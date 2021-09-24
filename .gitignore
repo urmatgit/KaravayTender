@@ -237,3 +237,6 @@ _Pvt_Extensions
 /.mfractor
 **/Files/*
 src/SmartAdmin.WebUI/logs/*
+**/logs/*
+src/SmartAdmin.WebUI/KaravayTender.db
+*.db
