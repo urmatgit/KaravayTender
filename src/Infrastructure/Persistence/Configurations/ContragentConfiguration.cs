@@ -21,6 +21,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence.Configurations
             builder.Property(c => c.ApplicationUserId)
                   .ValueGeneratedNever()
                   .IsRequired();
+            builder.Property(c => c.Name)
+                .HasMaxLength(50);
+
 
 
             
