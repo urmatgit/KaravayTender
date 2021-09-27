@@ -10,10 +10,15 @@ using CleanArchitecture.Razor.Domain.Common;
 
 namespace CleanArchitecture.Razor.Domain.Entities
 {
-   public  class Product: AuditableEntity
+   public  class Product: AuditableEntity, IHasDomainEvent, IAuditTrial
     {
         public int Id {  get; set; }
         public string Name {  get; set; }
-        public string Description {  get; set; }    
+        public decimal? Price { get; set; }
+        public string Description {  get; set; }
+        
+        
+        public virtual List<Customer> Customers { get; set; } = new();
+        public List<DomainEvent> DomainEvents { get; set; } = new();
     }
 }

@@ -8,8 +8,20 @@
 
   <ItemGroup>
     <Compile Remove="Customers\Import\**" />
+    <Compile Remove="Documents\**" />
+    <Compile Remove="DocumentTypes\**" />
+    <Compile Remove="Features\ApprovalDatas\**" />
+    <Compile Remove="Workflow\**" />
     <EmbeddedResource Remove="Customers\Import\**" />
+    <EmbeddedResource Remove="Documents\**" />
+    <EmbeddedResource Remove="DocumentTypes\**" />
+    <EmbeddedResource Remove="Features\ApprovalDatas\**" />
+    <EmbeddedResource Remove="Workflow\**" />
     <None Remove="Customers\Import\**" />
+    <None Remove="Documents\**" />
+    <None Remove="DocumentTypes\**" />
+    <None Remove="Features\ApprovalDatas\**" />
+    <None Remove="Workflow\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,11 +48,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Documents\Commands\Import\" />
-    <Folder Include="Features\ApprovalDatas\EventHandlers\" />
     <Folder Include="Resources\Documents\Commands\Import\" />
     <Folder Include="Resources\Features\ApprovalDatas\Commands\Import\" />
-    <Folder Include="Workflow\Approval\Data\" />
   </ItemGroup>
 
   <ItemGroup>

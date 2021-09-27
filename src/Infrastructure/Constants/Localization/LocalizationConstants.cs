@@ -13,31 +13,32 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Localization
     {
         public const string ResourcesPath = "Resources";
         public static readonly LanguageCode[] SupportedLanguages = {
-            new LanguageCode
-            {
-                Code = "en-US",
-                DisplayName= "English"
-            },
-            new LanguageCode
-            {
-                Code = "de-DE",
-                DisplayName = "Deutsch"
-            },
+            //new LanguageCode
+            //{
+            //    Code = "en-US",
+            //    DisplayName= "English"
+            //},
+            //new LanguageCode
+            //{
+            //    Code = "de-DE",
+            //    DisplayName = "Deutsch"
+            //},
              new LanguageCode
             {
                 Code = "ru",
                 DisplayName = "Russian"
-            },
-             new LanguageCode
-            {
-                Code = "ja-JP",
-                DisplayName = "Japanese"
-            },
-            new LanguageCode
-            {
-                Code = "zh-CN",
-                DisplayName = "中文"
             }
+            // ,
+            // new LanguageCode
+            //{
+            //    Code = "ja-JP",
+            //    DisplayName = "Japanese"
+            //},
+            //new LanguageCode
+            //{
+            //    Code = "zh-CN",
+            //    DisplayName = "中文"
+            //}
         };
     }
 

@@ -36,6 +36,9 @@ namespace CleanArchitecture.Razor.Domain.Entities
 
         public string Fax { get; set; }
         public string Comments { get; set; }
+        public int? ProductId { get; set; }
+        public virtual Product Product { get; set; }
+        
         public List<DomainEvent> DomainEvents { get; set; } = new();
     }
 }

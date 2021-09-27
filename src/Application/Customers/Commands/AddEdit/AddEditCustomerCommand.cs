@@ -43,6 +43,7 @@ namespace CleanArchitecture.Razor.Application.Customers.Commands.AddEdit
             {
                 var customer = await _context.Customers.FindAsync(new object[] { request.Id }, cancellationToken);
                 customer=_mapper.Map(request, customer);
+           //     _context.Customers.Update(customer);
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(customer.Id);
             }

@@ -2,7 +2,7 @@ using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Behaviours;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Customers.Commands.AddEdit;
-using CleanArchitecture.Razor.Application.Workflow.Approval.Steps;
+
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +29,7 @@ namespace CleanArchitecture.Razor.Application
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
             services.AddLazyCache();
+           // services.AddWorkflowSteps(w => w.Name.EndsWith("Step"), Assembly.GetExecutingAssembly());
             return services;
         }
         public static IServiceCollection AddWorkflowSteps(this IServiceCollection services, Func<Type, bool> predicate, params Assembly[] assemblies)
