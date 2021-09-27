@@ -1,6 +1,7 @@
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Customers.DTOs;
+using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 //using CleanArchitecture.Razor.Application.Documents.DTOs;
 //using CleanArchitecture.Razor.Application.DocumentTypes.DTOs;
 //using CleanArchitecture.Razor.Application.Features.ApprovalDatas.DTOs;
@@ -39,6 +40,7 @@ namespace CleanArchitecture.Application.UnitTests.Common.Mappings
         //[TestCase(typeof(ApprovalData), typeof(ApprovalDataDto))]
         //[TestCase(typeof(DocumentType), typeof(DocumentTypeDto))]
         //[TestCase(typeof(Document), typeof(DocumentDto))]
+        [TestCase(typeof(Category),typeof(CategoryDto))]
         [TestCase(typeof(Customer), typeof(CustomerDto))]
         [TestCase(typeof(KeyValue), typeof(KeyValueDto))]
         public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)

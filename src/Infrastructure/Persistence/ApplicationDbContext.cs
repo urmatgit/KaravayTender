@@ -44,7 +44,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         //public DbSet<Document> Documents { get; set; }
 
         public DbSet<KeyValue> KeyValues { get; set; }
-      //  public DbSet<ApprovalData> ApprovalDatas { get; set; }
+        //  public DbSet<ApprovalData> ApprovalDatas { get; set; }
+        
 
         public DbSet<Direction> Directions { get; set; }
         public DbSet<Category> Categories { get; set; }

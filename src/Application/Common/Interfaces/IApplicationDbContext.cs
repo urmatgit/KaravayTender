@@ -18,6 +18,9 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
         //DbSet<Document> Documents { get; set; }
         DbSet<KeyValue> KeyValues { get; set; }
         //DbSet<ApprovalData> ApprovalDatas { get; set; }
+        DbSet<Category> Categories { get; set; }
+        DbSet<Direction> Directions { get; set; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
