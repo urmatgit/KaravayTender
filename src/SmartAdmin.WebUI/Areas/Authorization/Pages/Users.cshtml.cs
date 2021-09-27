@@ -78,7 +78,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             var user = new ApplicationUser {
                 EmailConfirmed = true,
                 IsActive = false,
-                Site = RegisterFormModel.Site,
+                //Site = RegisterFormModel.Site,
                 DisplayName = RegisterFormModel.DisplayName,
                 UserName = RegisterFormModel.UserName,
                 Email = RegisterFormModel.Email,
@@ -94,7 +94,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             user.DisplayName=EditFormModel.DisplayName;
             user.PhoneNumber=EditFormModel.PhoneNumber;
             user.Email=EditFormModel.Email;
-            user.Site=EditFormModel.Site;
+            //user.Site=EditFormModel.Site;
             var result = await _userManager.UpdateAsync(user);
             return new JsonResult(result.ToApplicationResult());
         }
@@ -160,7 +160,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
                    .ToListAsync();
             var result = await _excelService.ExportAsync(data, new Dictionary<string, System.Func<ApplicationUser, object>>()
             {
-                { _localizer["Site"], item => item.Site },
+             //   { _localizer["Site"], item => item.Site },
                 { _localizer["User Name"], item => item.UserName },
                 { _localizer["Display Name"], item => item.DisplayName },
                 { _localizer["Phone Number"], item => item.PhoneNumber },
@@ -171,7 +171,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         public async  Task<FileResult> OnGetCreateTemplate()
         {
             var fields = new string[] {
-                _localizer["Site"],
+              //  _localizer["Site"],
                 _localizer["User Name"],
                 _localizer["Display Name"],
                 _localizer["Phone Number"],
@@ -190,7 +190,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
                 var data = stream.ToArray();
                 var result = await _excelService.ImportAsync(data, mappers: new Dictionary<string, Func<DataRow, RegisterModel, object>>
             {
-                { _localizer["Site"], (row,item) => item.Site = row[_localizer["Site"]]?.ToString() },
+               // { _localizer["Site"], (row,item) => item.Site = row[_localizer["Site"]]?.ToString() },
                 { _localizer["User Name"], (row,item) => item.UserName = row[_localizer["User Name"]]?.ToString() },
                 { _localizer["Display Name"], (row,item) => item.DisplayName =  row[_localizer["Display Name"]]?.ToString() },
                 { _localizer["Phone Number"], (row,item) => item.PhoneNumber =  row[_localizer["Phone Number"]]?.ToString() },
@@ -206,7 +206,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
                         {
                             EmailConfirmed = true,
                             IsActive = false,
-                            Site = item.Site,
+                           // Site = item.Site,
                             DisplayName = item.DisplayName,
                             UserName = item.UserName,
                             Email = item.Email,
@@ -247,9 +247,9 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         }
         public class RegisterModel
         {
-            [Display(Name = "Site")]
-            [Required]
-            public string Site { get; set; }
+            //[Display(Name = "Site")]
+            //[Required]
+            //public string Site { get; set; }
             [Display(Name = "User Name")]
             [Required]
             public string UserName { get; set; }
@@ -280,9 +280,9 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         public class EditUserModel
         {
             public string Id { get; set; }
-            [Display(Name = "Site")]
-            [Required]
-            public string Site { get; set; }
+            //[Display(Name = "Site")]
+            //[Required]
+            //public string Site { get; set; }
             [Display(Name = "User Name")]
             [Required]
             public string UserName { get; set; }

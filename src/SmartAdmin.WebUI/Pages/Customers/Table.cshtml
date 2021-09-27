@@ -1,0 +1,10 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@using CleanArchitecture.Razor.Infrastructure.Constants.Permission
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.Customers.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.Customers.Delete);
+}
+<table id="customer_dg">
+</table>
+

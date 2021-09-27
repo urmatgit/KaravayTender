@@ -1,4 +1,6 @@
 using CleanArchitecture.Razor.Application;
+using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.HandfireJobs;
 using CleanArchitecture.Razor.Infrastructure;
 using CleanArchitecture.Razor.Infrastructure.Constants.Application;
 using CleanArchitecture.Razor.Infrastructure.Constants.Localization;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Serilog;
 using SmartAdmin.WebUI.Extensions;
@@ -47,9 +50,10 @@ namespace SmartAdmin.WebUI
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
         
-            services.AddInfrastructure(Configuration)
-                    .AddApplication()
-                    .AddWorkflow(Configuration);
+        services.AddHangfire(Configuration);
+            services.AddApplication()
+                    .AddInfrastructure(Configuration);
+                    
           
             services.AddDatabaseDeveloperPageExceptionFilter();
            
@@ -73,7 +77,7 @@ namespace SmartAdmin.WebUI
                 .AddRazorPagesOptions(options =>
                 {
 
-                    options.Conventions.AddPageRoute("/AspNetCore/Welcome", "");
+                    options.Conventions.AddPageRoute("/Karavay/Welcome", "");
                 });
 
             services.ConfigureApplicationCookie(options => {
@@ -87,7 +91,7 @@ namespace SmartAdmin.WebUI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IStringLocalizer<Startup> localizer)
         {
             if (env.IsDevelopment())
             {
@@ -118,7 +122,8 @@ namespace SmartAdmin.WebUI
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseWorkflow();
+           // app.UseWorkflow();
+            app.UseHandfire(localizer["Karavay Jobs"]);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -32,7 +32,7 @@ namespace SmartAdmin.WebUI
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
 
-                    if (context.Database.IsSqlServer())
+                    if (context.Database.IsSqlServer() || context.Database.IsSqlite())
                     {
                         context.Database.Migrate();
                     }
@@ -42,6 +42,7 @@ namespace SmartAdmin.WebUI
 
                     await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
                     await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+                    await ApplicationDbContextSeed.SeedSampleProductDataAsync(context);
                 }
                 catch (Exception ex)
                 {

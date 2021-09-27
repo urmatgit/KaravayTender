@@ -2746,14 +2746,16 @@ html {
   text-decoration: none !important; }
 
 .breadcrumb > li.breadcrumb-item {
-  max-width: 130px;
+  max-width: 150px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   display: block; }
   .breadcrumb > li.breadcrumb-item:hover {
     max-width: 200px !important;
-    cursor: default; }
+    cursor: default;
+    font-weight: bold;
+  }
 
 [data-breadcrumb-seperator] + [data-breadcrumb-seperator]:before {
   content: attr(data-breadcrumb-seperator); }

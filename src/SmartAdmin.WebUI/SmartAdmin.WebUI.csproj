@@ -6,6 +6,27 @@
     <UserSecretsId>aspnet-SmartAdmin.WebUI-E383D1D3-A583-4134-97C9-6DFEB2F1657F</UserSecretsId>
   </PropertyGroup>
 
+<ItemGroup>
+    <Compile Remove="Pages\Approval\**" />
+    <Compile Remove="Pages\Documents\**" />
+    <Compile Remove="Pages\DocumentTypes\**" />
+    <Content Remove="Pages\Approval\**" />
+    <Content Remove="Pages\Documents\**" />
+    <Content Remove="Pages\DocumentTypes\**" />
+    <EmbeddedResource Remove="Pages\Approval\**" />
+    <EmbeddedResource Remove="Pages\Documents\**" />
+    <EmbeddedResource Remove="Pages\DocumentTypes\**" />
+    <None Remove="Pages\Approval\**" />
+    <None Remove="Pages\Documents\**" />
+    <None Remove="Pages\DocumentTypes\**" />
+  </ItemGroup>
+<ItemGroup>
+    <Compile Remove="Areas\Identity\Pages\Account\Register.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Areas\Identity\Pages\Account\Register.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.10" />
@@ -26,6 +47,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\HandfireJobs\HandfireJobs.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 

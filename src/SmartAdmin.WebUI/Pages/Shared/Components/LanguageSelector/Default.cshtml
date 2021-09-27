@@ -2,10 +2,17 @@
 <div class="dropdown-menu">
         @foreach (var culture in Model.SupportedCultures)
         {
-           <form method="GET">
-             <input type="hidden" name="culture" value="@culture.Name" />
-             <a href="javascript:void()" onclick="this.parentElement.submit();" class="dropdown-item" >@culture.DisplayName</a>
-           </form>
+    <form method="GET">
+        <input type="hidden" name="culture" value="@culture.Name" />
+        @if (culture.Name == Model.CurrentUICulture.Name)
+        {
+            <a href="javascript:void()" onclick="this.parentElement.submit();" class="dropdown-item font-weight-bold">@culture.DisplayName</a>
+        }
+        else
+        {
+            <a href="javascript:void()" onclick="this.parentElement.submit();" class="dropdown-item">@culture.DisplayName</a>
+        }
+    </form>
         }
 </div>
 

@@ -30,8 +30,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         public string UserName { get; set; }
         [BindProperty]
         public string DisplayName { get; set; }
-        [BindProperty]
-        public string Site { get; set; }
+        
         [BindProperty]
         public string Email { get; set; }
         [BindProperty]
@@ -68,7 +67,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             {
                 UserName = user.UserName;
                 Email = user.Email;
-                Site = user.Site;
+                
                 DisplayName = user.DisplayName;
                 IsActive = user.IsActive;
                 PhoneNumber = user.PhoneNumber;
@@ -125,8 +124,9 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             if (user != null)
             {
                 user.DisplayName = DisplayName;
-                user.Site = Site;
+                
                 user.PhoneNumber = PhoneNumber;
+                user.Email = Email;
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {

@@ -4,8 +4,8 @@ using System.Reflection;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Razor.Application.Settings;
-using CleanArchitecture.Razor.Application.Workflow.Approval;
-using CleanArchitecture.Razor.Domain.Entities.Worflow;
+
+
 using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Razor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
@@ -33,7 +33,16 @@ namespace CleanArchitecture.Razor.Infrastructure
                     options.UseInMemoryDatabase("CleanArchitecture.RazorDb")
                     ); ;
             }
-            else
+            else if (configuration.GetValue<bool>("UseSqliteDatabase"))
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlite(
+                        configuration.GetConnectionString("DefaultConnectionSqlite"),
+                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
+
+                    );
+            }
+            else 
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(
@@ -99,24 +108,6 @@ namespace CleanArchitecture.Razor.Infrastructure
             return services;
         }
 
-        public static IServiceCollection AddWorkflow(this IServiceCollection services, IConfiguration configuration)
-        {
-            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-            {
-                services.AddWorkflow();
-            }
-            else
-            {
-                services.AddWorkflow(x => x.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), true, true));
-            }
-            return services;
-        }
-        public static IApplicationBuilder UseWorkflow(this IApplicationBuilder app)
-        {
-            var host = app.ApplicationServices.GetService<IWorkflowHost>();
-            host.RegisterWorkflow<DocmentApprovalWorkflow, ApprovalData>();
-            host.Start();
-            return app;
-        }
+
     }
 }

@@ -115,11 +115,11 @@
             <form id="register_form" class="needs-validation" novalidate="novalidate">
                 <div class="modal-body">
                     @Html.AntiForgeryToken()
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <label class="form-label"> @_localizer["Your site name"]</label>
                         <input type="text" asp-for="RegisterFormModel.Site" class="form-control" placeholder="Site name" required="required" />
                         <span class="invalid-feedback" asp-validation-for="RegisterFormModel.Site">Sorry, you missed this one.</span>
-                    </div>
+                    </div>*@
                     <div class="form-group">
                         <label class="form-label">@_localizer["Login user name"]</label>
                         <input type="text" asp-for="RegisterFormModel.UserName" class="form-control" placeholder="User Name" required="required" />
@@ -185,11 +185,11 @@
                         <input type="text" asp-for="EditFormModel.UserName" class="form-control" placeholder="User Name" readonly="readonly" />
                         <span class="invalid-feedback" asp-validation-for="RegisterFormModel.UserName">Sorry, you missed this one.</span>
                     </div>
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <label class="form-label"> @_localizer["Your site name"]</label>
                         <input type="text" asp-for="EditFormModel.Site" class="form-control" placeholder="Site name" required="required" />
                         <span class="invalid-feedback" asp-validation-for="EditFormModel.Site">Sorry, you missed this one.</span>
-                    </div>
+                    </div>*@
 
                     <div class="form-group">
                         <label class="form-label">@_localizer["Your display name"]</label>
@@ -412,7 +412,7 @@
                         sortable: false,
                         width: 150
                     },
-                    { field: 'Site', title: '@_localizer["Site"]', sortable: true, width: 130 },
+                    @*{ field: 'Site', title: '@_localizer["Site"]', sortable: true, width: 130 },*@
                     { field: 'UserName', title: '@_localizer["User Name"]', sortable: true, width: 150 },
                     { field: 'DisplayName', title: '@_localizer["Display Name"]', sortable: true, width: 160 },
                     { field: 'Email', title: '@_localizer["Email"]', sortable: true, width: 190 },

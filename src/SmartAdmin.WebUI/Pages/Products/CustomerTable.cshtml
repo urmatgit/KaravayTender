@@ -1,0 +1,54 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@model SmartAdmin.WebUI.Pages.Products.IndexModel
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+
+<table id="customer_dg">
+</table>
+ 
+     
+
+    <script type="text/javascript">
+     var $dgCustomer={};
+        var initdatagridCustomer = () => {
+            $dgCustomer = $('#customer_dg').datagrid({
+                height: (window.innerHeight-320),
+                method: 'GET',
+                rownumbers: false,
+                singleSelect: true,
+                selectOnCheck: false,
+                checkOnSelect: false,
+                pagination: true,
+                clientPaging: false,
+                remoteFilter: true,
+                sortName: 'Id',
+                sortOrder:'desc',
+                pageSize: 15,
+                pageList: [10, 15, 30, 50, 100, 1000],
+               
+                columns: [[
+
+                    { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
+                    { field: 'NameOfEnglish', title: '@_localizer["Name Of English"]', sortable: true, width: 180 },
+                    { field: 'GroupName', title: '@_localizer["Group Name"]', sortable: true, width: 180 },
+                    { field: 'PartnerType', title: '@_localizer["Partner Type"]', sortable: true, width: 100, align: 'right' },
+                    { field: 'Region', title: '@_localizer["Region"]', sortable: true, width: 120 },
+                    { field: 'Sales', title: '@_localizer["Sales"]', sortable: true, width: 120 },
+                    { field: 'RegionSalesDirector', title: '@_localizer["Region Sales Director"]', sortable: true, width: 140 },
+                    { field: 'Address', title: '@_localizer["Address"]', sortable: true, width: 180 },
+                    { field: 'AddressOfEnglish', title: '@_localizer["Address Of English"]', sortable: true, width: 180 },
+                    { field: 'Contract', title: '@_localizer["Contract"]', sortable: true, width: 120 },
+                    { field: 'Email', title: 'Email', sortable: true, width: 130 },
+                    { field: 'PhoneNumber', title: '@_localizer["Phone Number"]', sortable: true, width: 120 },
+                    { field: 'Fax', title: '@_localizer["Fax"]', sortable: true, width: 120 },
+                    { field: 'Comments', title: '@_localizer["Comments"]', sortable: true, width: 180 }
+
+                ]]
+            })
+                .datagrid('enableFilter', {})
+                .datagrid('load', '@Url.Page("/Customers/Index")?handler=Data');
+
+    }
+        
+       
+    </script>
+  

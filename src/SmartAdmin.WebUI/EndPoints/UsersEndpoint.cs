@@ -70,7 +70,7 @@ namespace SmartAdmin.WebUI.EndPoints
             var user =await this._manager.FindByIdAsync(model.Id);
             if (user != null)
             {
-                user.Site = model.Site;
+               // user.Site = model.Site;
                 user.UserName = model.UserName;
                 user.Email = model.Email;
                 user.DisplayName = model.DisplayName;

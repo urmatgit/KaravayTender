@@ -29,12 +29,12 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
         {
             var principal = await base.CreateAsync(user);
             
-            if (!string.IsNullOrEmpty(user.Site))
-            {
-                ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
-                new Claim(ClaimTypes.Locality, user.Site)
-            });
-            }
+            //if (!string.IsNullOrEmpty(user.Site))
+            //{
+            //    ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+            //    new Claim(ClaimTypes.Locality, user.Site)
+            //});
+            //}
             if (!string.IsNullOrEmpty(user.ProfilePictureDataUrl))
             {
                 ((ClaimsIdentity)principal.Identity).AddClaims(new[] {

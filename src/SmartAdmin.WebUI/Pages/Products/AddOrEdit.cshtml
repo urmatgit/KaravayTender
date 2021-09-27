@@ -1,0 +1,58 @@
+﻿@model SmartAdmin.WebUI.Pages.Products.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+<div class="modal fade" id="product_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content p-2">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
+                </button>
+            </div>
+            <ul class="nav nav-tabs " role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#tab_justified-1" role="tab">@_localizer["Main"]</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#tab_justified-2" role="tab">@_localizer["Customer"]</a>
+                </li>
+            </ul>
+            <div class="tab-content p-2">
+                <div class="tab-pane fade show active" id="tab_justified-1" role="tabpanel">
+                    <form id="product_form" class="needs-validation" novalidate="novalidate">
+                        <div class="modal-body">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="Input.Id" />
+                            @Html.ValidationSummary()
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="name">@_localizer["Name"] <span class="text-danger">*</span></label>
+                                    <input type="text" asp-for="Input.Name" class="form-control" placeholder="Product Name" required />
+                                    <span class="invalid-feedback" asp-validation-for="Input.Name">Sorry, you missed this one.</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="Price">@_localizer["Price"] <span class="text-danger">*</span></label>
+                                    <input type="number" asp-for="Input.Price" class="form-control" placeholder="Price" required step="0.1" />
+                                    <span class="invalid-feedback" asp-validation-for="Input.Price">Sorry, you missed this one.</span>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label" for="Comments">@_localizer["Comments"] </label>
+                                    <input type="text" asp-for="Input.Description" class="form-control" placeholder="Comments" />
+                                    <span class="invalid-feedback" asp-validation-for="Input.Description">Sorry, you missed this one.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
+                            <button type="submit" class="btn btn-primary">@_localizer["Save"]</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="tab_justified-2" role="tabpanel">
+                    <partial name="CustomerTable"/>
+                </div>
+            </div>
+            </div>
+        </div>
+</div>
+

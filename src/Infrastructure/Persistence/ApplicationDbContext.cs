@@ -39,11 +39,16 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         public DbSet<Serilog> Serilogs { get; set; }
         public DbSet<AuditTrail> AuditTrails { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<DocumentType> DocumentTypes { get; set; }
-        public DbSet<Document> Documents { get; set; }
+        public DbSet<Product> Products { get; set; }
+        //public DbSet<DocumentType> DocumentTypes { get; set; }
+        //public DbSet<Document> Documents { get; set; }
 
         public DbSet<KeyValue> KeyValues { get; set; }
-        public DbSet<ApprovalData> ApprovalDatas { get; set; }
+      //  public DbSet<ApprovalData> ApprovalDatas { get; set; }
+
+        public DbSet<Direction> Directions { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<DirectionCategory> DirectionCategories { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
@@ -88,6 +93,12 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            foreach (var property in builder.Model.GetEntityTypes()
+            .SelectMany(t => t.GetProperties())
+            .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?)))
+            {
+                property.SetColumnType("decimal(18,2)");
+            }
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
         }

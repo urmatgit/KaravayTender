@@ -1,4 +1,4 @@
-@if (Settings.Features.AppSidebar)
+@if (Settings.Features.AppSidebar && User.Identity.IsAuthenticated)
 {
 <aside class="page-sidebar">
 	<partial name="_Logo"/>
