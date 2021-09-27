@@ -9,7 +9,9 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.Ignore(e => e.DomainEvents);
-            
+            builder.Property(t => t.Name)
+               .HasMaxLength(50);
+
         }
     }
 }
