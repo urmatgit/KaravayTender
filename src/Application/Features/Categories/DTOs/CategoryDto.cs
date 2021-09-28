@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
-using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
+//using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 
@@ -20,6 +20,6 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.DTOs
         public string Description { get; set; }
         public int DirectionId { get; set; }
         public virtual DirectionDto Direction { get; set; }
-        public virtual ICollection<ContragentCategoryDto> ContragentCategories { get; set; }
+      //  public virtual ICollection<ContragentCategoryDto> ContragentCategories { get; set; }
     }
 }

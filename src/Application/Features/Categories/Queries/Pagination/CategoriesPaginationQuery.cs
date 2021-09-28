@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -20,7 +20,7 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.Queries.Pagina
 {
     public class CategoriesWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<CategoryDto>>
     {
-       
+     public int DirectionId { get; set; }  
     }
     
     public class CategoriesWithPaginationQueryHandler :
@@ -45,8 +45,14 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.Queries.Pagina
         {
             //TODO:Implementing CategoriesWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<Category>(request.FilterRules);
+            if (request.DirectionId > 0)
+            {
+                
+                    filters = filters.And(p => p.DirectionId == request.DirectionId);
+                
+            }
            var data = await _context.Categories.Where(filters)
-                .OrderBy("{request.Sort} {request.Order}")
+                .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
             return data;

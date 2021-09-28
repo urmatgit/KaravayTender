@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.Categories.Commands.Delete
 {
@@ -8,7 +8,7 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.Commands.Delet
         {
            //TODO:Implementing DeleteCategoryCommandValidator method 
            //ex. RuleFor(v => v.Id).NotNull().GreaterThan(0);
-           throw new System.NotImplementedException();
+           //throw new System.NotImplementedException();
         }
     }
     public class DeleteCheckedCategoriesCommandValidator : AbstractValidator<DeleteCheckedCategoriesCommand>
@@ -17,7 +17,7 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.Commands.Delet
         {
             //TODO:Implementing DeleteProductCommandValidator method 
             //ex. RuleFor(v => v.Id).NotNull().NotEmpty();
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
     }
 }

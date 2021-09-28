@@ -155,7 +155,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                     Category categoryIngredient = new Category
                     {
                         Created = DateTime.UtcNow,
-                        Name = "Добавки"
+                        Name = "Добавки",
+                        DirectionId = directionMeterial.Id
                     };
                     Category categorySugar = new Category
                     {
@@ -166,7 +167,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                     Category categoryYeast = new Category
                     {
                         Created = DateTime.UtcNow,
-                        Name = "Дрожжи"
+                        Name = "Дрожжи",
+                        DirectionId = directionMeterial.Id
                     };
                     Category categoryMix = new Category
                     {

@@ -178,33 +178,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.ToTable("Contragents");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.ContragentCategory", b =>
-                {
-                    b.Property<int>("ContragentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ContragentId", "CategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("ContragentCategories");
-                });
-
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -229,9 +202,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("DirectionId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -274,8 +244,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DirectionId");
 
                     b.HasIndex("ProductId");
 
@@ -668,31 +636,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Navigation("Direction");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.ContragentCategory", b =>
-                {
-                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Category", "Category")
-                        .WithMany("ContragentCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Contragent", "Contragent")
-                        .WithMany("ContragentCategories")
-                        .HasForeignKey("ContragentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Contragent");
-                });
-
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Customer", b =>
                 {
-                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Direction", null)
-                        .WithMany("Customers")
-                        .HasForeignKey("DirectionId");
-
                     b.HasOne("CleanArchitecture.Razor.Domain.Entities.Product", "Product")
                         .WithMany("Customers")
                         .HasForeignKey("ProductId");
@@ -763,21 +708,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Category", b =>
-                {
-                    b.Navigation("ContragentCategories");
-                });
-
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Contragent", b =>
-                {
-                    b.Navigation("ContragentCategories");
-                });
-
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Direction", b =>
                 {
                     b.Navigation("Categories");
-
-                    b.Navigation("Customers");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Product", b =>

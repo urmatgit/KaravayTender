@@ -345,7 +345,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     Fax = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Comments = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProductId = table.Column<int>(type: "int", nullable: true),
-                    DirectionId = table.Column<int>(type: "int", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -355,43 +354,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Customers_Directions_DirectionId",
-                        column: x => x.DirectionId,
-                        principalTable: "Directions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Customers_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ContragentCategories",
-                columns: table => new
-                {
-                    ContragentId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ContragentCategories", x => new { x.ContragentId, x.CategoryId });
-                    table.ForeignKey(
-                        name: "FK_ContragentCategories_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ContragentCategories_Contragents_ContragentId",
-                        column: x => x.ContragentId,
-                        principalTable: "Contragents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -441,11 +406,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                 column: "DirectionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContragentCategories_CategoryId",
-                table: "ContragentCategories",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Contragents_ApplicationUserId",
                 table: "Contragents",
                 column: "ApplicationUserId");
@@ -453,11 +413,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Contragents_DirectionId",
                 table: "Contragents",
-                column: "DirectionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Customers_DirectionId",
-                table: "Customers",
                 column: "DirectionId");
 
             migrationBuilder.CreateIndex(
@@ -487,7 +442,10 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                 name: "AuditTrails");
 
             migrationBuilder.DropTable(
-                name: "ContragentCategories");
+                name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Contragents");
 
             migrationBuilder.DropTable(
                 name: "Customers");
@@ -502,19 +460,13 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Contragents");
-
-            migrationBuilder.DropTable(
-                name: "Products");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Directions");
+
+            migrationBuilder.DropTable(
+                name: "Products");
         }
     }
 }

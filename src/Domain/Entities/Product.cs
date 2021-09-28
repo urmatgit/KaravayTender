@@ -10,7 +10,7 @@ using CleanArchitecture.Razor.Domain.Common;
 
 namespace CleanArchitecture.Razor.Domain.Entities
 {
-   public  class Product: AuditableEntity, IHasDomainEvent, IAuditTrial
+   public  class Product: AuditableEntity, IHasDomainEvent
     {
         public int Id {  get; set; }
         public string Name {  get; set; }
