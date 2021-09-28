@@ -20,7 +20,8 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
         //DbSet<ApprovalData> ApprovalDatas { get; set; }
         DbSet<Category> Categories { get; set; }
         DbSet<Direction> Directions { get; set; }
-
+        DbSet<Contragent> Contragents { get; set; }
+        DbSet<ContragentCategory> ContragentCategories { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

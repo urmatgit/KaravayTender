@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,8 @@ namespace CleanArchitecture.Razor.Domain.Entities
 {
     public class Contragent : AuditableEntity, IHasDomainEvent, IAuditTrial
     {
-        public string ApplicationUserId { get; set; }
+        [Column("ApplicationUserId")]
+        public string Id { get; set; }
         //public int Id { get; set; }
         [Required]
         [MaxLength(50)]

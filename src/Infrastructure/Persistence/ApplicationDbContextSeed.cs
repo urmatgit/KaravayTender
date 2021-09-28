@@ -19,12 +19,14 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
             var administratorRole = new ApplicationRole("Admin") { Description= "Admin Group" };
+            var ManagerRole = new ApplicationRole("Manager") { Description = "Manager" };
             var userRole = new ApplicationRole("Basic") { Description = "Basic Group" };
             var super = new ApplicationRole("Super") { Description = "Super Group" };
-            var Supplier = new ApplicationRole("Supplier") { Description = "��������� �����" }; //Supplier of raw materials
+            var Supplier = new ApplicationRole("Supplier") { Description = "Поставщик сырья" }; //Supplier of raw materials
             if (roleManager.Roles.All(r => r.Name != administratorRole.Name))
             {
                 await roleManager.CreateAsync(administratorRole);
+                await roleManager.CreateAsync(ManagerRole);
                 await roleManager.CreateAsync(userRole);
                 await roleManager.CreateAsync(super);
                 await roleManager.CreateAsync(Supplier);
@@ -40,6 +42,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
             var administrator = new ApplicationUser { UserName = "administrator" , IsActive=true,DisplayName="Administrator", Email = "new163@163.com" , EmailConfirmed=true, ProfilePictureDataUrl=$"https://cn.gravatar.com/avatar/{"new163@163.com".ToMD5()}?s=120&d=retro" };
             var demo = new ApplicationUser { UserName = "Demo", IsActive = true,   DisplayName = "Demo", Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://cn.gravatar.com/avatar/{"neozhu@126.com".ToMD5()}?s=120&d=retro" };
             var supplier = new ApplicationUser { UserName = "Supplier", IsActive = true, Email = "supplier@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "" };
+            var manager = new ApplicationUser { UserName = "Manager1", IsActive = true, Email = "Manager1@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "" };
             if (userManager.Users.All(u => u.UserName != administrator.UserName))
             {
                 await userManager.CreateAsync(administrator, "Password123!");
@@ -52,6 +55,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                 await userManager.AddToRolesAsync(superUser, new[] { super.Name });
                 await userManager.CreateAsync(supplier, "Password123!");
                 await userManager.AddToRolesAsync(supplier, new[] { Supplier.Name });
+                await userManager.CreateAsync(manager, "Password123!");
+                await userManager.AddToRolesAsync(manager, new[] { ManagerRole.Name });
             }
 
         }
@@ -119,24 +124,24 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
             {
                 Direction directionMuka = new Direction
                 {
-                    Name = "����"
+                    Name = "Мука"
                     ,Created=DateTime.UtcNow
                 };
                 Direction directionMeterial = new Direction
                 {
-                    Name = "�����"
+                    Name = "Сырье"
                     ,
                     Created = DateTime.UtcNow
                 };
                 Direction directionTMC = new Direction
                 {
-                    Name = "���"
+                    Name = "ТМЦ"
                     ,
                     Created = DateTime.UtcNow
                 };
                 Direction directionPackage = new Direction
                 {
-                    Name = "��������"
+                    Name = "Упаковка"
                     ,
                     Created = DateTime.UtcNow
                 };
@@ -150,22 +155,22 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                     Category categoryIngredient = new Category
                     {
                         Created = DateTime.UtcNow,
-                        Name = "�������"
+                        Name = "Добавки"
                     };
                     Category categorySugar = new Category
                     {
                         Created = DateTime.UtcNow,
-                        Name = "�����"
+                        Name = "Сахар"
                     };
                     Category categoryYeast = new Category
                     {
                         Created = DateTime.UtcNow,
-                        Name = "������"
+                        Name = "Дрожжи"
                     };
                     Category categoryMix = new Category
                     {
                         Created = DateTime.UtcNow,
-                        Name = "�����"
+                        Name = "Смеси"
                     };
                     context.Categories.Add(categoryIngredient);
                     context.Categories.Add(categorySugar);
