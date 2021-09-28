@@ -14,7 +14,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
     public class Contragent : AuditableEntity, IHasDomainEvent, IAuditTrial
     {
         public string ApplicationUserId { get; set; }
-
+        //public int Id { get; set; }
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
@@ -32,15 +32,17 @@ namespace CleanArchitecture.Razor.Domain.Entities
         [Required]
         [MaxLength(30)]
         public string Phone { get; set; }
-        [Required]
-        [MaxLength(30)]
-        public string ContactPhone { get; set; }
         /// <summary>
         /// Контакное лицо
         /// </summary>
         [Required]
         [MaxLength(50)]
         public string ContactPerson { get; set; }
+        [Required]
+        [MaxLength(30)]
+        public string ContactPhone { get; set; }
+        [Required]
+        [MaxLength(30)]
         public string Email { get; set; }
         /// <summary>
         /// вид деятельности
@@ -56,6 +58,9 @@ namespace CleanArchitecture.Razor.Domain.Entities
         //public string RegistrationNumber { get; set; }
         //public string Password { get; set; }
 
+        public int DirectionId { get; set; }
+        public virtual Direction Direction { get; set; }
+        public virtual ICollection<ContragentCategory> ContragentCategories { get; set; }
         public List<DomainEvent> DomainEvents { get; set; }
     }
 }

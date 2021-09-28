@@ -7,27 +7,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Domain.Entities;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchitecture.Razor.Infrastructure.Persistence.Configurations
 {
-    public class DirectionCategoryConfiguration : IEntityTypeConfiguration<DirectionCategory>
+    public class ContragentCategoryConfiguration : IEntityTypeConfiguration<ContragentCategory>
     {
-        public void Configure1(EntityTypeBuilder<DirectionCategory> builder)
-        {
-            
-        }
-        public void Configure(EntityTypeBuilder<DirectionCategory> builder)
+       
+        public void Configure(EntityTypeBuilder<ContragentCategory> builder)
         {
             builder.Ignore(e => e.DomainEvents);
-            builder.HasKey(dc => new {dc.DirectionId,dc.CategoryId });
-            builder.HasOne(d => d.Direction)
-                .WithMany(d => d.DirectionCategories)
-                .HasForeignKey(d => d.DirectionId)
+            builder.HasKey(dc => new {dc.ContragentId ,dc.CategoryId });
+            builder.HasOne(d => d.Contragent)
+                .WithMany(d => d.ContragentCategories)
+                .HasForeignKey(d => d.ContragentId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasOne(c => c.Category)
-                .WithMany(c => c.DirectionCategories)
+                .WithMany(c => c.ContragentCategories)
                 .HasForeignKey(c => c.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
