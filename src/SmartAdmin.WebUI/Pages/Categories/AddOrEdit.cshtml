@@ -1,0 +1,44 @@
+﻿@model SmartAdmin.WebUI.Pages.Categories.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+<div class="modal fade" id="category_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
+                </button>
+            </div>
+            <form id="category_form" class="needs-validation" novalidate="novalidate">
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Input.Id" />
+                    
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label class="form-label" for="name">@_localizer["Name"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="Input.Name" class="form-control" placeholder="Category Name" />
+                            <span class="invalid-feedback" asp-validation-for="Input.Name"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="name">@_localizer["Direction"] <span class="text-danger">*</span></label>
+                            <select type="text" asp-for="Input.DirectionId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Direction"]">
+                                <option value="">@_localizer["Choose direction"]</option>
+                            </select>
+                            <span class="invalid-feedback" asp-validation-for="Input.DirectionId"></span>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label" for="Comments">@_localizer["Description"] </label>
+                            <input type="text" asp-for="Input.Description" class="form-control" placeholder="Comments" />
+                            <span class="invalid-feedback" asp-validation-for="Input.Description"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
+                    <button type="submit" class="btn btn-primary">@_localizer["Save"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

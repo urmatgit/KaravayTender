@@ -52,6 +52,7 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.Queries.Pagina
                 
             }
            var data = await _context.Categories.Where(filters)
+                .Include(c=>c.Direction)
                 .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);

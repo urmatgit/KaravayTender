@@ -12,7 +12,10 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.DTOs
     {
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Category, CategoryDto>().ReverseMap();
+            profile.CreateMap<Category, CategoryDto>()
+                .ForMember(x => x.DirectionName, s => s.MapFrom(y => y.Direction.Name));
+            profile.CreateMap<CategoryDto, Category>(MemberList.None);
+                
 
         }
         public int Id { get; set; }
@@ -20,6 +23,7 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.DTOs
         public string Description { get; set; }
         public int DirectionId { get; set; }
         public virtual DirectionDto Direction { get; set; }
+        public string DirectionName { get; set; }
       //  public virtual ICollection<ContragentCategoryDto> ContragentCategories { get; set; }
     }
 }

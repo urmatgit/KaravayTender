@@ -21,6 +21,8 @@ using CleanArchitecture.Razor.Application.Features.Categories.Queries.Export;
 using System.IO;
 using CleanArchitecture.Razor.Application.Features.Categories.Commands.Import;
 using CleanArchitecture.Razor.Application.Common.Exceptions;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
 
 namespace SmartAdmin.WebUI.Pages.Categories
 {
@@ -29,8 +31,9 @@ namespace SmartAdmin.WebUI.Pages.Categories
     {
         [BindProperty]
         public AddEditCategoryCommand Input { get; set; }
-        [BindProperty]
-        public IFormFile UploadedFile { get; set; }
+        
+        
+        public SelectList Directions { get; set; }
 
         private readonly IIdentityService _identityService;
         private readonly IAuthorizationService _authorizationService;
@@ -56,7 +59,10 @@ namespace SmartAdmin.WebUI.Pages.Categories
 
         public async Task OnGetAsync()
         {
-            var result = await _identityService.FetchUsers("Admin");
+            //var result = await _identityService.FetchUsers("Admin");
+            var request = new GetAllDirectionsQuery();
+            var directionsDtos = await _mediator.Send(request);
+            Directions = new SelectList(directionsDtos, "Id", "Name");
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] CategoriesWithPaginationQuery command)
         {
@@ -104,18 +110,18 @@ namespace SmartAdmin.WebUI.Pages.Categories
             var result = await _mediator.Send(command);
             return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", _localizer["Categories"] + ".xlsx");
         }
-        public async Task<IActionResult> OnPostImportAsync()
-        {
-            var stream = new MemoryStream();
-            await UploadedFile.CopyToAsync(stream);
-            var command = new ImportCategoriesCommand()
-            {
-                FileName = UploadedFile.FileName,
-                Data = stream.ToArray()
-            };
-            var result = await _mediator.Send(command);
-            return new JsonResult(result);
-        }
+        //public async Task<IActionResult> OnPostImportAsync()
+        //{
+        //    var stream = new MemoryStream();
+        //    await UploadedFile.CopyToAsync(stream);
+        //    var command = new ImportCategoriesCommand()
+        //    {
+        //        FileName = UploadedFile.FileName,
+        //        Data = stream.ToArray()
+        //    };
+        //    var result = await _mediator.Send(command);
+        //    return new JsonResult(result);
+        //}
 
     }
 }
