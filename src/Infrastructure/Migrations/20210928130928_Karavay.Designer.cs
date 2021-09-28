@@ -10,11 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CleanArchitecture.Razor.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<< HEAD:src/Infrastructure/Migrations/20210928134814_Karavay.Designer.cs
-    [Migration("20210928134814_Karavay")]
-=======
-    [Migration("20210928092844_Karavay")]
->>>>>>> 3e0e40c (Added Directions page):src/Infrastructure/Migrations/20210928092844_Karavay.Designer.cs
+    [Migration("20210928130928_Karavay")]
     partial class Karavay
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -184,70 +180,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.ToTable("Contragents");
                 });
 
-<<<<<<< HEAD:src/Infrastructure/Migrations/20210928134814_Karavay.Designer.cs
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressOfEnglish")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Contact")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Fax")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GroupName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameOfEnglish")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PartnerType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Region")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RegionSalesDirector")
-                        .HasColumnType("nvarchar(max)");
-
-=======
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.ContragentCategory", b =>
                 {
                     b.Property<int>("ContragentId")
@@ -340,17 +272,13 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Property<string>("RegionSalesDirector")
                         .HasColumnType("nvarchar(max)");
 
->>>>>>> 3e0e40c (Added Directions page):src/Infrastructure/Migrations/20210928092844_Karavay.Designer.cs
                     b.Property<string>("Sales")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-<<<<<<< HEAD:src/Infrastructure/Migrations/20210928134814_Karavay.Designer.cs
-=======
                     b.HasIndex("DirectionId");
 
->>>>>>> 3e0e40c (Added Directions page):src/Infrastructure/Migrations/20210928092844_Karavay.Designer.cs
                     b.HasIndex("ProductId");
 
                     b.ToTable("Customers");
@@ -445,14 +373,10 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Property<string>("Properties")
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD:src/Infrastructure/Migrations/20210928134814_Karavay.Designer.cs
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")
-=======
-                    b.Property<string>("TimeStamp")
->>>>>>> 3e0e40c (Added Directions page):src/Infrastructure/Migrations/20210928092844_Karavay.Designer.cs
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -746,14 +670,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Navigation("Direction");
                 });
 
-<<<<<<< HEAD:src/Infrastructure/Migrations/20210928134814_Karavay.Designer.cs
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Customer", b =>
-                {
-                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Product", "Product")
-                        .WithMany("Customers")
-                        .HasForeignKey("ProductId");
-
-=======
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.ContragentCategory", b =>
                 {
                     b.HasOne("CleanArchitecture.Razor.Domain.Entities.Category", "Category")
@@ -783,7 +699,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .WithMany("Customers")
                         .HasForeignKey("ProductId");
 
->>>>>>> 3e0e40c (Added Directions page):src/Infrastructure/Migrations/20210928092844_Karavay.Designer.cs
                     b.Navigation("Product");
                 });
 
@@ -850,11 +765,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-<<<<<<< HEAD:src/Infrastructure/Migrations/20210928134814_Karavay.Designer.cs
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Direction", b =>
-                {
-                    b.Navigation("Categories");
-=======
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Category", b =>
                 {
                     b.Navigation("ContragentCategories");
@@ -870,7 +780,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Navigation("Categories");
 
                     b.Navigation("Customers");
->>>>>>> 3e0e40c (Added Directions page):src/Infrastructure/Migrations/20210928092844_Karavay.Designer.cs
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Product", b =>

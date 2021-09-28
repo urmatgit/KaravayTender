@@ -139,8 +139,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MessageTemplate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Level = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TimeStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Exception = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Properties = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
