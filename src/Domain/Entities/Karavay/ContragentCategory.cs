@@ -14,8 +14,8 @@ namespace CleanArchitecture.Razor.Domain.Entities
 {
     public class ContragentCategory : AuditableEntity, IHasDomainEvent, IAuditTrial
     {
-        [Column("ApplicationUserId")]
-        public string ContragentId { get; set; }
+        
+        public int ContragentId { get; set; }
         public virtual Contragent Contragent { get; set; }
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }

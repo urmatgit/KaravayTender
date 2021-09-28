@@ -14,7 +14,7 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs
             profile.CreateMap<ContragentCategory, ContragentCategoryDto>().ReverseMap();
 
         }
-        public string ContragentId { get; set; }
+        public int ContragentId { get; set; }
         public virtual ContragentDto Contragent { get; set; }
         public int CategoryId { get; set; }
         public virtual CategoryDto Category { get; set; }

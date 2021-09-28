@@ -1,3 +1,4 @@
+using CleanArchitecture.Razor.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
@@ -20,5 +21,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Identity
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
         public virtual ICollection<ApplicationUserLogin> Logins { get; set; }
         public virtual ICollection<ApplicationUserToken> Tokens { get; set; }
+        public virtual ICollection<Contragent> Contragents { get; set; }
     }
 }

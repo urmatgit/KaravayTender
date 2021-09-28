@@ -9,14 +9,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Domain.Common;
+using CleanArchitecture.Razor.Domain.Enums;
 
 namespace CleanArchitecture.Razor.Domain.Entities
 {
     public class Contragent : AuditableEntity, IHasDomainEvent, IAuditTrial
     {
-        [Column("ApplicationUserId")]
-        public string Id { get; set; }
-        //public int Id { get; set; }
+        
+        
+        public int Id { get; set; }
+        [ForeignKey("ApplicationUserId")]
+        public string ApplicationUserId { get; set; }
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
@@ -59,7 +62,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
         /// </summary>
         //public string RegistrationNumber { get; set; }
         //public string Password { get; set; }
-
+        public ContragentStatus Status { get; set; }
         public int DirectionId { get; set; }
         public virtual Direction Direction { get; set; }
         public virtual ICollection<ContragentCategory> ContragentCategories { get; set; }

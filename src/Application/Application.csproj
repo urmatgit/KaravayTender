@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -25,6 +25,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\ContragentCategories\Commands\Create\CreateContragentCategoryCommand.cs" />
+    <Compile Remove="Features\ContragentCategories\Commands\Create\CreateContragentCategoryCommandValidator.cs" />
+    <Compile Remove="Features\ContragentCategories\Commands\Delete\DeleteContragentCategoryCommand.cs" />
+    <Compile Remove="Features\ContragentCategories\Commands\Delete\DeleteContragentCategoryCommandValidator.cs" />
+    <Compile Remove="Features\ContragentCategories\Commands\Update\UpdateContragentCategoryCommand.cs" />
+    <Compile Remove="Features\ContragentCategories\Commands\Update\UpdateContragentCategoryCommandValidator.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="FluentValidation" Version="10.3.3" />
@@ -48,6 +57,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\ContragentCategories\Commands\Create\" />
+    <Folder Include="Features\ContragentCategories\Commands\Delete\" />
+    <Folder Include="Features\ContragentCategories\Commands\Update\" />
     <Folder Include="Resources\Documents\Commands\Import\" />
     <Folder Include="Resources\Features\ApprovalDatas\Commands\Import\" />
   </ItemGroup>

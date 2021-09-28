@@ -5,6 +5,7 @@ using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
+using CleanArchitecture.Razor.Domain.Enums;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
 {
@@ -16,7 +17,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
 
         }
         public string ApplicationUserId { get; set; }
-        //public int Id { get; set; }
+        public int Id { get; set; }
        
         public string Name { get; set; }
 
@@ -52,6 +53,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         /// </summary>
         //public string RegistrationNumber { get; set; }
         //public string Password { get; set; }
+        public ContragentStatus Status { get; set; }
 
         public int DirectionId { get; set; }
         public virtual DirectionDto Direction { get; set; }

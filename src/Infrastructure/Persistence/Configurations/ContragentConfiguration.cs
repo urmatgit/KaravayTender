@@ -16,11 +16,10 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence.Configurations
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Contragent> builder)
         {
             builder.Ignore(c => c.DomainEvents);
-            builder.HasKey(c => c.Id);
-                    
-            builder.Property(c => c.Id)
-                  .ValueGeneratedNever()
-                  .IsRequired();
+            
+            //builder.Property(c => c.Id)
+            //      .ValueGeneratedNever()
+            //      .IsRequired();
             builder.Property(c => c.Name)
                 .HasMaxLength(50);
 

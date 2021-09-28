@@ -19,4 +19,9 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
     {
         T Data { get; }
     }
+    public interface IResult<out T,out T1> : IResult
+    {
+        T Data { get; }
+        T1 Data1 { get; }
+    }
 }

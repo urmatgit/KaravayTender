@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands.AddEdit
 {
@@ -7,9 +7,9 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
         public AddEditContragentCategoryCommandValidator()
         {
            //TODO:Implementing AddEditContragentCategoryCommandValidator method 
-            RuleFor(v => v.Name)
-                 .MaximumLength(50)
-                 .NotEmpty();
+            //RuleFor(v => v.Name)
+            //     .MaximumLength(50)
+            //     .NotEmpty();
            //throw new System.NotImplementedException();
         }
     }

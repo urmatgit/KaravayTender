@@ -60,5 +60,27 @@ namespace CleanArchitecture.Razor.Application.Common.Models
         }
     }
 
+    public class Result<T,T1> : Result, IResult<T,T1>
+    {
+        public T Data { get; set; }
+        public T1 Data1 { get; set; }
+
+        public static new Result<T,T1> Failure(IEnumerable<string> errors)
+        {
+            return new Result<T,T1> { Succeeded = false, Errors = errors.ToArray() };
+        }
+        public static new async Task<Result<T, T1>> FailureAsync(IEnumerable<string> errors)
+        {
+            return await Task.FromResult(Failure(errors));
+        }
+        public static Result<T, T1> Success(T data, T1 data1 )
+        {
+            return new Result<T, T1> { Succeeded = true, Data = data,Data1=data1 };
+        }
+        public static async Task<Result<T, T1>> SuccessAsync(T data,T1 data1)
+        {
+            return await Task.FromResult(Success(data,data1));
+        }
+    }
 }
 

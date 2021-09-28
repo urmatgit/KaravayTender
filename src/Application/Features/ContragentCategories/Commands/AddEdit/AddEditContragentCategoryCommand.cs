@@ -12,14 +12,14 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands.AddEdit
 {
-    public class AddEditContragentCategoryCommand: ContragentCategoryDto,IRequest<Result<int>>, IMapFrom<ContragentCategory>
+    public class AddEditContragentCategoryCommand: ContragentCategoryDto,IRequest<Result<int, int>>, IMapFrom<ContragentCategory>
     {
         //public string CacheKey => ContragentCategoryCacheKey.GetAllCacheKey;
 
         //public CancellationTokenSource ResetCacheToken => ContragentCategoryCacheTokenSource.ResetCacheToken;
     }
 
-    public class AddEditContragentCategoryCommandHandler : IRequestHandler<AddEditContragentCategoryCommand, Result<int>>
+    public class AddEditContragentCategoryCommandHandler : IRequestHandler<AddEditContragentCategoryCommand, Result<int,int>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -34,22 +34,22 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
             _localizer = localizer;
             _mapper = mapper;
         }
-        public async Task<Result<int>> Handle(AddEditContragentCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<int,int>> Handle(AddEditContragentCategoryCommand request, CancellationToken cancellationToken)
         {
             //TODO:Implementing AddEditContragentCategoryCommandHandler method 
-            if (request > 0)
+            if (request.CategoryId > 0 && request.ContragentId > 0)
             {
-                var item = await _context.ContragentCategories.FindAsync(new object[] { request.Id }, cancellationToken);
+                var item = await _context.ContragentCategories.FindAsync(new object[] { request.CategoryId,request.ContragentId }, cancellationToken);
                 item = _mapper.Map(request, item);
                 await _context.SaveChangesAsync(cancellationToken);
-                return Result<int>.Success(item.Id);
+                return Result<int,int>.Success(item.ContragentId,item.CategoryId);
             }
             else
             {
                 var item = _mapper.Map<ContragentCategory>(request);
                 _context.ContragentCategories.Add(item);
                 await _context.SaveChangesAsync(cancellationToken);
-                return Result<int>.Success(item.Id);
+                return Result<int, int>.Success(item.ContragentId, item.CategoryId);
             }
            
         }
