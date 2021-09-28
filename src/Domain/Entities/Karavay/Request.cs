@@ -17,6 +17,6 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public RequestStatus Status { get; set; }
         //public DateTime RequestCreated { get; set; }
         public DateTime Registrated { get; set; }
-        public List<DomainEvent> DomainEvents { get; set; }
+        public List<DomainEvent> DomainEvents { get; set; } = new();
     }
 }

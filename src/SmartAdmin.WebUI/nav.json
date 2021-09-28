@@ -1,11 +1,6 @@
 {
   "version": "4.5",
   "lists": [
-
-    {
-      "title": "CRM Application",
-      "roles": [ "Admin", "Basic" ]
-    },
     {
       "title": "Добро пожаловать!",
       "href": "karavay_welcome.html",
@@ -16,42 +11,43 @@
       "title": "Режимы",
       "icon": "fal fa-cubes",
       "roles": [ "Admin", "Manager", "Super" ],
-      "items": {
-        "title": "Поставщики",
-        "icon": "fal fa-luggage-cart",
-        "href": "",
-        "roles": [
-
-        ]
-      }
+      "items": [
+        {
+          "title": "Поставщики",
+          "icon": "fal fa-luggage-cart",
+          "roles": []
+        }
+      ]
     },
     {
       "title": "Справочники",
       "icon": "fal fa-cubes",
       "roles": [ "Admin", "Manager", "Super" ],
-      "items": {
-        "title": "Поставщики",
-        "icon": "fal fa-luggage-cart",
-        "href": "",
-        "roles": []
+      "items": [
+        {
+          "title": "Поставщики",
+          "icon": "fal fa-luggage-cart",
 
-      },
-      {
-        "title": "Направление",
-        "href": "",
-        "roles": []
-      },
-      {
-        "title": "Категории",
-        "href": "",
-        "roles": []
-      }
+          "roles": []
+        },
+        {
+          "title": "Направление",
+          "href": "directions_index.html",
+          "roles": []
+        },
+        {
+          "title": "Категории",
+          "href": "",
+          "roles": []
+        }
+      ]
+      
 
     },
     {
       "title": "Master Data",
       "icon": "fal fa-cubes",
-      "roles": [ "Admin", "Basic", "Super" ],
+      "roles": [ "Super" ],
       "items": [
         {
           "title": "Customers",
@@ -73,7 +69,7 @@
     {
       "title": "Documents",
       "icon": "fal fa-paperclip",
-      "roles": [ "Admin", "Basic", "Super" ],
+      "roles": [  "Super" ],
       "items": [
         {
           "title": "Products",
@@ -89,7 +85,7 @@
     },
 
     {
-      "title": "Authorization",
+      "title": "Admin",
       "icon": "fal fa-shield-alt",
       "roles": [ "Admin", "Super" ],
       "items": [

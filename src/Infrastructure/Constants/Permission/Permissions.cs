@@ -168,6 +168,19 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string View = "Permissions.Hangfire.View";
         }
 
+        //Karavay
+        [DisplayName("Directions")]
+        [Description("Directions Permissions")]
+        public static class Directions
+        {
+            public const string View = "Permissions.Directions.View";
+            public const string Create = "Permissions.Directions.Create";
+            public const string Edit = "Permissions.Directions.Edit";
+            public const string Delete = "Permissions.Directions.Delete";
+            public const string Search = "Permissions.Directions.Search";
+            public const string Export = "Permissions.Directions.Export";
+            public const string Import = "Permissions.Directions.Import";
+        }
 
         /// <summary>
         /// Returns a list of Permissions.

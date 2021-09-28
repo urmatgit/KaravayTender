@@ -18,7 +18,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
         
         
         public int Id { get; set; }
-        [ForeignKey("ApplicationUserId")]
+        //[ForeignKey("ApplicationUserId")]
         public string ApplicationUserId { get; set; }
         [Required]
         [MaxLength(50)]
@@ -66,6 +66,6 @@ namespace CleanArchitecture.Razor.Domain.Entities
         public int DirectionId { get; set; }
         public virtual Direction Direction { get; set; }
         public virtual ICollection<ContragentCategory> ContragentCategories { get; set; }
-        public List<DomainEvent> DomainEvents { get; set; }
+        public List<DomainEvent> DomainEvents { get; set; } = new();
     }
 }

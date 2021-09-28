@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,14 +15,30 @@ using Microsoft.Extensions.Localization;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Application.Common.Mappings;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
+using CleanArchitecture.Razor.Application.Features.Directions.Caching;
 
 namespace CleanArchitecture.Razor.Application.Features.Directions.Queries.Pagination
 {
-    public class DirectionsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<DirectionDto>>
+    public class DirectionsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<DirectionDto>> //,   ICacheable
     {
-       
+        //public string CacheKey => this.GetPagtionCacheKey(this.ToString());
+
+        //public MemoryCacheEntryOptions Options
+        //{
+        //    get
+        //    {
+        //         var option= new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(DirectionCacheTokenSource.ResetCacheToken.Token));
+        //        option.SetAbsoluteExpiration(TimeSpan.FromMinutes(1));
+        //        return option;
+        //    }
+        //}
+        
+
     }
-    
+
     public class DirectionsWithPaginationQueryHandler :
          IRequestHandler<DirectionsWithPaginationQuery, PaginatedData<DirectionDto>>
     {
@@ -45,10 +61,13 @@ namespace CleanArchitecture.Razor.Application.Features.Directions.Queries.Pagina
         {
             //TODO:Implementing DirectionsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<Direction>(request.FilterRules);
-           var data = await _context.Directions.Where(filters)
-                .OrderBy("{request.Sort} {request.Order}")
+           
+            var data = await _context.Directions.Where(filters)
+                .Include(d=>d.Categories)
+                .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<DirectionDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
+
             return data;
         }
     }

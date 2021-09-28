@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
+using CleanArchitecture.Razor.Application.Customers.DTOs;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 
@@ -18,5 +19,6 @@ namespace CleanArchitecture.Razor.Application.Features.Directions.DTOs
         public string Name { get; set; }
         public string Description { get; set; }
         public virtual ICollection<CategoryDto> Categories { get; set; }
+        public virtual ICollection<CustomerDto> Customers { get; set; }
     }
 }

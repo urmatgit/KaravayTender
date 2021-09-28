@@ -19,6 +19,6 @@ namespace CleanArchitecture.Razor.Domain.Entities
         public virtual Contragent Contragent { get; set; }
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
-        public List<DomainEvent> DomainEvents { get; set; }
+        public List<DomainEvent> DomainEvents { get; set; } = new();
     }
 }

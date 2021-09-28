@@ -20,15 +20,28 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence.Configurations
         {
             builder.Ignore(e => e.DomainEvents);
             builder.HasKey(dc => new {dc.ContragentId ,dc.CategoryId });
+
+            //  builder.HasKey(tp => new { tp.UserId, tp.InterestId });
+
+            //builder.HasOne(i => i.Interest)
+            //    .WithMany(i => i.UserInterests)
+            //    .HasForeignKey(ui => ui.InterestId);
+            //builder.HasOne(u => u.ApplicationUser)
+            //    .WithMany(u => u.UserInterests)
+            //    .HasForeignKey(ui => ui.UserId);
+
             builder.HasOne(d => d.Contragent)
                 .WithMany(d => d.ContragentCategories)
                 .HasForeignKey(d => d.ContragentId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.HasOne(c => c.Category)
                 .WithMany(c => c.ContragentCategories)
                 .HasForeignKey(c => c.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
+                
+                
         }
     }
 }
