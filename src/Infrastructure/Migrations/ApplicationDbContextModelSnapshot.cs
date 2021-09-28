@@ -371,7 +371,10 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Property<string>("Properties")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TimeStamp")
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

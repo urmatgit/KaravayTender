@@ -160,7 +160,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                     Category categorySugar = new Category
                     {
                         Created = DateTime.UtcNow,
-                        Name = "Сахар"
+                        Name = "Сахар",
+                        DirectionId=directionMeterial.Id
                     };
                     Category categoryYeast = new Category
                     {
@@ -170,7 +171,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                     Category categoryMix = new Category
                     {
                         Created = DateTime.UtcNow,
-                        Name = "Смеси"
+                        Name = "Смеси",
+                        DirectionId = directionMeterial.Id
                     };
                     context.Categories.Add(categoryIngredient);
                     context.Categories.Add(categorySugar);
@@ -179,7 +181,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                     await context.SaveChangesAsync();
 
                 }
-                
+
 
             }
         }

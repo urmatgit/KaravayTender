@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CleanArchitecture.Razor.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210928092844_Karavay")]
+    [Migration("20210928130928_Karavay")]
     partial class Karavay
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -373,7 +373,10 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Property<string>("Properties")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TimeStamp")
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
