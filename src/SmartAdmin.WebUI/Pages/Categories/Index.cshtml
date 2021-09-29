@@ -3,13 +3,13 @@
 @using CleanArchitecture.Razor.Infrastructure.Constants.Permission
 @model SmartAdmin.WebUI.Pages.Categories.IndexModel
 @inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
-    @inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
-    @{
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
     ViewData["Title"] = _localizer["Categories"].Value;
     ViewData["PageName"] = "categories_index";
     ViewData["Category1"] = _localizer["Categories"].Value;
     ViewData["Heading"] = _localizer["Categories"].Value;
-    ViewData["PageDescription"] = _localizer["See all available options"].Value;
+    ViewData["PageDescription"] = _localizer["Managing category parameters"].Value;
     ViewData["PreemptiveClass"] = "Default";
     var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.Categories.Create);
     var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.Categories.Edit);
@@ -18,8 +18,8 @@
     var _canImport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Categories.Import);
     var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Categories.Export);
 
-    }
-    @section HeadBlock {
+}
+@section HeadBlock {
 
     <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
     <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
@@ -31,36 +31,36 @@
             overflow: visible !important
         }
     </style>
-    }
-    <div id="js-page-content-demopanels" class="card mb-g">
-        <div class="card-header bg-white d-flex align-items-center">
-            <h4 class="m-0">
-                @_localizer["Categories"]
-                <small>@_localizer["See all available options"]</small>
-            </h4>
-            <div class="ml-auto">
-                @if (_canCreate.Succeeded)
-                {
+}
+<div id="js-page-content-demopanels" class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <h4 class="m-0">
+            @_localizer["Categories"]
+            <small>@_localizer["See all available options"]</small>
+        </h4>
+        <div class="ml-auto">
+            @if (_canCreate.Succeeded)
+            {
                 <button class="btn btn-sm btn-outline-primary " id="addbutton">
                     <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
                     @_localizer["Add"]
                 </button>
-                }
-                @if (_canDelete.Succeeded)
-                {
+            }
+            @if (_canDelete.Succeeded)
+            {
                 <button class="btn btn-sm btn-outline-danger" disabled id="deletebutton">
                     <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
                     @_localizer["Delete"]
                 </button>
-                }
-                @if (_canSearch.Succeeded)
-                {
+            }
+            @if (_canSearch.Succeeded)
+            {
                 <button class="btn btn-sm btn-outline-primary " id="searchbutton">
                     <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
                     @_localizer["Search"]
                 </button>
-                }
-                @*@if (_canImport.Succeeded)
+            }
+            @*@if (_canImport.Succeeded)
                 {
                 <div class="btn-group" role="group">
                     <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
@@ -74,28 +74,31 @@
                     </div>
                 </div>
                 }*@
-                @if (_canExport.Succeeded)
-                {
+            @if (_canExport.Succeeded)
+            {
                 <button class="btn btn-sm btn-outline-primary " id="exportbutton">
                     <span class="@(Settings.Theme.IconPrefix) fa-download mr-1"></span>
                     @_localizer["Export Excel"]
                 </button>
-                }
-            </div>
+            }
         </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <partial name="Table"/>
-                </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <partial name="Table" />
             </div>
         </div>
     </div>
-    <partial name="AddOrEdit" />
-    @await Component.InvokeAsync("ImportExcel", new { importUri = Url.Page("/Categories/Index") + "?handler=Import",
-    getTemplateUri = @Url.Page("/Categories/Index") + "?handler=CreateTemplate",
-    onImportedSucceeded = "reloadData()" })
-    @section ScriptsBlock {
+</div>
+<partial name="AddOrEdit" />
+@await Component.InvokeAsync("ImportExcel", new
+{
+    importUri = Url.Page("/Categories/Index") + "?handler=Import",
+getTemplateUri = @Url.Page("/Categories/Index") + "?handler=CreateTemplate",
+onImportedSucceeded = "reloadData()"
+})
+@section ScriptsBlock {
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
@@ -206,7 +209,32 @@
 
 			]]
 		})
-			.datagrid('enableFilter', {})
+			.datagrid('enableFilter',
+				[
+					{
+						field: 'DirectionName',
+						type: 'combobox',
+						options: {
+							panelHeight: 'auto',
+							data: [
+								{
+									value: null,
+									text:'@_localizer["All"]'
+								},
+								@foreach (var val in Model.Directions)
+								{
+									<text>
+								{
+									value: '@val.Text',
+									text:'@val.Text'
+									},
+									</text>
+								}
+							]
+                        }
+					}
+				]
+			)
 			.datagrid('load', '@Url.Page("/Categories/Index")?handler=Data');
 
 	}
@@ -357,4 +385,4 @@
 
 
     </script>
-    }
+}

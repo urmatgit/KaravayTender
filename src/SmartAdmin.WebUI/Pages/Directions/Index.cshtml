@@ -9,7 +9,7 @@
     ViewData["PageName"] = "directions_index";
     ViewData["Category1"] = _localizer["References"].Value;
     ViewData["Heading"] = _localizer["Directions"].Value;
-    ViewData["PageDescription"] = _localizer["See all available options"].Value;
+    ViewData["PageDescription"] = _localizer["Managing supplier referral parameters"].Value;
     ViewData["PreemptiveClass"] = "Default";
     var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.Directions.Create);
     var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.Directions.Edit);
