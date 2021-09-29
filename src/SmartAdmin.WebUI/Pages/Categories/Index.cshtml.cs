@@ -34,7 +34,10 @@ namespace SmartAdmin.WebUI.Pages.Categories
         
         
         public SelectList Directions { get; set; }
-
+        public string[] filterDirection = new string[]
+        {
+            "фильтр1","фильтр2","фильтр3","фильтр4"
+        };
         private readonly IIdentityService _identityService;
         private readonly IAuthorizationService _authorizationService;
         private readonly ICurrentUserService _currentUserService;

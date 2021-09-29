@@ -136,10 +136,15 @@
 						type: 'combobox',
 						options: {
 							panelHeight: 'auto',
-							data: [{
+							data: [
+								{
 								     value: null,
 								     text: 'ALL'
-							      },
+								},
+                                {
+                                    value: 'Все',
+                                    text: 'Все'
+                                },
 							@foreach (var val in Enum.GetNames(typeof(CleanArchitecture.Razor.Domain.Enums.AuditType)))
 			                {
 				               <text>

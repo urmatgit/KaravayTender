@@ -215,23 +215,41 @@ onImportedSucceeded = "reloadData()"
 						field: 'DirectionName',
 						type: 'combobox',
 						options: {
+
 							panelHeight: 'auto',
-							data: [
+                            data://[{ value: '', text: 'Все' }, { value: '1', text:'Первый'},{value:'2',text:'Второй'}]
+								[
 								{
 									value: null,
 									text:'@_localizer["All"]'
 								},
+								
 								@foreach (var val in Model.Directions)
 								{
 									<text>
-								{
-									value: '@val.Text',
-									text:'@val.Text'
+									{
+										value: '@val.Value',
+                                        text:'@Html.Raw(val.Text)'
 									},
-									</text>
+								    </text>
 								}
-							]
-                        }
+								]
+							,
+							onChange: function (newValue, oldValue) {
+									
+                                    $dg.datagrid('addFilterRule', {
+                                        field: 'DirectionId',
+                                        op: 'equal',
+                                        value: newValue
+                                    });
+                                
+							//	$dg.datagrid('doFilter');
+								
+                                
+                            }
+						}
+
+
 					}
 				]
 			)

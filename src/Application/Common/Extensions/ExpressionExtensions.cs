@@ -55,9 +55,10 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
             var props = TypeDescriptor.GetProperties(typeof(T));
             var prop = GetProperty(props, fieldName, true);
             var parameter = Expression.Parameter(typeof(T));
-            var expressionParameter = GetMemberExpression<T>(parameter, fieldName);
-            if (prop != null && fieldValue != null)
+            if (prop == null) return x => true;
+            if (fieldValue != null)
             {
+                var expressionParameter = GetMemberExpression<T>(parameter, fieldName);
                 BinaryExpression body = null;
                 if (prop.PropertyType.IsEnum)
                 {

@@ -20,7 +20,8 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.Queries.Pagina
 {
     public class CategoriesWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<CategoryDto>>
     {
-     public int DirectionId { get; set; }  
+     public int DirectionId { get; set; }
+     
     }
     
     public class CategoriesWithPaginationQueryHandler :
