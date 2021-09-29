@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit
 {
@@ -10,6 +10,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddE
             RuleFor(v => v.Name)
                  .MaximumLength(50)
                  .NotEmpty();
+
            //throw new System.NotImplementedException();
         }
     }

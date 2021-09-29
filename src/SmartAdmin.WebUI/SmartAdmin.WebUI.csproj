@@ -20,13 +20,6 @@
     <None Remove="Pages\Documents\**" />
     <None Remove="Pages\DocumentTypes\**" />
   </ItemGroup>
-<ItemGroup>
-    <Compile Remove="Areas\Identity\Pages\Account\Register.cshtml.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="Areas\Identity\Pages\Account\Register.cshtml" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Dockerfile" />

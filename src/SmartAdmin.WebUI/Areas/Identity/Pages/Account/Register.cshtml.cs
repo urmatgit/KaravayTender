@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using MediatR;
+using CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit;
 
 namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
 {
@@ -28,8 +30,10 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
       _logger = logger;
       _emailSender = emailSender;
     }
-
-    [BindProperty] public InputModel Input { get; set; }
+       [BindProperty]
+     public AddEditContragentCommand InputContagent { get; set; }
+    [BindProperty]
+        public InputModel Input { get; set; }
 
     public string ReturnUrl { get; set; }
 
@@ -42,7 +46,7 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
       {
         var user = new ApplicationUser { EmailConfirmed=true,
             IsActive=true,
-            Site=Input.Site,
+            //Site=Input.Site,
             DisplayName=Input.DisplayName,
             UserName = Input.UserName,
             Email = Input.Email,

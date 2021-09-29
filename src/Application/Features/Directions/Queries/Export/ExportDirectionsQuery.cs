@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -49,13 +49,16 @@ namespace CleanArchitecture.Razor.Application.Features.Directions.Queries.Export
             //TODO:Implementing ExportDirectionsQueryHandler method 
             var filters = PredicateBuilder.FromFilter<Direction>(request.FilterRules);
             var data = await _context.Directions.Where(filters)
-                       .OrderBy("{request.Sort} {request.Order}")
+                       .OrderBy($"{request.Sort} {request.Order}")
                        .ProjectTo<DirectionDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,
                 new Dictionary<string, Func<DirectionDto, object>>()
                 {
-                    //{ _localizer["Id"], item => item.Id },
+                    { _localizer["Id"], item => item.Id },
+                    { _localizer["Name"], item => item.Name },
+                    { _localizer["Description"], item => item.Description }
+
                 }
                 , _localizer["Directions"]);
             return result;

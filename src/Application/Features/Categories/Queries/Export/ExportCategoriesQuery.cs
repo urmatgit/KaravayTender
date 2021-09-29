@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -49,13 +49,18 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.Queries.Export
             //TODO:Implementing ExportCategoriesQueryHandler method 
             var filters = PredicateBuilder.FromFilter<Category>(request.FilterRules);
             var data = await _context.Categories.Where(filters)
-                       .OrderBy("{request.Sort} {request.Order}")
+                        .Include(c=>c.Direction)
+                       .OrderBy($"{request.Sort} {request.Order}") 
                        .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,
                 new Dictionary<string, Func<CategoryDto, object>>()
                 {
-                    //{ _localizer["Id"], item => item.Id },
+                    { _localizer["Id"], item => item.Id },
+                    { _localizer["Name"], item => item.Name },
+                    { _localizer["Direction"], item => item.Direction.Name },
+                    { _localizer["Description"], item => item.Description }
+
                 }
                 , _localizer["Categories"]);
             return result;
