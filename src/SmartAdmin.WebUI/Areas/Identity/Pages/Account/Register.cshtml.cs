@@ -31,7 +31,7 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
       _emailSender = emailSender;
     }
        [BindProperty]
-     public AddEditContragentCommand InputContagent { get; set; }
+     public AddEditContragentCommand InputContragent { get; set; }
     [BindProperty]
         public InputModel Input { get; set; }
 

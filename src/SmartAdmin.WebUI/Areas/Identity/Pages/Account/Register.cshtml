@@ -1,7 +1,7 @@
 ﻿@page
 
-@inject Microsoft.Extensions.Localization.IStringLocalizer<RegisterModel>   _localizer
-@model RegisterModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegisterModel>  _localizer
+    @model RegisterModel
     @{
     ViewData["PageName"] = "register";
     ViewData["Title"] = _localizer["Register"].Value;
@@ -20,8 +20,8 @@
     }
 
     <div class="col-xl-12 ml-auto mr-auto panel">
-        <div class="panel-toolbar ml-auto mr-0" >
-            
+        <div class="panel-toolbar ml-auto mr-0">
+
             <button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"><i class="@(Settings.Theme.IconPrefix) fa-expand"></i></button>
 
         </div>
@@ -44,62 +44,7 @@
                 </ul>
                 <div class="tab-content border border-top-0 p-3">
                     <div class="tab-pane fade show active" id="tab_1" role="tabpanel">
-                        <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
-                        <div class="form-group">
-                            <label class="col-xl-12 form-label">@_localizer["Name"] <span class="text-danger">*</span></label>
-                            <input type="text" asp-for="InputContagent.Name" class="form-control" placeholder=@_localizer["Name"] />
-                            <span class="invalid-feedback" asp-validation-for="InputContagent.Name"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-xl-12 form-label">@_localizer["Full name"]<span class="text-danger">*</span></label>
-                            <input type="text" asp-for="InputContagent.FullName" class="form-control" placeholder=@_localizer["Full name"] />
-                            <span class="invalid-feedback" asp-validation-for="InputContagent.FullName"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-xl-12 form-label">@_localizer["INN"]<span class="text-danger">*</span></label>
-                            <input type="text" asp-for="InputContagent.INN" class="form-control" placeholder=@_localizer["INN"] />
-                            <span class="invalid-feedback" asp-validation-for="InputContagent.INN"> </span>
-
-                        </div>
-                        <div class="form-group">
-                            <label class="col-xl-12 form-label">@_localizer["INN"]<span class="text-danger">*</span></label>
-                            <input type="text" asp-for="InputContagent.INN" class="form-control" placeholder=@_localizer["INN"] />
-                            <span class="invalid-feedback" asp-validation-for="InputContagent.INN"> </span>
-
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" asp-for="Input.Email">@_localizer["Email"]<span class="text-danger">*</span></label>
-                            <input type="email" asp-for="Input.Email" class="form-control" placeholder=@_localizer["Email"] value="" />
-                            <span class="invalid-feedback" asp-validation-for="Input.Email"></span>
-
-                        </div>
-                        @*<div class="form-group">
-                            <label class="form-label" asp-for="Input.Password">@_localizer["Please pick a password"]</label>
-                            <input type="password" asp-for="Input.Password" class="form-control" placeholder="Email for verification (minimum 6 characters)" value="" required="required" />
-                            <span class="invalid-feedback" asp-validation-for="Input.Password">Sorry, you missed this one.</span>
-                            <div class="help-block">Your password must be 6-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emojis.</div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" asp-for="Input.ConfirmPassword">@_localizer["Please confirm your password"]</label>
-                            <input type="password" asp-for="Input.ConfirmPassword" class="form-control" placeholder="Email for verification (minimum 6 characters)" value="" required="required" />
-                            <span class="invalid-feedback" asp-validation-for="Input.ConfirmPassword">Sorry, you missed this one.</span>
-                        </div>*@
-                        <div class="form-group demo">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" asp-for="Input.AgreeToTerms" />
-                                <label class="custom-control-label" asp-for="Input.AgreeToTerms">@_localizer["I agree to terms & conditions"]</label>
-                                <span class="invalid-feedback" asp-validation-for="Input.AgreeToTerms">You must agree before proceeding.</span>
-                            </div>
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" asp-for="Input.SignUp" />
-                                <label class="custom-control-label" asp-for="Input.SignUp">@_localizer["Sign up for newsletters (don't worry, we won't send that many)"]</label>
-                            </div>
-                        </div>
-                        <div class="row no-gutters">
-                            <div class="col-md-6 ml-auto text-right">
-                                <button id="js-login-btn" type="submit" class="btn btn-block btn-danger btn-lg mt-3">@_localizer["Send verification"]</button>
-                            </div>
-                        </div>
+                       <partial name="../Account/Contragent/ContragentInfoForm"/>
                     </div>
                     <div class="tab-pane fade show" id="tab_2" role="tabpanel">
                         <p> tab2</p>
@@ -120,7 +65,11 @@
 
     @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/formplugins/inputmask/inputmask.bundle.js"></script>
     <script>
+        $(document).ready(function () {
+            $(":input").inputmask();
+        });
         $("#js-login-btn").click(function (event) {
             // Fetch form to apply custom Bootstrap validation
             var form = $("#js-login");
