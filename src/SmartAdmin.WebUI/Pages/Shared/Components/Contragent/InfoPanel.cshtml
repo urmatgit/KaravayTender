@@ -1,6 +1,6 @@
-﻿
-@inject Microsoft.Extensions.Localization.IStringLocalizer<RegisterModel>  _localizer
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ContragentForm>  _localizer
 @model CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit.AddEditContragentCommand
+
 
 <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
 <div class="form-group">
@@ -109,13 +109,13 @@
         <span class="invalid-feedback" asp-validation-for="Input.ConfirmPassword">Sorry, you missed this one.</span>
     </div>*@
 @*<div class="form-group demo">
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" asp-for="Input.AgreeToTerms" />
-        <label class="custom-control-label" asp-for="Input.AgreeToTerms">@_localizer["I agree to terms & conditions"]</label>
-        <span class="invalid-feedback" asp-validation-for="Input.AgreeToTerms">You must agree before proceeding.</span>
-    </div>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" asp-for="Input.AgreeToTerms" />
+            <label class="custom-control-label" asp-for="Input.AgreeToTerms">@_localizer["I agree to terms & conditions"]</label>
+            <span class="invalid-feedback" asp-validation-for="Input.AgreeToTerms">You must agree before proceeding.</span>
+        </div>
 
-</div>*@
+    </div>*@
 <div class="row no-gutters">
     <div class="col-md-6 ml-auto text-right">
         <button id="js-login-btn" type="submit" class="btn btn-block btn-danger btn-lg mt-3">@_localizer["Send verification"]</button>

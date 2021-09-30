@@ -17,6 +17,7 @@ using CleanArchitecture.Razor.Application.Common.Exceptions;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
+using SmartAdmin.WebUI.Pages.Shared.Components.Contragent;
 
 namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
 {
@@ -28,6 +29,8 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ISender _mediator;
+        [BindProperty]
+        public ContragentForm contragentForm { get; set; } = new();
         public RegisterModel(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
@@ -42,21 +45,16 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _mediator = mediator;
         }
-        [BindProperty]
-        public AddEditContragentCommand InputContragent { get; set; }
-        public SelectList Directions { get; set; }
-        //[BindProperty]
-        //    public InputModel Input { get; set; }
+        
 
-        public string ReturnUrl { get; set; }
+      //  public void OnGet(string returnUrl = null) => contragentForm.ReturnUrl = returnUrl;
 
-        public void OnGet(string returnUrl = null) => ReturnUrl = returnUrl;
-
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string returnUrl = null)
         {
+            contragentForm.ReturnUrl = returnUrl;
             var request = new GetAllDirectionsQuery();
             var directionsDtos = await _mediator.Send(request);
-            Directions = new SelectList(directionsDtos, "Id", "Name");
+            contragentForm.Directions = new SelectList(directionsDtos, "Id", "Name");
         }
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
@@ -64,11 +62,11 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
              
             //try
             //{
-                var result = await _mediator.Send(InputContragent);
+                var result = await _mediator.Send(contragentForm.InputContragent);
                 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation($"Заявка на регистрацию создана - {InputContragent.Name}- {InputContragent.ContactPhone}");
+                    _logger.LogInformation($"Заявка на регистрацию создана - {contragentForm.InputContragent.Name}- {contragentForm.InputContragent.ContactPhone}");
                     return LocalRedirect(returnUrl);
                 }
                 //else

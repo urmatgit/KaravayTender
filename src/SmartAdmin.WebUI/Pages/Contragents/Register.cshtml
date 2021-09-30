@@ -1,4 +1,54 @@
 ﻿@page
-@model SmartAdmin.WebUI.Pages.Contragents.RegisterModel
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegisterModel>  _localizer
+@model RegisterModel
 @{
+    ViewData["PageName"] = "register";
+    ViewData["Title"] = _localizer["Register"].Value;
+}
+
+@section PageHeading {
+    <div class="col-xl-12">
+        <h2 class="fs-xxl fw-500 text-white text-left">
+            @_localizer["Торговая площадка- Заявка на регистрацию"]
+            <small class="h3 fw-300 mt-3 mb-5 text-white opacity-60 hidden-sm-down">
+                @_localizer["Доп. инфо..."]
+
+            </small>
+        </h2>
+    </div>
+}
+
+<div class="col-xl-12 ml-auto mr-auto panel">
+    <div class="panel-toolbar ml-auto mr-0">
+
+        <button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"><i class="@(Settings.Theme.IconPrefix) fa-expand"></i></button>
+
+    </div>
+    <div class="card p-4 rounded-plus bg-faded">
+        <partial name="../Shared/Components/Contragent/ContragentForm.cshtml" model="Model.contragentForm" />
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+@section ScriptsBlock{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/formplugins/inputmask/inputmask.bundle.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(":input").inputmask();
+        });
+        $("#js-login-btn").click(function (event) {
+            // Fetch form to apply custom Bootstrap validation
+            var form = $("#js-login");
+
+            if (form[0].checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            form.addClass('was-validated');
+            // Perform ajax submit here...
+        });
+    </script>
 }
