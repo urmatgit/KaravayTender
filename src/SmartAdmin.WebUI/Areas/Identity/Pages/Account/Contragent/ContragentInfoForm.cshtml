@@ -1,16 +1,17 @@
-﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<RegisterModel>  _localizer
-@model RegisterModel
+﻿
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegisterModel>  _localizer
+@model CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit.AddEditContragentCommand
 
 <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
 <div class="form-group">
     <label class="col-xl-12 form-label">@_localizer["Name"] <span class="text-danger">*</span></label>
-    <input type="text" asp-for="InputContragent.Name" class="form-control" placeholder=@_localizer["Name"] />
-    <span class="invalid-feedback" asp-validation-for="InputContragent.Name"></span>
+    <input type="text" asp-for="Name" class="form-control" placeholder=@_localizer["Name"] />
+    <span class="invalid-feedback" asp-validation-for="Name"></span>
 </div>
 <div class="form-group">
     <label class="col-xl-12 form-label">@_localizer["Full name"]<span class="text-danger">*</span></label>
-    <input type="text" asp-for="InputContragent.FullName" class="form-control" placeholder=@_localizer["Full name"] />
-    <span class="invalid-feedback" asp-validation-for="InputContragent.FullName"></span>
+    <input type="text" asp-for="FullName" class="form-control" placeholder=@_localizer["Full name"] />
+    <span class="invalid-feedback" asp-validation-for="FullName"></span>
 </div>
 <div class="form-group">
     <label class="col-xl-12 form-label">@_localizer["INN"]<span class="text-danger">*</span></label>
@@ -19,17 +20,17 @@
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-scanner-touchscreen width-1 text-align-center"></i></span>
         </div>
-        <input type="text" placeholder="" asp-for="InputContragent.INN" data-inputmask="'mask': '999999999999'" class="form-control">
+        <input type="text" placeholder="" asp-for="INN" data-inputmask="'mask': '999999999999'" class="form-control">
     </div>
     <span class="help-block">e.g "999999999999"</span>
-    <span class="invalid-feedback" asp-validation-for="InputContragent.INN"> </span>
+    <span class="invalid-feedback" asp-validation-for="INN"> </span>
 
 </div>
 
 <div class="form-group">
     <label class="col-xl-12 form-label">@_localizer["KPP"]</label>
-    <input type="text" asp-for="InputContragent.KPP" class="form-control" placeholder=@_localizer["KPP"] />
-    <span class="invalid-feedback" asp-validation-for="InputContragent.KPP"> </span>
+    <input type="text" asp-for="KPP" class="form-control" placeholder=@_localizer["KPP"] />
+    <span class="invalid-feedback" asp-validation-for="KPP"> </span>
 </div>
 <div class="form-group">
     <label class="col-xl-12 form-label">@_localizer["Site"]</label>
@@ -37,11 +38,11 @@
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-desktop width-1 text-align-center"></i></span>
         </div>
-        <input type="text" asp-for="InputContragent.Site" class="form-control" placeholder="" data-inputmask="'alias': 'url'" />
+        <input type="text" asp-for="Site" class="form-control" placeholder="" data-inputmask="'alias': 'url'" />
     </div>
     <span class="help-block">http:// or ftp://</span>
 
-    <span class="invalid-feedback" asp-validation-for="InputContragent.Site"> </span>
+    <span class="invalid-feedback" asp-validation-for="Site"> </span>
 
 </div>
 <div class="form-group">
@@ -50,18 +51,18 @@
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-phone width-1 text-align-center"></i></span>
         </div>
-        <input type="text" asp-for="InputContragent.Phone" data-inputmask="'mask': '+7 (999) 999-9999'" class="form-control" placeholder="" />
+        <input type="text" asp-for="Phone" data-inputmask="'mask': '+7 (999) 999-9999'" class="form-control" placeholder="" />
     </div>
 
     <span class="help-block">+7 (999) 999-9999</span>
-    <span class="invalid-feedback" asp-validation-for="InputContragent.Phone"> </span>
+    <span class="invalid-feedback" asp-validation-for="Phone"> </span>
 
 </div>
 <div class="form-group">
     <label class="col-xl-12 form-label">@_localizer["Contact person"]<span class="text-danger">*</span></label>
-    <input type="text" asp-for="InputContragent.ContactPerson" class="form-control" placeholder=@_localizer["Contact person"] />
+    <input type="text" asp-for="ContactPerson" class="form-control" placeholder=@_localizer["Contact person"] />
 
-    <span class="invalid-feedback" asp-validation-for="InputContragent.ContactPerson"></span>
+    <span class="invalid-feedback" asp-validation-for="ContactPerson"></span>
 </div>
 
 <div class="form-group">
@@ -70,31 +71,31 @@
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-phone-square-alt width-1 text-align-center"></i></span>
         </div>
-        <input type="text" asp-for="InputContragent.ContactPhone" class="form-control" placeholder="" data-inputmask="'mask': '+7 (999) 999-9999'" />
+        <input type="text" asp-for="ContactPhone" class="form-control" placeholder="" data-inputmask="'mask': '+7 (999) 999-9999'" />
 
     </div>
 
     <span class="help-block">+7 (999) 999-9999</span>
-    <span class="invalid-feedback" asp-validation-for="InputContragent.ContactPhone"></span>
+    <span class="invalid-feedback" asp-validation-for="ContactPhone"></span>
 </div>
 
 <div class="form-group">
-    <label class="form-label" asp-for="Input.Email">@_localizer["Email"]<span class="text-danger">*</span></label>
+    <label class="form-label" asp-for="Email">@_localizer["Email"]<span class="text-danger">*</span></label>
     <div class="input-group">
         <div class="input-group-prepend">
             <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-mouse-pointer width-1 text-align-center"></i></span>
         </div>
-        <input type="text" asp-for="Input.Email" placeholder="" data-inputmask="'alias': 'email'" class="form-control">
+        <input type="text" asp-for="Email" placeholder="" data-inputmask="'alias': 'email'" class="form-control">
     </div>
     <span class="help-block">xx@@xxx.xx</span>
     @*<input type="email" asp-for="Input.Email" class="form-control" placeholder=@_localizer["Email"] value="" data-inputmask="'alias': 'email'" />*@
-    <span class="invalid-feedback" asp-validation-for="Input.Email"></span>
+    <span class="invalid-feedback" asp-validation-for="Email"></span>
 
 </div>
 <div class="form-group">
     <label class="col-xl-12 form-label">@_localizer["Type of activity"]<span class="text-danger">*</span></label>
-    <input type="text" asp-for="InputContragent.TypeOfActivity" class="form-control" placeholder=@_localizer["Type of activity"] />
-    <span class="invalid-feedback" asp-validation-for="InputContragent.TypeOfActivity"></span>
+    <input type="text" asp-for="TypeOfActivity" class="form-control" placeholder=@_localizer["Type of activity"] />
+    <span class="invalid-feedback" asp-validation-for="TypeOfActivity"></span>
 </div>
 @*<div class="form-group">
         <label class="form-label" asp-for="Input.Password">@_localizer["Please pick a password"]</label>
@@ -107,14 +108,14 @@
         <input type="password" asp-for="Input.ConfirmPassword" class="form-control" placeholder="Email for verification (minimum 6 characters)" value="" required="required" />
         <span class="invalid-feedback" asp-validation-for="Input.ConfirmPassword">Sorry, you missed this one.</span>
     </div>*@
-<div class="form-group demo">
+@*<div class="form-group demo">
     <div class="custom-control custom-checkbox">
         <input type="checkbox" class="custom-control-input" asp-for="Input.AgreeToTerms" />
         <label class="custom-control-label" asp-for="Input.AgreeToTerms">@_localizer["I agree to terms & conditions"]</label>
         <span class="invalid-feedback" asp-validation-for="Input.AgreeToTerms">You must agree before proceeding.</span>
     </div>
 
-</div>
+</div>*@
 <div class="row no-gutters">
     <div class="col-md-6 ml-auto text-right">
         <button id="js-login-btn" type="submit" class="btn btn-block btn-danger btn-lg mt-3">@_localizer["Send verification"]</button>

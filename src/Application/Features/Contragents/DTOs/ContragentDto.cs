@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 
@@ -48,13 +49,15 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         /// Услуга
         /// </summary>
         public bool IsService { get; set; }
+        public string ManagerId { get; set; }
+        
         /// <summary>
         /// Логин
         /// </summary>
         //public string RegistrationNumber { get; set; }
         //public string Password { get; set; }
         public ContragentStatus Status { get; set; }
-
+        
         public int DirectionId { get; set; }
         public virtual DirectionDto Direction { get; set; }
         //public virtual ICollection<ContragentCategoryDto> ContragentCategories { get; set; }

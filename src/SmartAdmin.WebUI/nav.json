@@ -13,8 +13,9 @@
       "roles": [ "Admin", "Manager", "Super" ],
       "items": [
         {
-          "title": "Поставщики",
+          "title": "Внешние заявки",
           "icon": "fal fa-luggage-cart",
+
           "roles": []
         }
       ]
@@ -27,7 +28,7 @@
         {
           "title": "Поставщики",
           "icon": "fal fa-luggage-cart",
-
+          "href":  "contragents_index.html",
           "roles": []
         },
         {
