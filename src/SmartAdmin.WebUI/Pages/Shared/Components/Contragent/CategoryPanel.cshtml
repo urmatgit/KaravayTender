@@ -25,10 +25,11 @@
 
     </div>
     <div class="col-md-10">
-
-        <select type="text" asp-for="DirectionId" asp-items="@((SelectList)ViewData["Directions"])" class="custom-select" placeholder="@_localizer["Direction"]">
+        @if (Model != null) { 
+        <select type="text" asp-for="DirectionId" asp-items="@( new SelectList(Model.Directions,"Id","Name"))" class="custom-select" placeholder="@_localizer["Direction"]">
             <option value="">@_localizer["Choose direction"]</option>
         </select>
+        }
         <span class="invalid-feedback" asp-validation-for="DirectionId"></span>
     </div>
 
