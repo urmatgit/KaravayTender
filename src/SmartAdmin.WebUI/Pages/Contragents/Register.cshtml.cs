@@ -18,6 +18,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
 using SmartAdmin.WebUI.Pages.Shared.Components.Contragent;
+using System.Collections.Generic;
+using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
+using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 
 namespace SmartAdmin.WebUI.Pages.Contragents
 {
@@ -29,8 +33,18 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ISender _mediator;
+        //[BindProperty]
+        //public ContragentForm contragentForm { get; set; }
         [BindProperty]
-        public ContragentForm contragentForm { get; set; } = new();
+        public AddEditContragentCommand InputContragent { get; set; }
+        [BindProperty]
+        public SelectList Directions { get; set; } 
+        public List<CategoryDto> Categories { get; set; } = new();
+        //[BindProperty]
+        //    public InputModel Input { get; set; }
+
+        public string ReturnUrl { get; set; }
+        
         public RegisterModel(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
@@ -44,6 +58,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             _logger = logger;
             _emailSender = emailSender;
             _mediator = mediator;
+            
         }
         
 
@@ -51,46 +66,56 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            contragentForm.ReturnUrl = returnUrl;
+            ReturnUrl = returnUrl;
+            
             var request = new GetAllDirectionsQuery();
-            var directionsDtos = await _mediator.Send(request);
-            contragentForm.Directions = new SelectList(directionsDtos, "Id", "Name");
+            var directionsDtos =(List<DirectionDto>)  await _mediator.Send(request);
+            //InputContragent.Directions = directionsDtos;
+            Directions = new SelectList(directionsDtos, "Id", "Name");
+            //contragentForm.Categories = directionsDtos.SelectMany(d => d.Categories).ToList();
+                                        
         }
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-             
-            //try
-            //{
-                var result = await _mediator.Send(contragentForm.InputContragent);
-                
+            
+            if (ModelState.IsValid)
+            {
+
+                 var result = await _mediator.Send(InputContragent);
+
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation($"Заявка на регистрацию создана - {contragentForm.InputContragent.Name}- {contragentForm.InputContragent.ContactPhone}");
+                    _logger.LogInformation($"Заявка на регистрацию создана - {InputContragent.Name}- {InputContragent.ContactPhone}");
                     return LocalRedirect(returnUrl);
                 }
-                //else
-                //{
-                //    return BadRequest(Result.Failure(result.Errors));
-                //}
-                
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error);
+                    }
+                    //return BadRequest(Result.Failure(result.Errors));
+                }
+            }
+            
             //}
             //catch (ValidationException ex)
             //{
             //    var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
             //    foreach (var error in errors)
             //    {
-            //      //  ModelState.AddModelError(string.Empty, error);
+            //          ModelState.AddModelError(string.Empty, error);
             //    }
 
-            //   // return BadRequest(Result.Failure(errors));
+            //    // return BadRequest(Result.Failure(errors));
             //}
             //catch (Exception ex)
             //{
             //    ModelState.AddModelError(string.Empty, ex.Message);
             //    //return BadRequest(Result.Failure(new string[] { ex.Message }));
             //}
-            
+
             return Page();
         }
         //    public async Task<IActionResult> OnPostAsync(string returnUrl = null)

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -6,6 +7,7 @@ using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Contragents.Caching;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
+using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
@@ -18,6 +20,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddE
         public string CacheKey => ContragentCacheKey.GetAllCacheKey;
 
         public CancellationTokenSource ResetCacheToken => ContragentCacheTokenSource.ResetCacheToken;
+        public List<DirectionDto> Directions { get; set; } = new();
     }
 
     public class AddEditContragentCommandHandler : IRequestHandler<AddEditContragentCommand, Result<int>>
@@ -34,6 +37,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddE
             _context = context;
             _localizer = localizer;
             _mapper = mapper;
+            
         }
         public async Task<Result<int>> Handle(AddEditContragentCommand request, CancellationToken cancellationToken)
         {

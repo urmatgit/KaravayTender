@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -43,6 +43,7 @@ namespace CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll
         {
             //TODO:Implementing GetAllDirectionsQueryHandler method 
             var data = await _context.Directions
+                         .Include(d=>d.Categories)
                          .ProjectTo<DirectionDto>(_mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;

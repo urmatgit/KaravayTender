@@ -24,6 +24,7 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.DTOs
         public int DirectionId { get; set; }
         public virtual DirectionDto Direction { get; set; }
         public string DirectionName { get; set; }
+        public bool IsCheck { get; set; }
       //  public virtual ICollection<ContragentCategoryDto> ContragentCategories { get; set; }
     }
 }

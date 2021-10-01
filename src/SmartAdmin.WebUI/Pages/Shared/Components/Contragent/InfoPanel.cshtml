@@ -3,99 +3,141 @@
 
 
 <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
-<div class="form-group">
-    <label class="col-xl-12 form-label">@_localizer["Name"] <span class="text-danger">*</span></label>
-    <input type="text" asp-for="Name" class="form-control" placeholder=@_localizer["Name"] />
-    <span class="invalid-feedback" asp-validation-for="Name"></span>
-</div>
-<div class="form-group">
-    <label class="col-xl-12 form-label">@_localizer["Full name"]<span class="text-danger">*</span></label>
-    <input type="text" asp-for="FullName" class="form-control" placeholder=@_localizer["Full name"] />
-    <span class="invalid-feedback" asp-validation-for="FullName"></span>
-</div>
-<div class="form-group">
-    <label class="col-xl-12 form-label">@_localizer["INN"]<span class="text-danger">*</span></label>
+<div class="form-group row">
 
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-scanner-touchscreen width-1 text-align-center"></i></span>
-        </div>
-        <input type="text" placeholder="" asp-for="INN" data-inputmask="'mask': '999999999999'" class="form-control">
+    <div class="col-md-3 mat my-auto ">
+        <label class="col-xl-12 form-label ">@_localizer["Name"] <span class="text-danger">*</span></label>
     </div>
-    <span class="help-block">e.g "999999999999"</span>
-    <span class="invalid-feedback" asp-validation-for="INN"> </span>
-
-</div>
-
-<div class="form-group">
-    <label class="col-xl-12 form-label">@_localizer["KPP"]</label>
-    <input type="text" asp-for="KPP" class="form-control" placeholder=@_localizer["KPP"] />
-    <span class="invalid-feedback" asp-validation-for="KPP"> </span>
-</div>
-<div class="form-group">
-    <label class="col-xl-12 form-label">@_localizer["Site"]</label>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-desktop width-1 text-align-center"></i></span>
-        </div>
-        <input type="text" asp-for="Site" class="form-control" placeholder="" data-inputmask="'alias': 'url'" />
-    </div>
-    <span class="help-block">http:// or ftp://</span>
-
-    <span class="invalid-feedback" asp-validation-for="Site"> </span>
-
-</div>
-<div class="form-group">
-    <label class="col-xl-12 form-label">@_localizer["Phone"]<span class="text-danger">*</span></label>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-phone width-1 text-align-center"></i></span>
-        </div>
-        <input type="text" asp-for="Phone" data-inputmask="'mask': '+7 (999) 999-9999'" class="form-control" placeholder="" />
+    <div class="col-md-9">
+        <input type="text" asp-for="Name" class="form-control" placeholder=@_localizer["Name"] />
+        <span class="invalid-feedback" asp-validation-for="Name"></span>
     </div>
 
-    <span class="help-block">+7 (999) 999-9999</span>
-    <span class="invalid-feedback" asp-validation-for="Phone"> </span>
-
 </div>
-<div class="form-group">
-    <label class="col-xl-12 form-label">@_localizer["Contact person"]<span class="text-danger">*</span></label>
-    <input type="text" asp-for="ContactPerson" class="form-control" placeholder=@_localizer["Contact person"] />
+<div class="form-group row">
 
-    <span class="invalid-feedback" asp-validation-for="ContactPerson"></span>
-</div>
-
-<div class="form-group">
-    <label class="col-xl-12 form-label">@_localizer["Contact person phone"]<span class="text-danger">*</span></label>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-phone-square-alt width-1 text-align-center"></i></span>
-        </div>
-        <input type="text" asp-for="ContactPhone" class="form-control" placeholder="" data-inputmask="'mask': '+7 (999) 999-9999'" />
-
+    <div class="col-md-3 mat my-auto">
+        <label class="col-xl-12 form-label">@_localizer["Full name"]<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-md-9">
+        <input type="text" asp-for="FullName" class="form-control" placeholder=@_localizer["Full name"] />
+        <span class="invalid-feedback" asp-validation-for="FullName"></span>
     </div>
 
-    <span class="help-block">+7 (999) 999-9999</span>
-    <span class="invalid-feedback" asp-validation-for="ContactPhone"></span>
 </div>
+<div class="form-group row">
 
-<div class="form-group">
-    <label class="form-label" asp-for="Email">@_localizer["Email"]<span class="text-danger">*</span></label>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-mouse-pointer width-1 text-align-center"></i></span>
-        </div>
-        <input type="text" asp-for="Email" placeholder="" data-inputmask="'alias': 'email'" class="form-control">
+    <div class="col-md-3 mat my-auto">
+        <label class="col-xl-12 form-label">@_localizer["INN"]<span class="text-danger">*</span></label>
     </div>
-    <span class="help-block">xx@@xxx.xx</span>
-    @*<input type="email" asp-for="Input.Email" class="form-control" placeholder=@_localizer["Email"] value="" data-inputmask="'alias': 'email'" />*@
-    <span class="invalid-feedback" asp-validation-for="Email"></span>
+    <div class="col-md-9">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-scanner-touchscreen width-1 text-align-center"></i></span>
+            </div>
+            <input type="text" placeholder="" asp-for="INN" data-inputmask="'mask': '999999999999'" class="form-control">
+        </div>
+        <span class="help-block">e.g "999999999999"</span>
+        <span class="invalid-feedback" asp-validation-for="INN"> </span>
+    </div>
 
 </div>
-<div class="form-group">
-    <label class="col-xl-12 form-label">@_localizer["Type of activity"]<span class="text-danger">*</span></label>
-    <input type="text" asp-for="TypeOfActivity" class="form-control" placeholder=@_localizer["Type of activity"] />
-    <span class="invalid-feedback" asp-validation-for="TypeOfActivity"></span>
+
+<div class="form-group row">
+    <div class="col-md-3 mat my-auto">
+        <label class="col-xl-12 form-label">@_localizer["KPP"]</label>
+    </div>
+    <div class="col-md-9">
+        <input type="text" asp-for="KPP" class="form-control" placeholder=@_localizer["KPP"] />
+        <span class="invalid-feedback" asp-validation-for="KPP"> </span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3 mat my-auto">
+        <label class="col-xl-12 form-label">@_localizer["Site"]</label>
+    </div>
+    <div class="col-md-9">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-desktop width-1 text-align-center"></i></span>
+            </div>
+            <input type="text" asp-for="Site" class="form-control" placeholder="" data-inputmask="'alias': 'url'" />
+        </div>
+        <span class="help-block">http:// or ftp://</span>
+
+        <span class="invalid-feedback" asp-validation-for="Site"> </span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3 mat my-auto">
+        <label class="col-xl-12 form-label">@_localizer["Phone"]<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-md-9">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-phone width-1 text-align-center"></i></span>
+            </div>
+            <input type="text" asp-for="Phone" data-inputmask="'mask': '+7 (999) 999-9999'" class="form-control" placeholder="" />
+        </div>
+
+        <span class="help-block">+7 (999) 999-9999</span>
+        <span class="invalid-feedback" asp-validation-for="Phone"> </span>
+    </div>
+
+</div>
+<div class="form-group row">
+    <div class="col-md-3 mat my-auto">
+        <label class="col-xl-12 form-label">@_localizer["Contact person"]<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-md-9">
+        <input type="text" asp-for="ContactPerson" class="form-control" placeholder=@_localizer["Contact person"] />
+
+        <span class="invalid-feedback" asp-validation-for="ContactPerson"></span>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-md-3 mat my-auto">
+        <label class="col-xl-12 form-label">@_localizer["Contact person phone"]<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-md-9">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-phone-square-alt width-1 text-align-center"></i></span>
+            </div>
+            <input type="text" asp-for="ContactPhone" class="form-control" placeholder="" data-inputmask="'mask': '+7 (999) 999-9999'" />
+
+        </div>
+
+        <span class="help-block">+7 (999) 999-9999</span>
+        <span class="invalid-feedback" asp-validation-for="ContactPhone"></span>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-md-3 mat my-auto">
+        <label class="form-label" asp-for="Email">@_localizer["Email"]<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-md-9">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="@(Settings.Theme.IconPrefix) fa-mouse-pointer width-1 text-align-center"></i></span>
+            </div>
+            <input type="text" asp-for="Email" placeholder="" data-inputmask="'alias': 'email'" class="form-control">
+        </div>
+        <span class="help-block">xx@@xxx.xx</span>
+        @*<input type="email" asp-for="Input.Email" class="form-control" placeholder=@_localizer["Email"] value="" data-inputmask="'alias': 'email'" />*@
+        <span class="invalid-feedback" asp-validation-for="Email"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3 mat my-auto">
+        <label class="col-xl-12 form-label">@_localizer["Type of activity"]<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-md-9">
+        <input type="text" asp-for="TypeOfActivity" class="form-control" placeholder=@_localizer["Type of activity"] />
+        <span class="invalid-feedback" asp-validation-for="TypeOfActivity"></span>
+    </div>
 </div>
 @*<div class="form-group">
         <label class="form-label" asp-for="Input.Password">@_localizer["Please pick a password"]</label>
