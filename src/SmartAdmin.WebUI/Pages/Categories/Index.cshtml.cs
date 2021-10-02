@@ -23,10 +23,12 @@ using CleanArchitecture.Razor.Application.Features.Categories.Commands.Import;
 using CleanArchitecture.Razor.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
+using CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll;
 
 namespace SmartAdmin.WebUI.Pages.Categories
 {
     [Authorize(policy: Permissions.Categories.View)]
+
     public class IndexModel : PageModel
     {
         [BindProperty]
@@ -69,6 +71,13 @@ namespace SmartAdmin.WebUI.Pages.Categories
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] CategoriesWithPaginationQuery command)
         {
+            var result = await _mediator.Send(command);
+            return new JsonResult(result);
+        }
+        
+        public async Task<IActionResult> OnGetDataAsync(int directionid)
+        {
+            var command = new GetAllCategoriesQuery() { DirectionId = directionid };
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }

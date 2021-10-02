@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
@@ -11,6 +12,7 @@ using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit
@@ -39,6 +41,14 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddE
             _mapper = mapper;
             
         }
+        //private async Task LoadDirection()
+        //{
+        //    var data = await _context.Directions
+        //               .Include(d => d.Categories)
+        //               .ProjectTo<DirectionDto>(_mapper.ConfigurationProvider)
+        //               .ToListAsync();
+
+        //}
         public async Task<Result<int>> Handle(AddEditContragentCommand request, CancellationToken cancellationToken)
         {
             //TODO:Implementing AddEditContragentCommandHandler method 

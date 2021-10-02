@@ -8,7 +8,19 @@
     ViewData["ReturnUrl"] = Model.ReturnUrl;
     ViewData["Directions"] = Model.Directions ?? null;
 }
+@section HeadBlock {
 
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+    <style>
+
+        .customer_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+    </style>
+}
 @section PageHeading {
     <div class="col-xl-12">
         <h2 class="fs-xxl fw-500 text-white text-left">
@@ -35,6 +47,14 @@
 @Html.AntiForgeryToken()
 @section ScriptsBlock{
     <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>
+
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+
     <script src="~/js/formplugins/inputmask/inputmask.bundle.js"></script>
     <script>
         $(document).ready(function () {
@@ -52,5 +72,41 @@
             form.addClass('was-validated');
             // Perform ajax submit here...
         });
+        //axios.get('@Url.Page("/Customers/Index")?handler=Delete&id=' + id)
+        $("#DirectionId").change(function () {
+
+            
+            var id = $(this).val();
+            console.log(id);
+            axios.get('@Url.Page("/Contragents/Register")?handler=Categories&directionid='+id )
+                .then(res => {
+                    console.log(res);
+                   
+                    $("#categories").html(res.data)
+
+                })
+                 .catch((error) => {
+							if (error.response.data.Errors) {
+								const errors = error.response.data.Errors;
+								errors.forEach(item => {
+									toastr["error"](item);
+								});
+							} else {
+								toastr["error"](`@_localizer["Get categories fail"],${error.response.data}`);
+							}
+						});
+            //$.ajax({
+            //    type: "Get",
+            //    url: ,  //remember change the controller to your owns.
+            //    success: function (data) {
+            //        $("#categories").html("");
+            //        $("#categories").html(data);
+            //    },
+            //    error: function (response) {
+            //        console.log(response.responseText);
+            //    }
+            //});
+        });
     </script>
 }
+

@@ -12,5 +12,6 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public void OnGet()
         {
         }
+
     }
 }

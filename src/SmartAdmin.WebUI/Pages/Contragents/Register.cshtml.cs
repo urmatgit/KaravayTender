@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
+using CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll;
 
 namespace SmartAdmin.WebUI.Pages.Contragents
 {
@@ -74,6 +75,13 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             Directions = new SelectList(directionsDtos, "Id", "Name");
             //contragentForm.Categories = directionsDtos.SelectMany(d => d.Categories).ToList();
                                         
+        }
+        
+        public async Task<PartialViewResult> OnGetCategoriesAsync([FromQuery]int directionid)
+        {
+            var command = new GetAllCategoriesQuery() { DirectionId = directionid };
+            var result = await _mediator.Send(command);
+            return Partial("_CategoriesListPartial", result.ToList());// new JsonResult(result);
         }
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {

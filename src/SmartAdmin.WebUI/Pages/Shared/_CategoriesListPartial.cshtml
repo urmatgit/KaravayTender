@@ -1,0 +1,9 @@
+﻿@using CleanArchitecture.Razor.Application.Features.Categories.DTOs
+@model List<CategoryDto>
+@foreach (var catetory in Model)
+    {
+        <div class="custom-control custom-checkbox my-2">
+            <input type="checkbox" class="custom-control-input" value="@catetory.IsCheck" name="@catetory.Name" id="@catetory.Id">
+            <label class="custom-control-label" for="@catetory.Id">@catetory.Name</label>
+        </div>
+    }
