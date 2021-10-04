@@ -75,12 +75,12 @@ namespace SmartAdmin.WebUI.Pages.Categories
             return new JsonResult(result);
         }
         
-        public async Task<IActionResult> OnGetDataAsync(int directionid)
-        {
-            var command = new GetAllCategoriesQuery() { DirectionId = directionid };
-            var result = await _mediator.Send(command);
-            return new JsonResult(result);
-        }
+        //public async Task<IActionResult> OnGetDataAsync(int directionid)
+        //{
+        //    var command = new GetAllCategoriesQuery() { DirectionId = directionid };
+        //    var result = await _mediator.Send(command);
+        //    return new JsonResult(result);
+        //}
         public async Task<IActionResult> OnPostAsync()
         {
             try

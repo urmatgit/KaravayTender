@@ -7,6 +7,8 @@
     ViewData["Title"] = _localizer["Register"].Value;
     ViewData["ReturnUrl"] = Model.ReturnUrl;
     ViewData["Directions"] = Model.Directions ?? null;
+    ViewData["Heading"] = _localizer["Торговая площадка- Заявка на регистрацию"].Value;
+    
 }
 @section HeadBlock {
 
@@ -21,6 +23,8 @@
         }
     </style>
 }
+@if (!User.Identity.IsAuthenticated)
+{
 @section PageHeading {
     <div class="col-xl-12">
         <h2 class="fs-xxl fw-500 text-white text-left">
@@ -32,7 +36,7 @@
         </h2>
     </div>
 }
-
+}
 <div class="col-xl-12 ml-auto mr-auto panel">
     <div class="panel-toolbar ml-auto mr-0">
 
