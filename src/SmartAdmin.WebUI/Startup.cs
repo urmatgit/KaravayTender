@@ -17,6 +17,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Serilog;
 using SmartAdmin.WebUI.Extensions;
+using SmartAdmin.WebUI.Filters;
 using SmartAdmin.WebUI.Hubs;
 using SmartAdmin.WebUI.Models;
 using System.IO;
@@ -58,9 +59,16 @@ namespace SmartAdmin.WebUI
             services.AddDatabaseDeveloperPageExceptionFilter();
            
             services.AddControllers();
-           
+
             services
-                .AddRazorPages()
+                 .AddRazorPages(options =>
+                 {
+                    options.Conventions.AddPageRoute("/AspNetCore/Welcome", "");
+                 })
+                 .AddMvcOptions(options =>
+                 {
+                     options.Filters.Add<ApiExceptionFilterAttribute>();
+                 })
                 .AddFluentValidation(fv =>
                 {
                     fv.DisableDataAnnotationsValidation = true;
@@ -71,14 +79,12 @@ namespace SmartAdmin.WebUI
                 .AddJsonOptions(options =>
                   {
                       options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                      
-                    })
-                .AddRazorRuntimeCompilation()
-                .AddRazorPagesOptions(options =>
-                {
 
                     options.Conventions.AddPageRoute("/Karavay/Welcome", "");
                 });
+                  })
+                .AddRazorRuntimeCompilation();
+                 
 
             services.ConfigureApplicationCookie(options => {
                         options.LoginPath = "/Identity/Account/Login";
