@@ -22,7 +22,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddE
         public string CacheKey => ContragentCacheKey.GetAllCacheKey;
 
         public CancellationTokenSource ResetCacheToken => ContragentCacheTokenSource.ResetCacheToken;
-        public List<DirectionDto> Directions { get; set; } = new();
+        
     }
 
     public class AddEditContragentCommandHandler : IRequestHandler<AddEditContragentCommand, Result<int>>

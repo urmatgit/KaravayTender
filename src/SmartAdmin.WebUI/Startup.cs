@@ -63,12 +63,12 @@ namespace SmartAdmin.WebUI
             services
                  .AddRazorPages(options =>
                  {
-                    options.Conventions.AddPageRoute("/AspNetCore/Welcome", "");
+                    options.Conventions.AddPageRoute("/Karavay/Welcome", "");
                  })
-                 .AddMvcOptions(options =>
-                 {
-                     options.Filters.Add<ApiExceptionFilterAttribute>();
-                 })
+                 //.AddMvcOptions(options =>
+                 //{
+                 //    options.Filters.Add<ApiExceptionFilterAttribute>();
+                 //})
                 .AddFluentValidation(fv =>
                 {
                     fv.DisableDataAnnotationsValidation = true;
@@ -80,8 +80,7 @@ namespace SmartAdmin.WebUI
                   {
                       options.JsonSerializerOptions.PropertyNamingPolicy = null;
 
-                    options.Conventions.AddPageRoute("/Karavay/Welcome", "");
-                });
+                  
                   })
                 .AddRazorRuntimeCompilation();
                  

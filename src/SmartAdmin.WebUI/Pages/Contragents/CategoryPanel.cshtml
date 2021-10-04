@@ -1,7 +1,7 @@
-﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ContragentForm>  _localizer
-@model CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit.AddEditContragentCommand
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<RegisterModel>  _localizer
+@model RegisterModel
 @{
-    SelectList DirectionList = @ViewData["Directions"] as SelectList;
+   // SelectList DirectionList = @ViewData["Directions"] as SelectList;
 }
 <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
 <div class="form-group row">
@@ -13,11 +13,11 @@
     <div class="col-md-10">
 
         <div class="custom-control custom-checkbox">
-            <input type="checkbox" asp-for="IsService" class="custom-control-input" >
-            <label class="custom-control-label" for="IsService"></label>
+            <input type="checkbox" asp-for="InputContragent.IsService" class="custom-control-input" >
+            <label class="custom-control-label" for="InputContragent_IsService"></label>
         </div>
 
-        <span class="invalid-feedback" asp-validation-for="IsService"></span>
+        <span class="invalid-feedback" asp-validation-for="InputContragent.IsService"></span>
     </div>
 </div>
 
@@ -29,11 +29,11 @@
     </div>
     <div class="col-md-10">
 
-        <select type="text" asp-for="DirectionId" asp-items="@DirectionList" class="custom-select" placeholder="@_localizer["Direction"]">
+        <select type="text" asp-for="InputContragent.DirectionId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Direction"]">
             <option value="">@_localizer["Choose direction"]</option>
         </select>
 
-        <span class="invalid-feedback" asp-validation-for="DirectionId"></span>
+        <span class="invalid-feedback" asp-validation-for="InputContragent.DirectionId"></span>
     </div>
 
 </div>

@@ -38,7 +38,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         //public ContragentForm contragentForm { get; set; }
         [BindProperty]
         public AddEditContragentCommand InputContragent { get; set; }
-        [BindProperty]
+        
         public SelectList Directions { get; set; } 
         public List<CategoryDto> Categories { get; set; } = new();
         //[BindProperty]
@@ -68,15 +68,18 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            
-            var request = new GetAllDirectionsQuery();
-            var directionsDtos =(List<DirectionDto>)  await _mediator.Send(request);
-            //InputContragent.Directions = directionsDtos;
-            Directions = new SelectList(directionsDtos, "Id", "Name");
+
+            await LoadDirection();
             //contragentForm.Categories = directionsDtos.SelectMany(d => d.Categories).ToList();
                                         
         }
-        
+        private async Task LoadDirection()
+        {
+            var request = new GetAllDirectionsQuery();
+            var directionsDtos = (List<DirectionDto>)await _mediator.Send(request);
+            //InputContragent.Directions = directionsDtos;
+            Directions = new SelectList(directionsDtos, "Id", "Name");
+        }
         public async Task<PartialViewResult> OnGetCategoriesAsync([FromQuery]int directionid)
         {
             var command = new GetAllCategoriesQuery() { DirectionId = directionid };
@@ -85,7 +88,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         }
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = returnUrl ?? Url.Content("~/Contragents/SendedRegisterPage");
             
             if (ModelState.IsValid)
             {
@@ -105,6 +108,9 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                     }
                     //return BadRequest(Result.Failure(result.Errors));
                 }
+            }else
+            {
+                await LoadDirection();
             }
             
             //}

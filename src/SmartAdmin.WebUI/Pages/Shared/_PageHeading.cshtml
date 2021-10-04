@@ -1,6 +1,7 @@
-@if (ViewBag.Heading?.Length > 0)
+﻿@if (ViewBag.Heading?.Length > 0)
 {
-<h1 class="subheader-title">
+ 
+<h1 @(User.Identity.IsAuthenticated ? "class=\"subheader-title\"" :"style=color:white ")>
 	@Html.Raw(ViewBag.Heading)
 	@if (ViewBag.PageDescription?.Length > 0)
 {

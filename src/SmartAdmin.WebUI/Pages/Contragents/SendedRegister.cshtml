@@ -1,0 +1,14 @@
+﻿@page
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SendedRegisterModel>  _localizer
+@model SmartAdmin.WebUI.Pages.Contragents.SendedRegisterModel
+@{
+    ViewData["PageName"] = "SendedRegister";
+    ViewData["Title"] = _localizer["Sended to register"].Value;
+
+
+    //ViewData["Heading"] = _localizer["Торговая площадка- Заявка на регистрацию"].Value;
+
+}
+<div>
+    <p> Заявка на регистрацию отправлено</p>
+</div>
