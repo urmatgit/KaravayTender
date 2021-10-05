@@ -200,7 +200,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
 
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Locality, user.Site),
+              //  new(ClaimTypes.Locality, user.Site),
                 new(ClaimTypes.NameIdentifier, user.Id),
                 new(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl),
                 new(ClaimTypes.Email, user.Email),

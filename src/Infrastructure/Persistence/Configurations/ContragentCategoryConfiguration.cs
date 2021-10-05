@@ -33,13 +33,13 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence.Configurations
             builder.HasOne(d => d.Contragent)
                 .WithMany(d => d.ContragentCategories)
                 .HasForeignKey(d => d.ContragentId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.ClientCascade);
 
 
             builder.HasOne(c => c.Category)
                 .WithMany(c => c.ContragentCategories)
                 .HasForeignKey(c => c.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.ClientCascade);
                 
                 
         }

@@ -17,7 +17,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
         public string Description { get; set; }
         public int DirectionId { get; set; }
         public virtual Direction Direction { get; set; }
-        //public virtual ICollection<ContragentCategory> ContragentCategories { get; set; }
+        public virtual ICollection<ContragentCategory> ContragentCategories { get; set; }
         public List<DomainEvent> DomainEvents { get; set; } = new();
 
     }

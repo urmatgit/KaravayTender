@@ -50,7 +50,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         public DbSet<Direction> Directions { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Contragent> Contragents { get; set; }
-   //     public DbSet<ContragentCategory> ContragentCategories { get; set; }
+        public DbSet<ContragentCategory> ContragentCategories { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

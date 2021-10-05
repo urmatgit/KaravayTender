@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CleanArchitecture.Razor.Infrastructure.Migrations
 {
-    public partial class Karavay : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -300,6 +300,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     Email = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     TypeOfActivity = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsService = table.Column<bool>(type: "bit", nullable: false),
+                    ManagerId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<short>(type: "smallint", nullable: false),
                     DirectionId = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -361,6 +362,34 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ContragentCategories",
+                columns: table => new
+                {
+                    ContragentId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContragentCategories", x => new { x.ContragentId, x.CategoryId });
+                    table.ForeignKey(
+                        name: "FK_ContragentCategories_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ContragentCategories_Contragents_ContragentId",
+                        column: x => x.ContragentId,
+                        principalTable: "Contragents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -406,6 +435,11 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                 column: "DirectionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ContragentCategories_CategoryId",
+                table: "ContragentCategories",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Contragents_ApplicationUserId",
                 table: "Contragents",
                 column: "ApplicationUserId");
@@ -442,10 +476,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                 name: "AuditTrails");
 
             migrationBuilder.DropTable(
-                name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Contragents");
+                name: "ContragentCategories");
 
             migrationBuilder.DropTable(
                 name: "Customers");
@@ -460,13 +491,19 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Contragents");
+
+            migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Directions");
-
-            migrationBuilder.DropTable(
-                name: "Products");
         }
     }
 }

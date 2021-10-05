@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Compile Remove="Persistence\Configurations\ApprovalDataConfiguration.cs" />
-    <Compile Remove="Persistence\Configurations\ContragentCategoryConfiguration.cs" />
     <Compile Remove="Persistence\Configurations\DocumentConfiguration.cs" />
   </ItemGroup>
 

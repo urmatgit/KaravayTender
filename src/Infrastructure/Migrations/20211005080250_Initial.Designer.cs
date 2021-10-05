@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CleanArchitecture.Razor.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210930123125_AddedManagerId")]
-    partial class AddedManagerId
+    [Migration("20211005080250_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -181,6 +181,33 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.HasIndex("DirectionId");
 
                     b.ToTable("Contragents");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.ContragentCategory", b =>
+                {
+                    b.Property<int>("ContragentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ContragentId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ContragentCategories");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Customer", b =>
@@ -641,6 +668,25 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Navigation("Direction");
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.ContragentCategory", b =>
+                {
+                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Category", "Category")
+                        .WithMany("ContragentCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Contragent", "Contragent")
+                        .WithMany("ContragentCategories")
+                        .HasForeignKey("ContragentId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Contragent");
+                });
+
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Customer", b =>
                 {
                     b.HasOne("CleanArchitecture.Razor.Domain.Entities.Product", "Product")
@@ -711,6 +757,16 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Category", b =>
+                {
+                    b.Navigation("ContragentCategories");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Contragent", b =>
+                {
+                    b.Navigation("ContragentCategories");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Direction", b =>
