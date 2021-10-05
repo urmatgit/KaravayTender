@@ -147,6 +147,9 @@
   <data name="Email will be needed for verification and account recovery" xml:space="preserve">
     <value>Электронная почта потребуется для проверки и восстановления аккаунта</value>
   </data>
+  <data name="File too big!" xml:space="preserve">
+    <value>Файл слишком большой!</value>
+  </data>
   <data name="Files" xml:space="preserve">
     <value>Файлы</value>
   </data>
@@ -168,6 +171,9 @@
   <data name="Login user name" xml:space="preserve">
     <value>Имя пользователя для входа</value>
   </data>
+  <data name="Max. one file size 5Mb" xml:space="preserve">
+    <value>Максимальный размер одного файла 5Мб</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Наименование</value>
   </data>
@@ -179,6 +185,9 @@
   </data>
   <data name="Please pick a password" xml:space="preserve">
     <value>Пожалуйста, выберите пароль</value>
+  </data>
+  <data name="Please upload a file" xml:space="preserve">
+    <value>Пожалуйста, загрузите файл.</value>
   </data>
   <data name="Register" xml:space="preserve">
     <value>Регистрация</value>

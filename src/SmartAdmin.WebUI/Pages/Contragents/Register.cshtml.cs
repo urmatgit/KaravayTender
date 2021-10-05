@@ -41,6 +41,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public AddEditContragentCommand InputContragent { get; set; }
         [BindProperty]
         public List<IFormFile> Files { get; set; }
+        [BindProperty]
+        public string CategoryIds { get; set; }
         public SelectList Directions { get; set; } 
         public List<CategoryDto> Categories { get; set; } = new();
         //[BindProperty]
