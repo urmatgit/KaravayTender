@@ -8,7 +8,7 @@
     ViewData["ReturnUrl"] = Model.ReturnUrl;
     ViewData["Directions"] = Model.Directions ?? null;
     ViewData["Heading"] = _localizer["Торговая площадка- Заявка на регистрацию"].Value;
-    
+
 }
 @section HeadBlock {
 
@@ -16,6 +16,7 @@
     <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
     <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
     <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+    @*<link rel="stylesheet" media="screen, print" href="~/css/formplugins/dropzone/dropzone.css">*@
     <style>
 
         .customer_dg_datagrid-cell-c1-_action {
@@ -25,17 +26,17 @@
 }
 @if (!User.Identity.IsAuthenticated)
 {
-@section PageHeading {
-    <div class="col-xl-12">
-        <h2 class="fs-xxl fw-500 text-white text-left">
-            @_localizer["Торговая площадка- Заявка на регистрацию"]
-            <small class="h3 fw-300 mt-3 mb-5 text-white opacity-60 hidden-sm-down">
-                @_localizer["Доп. инфо..."]
+    @section PageHeading {
+        <div class="col-xl-12">
+            <h2 class="fs-xxl fw-500 text-white text-left">
+                @_localizer["Торговая площадка- Заявка на регистрацию"]
+                <small class="h3 fw-300 mt-3 mb-5 text-white opacity-60 hidden-sm-down">
+                    @_localizer["Доп. инфо..."]
 
-            </small>
-        </h2>
-    </div>
-}
+                </small>
+            </h2>
+        </div>
+    }
 }
 <div class="col-xl-12 ml-auto mr-auto panel">
     <div class="panel-toolbar ml-auto mr-0">
@@ -44,7 +45,7 @@
 
     </div>
     <div class="card p-4 rounded-plus bg-faded">
-        <partial name="ContragentForm"  />
+        <partial name="ContragentForm" />
     </div>
 </div>
 
@@ -54,7 +55,8 @@
     <script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>
-
+    @*<script type="text/javascript" src="~/js/formplugins/dropzone/dropzone.js" asp-append-version="true"></script>*@
+    
     <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
@@ -64,10 +66,76 @@
         $(document).ready(function () {
             $(":input").inputmask();
         });
+        //var t = new Dropzone("#js-login", {
+        //    maxFilesize: 20, //mb
+        //    acceptedFiles: ".png,.jpg,.jpeg",
+        //    uploadMultiple: true,
+        //    autoProcessQueue: false
+        //});
+
+        // upload
+        var uploadbutton = document.querySelector("button[name='uploadbutton']");
+        var uploadfileinputs = document.getElementById("Files");
+        var uploadfileinput = document.getElementById("file");
+        uploadbutton.addEventListener('click', (e) => {
+            uploadfileinput.click();
+        })
+        let uploadFiles = {};
+        uploadfileinput.onchange = (e) => {
+            //const files = uploadfileinput.taget.files;
+            console.log(e);
+            
+            console.log(e.target.files);
+            
+            Array.from(e.target.files).forEach(file => {
+                console.log(file.name);
+                if (file.name in uploadFiles) {
+
+                }
+                else {
+                    fileName = file.name;//uploadfileinput.value.split('\\').pop();
+
+                    uploadfilename.innerHTML += `
+              <div class="alert alert-info alert-dismissible fadeup show mb-2 mt-2" role="alert" id="${fileName}">
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                         <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
+                      </button>
+                      <div class="d-flex align-items-center">
+							<div class="alert-icon">
+									<i class="@(Settings.Theme.IconPrefix) fa-upload fs-xl"></i>
+							</div>
+							<div class="flex-1">
+	    							${fileName}
+							</div>
+					</div>
+             </div>
+        `
+                }
+                uploadFiles[file.name] = file;
+                UpdateFiles();
+            });
+         
+               $('#uploadfilename .alert').on('closed.bs.alert', (e) => {
+                   console.log(e);
+                   delete uploadFiles[e.currentTarget.id];
+                   UpdateFiles();
+                uploadfileinput.value = null;
+                
+            })
+        };
+        UpdateFiles=function(){
+            const dT = new DataTransfer();
+
+            $.map(uploadFiles, function (value, key) {
+                dT.items.add(value);
+            });
+            uploadfileinputs.files = dT.files;
+            console.log(uploadfileinputs.files);
+        }
         $("#js-login-btn").click(function (event) {
             // Fetch form to apply custom Bootstrap validation
             var form = $("#js-login");
-
+            
             if (form[0].checkValidity() === false) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -75,17 +143,19 @@
 
             form.addClass('was-validated');
             // Perform ajax submit here...
+            
+                
         });
         //axios.get('@Url.Page("/Customers/Index")?handler=Delete&id=' + id)
         $("#InputContragent_DirectionId").change(function () {
 
-            
+
             var id = $(this).val();
             console.log(id);
             axios.get('@Url.Page("/Contragents/Register")?handler=Categories&directionid='+id )
                 .then(res => {
                     console.log(res);
-                   
+
                     $("#categories").html(res.data)
 
                 })

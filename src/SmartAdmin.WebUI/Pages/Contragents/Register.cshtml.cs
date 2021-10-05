@@ -23,6 +23,7 @@ using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 using CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll;
+using Microsoft.AspNetCore.Http;
 
 namespace SmartAdmin.WebUI.Pages.Contragents
 {
@@ -38,7 +39,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         //public ContragentForm contragentForm { get; set; }
         [BindProperty]
         public AddEditContragentCommand InputContragent { get; set; }
-        
+        [BindProperty]
+        public List<IFormFile> Files { get; set; }
         public SelectList Directions { get; set; } 
         public List<CategoryDto> Categories { get; set; } = new();
         //[BindProperty]
@@ -88,7 +90,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         }
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/Contragents/SendedRegisterPage");
+            returnUrl = returnUrl ?? Url.Content("~/Contragents/SendedRegister");
             
             if (ModelState.IsValid)
             {

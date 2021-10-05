@@ -4,56 +4,28 @@
    // SelectList DirectionList = @ViewData["Directions"] as SelectList;
 }
 <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
-<div class="form-group row">
+<div class="form-group ">
+    <label class="form-label" for=""></label>
+    <input type="file" asp-for="Files" multiple style="display:none" required />
+    <input type="file" id="file" multiple style="display:none" required />
+    <div class="">
+        <button name="uploadbutton" type="button" class="btn btn-primary btn-icon waves-effect waves-themed mr-2">
+            <i class="fal fa-paperclip"></i>
 
-    <div class="col-md-2 mat my-auto">
-        <label class="form-label" for="name">@_localizer["Service"]</label>
+        </button>
+        <i class="fal fa-exclamation-triangle mr-2"></i>   @_localizer["Please upload a file"].
+        <div id="uploadfilename">
+            @*<div class="alert alert-danger mt-2 mb-2" role="alert">
 
-    </div>
-    <div class="col-md-10">
-
-        <div class="custom-control custom-checkbox">
-            <input type="checkbox" asp-for="InputContragent.IsService" class="custom-control-input" >
-            <label class="custom-control-label" for="InputContragent_IsService"></label>
+                </div>*@
         </div>
 
-        <span class="invalid-feedback" asp-validation-for="InputContragent.IsService"></span>
-    </div>
-</div>
-
-<div class="form-group row">
-
-    <div class="col-md-2 mat my-auto">
-        <label class="form-label" for="name">@_localizer["Direction"] <span class="text-danger">*</span></label>
-
-    </div>
-    <div class="col-md-10">
-
-        <select type="text" asp-for="InputContragent.DirectionId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Direction"]">
-            <option value="">@_localizer["Choose direction"]</option>
-        </select>
-
-        <span class="invalid-feedback" asp-validation-for="InputContragent.DirectionId"></span>
     </div>
 
 </div>
-<div class="form-group row">
-    <div class="col-md-2 mat">
-        <label class="form-label" for="name">@_localizer["Categories"] <span class="text-danger">*</span></label>
 
-    </div>
-    <div class="col-md-10">
-        <div id="categories">
-            @*@foreach (var catetory in Model.Categories)
-                {
-                    <div class="custom-control custom-checkbox my-2">
-                        <input type="checkbox" class="custom-control-input" value="@catetory.IsCheck" name="AssignedPermissions" id="@catetory.Id">
-                        <label class="custom-control-label" for="@catetory.Id">@catetory.Name</label>
-                    </div>
-                }*@
-        </div>
-    </div>
-</div>
+
+ 
 @*@section Scripts{
     <script>
 

@@ -50,13 +50,13 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         /// </summary>
         public bool IsService { get; set; }
         public string ManagerId { get; set; }
-        
+
         /// <summary>
         /// Логин
         /// </summary>
         //public string RegistrationNumber { get; set; }
         //public string Password { get; set; }
-        public ContragentStatus Status { get; set; }
+        public ContragentStatus Status { get; set; } = ContragentStatus.OnRegistration;
         
         public int DirectionId { get; set; }
         public virtual DirectionDto Direction { get; set; }

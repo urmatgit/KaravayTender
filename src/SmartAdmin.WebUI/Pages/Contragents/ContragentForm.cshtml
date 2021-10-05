@@ -4,7 +4,7 @@
 @{
     SelectList DirectionList = @ViewData["Directions"] as SelectList;
 }
-<form id="js-login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" class="needs-validation" novalidate="novalidate">
+<form id="js-login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" class="needs-validation" novalidate="novalidate" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
     @*<input type="hidden" asp-for="InputContragent.Id" />*@
     <ul class="nav nav-tabs nav-justified" role="tablist">
@@ -33,8 +33,9 @@
 
         </div>
         <div class="tab-pane fade show" id="tab_3" role="tabpanel">
-            <p> tab3</p>
+            <partial name="FilesPanel"/>
         </div>
+
         <div class="tab-pane fade " id="tab_4" role="tabpanel">
             <p> tab4</p>
         </div>

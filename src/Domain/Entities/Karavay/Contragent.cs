@@ -63,7 +63,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
         /// </summary>
         //public string RegistrationNumber { get; set; }
         //public string Password { get; set; }
-        public ContragentStatus Status { get; set; }
+        public ContragentStatus Status { get; set; } = ContragentStatus.OnRegistration;
         public int DirectionId { get; set; }
         public virtual Direction Direction { get; set; }
         public virtual ICollection<ContragentCategory> ContragentCategories { get; set; }
