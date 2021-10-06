@@ -9,6 +9,7 @@ using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
+using CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands.AddEdit;
 using CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit;
 using CleanArchitecture.Razor.Application.Features.Contragents.Commands.Delete;
@@ -74,8 +75,9 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
         public async Task OnGetAsync()
         {
-            var result = await _identityService.FetchUsers("Admin");
-
+            //var result = await _identityService.FetchUsers("Admin");
+            var result = await _mediator.Send(new GetAllCategoriesQuery());
+            Categories = (List<CategoryDto>)result;
 
             await LoadDirection();
         }
