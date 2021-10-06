@@ -41,17 +41,21 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
             if (request.CategoryId > 0 && request.ContragentId>0)
             {
                 var item = await _context.ContragentCategories.FindAsync(new object[] { request.ContragentId,request.CategoryId }, cancellationToken);
-                item = _mapper.Map(request, item);
-                await _context.SaveChangesAsync(cancellationToken);
+                if (item != null)
+                {
+                    item = _mapper.Map<ContragentCategory>(request);
+                    _context.ContragentCategories.Add(item);
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
                 return Result<int,int>.Success(item.ContragentId,item.CategoryId);
             }
-            else
-            {
-                var item = _mapper.Map<ContragentCategory>(request);
-                _context.ContragentCategories.Add(item);
-                await _context.SaveChangesAsync(cancellationToken);
-                return Result<int,int>.Success(item.ContragentId,request.CategoryId);
-            }
+            //else
+            //{
+            //    var item = _mapper.Map<ContragentCategory>(request);
+            //    _context.ContragentCategories.Add(item);
+            //    await _context.SaveChangesAsync(cancellationToken);
+            return Result<int,int>.Success(request.ContragentId,request.CategoryId);
+            //}
            
         }
     }

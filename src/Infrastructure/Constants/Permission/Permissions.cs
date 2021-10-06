@@ -23,16 +23,16 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Search = "Permissions.Logs.Search";
             public const string Export = "Permissions.Logs.Export";
         }
-        [DisplayName("Workflow")]
-        [Description("Approval Permissions")]
-        public static class Approval
-        {
-            public const string View = "Permissions.Approval.View";
-            public const string Approve = "Permissions.Approval.Approve";
-            public const string Histories = "Permissions.Approval.Histories";
-            public const string Search = "Permissions.Approval.Search";
-            public const string Export = "Permissions.Approval.Export";
-        }
+        //[DisplayName("Workflow")]
+        //[Description("Approval Permissions")]
+        //public static class Approval
+        //{
+        //    public const string View = "Permissions.Approval.View";
+        //    public const string Approve = "Permissions.Approval.Approve";
+        //    public const string Histories = "Permissions.Approval.Histories";
+        //    public const string Search = "Permissions.Approval.Search";
+        //    public const string Export = "Permissions.Approval.Export";
+        //}
 
         [DisplayName("Products")]
         [Description("Products Permissions")]
@@ -59,44 +59,33 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Import = "Permissions.Customers.Import";
         }
 
-        [DisplayName("Categories")]
-        [Description("Categories Permissions")]
-        public static class Categories
-        {
-            public const string View = "Permissions.Categories.View";
-            public const string Create = "Permissions.Categories.Create";
-            public const string Edit = "Permissions.Categories.Edit";
-            public const string Delete = "Permissions.Categories.Delete";
-            public const string Search = "Permissions.Categories.Search";
-            public const string Export = "Permissions.Categories.Export";
-            public const string Import = "Permissions.Categories.Import";
-        }
 
-        [DisplayName("Documents")]
-        [Description("Documents Permissions")]
-        public static class Documents
-        {
-            public const string View = "Permissions.Documents.View";
-            public const string Create = "Permissions.Documents.Create";
-            public const string Edit = "Permissions.Documents.Edit";
-            public const string Delete = "Permissions.Documents.Delete";
-            public const string Search = "Permissions.Documents.Search";
-            public const string Export = "Permissions.Documents.Export";
-            public const string Import = "Permissions.Documents.Import";
-            public const string Download = "Permissions.Documents.Download";
-        }
-        [DisplayName("DocumentTypes")]
-        [Description("DocumentTypes Permissions")]
-        public static class DocumentTypes
-        {
-            public const string View = "Permissions.DocumentTypes.View";
-            public const string Create = "Permissions.DocumentTypes.Create";
-            public const string Edit = "Permissions.DocumentTypes.Edit";
-            public const string Delete = "Permissions.DocumentTypes.Delete";
-            public const string Search = "Permissions.DocumentTypes.Search";
-            public const string Export = "Permissions.Documents.Export";
-            public const string Import = "Permissions.Categories.Import";
-        }
+
+        //[DisplayName("Documents")]
+        //[Description("Documents Permissions")]
+        //public static class Documents
+        //{
+        //    public const string View = "Permissions.Documents.View";
+        //    public const string Create = "Permissions.Documents.Create";
+        //    public const string Edit = "Permissions.Documents.Edit";
+        //    public const string Delete = "Permissions.Documents.Delete";
+        //    public const string Search = "Permissions.Documents.Search";
+        //    public const string Export = "Permissions.Documents.Export";
+        //    public const string Import = "Permissions.Documents.Import";
+        //    public const string Download = "Permissions.Documents.Download";
+        //}
+        //[DisplayName("DocumentTypes")]
+        //[Description("DocumentTypes Permissions")]
+        //public static class DocumentTypes
+        //{
+        //    public const string View = "Permissions.DocumentTypes.View";
+        //    public const string Create = "Permissions.DocumentTypes.Create";
+        //    public const string Edit = "Permissions.DocumentTypes.Edit";
+        //    public const string Delete = "Permissions.DocumentTypes.Delete";
+        //    public const string Search = "Permissions.DocumentTypes.Search";
+        //    public const string Export = "Permissions.Documents.Export";
+        //    public const string Import = "Permissions.Categories.Import";
+        //}
         [DisplayName("Dictionaries")]
         [Description("Dictionaries Permissions")]
         public static class Dictionaries
@@ -181,7 +170,30 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Export = "Permissions.Directions.Export";
             public const string Import = "Permissions.Directions.Import";
         }
-
+        [DisplayName("Categories")]
+        [Description("Categories Permissions")]
+        public static class Categories
+        {
+            public const string View = "Permissions.Categories.View";
+            public const string Create = "Permissions.Categories.Create";
+            public const string Edit = "Permissions.Categories.Edit";
+            public const string Delete = "Permissions.Categories.Delete";
+            public const string Search = "Permissions.Categories.Search";
+            public const string Export = "Permissions.Categories.Export";
+            public const string Import = "Permissions.Categories.Import";
+        }
+        [DisplayName("Contragents")]
+        [Description("Contragents Permissions")]
+        public static class Contragents
+        {
+            public const string View = "Permissions.Contragents.View";
+            public const string Create = "Permissions.Contragents.Create";
+            public const string Edit = "Permissions.Contragents.Edit";
+            public const string Delete = "Permissions.Contragents.Delete";
+            public const string Search = "Permissions.Contragents.Search";
+            public const string Export = "Permissions.Contragents.Export";
+            public const string Import = "Permissions.Contragents.Import";
+        }
         /// <summary>
         /// Returns a list of Permissions.
         /// </summary>

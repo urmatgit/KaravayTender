@@ -1,13 +1,13 @@
 ﻿@using CleanArchitecture.Razor.Application.Features.Categories.DTOs
 @model List<CategoryDto>
-    <div>
+    
         <input type="text" id="CategoryIds" name="CategoryIds" hidden  />
         @foreach (var catetory in Model)
         {
-            <div class="custom-control custom-checkbox my-2" id="categories">
-                <input type="checkbox" class="custom-control-input" value="@catetory.IsCheck" name="@catetory.Name" id="@catetory.Id">
+            <div class="custom-control custom-checkbox my-2" name="category">
+                <input type="checkbox" class="custom-control-input" value="@catetory.IsCheck" name="category.Name" id="@catetory.Id">
                 <label class="custom-control-label" for="@catetory.Id">@catetory.Name</label>
             </div>
         }
 
-    </div>
+    

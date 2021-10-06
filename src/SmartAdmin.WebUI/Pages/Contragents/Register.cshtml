@@ -46,7 +46,7 @@
 
     </div>
     <div class="card p-4 rounded-plus bg-faded">
-        <partial name="ContragentForm" />
+        <partial name="../Contragents/Register/ContragentForm" />
     </div>
 </div>
 
@@ -63,28 +63,50 @@
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
 
     <script src="~/js/formplugins/inputmask/inputmask.bundle.js"></script>
-    <script>
+   <script src="~/js/Karavay/Contragents.js"></script>
+   <script>
         $(document).ready(function () {
             $(":input").inputmask();
         });
-        //var t = new Dropzone("#js-login", {
-        //    maxFilesize: 20, //mb
-        //    acceptedFiles: ".png,.jpg,.jpeg",
-        //    uploadMultiple: true,
-        //    autoProcessQueue: false
-        //});
-        var selectedCategories = new Array();
-        getCheckedCategories = () => {
-            var result = $('#categories input:checked').map(function () {
-                return this.id;
-            }).get().join(',');
-            var categoryIds = document.getElementById("CategoryIds");
-            categoryIds.value = result;
-            console.log(result);
+        var translations = {
+            FileSizeToBig: '@_localizer["File too big!"]',
+            GetCategoriesFail: '@_localizer["Get categories fail"]',
+            IconPrefix:  '@(Settings.Theme.IconPrefix)'
         }
-        
+        //--
+        $("#js-login-btn").click(function (event) {
+            // Fetch form to apply custom Bootstrap validation
+            getCheckedCategories();
+            var form = $("#js-login");
+
+            if (form[0].checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            form.addClass('was-validated');
+            // Perform ajax submit here...
 
 
+        });
+
+        @*var selectedCategories = new Array();
+        getCheckedCategories = () => {
+            var categories = document.getElementsByName("category.Name");
+            var categoryIds = document.getElementById("CategoryIds");
+            var result = new Object();
+            var resJson = "";
+            for (var checkbox of categories) {
+                console.log(`${checkbox.id}:${checkbox.checked}`);
+               // result += `${checkbox.id}:${checkbox.checked},`
+                result.Id = checkbox.id;
+                result.IsCheck = checkbox.checked
+                resJson += `${JSON.stringify(result)},`;
+
+            }
+            categoryIds.value =`[${resJson.slice(0, -1)}]`;
+           // console.log(`[${resJson.slice(0, -1)}]`);
+        }
         // upload
         var maxFileSize = 5242880; // 5MB -> 5 * 1024 * 1024
         var maxFilesSize = 52428800; // 50MB -> 50 * 1024 * 1024
@@ -98,9 +120,9 @@
         uploadfileinput.onchange = (e) => {
             //const files = uploadfileinput.taget.files;
             console.log(e);
-            
+
             console.log(e.target.files);
-            
+
             Array.from(e.target.files).forEach(file => {
                 console.log(file.name);
                 let isBigFile = "";
@@ -132,7 +154,7 @@
                 }
                 if (isBigFile==="")
                     uploadFiles[file.name] = file;
-                
+
             });
             UpdateFiles();
                $('#uploadfilename .alert').on('closed.bs.alert', (e) => {
@@ -140,7 +162,7 @@
                    delete uploadFiles[e.currentTarget.id];
                    UpdateFiles();
                 uploadfileinput.value = null;
-                
+
             })
         };
         function IsBigFile(file) {
@@ -159,23 +181,9 @@
             uploadfileinputs.files = dT.files;
             console.log(uploadfileinputs.files);
         }
-        $("#js-login-btn").click(function (event) {
-            // Fetch form to apply custom Bootstrap validation
-            getCheckedCategories();
-            var form = $("#js-login");
-            
-            if (form[0].checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
 
-            form.addClass('was-validated');
-            // Perform ajax submit here...
-            
-                
-        });
         //axios.get('@Url.Page("/Customers/Index")?handler=Delete&id=' + id)
-        $("#InputContragent_DirectionId").change(function () {
+        $("#Input_DirectionId").change(function () {
 
 
             var id = $(this).val();
@@ -208,7 +216,7 @@
             //        console.log(response.responseText);
             //    }
             //});
-        });
-    </script>
+        });*@
+   </script>
 }
 

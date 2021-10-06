@@ -24,6 +24,9 @@ using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 using CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll;
 using Microsoft.AspNetCore.Http;
+using CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands.AddEdit;
+using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace SmartAdmin.WebUI.Pages.Contragents
 {
@@ -38,7 +41,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         //[BindProperty]
         //public ContragentForm contragentForm { get; set; }
         [BindProperty]
-        public AddEditContragentCommand InputContragent { get; set; }
+        public AddEditContragentCommand Input { get; set; }
         [BindProperty]
         public List<IFormFile> Files { get; set; }
         [BindProperty]
@@ -63,11 +66,22 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             _logger = logger;
             _emailSender = emailSender;
             _mediator = mediator;
-            
+#if DEBUG
+            Input = new AddEditContragentCommand();
+            Input.Name = "name1";
+            Input.FullName = "nama name2";
+            Input.ContactPerson = "Person1";
+            Input.ContactPhone = "+7(999)9303433";
+            Input.Email = "test@gmail.com";
+            Input.INN = "123456789011";
+            Input.Phone= "+7(999)9303433";
+            Input.DirectionId = 3;
+            Input.TypeOfActivity = "Haltura";
+#endif
         }
-        
 
-      //  public void OnGet(string returnUrl = null) => contragentForm.ReturnUrl = returnUrl;
+
+        //  public void OnGet(string returnUrl = null) => contragentForm.ReturnUrl = returnUrl;
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -81,7 +95,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         {
             var request = new GetAllDirectionsQuery();
             var directionsDtos = (List<DirectionDto>)await _mediator.Send(request);
-            //InputContragent.Directions = directionsDtos;
+           // Debug.WriteLine(JsonConvert.SerializeObject(directionsDtos));
+            //Input.Directions = directionsDtos;
             Directions = new SelectList(directionsDtos, "Id", "Name");
         }
         public async Task<PartialViewResult> OnGetCategoriesAsync([FromQuery]int directionid)
@@ -93,15 +108,37 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/Contragents/SendedRegister");
-            
+            try { 
             if (ModelState.IsValid)
             {
 
-                 var result = await _mediator.Send(InputContragent);
+                 var result = await _mediator.Send(Input);
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation($"Заявка на регистрацию создана - {InputContragent.Name}- {InputContragent.ContactPhone}");
+                    _logger.LogInformation($"Заявка на регистрацию создана - {Input.Name}- {Input.ContactPhone}");
+                    
+                        var ContragetnCategory = new AddOrDelContragentCategorysCommand()
+                        {
+                            ContragentId = result.Data,
+                            CategoriesJson = CategoryIds
+                        };
+                        var resultContragentCategory = await _mediator.Send(ContragetnCategory);
+                        
+                            if (resultContragentCategory.Succeeded)
+                            {
+                                _logger.LogInformation($"Категории добавлены {resultContragentCategory.Data} - {Input.Name} ");
+                            }
+                            else
+                            {
+                                foreach (var error in resultContragentCategory.Errors)
+                                {
+                                    ModelState.AddModelError(string.Empty, error);
+                                }
+                            }
+                         
+                    
+
                     return LocalRedirect(returnUrl);
                 }
                 else
@@ -116,23 +153,23 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             {
                 await LoadDirection();
             }
-            
-            //}
-            //catch (ValidationException ex)
-            //{
-            //    var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
-            //    foreach (var error in errors)
-            //    {
-            //          ModelState.AddModelError(string.Empty, error);
-            //    }
 
-            //    // return BadRequest(Result.Failure(errors));
-            //}
-            //catch (Exception ex)
-            //{
-            //    ModelState.AddModelError(string.Empty, ex.Message);
-            //    //return BadRequest(Result.Failure(new string[] { ex.Message }));
-            //}
+            }
+            catch (ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                foreach (var error in errors)
+                {
+                    ModelState.AddModelError(string.Empty, error);
+                }
+
+                // return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                //return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
 
             return Page();
         }
@@ -148,10 +185,10 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         //  //  var user = new ApplicationUser { EmailConfirmed=true,
         //  //      IsActive=true,
         //  //      //Site=Input.Site,
-        //  //      DisplayName= InputContragent.Name,
-        //  //      UserName = InputContragent.UserName,
-        //  //      Email = InputContragent.Email,
-        //  //      ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ InputContragent.Email.ToMD5() }?s=120&d=retro"
+        //  //      DisplayName= Input.Name,
+        //  //      UserName = Input.UserName,
+        //  //      Email = Input.Email,
+        //  //      ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ Input.Email.ToMD5() }?s=120&d=retro"
         //  //  };
         //  //  var result = await _userManager.CreateAsync(user, Input.Password);
         //  //  if (result.Succeeded)

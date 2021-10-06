@@ -13,7 +13,7 @@ namespace SmartAdmin.WebUI.Pages.Shared.Components.Contragent
     public class ContragentForm
     {
         [BindProperty]
-        public AddEditContragentCommand InputContragent { get; set; }
+        public AddEditContragentCommand Input { get; set; }
         public SelectList Directions { get; set; }
         public List<CategoryDto> Categories { get; set; } = new();
         //[BindProperty]

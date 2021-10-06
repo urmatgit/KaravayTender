@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -46,7 +46,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
             //TODO:Implementing ContragentsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<Contragent>(request.FilterRules);
            var data = await _context.Contragents.Where(filters)
-                .OrderBy("{request.Sort} {request.Order}")
+                .Include(i=>i.Direction)
+                .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<ContragentDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
             return data;

@@ -62,11 +62,11 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
              
             //try
             //{
-                var result = await _mediator.Send(contragentForm.InputContragent);
+                var result = await _mediator.Send(contragentForm.Input);
                 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation($"Заявка на регистрацию создана - {contragentForm.InputContragent.Name}- {contragentForm.InputContragent.ContactPhone}");
+                    _logger.LogInformation($"Заявка на регистрацию создана - {contragentForm.Input.Name}- {contragentForm.Input.ContactPhone}");
                     return LocalRedirect(returnUrl);
                 }
                 //else
@@ -105,10 +105,10 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
         //  //  var user = new ApplicationUser { EmailConfirmed=true,
         //  //      IsActive=true,
         //  //      //Site=Input.Site,
-        //  //      DisplayName= InputContragent.Name,
-        //  //      UserName = InputContragent.UserName,
-        //  //      Email = InputContragent.Email,
-        //  //      ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ InputContragent.Email.ToMD5() }?s=120&d=retro"
+        //  //      DisplayName= Input.Name,
+        //  //      UserName = Input.UserName,
+        //  //      Email = Input.Email,
+        //  //      ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ Input.Email.ToMD5() }?s=120&d=retro"
         //  //  };
         //  //  var result = await _userManager.CreateAsync(user, Input.Password);
         //  //  if (result.Succeeded)

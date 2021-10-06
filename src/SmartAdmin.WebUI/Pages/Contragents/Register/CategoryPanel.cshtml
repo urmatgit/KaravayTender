@@ -13,11 +13,11 @@
     <div class="col-md-10">
 
         <div class="custom-control custom-checkbox">
-            <input type="checkbox" asp-for="InputContragent.IsService" class="custom-control-input" >
-            <label class="custom-control-label" for="InputContragent_IsService"></label>
+            <input type="checkbox" asp-for="Input.IsService" class="custom-control-input" >
+            <label class="custom-control-label" for="Input_IsService"></label>
         </div>
 
-        <span class="invalid-feedback" asp-validation-for="InputContragent.IsService"></span>
+        <span class="invalid-feedback" asp-validation-for="Input.IsService"></span>
     </div>
 </div>
 
@@ -29,11 +29,11 @@
     </div>
     <div class="col-md-10">
 
-        <select type="text" asp-for="InputContragent.DirectionId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Direction"]">
+        <select type="text" asp-for="Input.DirectionId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Direction"]">
             <option value="">@_localizer["Choose direction"]</option>
         </select>
 
-        <span class="invalid-feedback" asp-validation-for="InputContragent.DirectionId"></span>
+        <span class="invalid-feedback" asp-validation-for="Input.DirectionId"></span>
     </div>
 
 </div>
@@ -44,6 +44,7 @@
     </div>
     <div class="col-md-10">
         <div id="categories">
+            <partial name="_CategoriesListPartial" model="Model.Categories"/>
             @*@foreach (var catetory in Model.Categories)
                 {
                     <div class="custom-control custom-checkbox my-2">
@@ -54,24 +55,3 @@
         </div>
     </div>
 </div>
-@*@section Scripts{
-    <script>
-
-    $(function () {
-        $("#DirectionId").change(function () {
-            console.log($(this).val());
-            //$.ajax({
-            //    type: "Get",
-            //    url: "/Home/ShowProduct?type=" + $(this).val(),  //remember change the controller to your owns.
-            //    success: function (data) {
-            //        $("#productcontainer").html("");
-            //        $("#productcontainer").html(data);
-            //    },
-            //    error: function (response) {
-            //        console.log(response.responseText);
-            //    }
-            //});
-        });
-    });
-    </script>
-}*@

@@ -64,6 +64,8 @@ namespace SmartAdmin.WebUI
                  .AddRazorPages(options =>
                  {
                     options.Conventions.AddPageRoute("/Karavay/Welcome", "");
+                    // options.Conventions.AddAreaPageRoute("Identity","/Account/Login","");
+                     
                  })
                  //.AddMvcOptions(options =>
                  //{
