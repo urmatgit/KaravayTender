@@ -122,7 +122,7 @@
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/inputmask/inputmask.bundle.js"></script>
-    <script src="~/js/Karavay/Contragents.js"></script>
+    <script src="~/js/Karavay/Contragents.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $(":input").inputmask();
@@ -273,13 +273,13 @@
 		if (contragent) {
 			$('#contragent_modal .modal-title').html('@_localizer["Edit Contragent"]');
 			$('#contragent_form').jsonToForm(contragent, {
-				PartnerType: function (value) {
-					if (value == 'TP') {
-						$('#contragent_form [name*="PartnerType"]').val(0);
-					} else {
-						$('#contragent_form [name*="PartnerType"]').val(1);
-					}
-				}
+                IsService: function (value) {
+                    if (value == true) {
+                        $('#contragent_form [name*="IsService"]').prop('checked', true);
+                    } else {
+                        $('#contragent_form [name*="IsService"]').prop('checked', false);
+                    }
+                }
 			})
 		} else {
 			$('#contragent_form #Input_Id').val(0)
@@ -289,6 +289,7 @@
 
 	var onEdit = (index) => {
 		var contragent = $dg.datagrid('getRows')[index];
+        getCategoriesByDirectionId(contragent.DirectionId);
 		popupmodal(contragent);
 	}
 	var onDelete = (id) => {

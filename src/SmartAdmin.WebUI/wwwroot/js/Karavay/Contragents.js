@@ -1,3 +1,22 @@
+function getCategoriesByDirectionId(id) {
+    axios.get('/Contragents/Register?handler=Categories&directionid=' + id)
+        .then(res => {
+            console.log(res);
+
+            $("#categories").html(res.data)
+
+        })
+        .catch((error) => {
+            if (error.response.data.Errors) {
+                const errors = error.response.data.Errors;
+                errors.forEach(item => {
+                    toastr["error"](item);
+                });
+            } else {
+                toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
+            }
+        });
+}
 (function ($) {
     var selectedCategories = new Array();
     //$("input[name='category.Name']").change(function () {
@@ -105,30 +124,14 @@ UpdateFiles = function () {
     uploadfileinputs.files = dT.files;
     console.log(uploadfileinputs.files);
 }
-
+    
 //axios.get('@Url.Page("/Customers/Index")?handler=Delete&id=' + id)
 $("#Input_DirectionId").change(function () {
 
 
     var id = $(this).val();
     console.log(id);
-    axios.get('/Contragents/Register?handler=Categories&directionid=' + id)
-        .then(res => {
-            console.log(res);
-
-            $("#categories").html(res.data)
-
-        })
-        .catch((error) => {
-            if (error.response.data.Errors) {
-                const errors = error.response.data.Errors;
-                errors.forEach(item => {
-                    toastr["error"](item);
-                });
-            } else {
-                toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
-            }
-        });
+    getCategoriesByDirectionId(id);
     //$.ajax({
     //    type: "Get",
     //    url: ,  //remember change the controller to your owns.
