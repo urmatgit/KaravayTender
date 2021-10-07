@@ -1,6 +1,7 @@
 ﻿@page
 @using CleanArchitecture.Razor.Domain.Enums
 @using CleanArchitecture.Razor.Infrastructure.Constants.Permission
+@using  CleanArchitecture.Razor.Application.Common.Extensions
 @model SmartAdmin.WebUI.Pages.Contragents.IndexModel
 @inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
 @inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
@@ -41,45 +42,45 @@
         <div class="ml-auto">
             @if (_canCreate.Succeeded)
             {
-                <button class="btn btn-sm btn-outline-primary " id="addbutton">
-                    <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
-                    @_localizer["Add"]
-                </button>
+            <button class="btn btn-sm btn-outline-primary " id="addbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
+                @_localizer["Add"]
+            </button>
             }
             @if (_canDelete.Succeeded)
             {
-                <button class="btn btn-sm btn-outline-danger" disabled id="deletebutton">
-                    <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
-                    @_localizer["Delete"]
-                </button>
+            <button class="btn btn-sm btn-outline-danger" disabled id="deletebutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
+                @_localizer["Delete"]
+            </button>
             }
             @if (_canSearch.Succeeded)
             {
-                <button class="btn btn-sm btn-outline-primary " id="searchbutton">
-                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
-                    @_localizer["Search"]
-                </button>
+            <button class="btn btn-sm btn-outline-primary " id="searchbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                @_localizer["Search"]
+            </button>
             }
             @if (_canImport.Succeeded)
             {
-                <div class="btn-group" role="group">
-                    <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
-                        <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="importbutton">
-                        <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
-                    </div>
+            <div class="btn-group" role="group">
+                <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
+                    <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="importbutton">
+                    <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
                 </div>
+            </div>
             }
             @if (_canExport.Succeeded)
             {
-                <button class="btn btn-sm btn-outline-primary " id="exportbutton">
-                    <span class="@(Settings.Theme.IconPrefix) fa-download mr-1"></span>
-                    @_localizer["Export Excel"]
-                </button>
+            <button class="btn btn-sm btn-outline-primary " id="exportbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-download mr-1"></span>
+                @_localizer["Export Excel"]
+            </button>
             }
         </div>
     </div>
@@ -133,13 +134,13 @@
 			   IconPrefix:  '@(Settings.Theme.IconPrefix)'
 		}
 		let currentEditRow = "";
-		
+
         $("#saveButton").click(function (event) {
             getCheckedCategories();
 
 
 		});
-       
+
 	$('#searchbutton').click(function () {
 		reloadData();
 	});
@@ -186,7 +187,7 @@
 	var $dg={};
 	var initdatagrid = () => {
 		$dg = $('#contragent_dg').datagrid({
-			height: (window.innerHeight-320),
+			height: (window.innerHeight - 320),
 			method: 'GET',
 			rownumbers: false,
 			singleSelect: true,
@@ -196,12 +197,12 @@
 			clientPaging: false,
 			remoteFilter: true,
 			sortName: 'Id',
-			sortOrder:'desc',
+			sortOrder: 'desc',
 			pageSize: 15,
 			pageList: [10, 15, 30, 50, 100, 1000],
-            onLoadError: function (XMLHttpRequest, textStatus, errorThrown) {
-                toastr["error"](`@_localizer["load fail"],${errorThrown}`);
-            },
+			onLoadError: function (XMLHttpRequest, textStatus, errorThrown) {
+				toastr["error"](`@_localizer["load fail"],${errorThrown}`);
+			},
 			onBeforeLoad: function () {
 				$('#deletebutton').prop('disabled', true);
 			},
@@ -238,25 +239,58 @@
 							  </div>`;
 					}
 				},
+
+				{ field: 'Status', title: '@_localizer["Status"]', sortable: true, width: 100 },
 				{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 100 },
-                { field: 'FullName', title: '@_localizer["Full name"]', sortable: true, width: 180 },
+				{ field: 'FullName', title: '@_localizer["Full name"]', sortable: true, width: 180 },
 				{ field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 180 },
 				{
-                    field: 'IsService', title: '@_localizer["Service"]', align: 'center', sortable: true, width: 80, formatter: checkboxformatter
+					field: 'IsService', title: '@_localizer["Service"]', align: 'center', sortable: true, width: 80, formatter: checkboxformatter
 				},
-                { field: 'INN', title: '@_localizer["INN"]', sortable: true, width: 120 },
-                { field: 'KPP', title: '@_localizer["KPP"]', sortable: true, width: 120 },
-                { field: 'Manager', title: '@_localizer["Manager"]', sortable: true, width: 140 },
+				{ field: 'INN', title: '@_localizer["INN"]', sortable: true, width: 120 },
+				{ field: 'KPP', title: '@_localizer["KPP"]', sortable: true, width: 120 },
+				{ field: 'Manager', title: '@_localizer["Manager"]', sortable: true, width: 140 },
 				{ field: 'Phone', title: '@_localizer["Phone"]', sortable: true, width: 180 },
-                { field: 'ContactPerson', title: '@_localizer["Contact person"]', sortable: true, width: 180 },
-                { field: 'ContactPhone', title: '@_localizer["Contact person phone"]', sortable: true, width: 180 },
+				{ field: 'ContactPerson', title: '@_localizer["Contact person"]', sortable: true, width: 180 },
+				{ field: 'ContactPhone', title: '@_localizer["Contact person phone"]', sortable: true, width: 180 },
 				{ field: 'Email', title: 'Email', sortable: true, width: 130 }
 
 
 
 			]]
 		})
-			.datagrid('enableFilter', {})
+			.datagrid('enableFilter', [
+				{
+					field: 'Status',
+					type: 'combobox',
+					options:{
+						panelHeight: 'auto',
+						data: [
+								{
+									value: null,
+									text: 'Все'
+								},
+								@foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.RequestStatus)))
+								{
+									<text>
+									{
+										value: '@val',
+										text:'@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.RequestStatus)val).ToDescriptionString()))'
+									},
+									</text>
+								}
+						],
+						onChange: function (newValue, oldValue) {
+							console.log(newValue);
+                            $dg.datagrid('contragent_dg', {
+								field: 'Status',
+								op: 'equal',
+								value: newValue
+							});
+						}
+					}
+				}
+			])
 			.datagrid('load', '@Url.Page("/Contragents/Index")?handler=Data');
 
 	}
@@ -330,7 +364,7 @@
 	var onEdit = (index) => {
 		var contragent = $dg.datagrid('getRows')[index];
 		getCategoriesByDirectionId(contragent.DirectionId, contragent.Id);
-         
+
 		popupmodal(contragent);
 
 	}

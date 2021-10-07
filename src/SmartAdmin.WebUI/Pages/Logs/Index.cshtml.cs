@@ -10,6 +10,7 @@ using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Razor.Application.Logs.Queries.PaginationQuery;
 using CleanArchitecture.Razor.Application.Features.Logs.Queries.Export;
 using CleanArchitecture.Razor.Application.Features.Logs.Queries.ChatData;
+using System;
 
 namespace SmartAdmin.WebUI.Pages.Logs
 {
@@ -51,6 +52,7 @@ namespace SmartAdmin.WebUI.Pages.Logs
         {
             var result = await _mediator.Send(command);
             return new JsonResult(result);
+            
         }
 
     }

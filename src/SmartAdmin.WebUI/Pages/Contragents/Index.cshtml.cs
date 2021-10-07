@@ -78,7 +78,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             //var result = await _identityService.FetchUsers("Admin");
             var result = await _mediator.Send(new GetAllCategoriesQuery());
             Categories = (List<CategoryDto>)result;
-
+            //string description = Enum.GetName(typeof(CleanArchitecture.Razor.Domain.Enums.RequestStatus), -1);
             await LoadDirection();
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] ContragentsWithPaginationQuery command)
