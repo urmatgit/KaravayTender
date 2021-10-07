@@ -132,11 +132,14 @@
 			GetCategoriesFail: '@_localizer["Get categories fail"]',
 			   IconPrefix:  '@(Settings.Theme.IconPrefix)'
 		}
+		let currentEditRow = "";
+		
         $("#saveButton").click(function (event) {
             getCheckedCategories();
 
 
-        });
+		});
+       
 	$('#searchbutton').click(function () {
 		reloadData();
 	});
@@ -258,6 +261,22 @@
 
 	}
 
+		$('#contragent_modal').on('shown.bs.modal', function () {
+			if (currentEditRow && currentEditRow.ContragentCategories && currentEditRow.ContragentCategories.length>0) {
+				var categories = $('#contragent_form [name*="category.Name"]');//  document.getElementsByName("category.Name");
+				let values = currentEditRow.ContragentCategories;
+				for (var checkbox of categories) {
+
+					//$(checkbox).prop('checked', true);
+					let finded = values.find(o => o.CategoryId == checkbox.id);
+					if (finded)
+					     $(checkbox).prop('checked', true);
+
+
+				}
+			}
+            console.log('shown.bs.modal');
+        })
 	var reloadData = () => {
 		$dg.datagrid('load', '@Url.Page("/Contragents/Index")?handler=Data');
 	}
@@ -271,6 +290,7 @@
 		$('#contragent_form').clearForm();
 		$('#contragent_form')[0].reset();
 		if (contragent) {
+			currentEditRow = contragent;
 			$('#contragent_modal .modal-title').html('@_localizer["Edit Contragent"]');
 			$('#contragent_form').jsonToForm(contragent, {
                 IsService: function (value) {
@@ -279,7 +299,27 @@
                     } else {
                         $('#contragent_form [name*="IsService"]').prop('checked', false);
                     }
-                }
+				},
+				ContragentCategories: function (values) {
+                    console.log("ContragentCategories");
+					console.log(values);
+
+     //               $('#contragent_form [name*="category.Name"]').prop('checked', true);
+					var categories = $('#contragent_form [name*="category.Name"]');//  document.getElementsByName("category.Name");
+                    for (var checkbox of categories) {
+
+                        $(checkbox).prop('checked', true);
+						//let finded = values.find(o => o.CategoryId == checkbox.id);
+						//if (finded)
+      //                      $(checkbox).prop('checked', true);
+
+
+                    }
+				},
+				//DirectionId: function (value) {
+    //                $('#contragent_form [name*="category.Name"]').prop('value', true);
+    //            }
+
 			})
 		} else {
 			$('#contragent_form #Input_Id').val(0)
@@ -289,8 +329,10 @@
 
 	var onEdit = (index) => {
 		var contragent = $dg.datagrid('getRows')[index];
-        getCategoriesByDirectionId(contragent.DirectionId);
+		getCategoriesByDirectionId(contragent.DirectionId, contragent.Id);
+         
 		popupmodal(contragent);
+
 	}
 	var onDelete = (id) => {
 		bootbox.confirm({

@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Http;
 using CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands.AddEdit;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using CleanArchitecture.Razor.Application.Features.ContragentCategories.Queries.GetAll;
 
 namespace SmartAdmin.WebUI.Pages.Contragents
 {
@@ -99,10 +100,25 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             //Input.Directions = directionsDtos;
             Directions = new SelectList(directionsDtos, "Id", "Name");
         }
-        public async Task<PartialViewResult> OnGetCategoriesAsync([FromQuery]int directionid)
+        public async Task<PartialViewResult> OnGetCategoriesAsync([FromQuery]int directionid,int contragentid=0)
         {
             var command = new GetAllCategoriesQuery() { DirectionId = directionid };
             var result = await _mediator.Send(command);
+            if (result?.Count()>0 && contragentid > 0)
+            {
+                var contragent = new GetByContragentCategoryQuery() { ContragentId = contragentid };
+                var resultContragent = await _mediator.Send(contragent);
+                if (resultContragent?.Count()>0)
+                {
+                    foreach (var cat in resultContragent)
+                    {
+                        var ResCat = result.FirstOrDefault(c => c.Id == cat.CategoryId);
+                        if (ResCat != null)
+                            ResCat.IsCheck = true;
+                        
+                    }
+                }
+            }
             return Partial("_CategoriesListPartial", result.ToList());// new JsonResult(result);
         }
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)

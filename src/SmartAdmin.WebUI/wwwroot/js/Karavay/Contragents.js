@@ -1,5 +1,5 @@
-function getCategoriesByDirectionId(id) {
-    axios.get('/Contragents/Register?handler=Categories&directionid=' + id)
+function getCategoriesByDirectionId(id, contragentid) {
+    axios.get('/Contragents/Register?handler=Categories&directionid=' + id )
         .then(res => {
             console.log(res);
 
