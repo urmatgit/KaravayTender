@@ -12,6 +12,7 @@ using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 
@@ -28,6 +29,7 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<AddOrDelContragentCategorysCommandHandler> _localizer;
+        
         public AddOrDelContragentCategorysCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<AddOrDelContragentCategorysCommandHandler> localizer,
@@ -51,19 +53,21 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
                     {
                         foreach (CategoryDto category in categories)
                         {
-                            var item = await _context.ContragentCategories.FindAsync(new object[] { request.ContragentId, category.Id }, cancellationToken);
+                            var item = await _context.ContragentCategories.AsNoTracking().FirstOrDefaultAsync(f => f.ContragentId == request.ContragentId && f.CategoryId == category.Id,cancellationToken); //FindAsync(new object[] { request.ContragentId, category.Id }, cancellationToken);
+                            
                             if (item != null)
                             {
                                 //Finded
                                 if (!category.IsCheck)
                                 {
                                     //delete
-                                    item = new ContragentCategory()
+                                    var item1 = new ContragentCategory()
                                     {
                                         ContragentId = request.ContragentId,
                                         CategoryId = category.Id
                                     };
-                                    _context.ContragentCategories.Remove(item);
+                                    _context.ContragentCategories.Remove(item1);
+                                    
                                 }
 
 
@@ -73,12 +77,13 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
                                 if (category.IsCheck)
                                 {
                                     //add
-                                    item = new ContragentCategory()
+                                    var item1 = new ContragentCategory()
                                     {
                                         ContragentId = request.ContragentId,
                                         CategoryId = category.Id
                                     };
-                                    _context.ContragentCategories.Add(item);
+                                    _context.ContragentCategories.Add(item1);
+                                    
                                 }
                             }
                         }
