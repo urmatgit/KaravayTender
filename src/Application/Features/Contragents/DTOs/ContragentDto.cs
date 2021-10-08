@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
@@ -17,6 +18,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
             //profile.CreateMap<Contragent, ContragentDto>().ReverseMap();
             profile.CreateMap<Contragent, ContragentDto>()
                 .ForMember(x => x.DirectionName, s => s.MapFrom(y => y.Direction.Name));
+            profile.CreateMap<Contragent, ContragentDto>()
+                .ForMember(x => x.StatusStr, s => s.MapFrom(y => y.Status.ToDescriptionString()));
             profile.CreateMap<ContragentDto, Contragent>(MemberList.None);
 
         }
@@ -60,7 +63,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         //public string RegistrationNumber { get; set; }
         //public string Password { get; set; }
         public ContragentStatus Status { get; set; } = ContragentStatus.OnRegistration;
-        
+        public string StatusStr { get; set; } = ContragentStatus.OnRegistration.ToDescriptionString();
         public int DirectionId { get; set; }
         public virtual DirectionDto Direction { get; set; }
         public string DirectionName { get; set; }

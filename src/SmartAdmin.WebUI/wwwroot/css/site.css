@@ -1,4 +1,4 @@
-﻿/* Bootstrap Validation Summary Override */
+/* Bootstrap Validation Summary Override */
 /* Bootstrap Validation Summary Override */
 .validation-summary-valid {
     display: none;
@@ -119,3 +119,6 @@ pre.prettyprint {
     }
 
 /* Enter custom CSS rules for your application here */
+.form-group {
+    margin-bottom: 1rem;
+}

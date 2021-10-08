@@ -240,7 +240,7 @@
 					}
 				},
 
-				{ field: 'Status', title: '@_localizer["Status"]', sortable: true, width: 100 },
+				{ field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 100 },
 				{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 100 },
 				{ field: 'FullName', title: '@_localizer["Full name"]', sortable: true, width: 180 },
 				{ field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 180 },
@@ -261,7 +261,7 @@
 		})
 			.datagrid('enableFilter', [
 				{
-					field: 'Status',
+					field: 'StatusStr',
 					type: 'combobox',
 					options:{
 						panelHeight: 'auto',
@@ -270,23 +270,27 @@
 									value: null,
 									text: 'Все'
 								},
-								@foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.RequestStatus)))
+								@foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
 								{
 									<text>
 									{
 										value: '@val',
-										text:'@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.RequestStatus)val).ToDescriptionString()))'
+										text:'@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'
 									},
 									</text>
 								}
 						],
+
 						onChange: function (newValue, oldValue) {
+							
+								$dg.datagrid('addFilterRule', {
+									field: 'Status',
+									op: 'equal',
+                                    value: newValue
+								});
+							
 							console.log(newValue);
-                            $dg.datagrid('contragent_dg', {
-								field: 'Status',
-								op: 'equal',
-								value: newValue
-							});
+                            
 						}
 					}
 				}
@@ -333,26 +337,7 @@
                     } else {
                         $('#contragent_form [name*="IsService"]').prop('checked', false);
                     }
-				},
-				ContragentCategories: function (values) {
-                    console.log("ContragentCategories");
-					console.log(values);
-
-     //               $('#contragent_form [name*="category.Name"]').prop('checked', true);
-					var categories = $('#contragent_form [name*="category.Name"]');//  document.getElementsByName("category.Name");
-                    for (var checkbox of categories) {
-
-                        $(checkbox).prop('checked', true);
-						//let finded = values.find(o => o.CategoryId == checkbox.id);
-						//if (finded)
-      //                      $(checkbox).prop('checked', true);
-
-
-                    }
-				},
-				//DirectionId: function (value) {
-    //                $('#contragent_form [name*="category.Name"]').prop('value', true);
-    //            }
+				}
 
 			})
 		} else {
