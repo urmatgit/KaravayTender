@@ -1,0 +1,76 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel>  _localizer
+
+@model IndexModel
+@{
+
+}
+<div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
+<div class="form-group row">
+    <div class="col-md-3 mat my-auto ">
+        <label class="col-xl-12 form-label ">@_localizer["Login"] <span class="text-danger">*</span></label>
+    </div>
+    <div class="col-md-9">
+        <input type="text" asp-for="UserFormModel.Login" class="form-control" placeholder=@_localizer["Name"] />
+        <span class="invalid-feedback" asp-validation-for="UserFormModel.Login"></span>
+    </div>
+
+</div>
+<div class="form-group row">
+    <div class="col-md-3 mat my-auto ">
+        <label class="col-xl-12 form-label ">@_localizer["Password"] <span class="text-danger">*</span></label>
+    </div>
+    <div class="col-md-9">
+        <input type="text" asp-for="UserFormModel.Password" class="form-control" placeholder=@_localizer["Password"] />
+        <span class="invalid-feedback" asp-validation-for="UserFormModel.Password"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3 mat my-auto ">
+        <label class="col-xl-12 form-label ">@_localizer["Please confirm your password"] <span class="text-danger">*</span></label>
+    </div>
+    <div class="col-md-9">
+        <input type="text" asp-for="UserFormModel.ConfirmPassword" class="form-control" placeholder=@_localizer["Please confirm your password"] />
+        <span class="invalid-feedback" asp-validation-for="UserFormModel.ConfirmPassword"></span>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-md-2 mat my-auto">
+        <label class="form-label" for="name">@_localizer["Maneger"] <span class="text-danger">*</span></label>
+
+    </div>
+    <div class="col-md-10">
+
+        <select type="text" asp-for="Input.ManagerId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Manager"]">
+            <option value="">@_localizer["Choose direction"]</option>
+        </select>
+
+        <span class="invalid-feedback" asp-validation-for="Input.ManagerId"></span>
+    </div>
+
+</div>
+<div class="form-group row">
+    <div class="col-md-3 mat my-auto ">
+        <label class="col-xl-12 form-label ">@_localizer["Manager phone"] <span class="text-danger">*</span></label>
+    </div>
+    <div class="col-md-9">
+        <input type="text" asp-for="UserFormModel.ManagerPhone" class="form-control" placeholder=@_localizer["Manager phone"] />
+        <span class="invalid-feedback" asp-validation-for="UserFormModel.ManagerPhone"></span>
+    </div>
+</div>
+div class="form-group row">
+
+<div class="col-md-2 mat my-auto">
+    <label class="form-label" for="IsService">@_localizer["Active"]</label>
+
+</div>
+<div class="col-md-10">
+
+    <div class="custom-control custom-checkbox">
+        <input type="checkbox" asp-for="UserFormModel.Active" class="custom-control-input" value="true">
+        <label class="custom-control-label" for="Input_IsService"></label>
+    </div>
+
+    <span class="invalid-feedback" asp-validation-for="UserFormModel.Active"></span>
+</div>
+

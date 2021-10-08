@@ -1,8 +1,11 @@
 ﻿
 @model IndexModel
+@using CleanArchitecture.Razor.Infrastructure.Constants.Permission
 @inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel>  _localizer
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
 @{
-    SelectList DirectionList = @ViewData["Directions"] as SelectList;
+    //SelectList DirectionList = @ViewData["Directions"] as SelectList;
+    var _canAcceditation = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Acceditation);
 }
 <form id="contragent_form" class="needs-validation" novalidate="novalidate" enctype="multipart/form-data">
     <div class="modal-body">
@@ -20,7 +23,7 @@
                 <a class="nav-link" data-toggle="tab" href="#tab_3" role="tab"><i class="@(Settings.Theme.IconPrefix) fa-file mr-1"></i> @_localizer["Files"]</a>
             </li>
             <!--For manager-->
-            <li class="nav-item" style="display:none">
+            <li class="nav-item" >
                 <a class="nav-link" data-toggle="tab" href="#tab_4" role="tab"><i class="@(Settings.Theme.IconPrefix) fa-check-square mr-1"></i> @_localizer["Accreditation"]</a>
             </li>
         </ul>
@@ -30,17 +33,16 @@
             </div>
             <div class="tab-pane fade show p-3" id="tab_2" role="tabpanel">
                 <partial name="../Contragents/Index/CategoryPanel" />
-
-
-
             </div>
-            <div class="tab-pane fade show" id="tab_3" role="tabpanel">
+            <div class="tab-pane fade show  p-3" id="tab_3" role="tabpanel">
                 <partial name="../Contragents/Index/FilesPanel" />
             </div>
-
-            <div class="tab-pane fade " id="tab_4" role="tabpanel">
-                <p> tab4</p>
-            </div>
+            @if (_canAcceditation.Succeeded)
+            {
+                <div class="tab-pane fade show  p-3" id="tab_4" role="tabpanel">
+                    <partial name="../Contragents/Index/AccreditationPanel" />
+                </div>
+            }
         </div>
 
     </div>

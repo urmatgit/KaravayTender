@@ -193,6 +193,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Search = "Permissions.Contragents.Search";
             public const string Export = "Permissions.Contragents.Export";
             public const string Import = "Permissions.Contragents.Import";
+            public const string Acceditation = "Permissions.Contragents.Acceditation";
         }
         /// <summary>
         /// Returns a list of Permissions.

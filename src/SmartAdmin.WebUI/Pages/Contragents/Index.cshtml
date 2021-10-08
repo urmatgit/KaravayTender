@@ -18,6 +18,7 @@
     var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Search);
     var _canImport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Import);
     var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Export);
+    var _canAcceditation = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Acceditation);
 
 }
 @section HeadBlock {

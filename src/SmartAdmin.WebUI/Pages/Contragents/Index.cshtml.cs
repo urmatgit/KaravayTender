@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -44,6 +45,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         private readonly ILogger<IndexModel> _logger;
         [BindProperty]
         public AddEditContragentCommand Input { get; set; }
+        [BindProperty]
+        public UserModel UserFormModel { get; set; } = new();
 
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
@@ -90,7 +93,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 var result = await _mediator.Send(command);
                 return new JsonResult(result);
             }
-            catch (ValidationException ex)
+            catch (CleanArchitecture.Razor.Application.Common.Exceptions.ValidationException ex)
             {
                 var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
                 return BadRequest(Result.Failure(errors));
@@ -126,7 +129,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 }
                 return new JsonResult(result);
             }
-            catch (ValidationException ex)
+            catch (CleanArchitecture.Razor.Application.Common.Exceptions.ValidationException ex)
             {
                 var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
                 return BadRequest(Result.Failure(errors));
@@ -180,6 +183,31 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             //Debug.WriteLine(JsonConvert.SerializeObject(directionsDtos));
             //Input.Directions = directionsDtos;
             Directions = new SelectList(directionsDtos, "Id", "Name");
+        }
+        public class UserModel
+        {
+            
+            [Display(Name = "User Name")]
+            [Required]
+            public string Login { get; set; }
+
+            [Display(Name = "Manager phone")]
+            [Required]
+            public string ManagerPhone { get; set; }
+
+            [Required]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [DataType(DataType.Password)]
+            [Display(Name = "Password")]
+            public string Password { get; set; }
+
+            [DataType(DataType.Password)]
+            [Display(Name = "Confirm password")]
+            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            public string ConfirmPassword { get; set; }
+            public bool Active { get; set; }
+                 
+
         }
     }
 }
