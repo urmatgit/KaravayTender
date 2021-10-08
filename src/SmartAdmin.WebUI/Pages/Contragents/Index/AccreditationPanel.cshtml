@@ -35,14 +35,13 @@
 </div>
 
 <div class="form-group row">
-    <div class="col-md-2 mat my-auto">
-        <label class="form-label" for="name">@_localizer["Maneger"] <span class="text-danger">*</span></label>
-
+    <div class="col-md-3 mat my-auto">
+        <label class="col-xl-12 form-label" for="name">@_localizer["Manager"] <span class="text-danger">*</span></label>
     </div>
-    <div class="col-md-10">
+    <div class="col-md-9">
 
         <select type="text" asp-for="Input.ManagerId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Manager"]">
-            <option value="">@_localizer["Choose direction"]</option>
+            <option value="">@_localizer["Choose manager"]</option>
         </select>
 
         <span class="invalid-feedback" asp-validation-for="Input.ManagerId"></span>
@@ -58,19 +57,23 @@
         <span class="invalid-feedback" asp-validation-for="UserFormModel.ManagerPhone"></span>
     </div>
 </div>
-div class="form-group row">
 
-<div class="col-md-2 mat my-auto">
-    <label class="form-label" for="IsService">@_localizer["Active"]</label>
 
-</div>
-<div class="col-md-10">
+<div class="form-group row">
 
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" asp-for="UserFormModel.Active" class="custom-control-input" value="true">
-        <label class="custom-control-label" for="Input_IsService"></label>
+    <div class="col-md-3 mat my-auto">
+        <label class="col-xl-12 form-label" for="IsService">@_localizer["Active"]</label>
+
     </div>
+    <div class="col-md-9">
 
-    <span class="invalid-feedback" asp-validation-for="UserFormModel.Active"></span>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" asp-for="UserFormModel.Active" class="custom-control-input" value="true">
+            <label class="custom-control-label" for="Input_IsService"></label>
+        </div>
+
+        <span class="invalid-feedback" asp-validation-for="UserFormModel.Active"></span>
+    </div>
 </div>
 
+ 
