@@ -133,6 +133,22 @@
 			GetCategoriesFail: '@_localizer["Get categories fail"]',
 			   IconPrefix:  '@(Settings.Theme.IconPrefix)'
 		}
+
+		var YesNotList = [
+			{
+				id: '',
+				text: 'Все'
+			},
+			{
+            id: 'true',
+            text: 'Да'
+			},
+            {
+                id: 'false',
+                text: 'Нет'
+            }
+
+		]
 		let currentEditRow = "";
 
         $("#saveButton").click(function (event) {
@@ -225,7 +241,7 @@
 				{
 					field: '_action',
 					title: '@_localizer["Command"]',
-					width: 100,
+					width: 80,
 					align: 'center',
 					formatter: function (value, row, index) {
 						return `<div class="btn-group" role="group">
@@ -240,12 +256,13 @@
 					}
 				},
 
-				{ field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 100 },
+				{ field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 140 },
 				{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 100 },
 				{ field: 'FullName', title: '@_localizer["Full name"]', sortable: true, width: 180 },
 				{ field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 180 },
 				{
-					field: 'IsService', title: '@_localizer["Service"]', align: 'center', sortable: true, width: 80, formatter: checkboxformatter
+					field: 'IsServiceStr', title: '@_localizer["Service"]', align: 'center', sortable: true, width: 80, formatter: checkboxformatter
+				
 				},
 				{ field: 'INN', title: '@_localizer["INN"]', sortable: true, width: 120 },
 				{ field: 'KPP', title: '@_localizer["KPP"]', sortable: true, width: 120 },
@@ -263,42 +280,101 @@
 				{
 					field: 'StatusStr',
 					type: 'combobox',
-					options:{
+					options: {
 						panelHeight: 'auto',
 						data: [
-								{
-									value: null,
-									text: 'Все'
-								},
+							{
+								value: null,
+								text: 'Все'
+							},
 								@foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
 								{
 									<text>
-									{
-										value: '@val',
-										text:'@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'
-									},
+							{
+								value: '@val',
+								text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'
+							},
 									</text>
 								}
 						],
 
 						onChange: function (newValue, oldValue) {
-							
-								$dg.datagrid('addFilterRule', {
-									field: 'Status',
-									op: 'equal',
-                                    value: newValue
-								});
-							
+
+							$dg.datagrid('addFilterRule', {
+								field: 'Status',
+								op: 'equal',
+								value: newValue
+							});
+
 							console.log(newValue);
-                            
+
 						}
 					}
+				},
+
+				{
+                    field: 'IsServiceStr',
+					type: 'combobox',
+					options: {
+						panelHeight: 'auto',
+						valueField: 'id',
+						textField:'text',
+						data: YesNotList,
+                        onChange: function (newValue, oldValue) {
+                            console.log(newValue);
+                            $dg.datagrid('addFilterRule', {
+                                field: 'IsService',
+                                op: 'equal',
+                                value: newValue
+                            });
+
+                        }
+
+					}
+
 				}
 			])
 			.datagrid('load', '@Url.Page("/Contragents/Index")?handler=Data');
 
 	}
+        InitComboFilter = function (dg, field, data, url, valueField, textField) {
+            var comboOption;
 
+                comboOption = {
+                    panelHeight: 'auto',
+                    data: data,
+                    valueField: valueField,
+                    textField: textField,
+                    panelMaxHeight: 200,
+                    onChange: function (value) {
+                        DoComboFilter($dg, data, field, value );
+                    }
+                };
+
+            var filter = {
+                field: field,
+                type: 'combobox',
+                options: comboOption,
+            }
+            //$(".datagrid-filter-row td[field='" + field + "']").find("input").height(22);
+            //console.log($(".datagrid-filter-row").html());
+            return filter;
+		};
+        function DoComboFilter($dg, data, field, value ) {
+            if (value == "") {
+                $dg.datagrid('removeFilterRule', field);
+                $dg.datagrid('doFilter');
+                return;
+            }
+            // if (Common.CommonHelper.lslnArray(data, value, checkFiled)) {
+            $dg.datagrid('addFilterRule', {
+                field: field,
+                op: 'equal',
+                value: 1
+            });
+            //$dg.datagrid('doFilter');
+            // }
+        }
 		$('#contragent_modal').on('shown.bs.modal', function () {
 			if (currentEditRow && currentEditRow.ContragentCategories && currentEditRow.ContragentCategories.length>0) {
 				var categories = $('#contragent_form [name*="category.Name"]');//  document.getElementsByName("category.Name");

@@ -55,6 +55,13 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         /// Услуга
         /// </summary>
         public bool IsService { get; set; }
+        public bool IsServiceStr
+        {
+            get
+            {
+                return IsService;
+            }
+        }
         public string ManagerId { get; set; }
 
         /// <summary>

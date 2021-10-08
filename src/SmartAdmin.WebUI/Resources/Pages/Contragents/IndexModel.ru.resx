@@ -121,7 +121,7 @@
     <value>Добавить</value>
   </data>
   <data name="Add Contragent" xml:space="preserve">
-    <value>Добавление контрагенда</value>
+    <value>Добавление контрагенты</value>
   </data>
   <data name="Add Direction" xml:space="preserve">
     <value>Направление</value>
@@ -187,7 +187,7 @@
     <value>Редактировать</value>
   </data>
   <data name="Edit Contragent" xml:space="preserve">
-    <value>Редактирование контрагенда</value>
+    <value>Редактирование контрагенты</value>
   </data>
   <data name="Edit Direction" xml:space="preserve">
     <value>Редактировать направление</value>
