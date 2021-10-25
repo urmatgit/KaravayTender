@@ -40,11 +40,11 @@
     </div>
     <div class="col-md-9">
 
-        <select type="text" asp-for="Input.ManagerId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Manager"]">
+        <select type="text" asp-for="Input.ManagerId" asp-items="Model.Managers" class="custom-select" placeholder="@_localizer["Manager"]"  required>
             <option value="">@_localizer["Choose manager"]</option>
         </select>
 
-        <span class="invalid-feedback" asp-validation-for="Input.ManagerId"></span>
+        <span class="invalid-feedback" asp-validation-for="Input.ManagerId">Не выбрано 'Направление'</span>
     </div>
 
 </div>
@@ -69,7 +69,7 @@
 
         <div class="custom-control custom-checkbox">
             <input type="checkbox" asp-for="UserFormModel.Active" class="custom-control-input" value="true">
-            <label class="custom-control-label" for="Input_IsService"></label>
+            <label class="custom-control-label" for="UserFormModel_Active"></label>
         </div>
 
         <span class="invalid-feedback" asp-validation-for="UserFormModel.Active"></span>

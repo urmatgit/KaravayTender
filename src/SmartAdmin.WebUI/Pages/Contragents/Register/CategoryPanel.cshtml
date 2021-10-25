@@ -29,7 +29,9 @@
     </div>
     <div class="col-md-10">
 
-        <select type="text" asp-for="Input.DirectionId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Direction"]">
+      
+
+        <select type="text" asp-for="Input.DirectionId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Direction"]"  data-val-required= "Не выбрано 'Направление'">
             <option value="">@_localizer["Choose direction"]</option>
         </select>
 

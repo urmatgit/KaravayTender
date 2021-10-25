@@ -414,7 +414,14 @@
                     } else {
                         $('#contragent_form [name*="IsService"]').prop('checked', false);
                     }
-				}
+				},
+                Active: function (value) {
+                    if (value == true) {
+                        $('#contragent_form [name*="Active"]').prop('checked', true);
+                    } else {
+                        $('#contragent_form [name*="Active"]').prop('checked', false);
+                    }
+                }
 
 			})
 		} else {

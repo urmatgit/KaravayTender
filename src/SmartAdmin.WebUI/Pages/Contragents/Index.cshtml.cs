@@ -21,9 +21,11 @@ using CleanArchitecture.Razor.Application.Features.Contragents.Queries.Paginatio
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Razor.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -43,6 +45,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         private readonly ISender _mediator;
         private readonly IStringLocalizer<IndexModel> _localizer;
         private readonly ILogger<IndexModel> _logger;
+        private readonly  UserManager<ApplicationUser> _userManager;
         [BindProperty]
         public AddEditContragentCommand Input { get; set; }
         [BindProperty]
@@ -56,6 +59,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         [BindProperty]
         public string CategoryIds { get; set; }
         public SelectList Directions { get; set; }
+        public SelectList Managers { get; set; }
         public List<CategoryDto> Categories { get; set; } = new();
 
         public IndexModel(
@@ -64,9 +68,11 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             ICurrentUserService currentUserService,
             ISender mediator,
             IStringLocalizer<IndexModel> localizer,
-               ILogger<IndexModel> logger
+               ILogger<IndexModel> logger,
+               UserManager<ApplicationUser> userManager
             )
         {
+            _userManager = userManager;
             _logger = logger;
             _identityService = identityService;
             _authorizationService = authorizationService;
@@ -83,6 +89,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             Categories = (List<CategoryDto>)result;
             //string description = Enum.GetName(typeof(CleanArchitecture.Razor.Domain.Enums.RequestStatus), -1);
             await LoadDirection();
+            await LoadManagers();
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] ContragentsWithPaginationQuery command)
         {
@@ -184,26 +191,31 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             //Input.Directions = directionsDtos;
             Directions = new SelectList(directionsDtos, "Id", "Name");
         }
+        private async Task LoadManagers()
+        {
+            var managers = await _userManager.GetUsersInRoleAsync("Manager");
+            Managers = new SelectList(managers.Select(u => new { Id = u.Id, Name = string.IsNullOrEmpty(u.DisplayName) ? u.UserName : u.DisplayName }), "Id", "Name");
+        }
         public class UserModel
         {
             
             [Display(Name = "User Name")]
-            [Required]
+            [Required(ErrorMessage = "'Логин' является обязательным")]
             public string Login { get; set; }
 
             [Display(Name = "Manager phone")]
-            [Required]
+            [Required(ErrorMessage = "Телефон номер менеджера не указан")]
             public string ManagerPhone { get; set; }
 
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "'Пароль' является обязательным")]
+            [StringLength(20, ErrorMessage = "Пароль должен содержать не менее {2} и не более {1} символов.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Compare("Password", ErrorMessage = "Пароль и пароль подтверждения не совпадают.")]
             public string ConfirmPassword { get; set; }
             public bool Active { get; set; }
                  

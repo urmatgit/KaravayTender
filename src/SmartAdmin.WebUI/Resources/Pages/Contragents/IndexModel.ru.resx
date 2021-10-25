@@ -153,6 +153,9 @@
   <data name="Choose direction" xml:space="preserve">
     <value>Выберите направление</value>
   </data>
+  <data name="Choose manager" xml:space="preserve">
+    <value>Выберите менеджера</value>
+  </data>
   <data name="Close" xml:space="preserve">
     <value>Закрыть</value>
   </data>

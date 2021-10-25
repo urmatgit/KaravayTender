@@ -12,12 +12,7 @@
       "icon": "fal fa-cubes",
       "roles": [ "Admin", "Manager", "Super" ],
       "items": [
-        {
-          "title": "Внешние заявки",
-          "icon": "fal fa-luggage-cart",
-
-          "roles": []
-        }
+        
       ]
     },
     {
