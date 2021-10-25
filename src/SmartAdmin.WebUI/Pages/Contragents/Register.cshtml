@@ -67,7 +67,10 @@
    <script>
         $(document).ready(function () {
             $(":input").inputmask();
+            $("#js-login").data("validator").settings.ignore = "";
+           
         });
+        
         var translations = {
             FileSizeToBig: '@_localizer["File too big!"]',
             GetCategoriesFail: '@_localizer["Get categories fail"]',

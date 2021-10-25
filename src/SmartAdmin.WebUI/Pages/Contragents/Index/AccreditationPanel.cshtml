@@ -20,7 +20,7 @@
         <label class="col-xl-12 form-label ">@_localizer["Password"] <span class="text-danger">*</span></label>
     </div>
     <div class="col-md-9">
-        <input type="text" asp-for="UserFormModel.Password" class="form-control" placeholder=@_localizer["Password"] />
+        <input type="text" asp-for="UserFormModel.Password" class="form-control" placeholder=@_localizer["Password"] value="" required="required" pattern="^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{6,}$" />
         <span class="invalid-feedback" asp-validation-for="UserFormModel.Password"></span>
     </div>
 </div>
@@ -40,11 +40,11 @@
     </div>
     <div class="col-md-9">
 
-        <select type="text" asp-for="Input.ManagerId" asp-items="Model.Managers" class="custom-select" placeholder="@_localizer["Manager"]"  required>
+        <select type="text" asp-for="Input.ManagerId" asp-items="Model.Managers" class="custom-select" placeholder="@_localizer["Manager"]"   >
             <option value="">@_localizer["Choose manager"]</option>
         </select>
 
-        <span class="invalid-feedback" asp-validation-for="Input.ManagerId">Не выбрано 'Направление'</span>
+        <span class="invalid-feedback" asp-validation-for="Input.ManagerId">Не выбрано 'Менеджер'</span>
     </div>
 
 </div>

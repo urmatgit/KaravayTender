@@ -171,6 +171,9 @@
   <data name="Contragent Info" xml:space="preserve">
     <value>Поставщике</value>
   </data>
+  <data name="Contragents" xml:space="preserve">
+    <value>Контрагенты</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Удалить</value>
   </data>

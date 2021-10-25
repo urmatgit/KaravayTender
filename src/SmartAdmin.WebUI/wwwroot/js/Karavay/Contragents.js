@@ -1,3 +1,20 @@
+function getConragentUserById(id) {
+    axios.get('/Contragents/Index?handler=ContragentUser&id=' + id)
+        .then(res => {
+            console.log(res);
+
+        })
+        .catch((error) => {
+            if (error.response.data.Errors) {
+                const errors = error.response.data.Errors;
+                errors.forEach(item => {
+                    toastr["error"](item);
+                });
+            } else {
+                toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
+            }
+        });
+}
 function getCategoriesByDirectionId(id, contragentid) {
     axios.get('/Contragents/Register?handler=Categories&directionid=' + id )
         .then(res => {

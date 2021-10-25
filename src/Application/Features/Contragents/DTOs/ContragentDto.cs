@@ -26,36 +26,36 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         public string ApplicationUserId { get; set; }
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Не указано наименование")]
+        [Required(ErrorMessage = "'Наименование' является обязательным ")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Не указано полное наименование")]
+        [Required(ErrorMessage = "'Полное наименование' является обязательным")]
         public string FullName { get; set; }
 
-        [Required(ErrorMessage = "Не указано ИНН")]
+        [Required(ErrorMessage = "'ИНН' является обязательным")]
         public string INN { get; set; }
         
         public string KPP { get; set; }
        
         public string Site { get; set; }
 
-        [Required(ErrorMessage = "'Телефон организации' должно быть заполнено")]
+        [Required(ErrorMessage = "'Телефон организации' является обязательным")]
         public string Phone { get; set; }
         /// <summary>
         /// Контакное лицо
         /// </summary>
-        [Required(ErrorMessage = "'Контакное лицо' должно быть заполнено")]
+        [Required(ErrorMessage = "'Контакное лицо' является обязательным")]
         public string ContactPerson { get; set; }
 
-        [Required(ErrorMessage = "'Моб. тел. контакного лица' должно быть заполнено")]
+        [Required(ErrorMessage = "'Моб. тел. контакного лица' является обязательным")]
         public string ContactPhone { get; set; }
 
-        [Required(ErrorMessage = "'Адрес электроной почты' должно быть заполнено")]
+        [Required(ErrorMessage = "'Адрес электроной почты' является обязательным")]
         public string Email { get; set; }
         /// <summary>
         /// вид деятельности
         /// </summary>
-        [Required(ErrorMessage = "'Вид деятельности' должно быть заполнено")]
+        [Required(ErrorMessage = "'Вид деятельности' является обязательным")]
         public string TypeOfActivity { get; set; }
         /// <summary>
         /// Услуга
@@ -68,6 +68,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
                 return IsService;
             }
         }
+        [Required(ErrorMessage = "Не выбран 'Менеджер'")]
         public string ManagerId { get; set; }
 
         /// <summary>

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Exceptions;
+using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Razor.Application.Common.Models;
@@ -21,6 +22,7 @@ using CleanArchitecture.Razor.Application.Features.Contragents.Queries.Paginatio
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Razor.Infrastructure.Constants.Role;
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -112,29 +114,48 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         }
         public async Task<IActionResult> OnPostAsync()
         {
+
             try
             {
-                var result = await _mediator.Send(Input);
-                if (result.Succeeded)
+                if (ModelState.IsValid)
                 {
-                    var ContragetnCategory = new AddOrDelContragentCategorysCommand()
+                    var result = await _mediator.Send(Input);
+                    if (result.Succeeded)
                     {
-                        ContragentId = result.Data,
-                        CategoriesJson = CategoryIds
-                    };
-                    var resultContragentCategory = await _mediator.Send(ContragetnCategory);
+                        var ContragetnCategory = new AddOrDelContragentCategorysCommand()
+                        {
+                            ContragentId = result.Data,
+                            CategoriesJson = CategoryIds
+                        };
+                        var resultContragentCategory = await _mediator.Send(ContragetnCategory);
 
-                    if (resultContragentCategory.Succeeded)
-                    {
-                        _logger.LogInformation($"Категории добавлены {resultContragentCategory.Data} - {Input.Name} ");
-                    }
-                    else
-                    {
-                        return BadRequest(Result.Failure(resultContragentCategory.Errors));
+                        if (resultContragentCategory.Succeeded)
+                        {
+                            _logger.LogInformation($"Категории добавлены {resultContragentCategory.Data} - {Input.Name} ");
+                        }
+                        else
+                        {
+                            return BadRequest(Result.Failure(resultContragentCategory.Errors));
+
+                        }
+                        var user = await CreateUser();
+                        if (!user.Item1.Succeeded)
+                        {
+                            var errors = user.Item1.Errors.Select(x => $"{ string.Join(",", x.Description) }");
+                            return    BadRequest(errors);
+                        }else
+                        {
+                            Input.ApplicationUserId = user.Item2;
+                        }
                         
                     }
+                    return new JsonResult(result);
                 }
-                return new JsonResult(result);
+                else
+                {
+                    return BadRequest(ModelState);
+
+                }
             }
             catch (CleanArchitecture.Razor.Application.Common.Exceptions.ValidationException ex)
             {
@@ -146,6 +167,31 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
 
+        }
+        private async Task< (IdentityResult,string)> CreateUser()
+        {
+            var user = new ApplicationUser
+            {
+                EmailConfirmed = true,
+                IsActive = UserFormModel.Active,
+                PhoneNumber=UserFormModel.ManagerPhone,
+                DisplayName = Input.Name,
+                UserName = UserFormModel.Login,
+                Email = Input.Email,
+                ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ Input.Email.ToMD5() }?s=120&d=retro"
+            };
+            var result = await _userManager.CreateAsync(user, UserFormModel.Password);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRolesAsync(user, new[] { RoleConstants.SupplierRole });
+                _logger.LogInformation($"User created a new account with password.({UserFormModel.Login} {Input.Name})");
+            }
+            else
+            {
+                _logger.LogError($"User created error.({UserFormModel.Login} {Input.Name})", result.Errors);
+                
+            }
+            return (result,user.Id);
         }
 
         public async Task<IActionResult> OnGetDeleteCheckedAsync([FromQuery] int[] id)
@@ -183,6 +229,24 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
+        public async Task<IActionResult> OnGetContragentUserAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                var manager = await _userManager.FindByIdAsync(Input.ManagerId);
+                UserModel userModel = new UserModel()
+                {
+                    Login = user.UserName,
+                    Active = user.IsActive,
+                    ManagerPhone = manager.PhoneNumber
+                };
+                UserFormModel = userModel;
+
+            }
+            return new JsonResult("");
+
+        }
         private async Task LoadDirection()
         {
             var request = new GetAllDirectionsQuery();
@@ -196,6 +260,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             var managers = await _userManager.GetUsersInRoleAsync("Manager");
             Managers = new SelectList(managers.Select(u => new { Id = u.Id, Name = string.IsNullOrEmpty(u.DisplayName) ? u.UserName : u.DisplayName }), "Id", "Name");
         }
+        
         public class UserModel
         {
             

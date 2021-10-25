@@ -396,7 +396,8 @@
 		$dg.datagrid('load', '@Url.Page("/Contragents/Index")?handler=Data');
 	}
 
-	$(() => {
+		$(() => {
+			$("#contragent_form").data("validator").settings.ignore = "";
 		initdatagrid();
 	})
 	var popupmodal = (contragent) => {
@@ -433,10 +434,11 @@
 	var onEdit = (index) => {
 		var contragent = $dg.datagrid('getRows')[index];
 		getCategoriesByDirectionId(contragent.DirectionId, contragent.Id);
-
+		getConragentUserById(contragent.Id);
 		popupmodal(contragent);
 
-	}
+		}
+
 	var onDelete = (id) => {
 		bootbox.confirm({
 			message: "@_localizer["Are you sure delete a row?"]",
