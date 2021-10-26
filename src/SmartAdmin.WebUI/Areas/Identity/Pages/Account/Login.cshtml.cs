@@ -97,7 +97,7 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Введен неверный логин или пароль");
                     return Page();
                 }
             }

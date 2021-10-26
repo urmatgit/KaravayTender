@@ -21,6 +21,7 @@ using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagination;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
+using CleanArchitecture.Razor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Razor.Infrastructure.Constants.Role;
 using CleanArchitecture.Razor.Infrastructure.Identity;
@@ -141,9 +142,9 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
                         var userApp = await CheckUser(Input.ApplicationUserId);
 
-                        if (string.IsNullOrEmpty(userApp.Id))
+                        if (!userApp.Item2)
                         {
-                            var user = await CreateUser(userApp);
+                            var user = await CreateUser(userApp.Item1);
                             if (!user.Item1.Succeeded)
                             {
                                 var errors = user.Item1.Errors.Select(x => $"{ string.Join(",", x.Description) }");
@@ -156,7 +157,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                             }
                         }else
                         {
-                            var user = await UpdateUser(userApp, UserFormModel, Input.Email, Input.Phone);
+                            var user = await UpdateUser(userApp.Item1, UserFormModel, Input.Email, Input.Phone);
                             if (!user.Succeeded)
                             {
                                 var errors = user.Errors.Select(x => $"{ string.Join(",", x.Description) }");
@@ -176,21 +177,22 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             catch (CleanArchitecture.Razor.Application.Common.Exceptions.ValidationException ex)
             {
                 var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
-                return BadRequest(Result.Failure(errors));
+                return BadRequest(errors);
             }
             catch (Exception ex)
             {
-                return BadRequest(Result.Failure(new string[] { ex.Message }));
+                return BadRequest(new string[] { ex.Message });
             }
 
         }
-        private async Task<ApplicationUser> CheckUser(string id)
+        private async Task<(ApplicationUser,bool)> CheckUser(string id)
         {
             ApplicationUser user=null;
+            bool IsExist = false;
             if (!string.IsNullOrEmpty(id))
             {
                 user = await _userManager.FindByIdAsync(id);
-                
+                IsExist = user != null;
             }
             if (user==null)
             {
@@ -205,11 +207,19 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                     ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ Input.Email.ToMD5() }?s=120&d=retro"
                 };
             }
-            return user;
+            return (user, IsExist);
         }
         private async Task<IdentityResult> UpdateUser(ApplicationUser user, UserModel userModel,string email,string phone)
         {
-            
+
+            var checkEmail = await _userManager.FindByEmailAsync(email);
+            if (checkEmail.UserName != userModel.Login)
+            {
+                return IdentityResult.Failed(new IdentityError
+                {
+                    Description = $"{email} уже используется!"
+                });
+            }
             user.UserName = userModel.Login;
             user.PhoneNumber = phone;
             user.Email = email;
@@ -222,6 +232,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 else
                     _logger.LogError($"User changed password.({userModel.Login})", resultPass.Errors);
             }
+            
             var result = await _userManager.UpdateAsync(user);
             return result;
         }

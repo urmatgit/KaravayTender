@@ -59,6 +59,7 @@ namespace CleanArchitecture.Razor.Infrastructure
             services
                 .AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<ApplicationRole>()
+                .AddErrorDescriber<CustomIdentityErrorDescriber>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -76,6 +77,8 @@ namespace CleanArchitecture.Razor.Infrastructure
                 // Default SignIn settings.
                 options.SignIn.RequireConfirmedEmail = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
+                //options.User.RequireUniqueEmail = true;
+                
                 // Default Lockout settings.
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
