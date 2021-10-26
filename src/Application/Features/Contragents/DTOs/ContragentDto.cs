@@ -70,6 +70,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         }
         [Required(ErrorMessage = "Не выбран 'Менеджер'")]
         public string ManagerId { get; set; }
+        public string ManagerPhone { get; set; }
+        public string Manager { get; set; }
 
         /// <summary>
         /// Логин

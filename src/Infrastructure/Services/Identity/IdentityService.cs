@@ -114,6 +114,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
                 .ToDictionaryAsync(x => x.UserName, y => y.DisplayName);
             return result;
         }
+        
 
         public async Task<Result<TokenResponseDto>> LoginAsync(TokenRequestDto request)
         {
@@ -259,6 +260,15 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
             user.IsLive = true;
             await _userManager.UpdateAsync(user);
             return user.DisplayName;
+        }
+
+        public async Task<List<IApplicationUser>>  FetchUsersEx(string roleName)
+        {
+            var result = await _userManager.Users
+                .Where(x => x.UserRoles.Where(y => y.Role.Name == roleName).Any())
+                .Include(x => x.UserRoles)
+                .ToListAsync();  //ToDictionaryAsync(x => x.UserName, y => y.DisplayName);
+            return result.Cast<IApplicationUser>().ToList();
         }
     }
 }

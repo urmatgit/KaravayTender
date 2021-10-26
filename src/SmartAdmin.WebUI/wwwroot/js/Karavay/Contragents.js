@@ -1,8 +1,9 @@
-function getConragentUserById(id) {
+function getConragentUserById(id,callback) {
     axios.get('/Contragents/Index?handler=ContragentUser&id=' + id)
         .then(res => {
             console.log(res);
-
+            if (callback)
+                callback(res);
         })
         .catch((error) => {
             if (error.response.data.Errors) {

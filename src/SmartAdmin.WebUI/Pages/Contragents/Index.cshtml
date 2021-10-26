@@ -151,7 +151,23 @@
 
 		]
 		let currentEditRow = "";
-
+		function GetManagerPhone(val) {
+            axios.get('/Contragents/Index?handler=Manager&id=' + val)
+                .then(res => {
+					console.log(res);
+                    $('#contragent_form #UserFormModel_ManagerPhone').val(res.data.ManagerPhone);
+                })
+                .catch((error) => {
+                    if (error.response.data.Errors) {
+                        const errors = error.response.data.Errors;
+                        errors.forEach(item => {
+                            toastr["error"](item);
+                        });
+                    } else {
+                        toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
+                    }
+                });
+        }
         $("#saveButton").click(function (event) {
             getCheckedCategories();
 
@@ -263,7 +279,7 @@
 				{ field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 180 },
 				{
 					field: 'IsServiceStr', title: '@_localizer["Service"]', align: 'center', sortable: true, width: 80, formatter: checkboxformatter
-				
+
 				},
 				{ field: 'INN', title: '@_localizer["INN"]', sortable: true, width: 120 },
 				{ field: 'KPP', title: '@_localizer["KPP"]', sortable: true, width: 120 },
@@ -377,6 +393,7 @@
             // }
         }
 		$('#contragent_modal').on('shown.bs.modal', function () {
+            $('#contragent_form #UserFormModel_ManagerPhone').val(currentEditRow.ManagerPhone);
 			if (currentEditRow && currentEditRow.ContragentCategories && currentEditRow.ContragentCategories.length>0) {
 				var categories = $('#contragent_form [name*="category.Name"]');//  document.getElementsByName("category.Name");
 				let values = currentEditRow.ContragentCategories;
@@ -407,24 +424,19 @@
 		$('#contragent_form')[0].reset();
 		if (contragent) {
 			currentEditRow = contragent;
+			console.log(contragent);
 			$('#contragent_modal .modal-title').html('@_localizer["Edit Contragent"]');
 			$('#contragent_form').jsonToForm(contragent, {
-                IsService: function (value) {
-                    if (value == true) {
-                        $('#contragent_form [name*="IsService"]').prop('checked', true);
-                    } else {
-                        $('#contragent_form [name*="IsService"]').prop('checked', false);
-                    }
-				},
-                Active: function (value) {
-                    if (value == true) {
-                        $('#contragent_form [name*="Active"]').prop('checked', true);
-                    } else {
-                        $('#contragent_form [name*="Active"]').prop('checked', false);
-                    }
-                }
-
-			})
+				IsService: function (value) {
+					if (value == true) {
+						$('#contragent_form [name*="IsService"]').prop('checked', true);
+					} else {
+						$('#contragent_form [name*="IsService"]').prop('checked', false);
+					}
+				}
+			});
+			$('#contragent_form #Input_ApplicationUserId').val(contragent.ApplicationUserId);
+			$('#contragent_form #UserFormModel_ManagerPhone').val(contragent.ManagerPhone);
 		} else {
 			$('#contragent_form #Input_Id').val(0)
 
@@ -434,7 +446,26 @@
 	var onEdit = (index) => {
 		var contragent = $dg.datagrid('getRows')[index];
 		getCategoriesByDirectionId(contragent.DirectionId, contragent.Id);
-		getConragentUserById(contragent.Id);
+		if (contragent.ApplicationUserId) {
+			$('#UserFormModel_Password').required = "";
+
+			var user = getConragentUserById(contragent.ApplicationUserId, function (res) {
+				if (res) {
+					$('#contragent_form').jsonToForm(res.data, {
+						Active: function (value) {
+							if (value == true) {
+								$('#contragent_form [name*="Active"]').prop('checked', true);
+							} else {
+								$('#contragent_form [name*="Active"]').prop('checked', false);
+							}
+						}
+
+
+					});
+				}
+			});
+		}
+
 		popupmodal(contragent);
 
 		}

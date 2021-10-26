@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Audit;
 using CleanArchitecture.Razor.Domain.Entities.Log;
@@ -21,6 +22,7 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
         DbSet<Category> Categories { get; set; }
         DbSet<Direction> Directions { get; set; }
         DbSet<Contragent> Contragents { get; set; }
+        
         DbSet<ContragentCategory> ContragentCategories { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

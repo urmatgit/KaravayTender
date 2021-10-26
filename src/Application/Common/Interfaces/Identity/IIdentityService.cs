@@ -18,6 +18,7 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces.Identity
         Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
         Task<Result> DeleteUserAsync(string userId);
         Task<IDictionary<string, string>> FetchUsers(string roleName);
+        Task<List<IApplicationUser>> FetchUsersEx(string roleName);
         Task<string> UpdateLiveStatus(string userId, bool isLive);
     }
 }

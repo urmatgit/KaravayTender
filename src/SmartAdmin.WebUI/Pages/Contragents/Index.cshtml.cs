@@ -138,14 +138,30 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                             return BadRequest(Result.Failure(resultContragentCategory.Errors));
 
                         }
-                        var user = await CreateUser();
-                        if (!user.Item1.Succeeded)
+
+                        var userApp = await CheckUser(Input.ApplicationUserId);
+
+                        if (string.IsNullOrEmpty(userApp.Id))
                         {
-                            var errors = user.Item1.Errors.Select(x => $"{ string.Join(",", x.Description) }");
-                            return    BadRequest(errors);
+                            var user = await CreateUser(userApp);
+                            if (!user.Item1.Succeeded)
+                            {
+                                var errors = user.Item1.Errors.Select(x => $"{ string.Join(",", x.Description) }");
+                                return BadRequest(errors);
+                            }
+                            else
+                            {
+                                Input.ApplicationUserId = user.Item2;
+                                 result = await _mediator.Send(Input);
+                            }
                         }else
                         {
-                            Input.ApplicationUserId = user.Item2;
+                            var user = await UpdateUser(userApp, UserFormModel, Input.Email, Input.Phone);
+                            if (!user.Succeeded)
+                            {
+                                var errors = user.Errors.Select(x => $"{ string.Join(",", x.Description) }");
+                                return BadRequest(errors);
+                            }
                         }
                         
                     }
@@ -168,18 +184,50 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             }
 
         }
-        private async Task< (IdentityResult,string)> CreateUser()
+        private async Task<ApplicationUser> CheckUser(string id)
         {
-            var user = new ApplicationUser
+            ApplicationUser user=null;
+            if (!string.IsNullOrEmpty(id))
             {
-                EmailConfirmed = true,
-                IsActive = UserFormModel.Active,
-                PhoneNumber=UserFormModel.ManagerPhone,
-                DisplayName = Input.Name,
-                UserName = UserFormModel.Login,
-                Email = Input.Email,
-                ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ Input.Email.ToMD5() }?s=120&d=retro"
-            };
+                user = await _userManager.FindByIdAsync(id);
+                
+            }
+            if (user==null)
+            {
+                user= new ApplicationUser
+                {
+                    EmailConfirmed = true,
+                    IsActive = UserFormModel.Active,
+                    PhoneNumber = UserFormModel.ManagerPhone,
+                    DisplayName = Input.Name,
+                    UserName = UserFormModel.Login,
+                    Email = Input.Email,
+                    ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ Input.Email.ToMD5() }?s=120&d=retro"
+                };
+            }
+            return user;
+        }
+        private async Task<IdentityResult> UpdateUser(ApplicationUser user, UserModel userModel,string email,string phone)
+        {
+            
+            user.UserName = userModel.Login;
+            user.PhoneNumber = phone;
+            user.Email = email;
+            if (!string.IsNullOrEmpty(userModel.Password))
+            {
+                var code =await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resultPass = await _userManager.ResetPasswordAsync(user, code, userModel.Password);
+                if (resultPass.Succeeded)
+                    _logger.LogInformation($"User changed password.({userModel.Login})");
+                else
+                    _logger.LogError($"User changed password.({userModel.Login})", resultPass.Errors);
+            }
+            var result = await _userManager.UpdateAsync(user);
+            return result;
+        }
+        private async Task< (IdentityResult,string)> CreateUser(ApplicationUser user)
+        {
+             
             var result = await _userManager.CreateAsync(user, UserFormModel.Password);
             if (result.Succeeded)
             {
@@ -229,20 +277,35 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
+        public async Task<IActionResult> OnGetManagerAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                
+                UserModel userModel = new UserModel()
+                {
+                    Login = user.UserName,
+                    ManagerPhone = user.PhoneNumber
+                };
+                
+                return new JsonResult(userModel);
+            }
+            return new JsonResult("");
+
+        }
         public async Task<IActionResult> OnGetContragentUserAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
-                var manager = await _userManager.FindByIdAsync(Input.ManagerId);
+                
                 UserModel userModel = new UserModel()
                 {
                     Login = user.UserName,
-                    Active = user.IsActive,
-                    ManagerPhone = manager.PhoneNumber
+                    Active = user.IsActive
                 };
-                UserFormModel = userModel;
-
+                return new JsonResult(userModel);
             }
             return new JsonResult("");
 
@@ -272,8 +335,9 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             [Required(ErrorMessage = "Телефон номер менеджера не указан")]
             public string ManagerPhone { get; set; }
 
-            [Required(ErrorMessage = "'Пароль' является обязательным")]
+          //  [Required(ErrorMessage = "'Пароль' является обязательным")]
             [StringLength(20, ErrorMessage = "Пароль должен содержать не менее {2} и не более {1} символов.", MinimumLength = 6)]
+            [RegularExpression("^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{6,}$", ErrorMessage = "Пароли должны состоять не менее чем из 6 символов и содержать 3 из 4 следующих символов: верхний регистр (A-Z), нижний регистр (a-z), число (0-9) и специальный символ (например !@#$%^&*)")]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -284,7 +348,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             public string ConfirmPassword { get; set; }
             public bool Active { get; set; }
                  
-
+            
         }
     }
 }
