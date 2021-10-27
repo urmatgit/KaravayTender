@@ -93,6 +93,7 @@ getCheckedCategories = () => {
 // upload
 var maxFileSize = 5242880; // 5MB -> 5 * 1024 * 1024
 var maxFilesSize = 52428800; // 50MB -> 50 * 1024 * 1024
+
 var uploadbutton = document.querySelector("button[name='uploadbutton']");
 var uploadfileinputs = document.getElementById("Files");
 var uploadfileinput = document.getElementById("file");

@@ -1,11 +1,15 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace CleanArchitecture.Razor.Infrastructure.Services
 {
@@ -32,7 +36,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
                 }
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
-                   await streamData.CopyToAsync(stream);
+                    await streamData.CopyToAsync(stream);
                 }
                 return dbPath;
             }
@@ -86,5 +90,51 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
 
             return string.Format(pattern, max);
         }
+
+        public async Task<IResult> UploadContragentFileAsync(int Id, List<IFormFile> files)
+        {
+
+            try
+            {
+                var folder = Id.ToString();// request.UploadType.ToDescriptionString();
+                var folderName = Path.Combine("Files", "Documents", folder);
+                if (!Directory.Exists(folderName))
+                {
+                    Directory.CreateDirectory(folderName);
+                }
+
+                foreach (IFormFile file in files)
+                {
+                    string fileName = Path.GetFileName(file.FileName);
+                    using (FileStream stream = new FileStream(Path.Combine(folderName, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                }
+            } catch (Exception er)
+            {
+                return await Result.FailureAsync(new string[] { er.Message });
+            }
+            return await Result.SuccessAsync();
+
+        }
+        public async Task<IResult<Dictionary<string, long>>> LoadContragentFilesAsync(int Id){
+            Dictionary<string, long> Result = new Dictionary<string, long>();
+            try
+            {
+                var folder = Id.ToString();// request.UploadType.ToDescriptionString();
+                var folderName = Path.Combine("Files", "Documents", folder);
+                if (Directory.Exists(folderName)) {
+                    foreach (string file in  Directory.GetFiles(folderName)) {
+                        FileInfo fileInfo = new FileInfo(file);
+                        Result.Add(Path.GetFileName(file), fileInfo.Length);
+                        }
+                }
+            } catch(Exception er)
+            {
+                return await Result<Dictionary<string, long>>.FailureAsync(new string[] { er.Message });
+            }
+            return await Result<Dictionary<string, long>>.SuccessAsync(Result);
+           }
     }
 }

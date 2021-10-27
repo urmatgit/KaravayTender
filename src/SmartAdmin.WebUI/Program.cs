@@ -23,6 +23,11 @@ namespace SmartAdmin.WebUI
             {
                 Directory.CreateDirectory(filePath);
             }
+            filePath = Path.Combine(filePath, "Documents");
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
             var host = CreateHostBuilder(args).Build();
           
             using (var scope = host.Services.CreateScope())

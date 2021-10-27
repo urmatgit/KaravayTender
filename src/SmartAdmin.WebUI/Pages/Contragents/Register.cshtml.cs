@@ -28,6 +28,8 @@ using CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands
 using Newtonsoft.Json;
 using System.Diagnostics;
 using CleanArchitecture.Razor.Application.Features.ContragentCategories.Queries.GetAll;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace SmartAdmin.WebUI.Pages.Contragents
 {
@@ -39,6 +41,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ISender _mediator;
+        private readonly IUploadService _uploadService;
         //[BindProperty]
         //public ContragentForm contragentForm { get; set; }
         [BindProperty]
@@ -59,9 +62,11 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         SignInManager<ApplicationUser> signInManager,
         ILogger<RegisterModel> logger,
         IEmailSender emailSender,
-        ISender mediator
+        ISender mediator,
+        IUploadService uploadService
         )
         {
+            _uploadService = uploadService;
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
@@ -156,8 +161,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                                     ModelState.AddModelError(string.Empty, error);
                                 }
                             }
-                         
-                    
+
+                        await _uploadService.UploadContragentFileAsync(result.Data, Files);
 
                     return LocalRedirect(returnUrl);
                 }
@@ -193,6 +198,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
             return Page();
         }
+         
         //    public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         //{
         //  returnUrl = returnUrl ?? Url.Content("~/");
