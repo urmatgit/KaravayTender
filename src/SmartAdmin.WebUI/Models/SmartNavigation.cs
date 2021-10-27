@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -44,6 +44,16 @@ namespace SmartAdmin.WebUI.Models
         }
 
         public string Version { get; set; }
+        public Dictionary<string, string> SpanValues = new Dictionary<string, string>();
+        public string FindInSpanValues(string key)
+        {
+
+            if (!string.IsNullOrEmpty(key) && SpanValues.ContainsKey(key))
+                return SpanValues[key];
+            else
+                return key;
+
+        }
         public List<ListItem> Lists { get; set; } = new List<ListItem>();
     }
 

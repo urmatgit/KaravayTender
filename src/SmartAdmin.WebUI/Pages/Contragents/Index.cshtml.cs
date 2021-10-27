@@ -177,10 +177,12 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             catch (CleanArchitecture.Razor.Application.Common.Exceptions.ValidationException ex)
             {
                 var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                _logger.LogError(ex.Message, ex);
                 return BadRequest(errors);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 return BadRequest(new string[] { ex.Message });
             }
 

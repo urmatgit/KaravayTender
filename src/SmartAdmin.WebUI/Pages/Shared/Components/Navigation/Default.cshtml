@@ -24,7 +24,7 @@
                     <span class="nav-link-text" data-i18n="@group.I18n">@_localizer[group.Text]</span>
                     @if (group.Span.HasValue())
                     {
-                        <span class="@group.Span.Class">@group.Span.Text.AsRaw()</span>
+                        <span class="@group.Span.Class">@Model.FindInSpanValues(group.Span.Text).AsRaw()</span>
                     }
                 </a>
                 <ul>
@@ -59,7 +59,7 @@
                                     <span class="nav-link-text" data-i18n="@item.I18n">@_localizer[item.Text]</span>
                                     @if (item.Span.HasValue())
                                     {
-                                        <span class="@item.Span.Class">@item.Span.Text.AsRaw()</span>
+                                <span class="@item.Span.Class">@Model.FindInSpanValues(item.Span.Text).AsRaw()</span>
                                     }
                                 </a>
                             </text>
