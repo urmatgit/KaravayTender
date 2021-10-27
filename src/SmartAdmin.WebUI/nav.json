@@ -25,7 +25,8 @@
           "icon": "fal fa-luggage-cart",
           "span": {
             "class": "dl-ref bg-danger-500 hidden-nav-function-minify hidden-nav-function-top",
-            "text": "[ContragentOnRegistrationCount]"
+            "text": "[ContragentOnRegistrationCount]",
+            "id": "ContragentOnRegistrationCount"
           },
           "href": "contragents_index.html",
           "roles": []

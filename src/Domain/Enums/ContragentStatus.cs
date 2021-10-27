@@ -19,7 +19,9 @@ namespace CleanArchitecture.Razor.Domain.Enums
         [Description(@"На регистрации")]
         OnRegistration = 1,
         [Description(@"Зарегистрирован")]
-        Registered = 2
+        Registered = 2,
+        [Description(@"Отклонена")]
+        Reject = 3
 
     }
 }

@@ -120,6 +120,12 @@
   <data name="Acceditation" xml:space="preserve">
     <value>Аккедитация</value>
   </data>
+  <data name="Acceditation reject" xml:space="preserve">
+    <value>Аккедитация отклонена</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Принять</value>
+  </data>
   <data name="Active" xml:space="preserve">
     <value>Акивность </value>
   </data>
@@ -134,6 +140,9 @@
   </data>
   <data name="All" xml:space="preserve">
     <value>Все</value>
+  </data>
+  <data name="Are you sure change status?" xml:space="preserve">
+    <value>Вы уверены, что хотите изменить состояние?</value>
   </data>
   <data name="Are you sure delete a row?" xml:space="preserve">
     <value>Вы уверены, что удалите строку?</value>
@@ -237,6 +246,9 @@
   <data name="KPP" xml:space="preserve">
     <value>КПП</value>
   </data>
+  <data name="Log" xml:space="preserve">
+    <value>Лог астивности</value>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>Логин</value>
   </data>
@@ -282,6 +294,12 @@
   <data name="Register now, its free!" xml:space="preserve">
     <value>Зарегистрируйтесь сейчас, это бесплатно!</value>
   </data>
+  <data name="Reject" xml:space="preserve">
+    <value>Отклонить</value>
+  </data>
+  <data name="Reject description" xml:space="preserve">
+    <value>Причина отклонения</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Сохранить</value>
   </data>
@@ -308,6 +326,9 @@
   </data>
   <data name="Site" xml:space="preserve">
     <value>Сайт</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Состояние</value>
   </data>
   <data name="Type of activity" xml:space="preserve">
     <value>Вид деятельности</value>

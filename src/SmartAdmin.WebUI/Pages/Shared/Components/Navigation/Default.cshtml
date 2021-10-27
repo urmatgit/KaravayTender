@@ -59,7 +59,9 @@
                                     <span class="nav-link-text" data-i18n="@item.I18n">@_localizer[item.Text]</span>
                                     @if (item.Span.HasValue())
                                     {
-                                <span class="@item.Span.Class">@Model.FindInSpanValues(item.Span.Text).AsRaw()</span>
+                                <span class="@item.Span.Class"  @(!string.IsNullOrEmpty(item.Span.id) ? $"id={@item.Span.id}":"")
+
+                                      >@Model.FindInSpanValues(item.Span.Text).AsRaw()</span>
                                     }
                                 </a>
                             </text>

@@ -124,7 +124,11 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/Contragents/SendedRegister");
-            try { 
+            try {
+                if (Files.Count == 0)
+                {
+                    throw new Exception("Не добавлены файлы! ");
+                }
             if (ModelState.IsValid)
             {
 

@@ -1,7 +1,8 @@
 ﻿@page
 @using CleanArchitecture.Razor.Domain.Enums
-@using CleanArchitecture.Razor.Infrastructure.Constants.Permission
 @using  CleanArchitecture.Razor.Application.Common.Extensions
+@using CleanArchitecture.Razor.Infrastructure.Constants.Permission
+
 @model SmartAdmin.WebUI.Pages.Contragents.IndexModel
 @inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
 @inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
@@ -98,7 +99,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
+                <h5 class="modal-title" id="Main-modal-title">Modal title1</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
                 </button>
@@ -108,6 +109,7 @@
         </div>
     </div>
 </div>
+<partial name="../Contragents/Index/RejectDialog" />
 @await Component.InvokeAsync("ImportExcel", new
 {
     importUri = Url.Page("/Contragents/Index") + "?handler=Import",
@@ -192,7 +194,42 @@
 	$('#gettemplatebutton').click(function () {
 		onGetTemplate();
 	});
-	$('#contragent_form :submit').click(function (e) {
+		$('#rejectButton ').click(function (e) {
+
+						
+						
+						var data = {
+							Description: `${$('#RejectModel_Description').val()}`,
+							Id: currentEditRow.Id
+
+						}
+						console.log(data)
+						var headers = {
+							"RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+						}
+						axios.post('@Url.Page("/Contragents/Index")?handler=Reject',
+							data,
+							{
+								headers: headers
+							})
+							.then(response => {
+								toastr["info"]('@_localizer["Acceditation reject"]');
+                                $('#contragent_modal').modal('toggle');
+                                $('#RejectModal').modal('toggle');
+								reloadData();
+							}).catch(error => {
+								if (error.response.data.errors) {
+									const errors = error.response.data.errors;
+									for (let [key, value] of Object.entries(errors)) {
+										toastr["error"](`${key}: ${value.toString()}`);
+									}
+								} else {
+									toastr["error"](`@_localizer["Reject fail"],${error.response.data}`);
+								}
+							})
+
+		})
+        $('#contragent_form  :submit').click(function (e) {
 		const form = document.querySelector('#contragent_form');
 		if ($(form).valid() === false) {
 			form.classList.add('was-validated');
@@ -392,26 +429,31 @@
             });
             //$dg.datagrid('doFilter');
             // }
-        }
-		$('#contragent_modal').on('shown.bs.modal', function () {
+		}
+        $('#contragent_modal').on('shown.bs.modal', function () {
             $('#contragent_form #UserFormModel_ManagerPhone').val(currentEditRow.ManagerPhone);
-			if (currentEditRow && currentEditRow.ContragentCategories && currentEditRow.ContragentCategories.length>0) {
-				var categories = $('#contragent_form [name*="category.Name"]');//  document.getElementsByName("category.Name");
-				let values = currentEditRow.ContragentCategories;
-				for (var checkbox of categories) {
+            if (currentEditRow && currentEditRow.ContragentCategories && currentEditRow.ContragentCategories.length > 0) {
+                var categories = $('#contragent_form [name*="category.Name"]');//  document.getElementsByName("category.Name");
+                let values = currentEditRow.ContragentCategories;
+                for (var checkbox of categories) {
 
-					//$(checkbox).prop('checked', true);
-					let finded = values.find(o => o.CategoryId == checkbox.id);
-					if (finded)
-					     $(checkbox).prop('checked', true);
+                    //$(checkbox).prop('checked', true);
+                    let finded = values.find(o => o.CategoryId == checkbox.id);
+                    if (finded)
+                        $(checkbox).prop('checked', true);
 
 
-				}
-			}
+                }
+            }
             console.log('shown.bs.modal');
+        })
+        $('#RejectModal').on('shown.bs.modal', function () {
+            $('#RejectModel_Description').val("");
+			i 
         })
 	var reloadData = () => {
 		$dg.datagrid('load', '@Url.Page("/Contragents/Index")?handler=Data');
+		getConragentStatusCount();
 	}
 
 		$(() => {
@@ -420,13 +462,13 @@
 	})
 	var popupmodal = (contragent) => {
 		$('#contragent_modal').modal('toggle');
-		$('#contragent_modal .modal-title').html('@_localizer["Add Contragent"]');
+        $('#contragent_modal #Main-modal-title').html('@_localizer["Add Contragent"]');
 		$('#contragent_form').clearForm();
 		$('#contragent_form')[0].reset();
 		if (contragent) {
 			currentEditRow = contragent;
 			console.log(contragent);
-			$('#contragent_modal .modal-title').html('@_localizer["Edit Contragent"]');
+            $('#contragent_modal #Main-modal-title').html('@_localizer["Edit Contragent"]');
 			$('#contragent_form').jsonToForm(contragent, {
 				IsService: function (value) {
 					if (value == true) {
@@ -438,6 +480,7 @@
 			});
 			$('#contragent_form #Input_ApplicationUserId').val(contragent.ApplicationUserId);
 			$('#contragent_form #UserFormModel_ManagerPhone').val(contragent.ManagerPhone);
+            $('#contragent_form #RejectModel_Status').val(3);
 		} else {
 			$('#contragent_form #Input_Id').val(0)
 

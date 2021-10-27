@@ -1,4 +1,26 @@
-function getConragentUserById(id,callback) {
+function getConragentStatusCount() {
+    axios.get('/Contragents/Index?handler=OnRegistraionCount')
+        .then(res => {
+            console.log(res);
+            //ContragentOnRegistrationCount
+            $('*[id*=ContragentOnRegistrationCount]:visible').each(function () {
+                $(this).text(res.data.Data);
+            });
+        })
+        .catch((error) => {
+            if (error.response.data.Errors) {
+                const errors = error.response.data.Errors;
+                errors.forEach(item => {
+                    toastr["error"](item);
+                });
+            } else {
+                toastr["error"](`Получение количество контрагентов (OnRegistraion),${error.response.data}`);
+            }
+        });
+}
+
+
+function getConragentUserById(id, callback) {
     axios.get('/Contragents/Index?handler=ContragentUser&id=' + id)
         .then(res => {
             console.log(res);

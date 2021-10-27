@@ -1,6 +1,8 @@
 ﻿
 @model IndexModel
 @using CleanArchitecture.Razor.Infrastructure.Constants.Permission
+@using CleanArchitecture.Razor.Domain.Enums
+@using  CleanArchitecture.Razor.Application.Common.Extensions
 @inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel>  _localizer
 @inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
 @{
@@ -9,7 +11,7 @@
 }
 <form id="contragent_form" class="needs-validation" novalidate="novalidate" enctype="multipart/form-data">
     <div class="modal-body">
-        
+
         @*<form id="js-login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" class="needs-validation" novalidate="novalidate" enctype="multipart/form-data">*@
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Input.Id" />
@@ -26,12 +28,12 @@
             <!--For manager-->
             @if (_canAcceditation.Succeeded)
             {
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab_4" role="tab"><i class="@(Settings.Theme.IconPrefix) fa-check-square mr-1"></i> @_localizer["Accreditation"]</a>
-                </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tab_4" role="tab"><i class="@(Settings.Theme.IconPrefix) fa-check-square mr-1"></i> @_localizer["Accreditation"]</a>
+            </li>
             }
-            </ul>
-            
+        </ul>
+
         <div class="tab-content border border-top-0 p-3">
             <div class="tab-pane fade show p-3 active" id="tab_1" role="tabpanel">
                 <partial name="../Contragents/Index/InfoPanel" />
@@ -44,15 +46,59 @@
             </div>
             @if (_canAcceditation.Succeeded)
             {
-                <div class="tab-pane fade show  p-3" id="tab_4" role="tabpanel">
-                    <partial name="../Contragents/Index/AccreditationPanel" />
-                </div>
+            <div class="tab-pane fade show  p-3" id="tab_4" role="tabpanel">
+                <partial name="../Contragents/Index/AccreditationPanel" />
+            </div>
             }
         </div>
 
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
-        <button type="submit" class="btn btn-primary" id="saveButton">@_localizer["Save"]</button>
+
+        @if (_canAcceditation.Succeeded){
+        <button type="button" class="btn btn-danger"   data-toggle="modal" data-target="#RejectModal">@_localizer["Reject"]</button>
+        
+        <!--<div class="btn-group">
+            <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @_localizer["Reject"]
+            </button>
+            <div class="dropdown-menu dropdown-lg">
+                <div class="card-body p-4">
+                    <div class="form-group row">
+
+                        <div class="col-md-4 mat my-auto">
+                            <label class="form-label" for="name">@_localizer["Status"] </label>
+
+                        </div>
+                        <div class="col-md-8">
+
+                            <select type="text" asp-for="RejectModel.Status" class="custom-select" placeholder="@_localizer["Status"]" value="3">
+                                <option value="">@_localizer["Choose status"]</option>
+                                @foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus))){
+                                <option value="@Convert.ToInt16(val)">@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))</option>
+
+                                 }
+                            </select>
+
+                            <span class="invalid-feedback" asp-validation-for="RejectModel.Status"></span>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <label class="form-label" for="Description">@_localizer["Reject description"] </label>
+                        <input type="text" asp-for="RejectModel.Description" class="form-control" placeholder="Comments" />
+                        <span class="invalid-feedback" asp-validation-for="RejectModel.Description"></span>
+                    </div>
+
+                    <button type="button" id="rejectButton" class="btn btn-info btn-block ">@_localizer["Save"]</button>-->
+                    @*<button type="button" class="btn btn-info btn-block">>@_localizer["Cancel"]</button>*@
+                <!--</div>
+
+            </div>
+        </div>-->
+        }
+        <button type="submit" class="btn btn-primary" id="saveButton">@_localizer["Accept"]</button>
+
     </div>
 </form>

@@ -81,7 +81,7 @@ namespace SmartAdmin.WebUI.Models
         public string Position { get; set; }
         public string Class { get; set; }
         public string Text { get; set; }
-
+        public string id { get; set; }
         public bool HasValue() => (Position?.Length ?? 0) + (Class?.Length ?? 0) + (Text?.Length ?? 0) > 0;
     }
 

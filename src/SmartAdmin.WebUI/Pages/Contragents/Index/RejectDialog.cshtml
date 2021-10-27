@@ -1,0 +1,26 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel>  _localizer
+
+@model IndexModel
+<div class="modal fade" id="RejectModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Отклонение</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="form-label" for="Description">@_localizer["Reject description"] </label>
+                    <textarea    asp-for="RejectModel.Description" class="form-control" placeholder="Comments" ></textarea>
+                    <span class="invalid-feedback" asp-validation-for="RejectModel.Description"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Cancel"]</button>
+                <button type="button" id="rejectButton" class="btn btn-primary">@_localizer["Save"]</button>
+            </div>
+        </div>
+    </div>
+</div>

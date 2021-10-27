@@ -16,11 +16,14 @@ using CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands
 using CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit;
 using CleanArchitecture.Razor.Application.Features.Contragents.Commands.Delete;
 using CleanArchitecture.Razor.Application.Features.Contragents.Commands.Import;
+using CleanArchitecture.Razor.Application.Features.Contragents.Commands.Update;
 using CleanArchitecture.Razor.Application.Features.Contragents.Queries.Export;
 using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetAll;
+using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetCount;
 using CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagination;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
+using CleanArchitecture.Razor.Domain.Enums;
 using CleanArchitecture.Razor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Razor.Infrastructure.Constants.Role;
@@ -56,6 +59,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
+        [BindProperty]
+        public RejectFormModel RejectModel { get; set; }
 
         [BindProperty]
         public List<IFormFile> Files { get; set; }
@@ -94,6 +99,11 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             await LoadDirection();
             await LoadManagers();
         }
+        public async Task<IActionResult> OnGetOnRegistraionCountAsync()
+        {
+            var count = await _mediator.Send(new GetByStatusQuery() { Status = ContragentStatus.OnRegistration });
+            return new JsonResult(count);
+        }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] ContragentsWithPaginationQuery command)
         {
             try
@@ -118,6 +128,10 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
             try
             {
+                if (Files.Count == 0)
+                {
+                    throw new Exception("Не добавлены файлы! ");
+                }
                 if (ModelState.IsValid)
                 {
                     var result = await _mediator.Send(Input);
@@ -153,7 +167,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                             else
                             {
                                 Input.ApplicationUserId = user.Item2;
-                                 result = await _mediator.Send(Input);
+                                
                             }
                         }else
                         {
@@ -164,7 +178,10 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                                 return BadRequest(errors);
                             }
                         }
-                        
+                        Input.Status = CleanArchitecture.Razor.Domain.Enums.ContragentStatus.Registered;
+                        _logger.LogInformation($"Contragent {Input.Name} set status {Input.Status}");
+                        result = await _mediator.Send(Input);
+
                     }
                     return new JsonResult(result);
                 }
@@ -267,6 +284,22 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             var result = await _mediator.Send(command);
             return new JsonResult("");
         }
+        public async Task<IActionResult> OnPostRejectAsync([FromBody] RejectFormModel model)
+        {
+            
+            var command = new UpdateStatusContragentCommand()
+            {
+                Id = model.Id,
+                Status = ContragentStatus.Reject
+            };
+            var result = await _mediator.Send(command);
+            if (!result.Succeeded)
+            {
+                _logger.LogError($"Сontragent reject error.({model.Id} {ContragentStatus.Reject})", result.Errors);
+                return BadRequest(result.Errors);
+            }
+            return new JsonResult("");
+        }
         public async Task<FileResult> OnPostExportAsync([FromBody] ExportContragentsQuery command)
         {
             var result = await _mediator.Send(command);
@@ -336,7 +369,14 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             var managers = await _userManager.GetUsersInRoleAsync("Manager");
             Managers = new SelectList(managers.Select(u => new { Id = u.Id, Name = string.IsNullOrEmpty(u.DisplayName) ? u.UserName : u.DisplayName }), "Id", "Name");
         }
-        
+
+        public class RejectFormModel
+        {
+            
+            public string Description { get; set; }
+            public int Id { get; set; }
+        }
+             
         public class UserModel
         {
             
