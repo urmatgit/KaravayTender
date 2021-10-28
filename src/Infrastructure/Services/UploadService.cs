@@ -118,23 +118,44 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
             return await Result.SuccessAsync();
 
         }
-        public async Task<IResult<Dictionary<string, long>>> LoadContragentFilesAsync(int Id){
-            Dictionary<string, long> Result = new Dictionary<string, long>();
+        public async Task<IResult<List<string>>> LoadContragentFilesAsync(int Id){
+            List<string> Result = new List<string>();
             try
             {
                 var folder = Id.ToString();// request.UploadType.ToDescriptionString();
                 var folderName = Path.Combine("Files", "Documents", folder);
                 if (Directory.Exists(folderName)) {
                     foreach (string file in  Directory.GetFiles(folderName)) {
-                        FileInfo fileInfo = new FileInfo(file);
-                        Result.Add(Path.GetFileName(file), fileInfo.Length);
+                        
+                        Result.Add(Path.Combine(folderName,Path.GetFileName(file)));
                         }
                 }
             } catch(Exception er)
             {
-                return await Result<Dictionary<string, long>>.FailureAsync(new string[] { er.Message });
+                return await Result<List<string>>.FailureAsync(new string[] { er.Message });
             }
-            return await Result<Dictionary<string, long>>.SuccessAsync(Result);
+            return await Result<List<string>>.SuccessAsync(Result);
            }
+
+        public async Task<IResult> RemoveFileAsync(int Id, string name)
+        {
+            var folder = Id.ToString();// request.UploadType.ToDescriptionString();
+            var folderName = Path.Combine("Files", "Documents", folder, name);
+            if (File.Exists(folderName))
+            {
+                try
+                {
+                    File.Delete(folder);
+
+                }
+                catch (Exception er)
+                {
+                    return  await Result.FailureAsync(new string[] { er.Message });
+                }
+                
+            }
+            return await Result.SuccessAsync();
+        }
+        
     }
 }

@@ -1,13 +1,13 @@
 ﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel>  _localizer
 @model IndexModel
 @{
-   // SelectList DirectionList = @ViewData["Directions"] as SelectList;
+    // SelectList DirectionList = @ViewData["Directions"] as SelectList;
 }
 <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
 <div class="form-group ">
     <label class="form-label" for=""></label>
-    <input type="file" asp-for="Files" multiple style="display:none"  />
-    <input type="file" id="file" multiple style="display:none"  />
+    <input type="file" asp-for="Files" multiple style="display:none" />
+    <input type="file" id="file" multiple style="display:none" />
     <div class="">
         <button name="uploadbutton" type="button" class="btn btn-primary btn-icon waves-effect waves-themed mr-2">
             <i class="fal fa-paperclip"></i>
@@ -17,33 +17,60 @@
         <div id="uploadfilename">
             @*<div class="alert alert-danger mt-2 mb-2" role="alert">
 
-            </div>*@
+                </div>*@
         </div>
 
     </div>
 
 </div>
+<div id="panel-1" class="panel">
+    <div class="panel-hdr">
+        <h2>
+            @_localizer["Uploaded files"]
+        </h2>
+    </div>
+    <div class="panel-container show">
+        <div class="panel-content" >
+            
+            <table class="table table-sm m-0" >
+                <thead class="bg-primary-500">
+                    <tr>
+                        <th>#</th>
+                        <th> @_localizer["File"]</th>
+                        <th> </th>
+
+                    </tr>
+                </thead>
+                <tbody id="files_panel">
+                     
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+   
 
 
- 
 @*@section Scripts{
-    <script>
+        <script>
 
-    $(function () {
-        $("#DirectionId").change(function () {
-            console.log($(this).val());
-            //$.ajax({
-            //    type: "Get",
-            //    url: "/Home/ShowProduct?type=" + $(this).val(),  //remember change the controller to your owns.
-            //    success: function (data) {
-            //        $("#productcontainer").html("");
-            //        $("#productcontainer").html(data);
-            //    },
-            //    error: function (response) {
-            //        console.log(response.responseText);
-            //    }
-            //});
+        $(function () {
+            $("#DirectionId").change(function () {
+                console.log($(this).val());
+                //$.ajax({
+                //    type: "Get",
+                //    url: "/Home/ShowProduct?type=" + $(this).val(),  //remember change the controller to your owns.
+                //    success: function (data) {
+                //        $("#productcontainer").html("");
+                //        $("#productcontainer").html(data);
+                //    },
+                //    error: function (response) {
+                //        console.log(response.responseText);
+                //    }
+                //});
+            });
         });
-    });
-    </script>
-}*@
+        </script>
+    }*@

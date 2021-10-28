@@ -204,6 +204,9 @@
   <data name="Direction1" xml:space="preserve">
     <value>Направление</value>
   </data>
+  <data name="Download Success" xml:space="preserve">
+    <value>Загрузка завершена</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Редактировать</value>
   </data>
@@ -224,6 +227,9 @@
   </data>
   <data name="Export fail" xml:space="preserve">
     <value>Ошибка при экспорте</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Файл</value>
   </data>
   <data name="File too big!" xml:space="preserve">
     <value>Файл слишком большой!</value>
@@ -332,6 +338,9 @@
   </data>
   <data name="Type of activity" xml:space="preserve">
     <value>Вид деятельности</value>
+  </data>
+  <data name="Uploaded files" xml:space="preserve">
+    <value>Загруженные файлы</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Да</value>

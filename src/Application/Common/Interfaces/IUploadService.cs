@@ -13,6 +13,8 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
     {
         Task<string> UploadAsync(UploadRequest request);
         Task<IResult> UploadContragentFileAsync(int Id, List<IFormFile> files);
-        Task<IResult<Dictionary<string, long>>> LoadContragentFilesAsync(int Id);
+        Task<IResult<List<string>>> LoadContragentFilesAsync(int Id);
+        Task<IResult> RemoveFileAsync(int Id, string name);
+
     }
 }

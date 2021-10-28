@@ -134,7 +134,8 @@
 		var translations = {
             FileSizeToBig: '@_localizer["File too big!"]',
 			GetCategoriesFail: '@_localizer["Get categories fail"]',
-			   IconPrefix:  '@(Settings.Theme.IconPrefix)'
+			IconPrefix: '@(Settings.Theme.IconPrefix)',
+            Download_Success: '@_localizer["Download Success"]'
 		}
 
 		var YesNotList = [
@@ -196,8 +197,8 @@
 	});
 		$('#rejectButton ').click(function (e) {
 
-						
-						
+
+
 						var data = {
 							Description: `${$('#RejectModel_Description').val()}`,
 							Id: currentEditRow.Id
@@ -235,6 +236,13 @@
 			form.classList.add('was-validated');
 		} else {
 			const request = $('#contragent_form').serialize();
+            for (var i = 0; i != uploadfileinputs.files.length; i++) {
+                request.append("files", files[i]);
+			}
+   //         var headers = {
+   //             "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+			//}
+			//request.append(headers, headers);
 			axios.post('@Url.Page("/Contragents/Index")', request).then(res => {
 				toastr["info"]('@_localizer["Save Success."]');
 				$('#contragent_modal').modal('toggle');
@@ -449,7 +457,7 @@
         })
         $('#RejectModal').on('shown.bs.modal', function () {
             $('#RejectModel_Description').val("");
-			i 
+			i
         })
 	var reloadData = () => {
 		$dg.datagrid('load', '@Url.Page("/Contragents/Index")?handler=Data');
@@ -487,6 +495,7 @@
 		}
 	}
 
+
 	var onEdit = (index) => {
 		var contragent = $dg.datagrid('getRows')[index];
 		getCategoriesByDirectionId(contragent.DirectionId, contragent.Id);
@@ -509,7 +518,7 @@
 				}
 			});
 		}
-
+        //getConragentFiles(contragent.Id);
 		popupmodal(contragent);
 
 		}

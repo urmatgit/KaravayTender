@@ -52,6 +52,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         private readonly IStringLocalizer<IndexModel> _localizer;
         private readonly ILogger<IndexModel> _logger;
         private readonly  UserManager<ApplicationUser> _userManager;
+        private readonly IUploadService _uploadService;
         [BindProperty]
         public AddEditContragentCommand Input { get; set; }
         [BindProperty]
@@ -77,9 +78,11 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             ISender mediator,
             IStringLocalizer<IndexModel> localizer,
                ILogger<IndexModel> logger,
-               UserManager<ApplicationUser> userManager
+               UserManager<ApplicationUser> userManager,
+                IUploadService uploadService
             )
         {
+            _uploadService = uploadService;
             _userManager = userManager;
             _logger = logger;
             _identityService = identityService;
@@ -98,6 +101,18 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             //string description = Enum.GetName(typeof(CleanArchitecture.Razor.Domain.Enums.RequestStatus), -1);
             await LoadDirection();
             await LoadManagers();
+        }
+        public async Task<IActionResult> OnGetFilesListAsync(int id)
+        {
+            try
+            {
+                var files = await _uploadService.LoadContragentFilesAsync(id);
+                return new JsonResult(files?.Data);
+            }
+            catch (Exception er)
+            {
+                return BadRequest(new string[] { er.Message });
+            }
         }
         public async Task<IActionResult> OnGetOnRegistraionCountAsync()
         {
@@ -181,6 +196,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                         Input.Status = CleanArchitecture.Razor.Domain.Enums.ContragentStatus.Registered;
                         _logger.LogInformation($"Contragent {Input.Name} set status {Input.Status}");
                         result = await _mediator.Send(Input);
+                        await _uploadService.UploadContragentFileAsync(result.Data, Files);
 
                     }
                     return new JsonResult(result);
@@ -232,7 +248,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         {
 
             var checkEmail = await _userManager.FindByEmailAsync(email);
-            if (checkEmail.UserName != userModel.Login)
+            if (checkEmail!=null && checkEmail.UserName != userModel.Login)
             {
                 return IdentityResult.Failed(new IdentityError
                 {
