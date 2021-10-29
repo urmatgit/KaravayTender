@@ -143,10 +143,10 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
             try
             {
-                if (Files.Count == 0)
-                {
-                    throw new Exception("Не добавлены файлы! ");
-                }
+                //if (Request.Form.Files.Count == 0)
+                //{
+                //    throw new Exception("Не добавлены файлы! ");
+                //}
                 if (ModelState.IsValid)
                 {
                     var result = await _mediator.Send(Input);
@@ -196,7 +196,10 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                         Input.Status = CleanArchitecture.Razor.Domain.Enums.ContragentStatus.Registered;
                         _logger.LogInformation($"Contragent {Input.Name} set status {Input.Status}");
                         result = await _mediator.Send(Input);
-                        await _uploadService.UploadContragentFileAsync(result.Data, Files);
+                        if (Request?.Form?.Files?.Count > 0)
+                        {
+                            await _uploadService.UploadContragentFileAsync(result.Data, Request.Form.Files.ToList());
+                        }
 
                     }
                     return new JsonResult(result);
