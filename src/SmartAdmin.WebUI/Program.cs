@@ -48,7 +48,7 @@ namespace SmartAdmin.WebUI
 
                     await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
                     await ApplicationDbContextSeed.SeedSampleDataAsync(context);
-                    await ApplicationDbContextSeed.SeedSampleProductDataAsync(context);
+                  //  await ApplicationDbContextSeed.SeedSampleProductDataAsync(context);
                     await ApplicationDbContextSeed.SeekDirectionAndCategory(context);
                 }
                 catch (Exception ex)
