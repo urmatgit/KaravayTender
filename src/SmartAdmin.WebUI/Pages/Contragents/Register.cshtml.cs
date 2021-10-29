@@ -30,6 +30,7 @@ using System.Diagnostics;
 using CleanArchitecture.Razor.Application.Features.ContragentCategories.Queries.GetAll;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetAll;
 
 namespace SmartAdmin.WebUI.Pages.Contragents
 {
@@ -136,7 +137,17 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 }
             if (ModelState.IsValid)
             {
-
+                    var checking = new CheckExistByParamsQuery
+                    {
+                        Email = Input.Email,
+                        INN = Input.INN,
+                        Name = Input.Name
+                    };
+                 var checkExist = await _mediator.Send(checking);
+                    if (checkExist.Data!=null)
+                    {
+                        throw new Exception($"Контрагент ключевыми параметрами уже существует  ('{Input.Email}' '{Input.INN}' '{Input.Name}')!"); ;
+                    }
                  var result = await _mediator.Send(Input);
 
                 if (result.Succeeded)
@@ -174,10 +185,11 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                     }
                     //return BadRequest(Result.Failure(result.Errors));
                 }
-            }else
-            {
-                await LoadDirection();
             }
+            //    else
+            //{
+            //    await LoadDirection();
+            //}
 
             }
             catch (ValidationException ex)
@@ -195,7 +207,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 ModelState.AddModelError(string.Empty, ex.Message);
                 //return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
-
+            await LoadDirection();
             return Page();
         }
          

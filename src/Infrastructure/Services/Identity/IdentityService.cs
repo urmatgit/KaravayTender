@@ -261,7 +261,14 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
             await _userManager.UpdateAsync(user);
             return user.DisplayName;
         }
-
+        public async  Task<Result> DisableUserAsync(string userId)
+        {
+           var user = await _userManager.FindByIdAsync(userId);
+            if (user is null) return Result.Success();
+            user.IsActive = false;
+            await _userManager.UpdateAsync(user);
+            return Result.Success();
+        }
         public async Task<List<IApplicationUser>>  FetchUsersEx(string roleName)
         {
             var result = await _userManager.Users

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Delete
 {
@@ -6,9 +6,9 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Dele
     {
         public DeleteContragentCommandValidator()
         {
-           //TODO:Implementing DeleteContragentCommandValidator method 
-           //ex. RuleFor(v => v.Id).NotNull().GreaterThan(0);
-           throw new System.NotImplementedException();
+            //TODO:Implementing DeleteContragentCommandValidator method 
+            //ex. RuleFor(v => v.Id).NotNull().GreaterThan(0);
+            RuleFor(v => v.Id).NotNull().GreaterThan(0);
         }
     }
     public class DeleteCheckedContragentsCommandValidator : AbstractValidator<DeleteCheckedContragentsCommand>
@@ -17,7 +17,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Dele
         {
             //TODO:Implementing DeleteProductCommandValidator method 
             //ex. RuleFor(v => v.Id).NotNull().NotEmpty();
-            throw new System.NotImplementedException();
+            RuleFor(v => v.Id).NotNull().NotEmpty();
+
         }
     }
 }

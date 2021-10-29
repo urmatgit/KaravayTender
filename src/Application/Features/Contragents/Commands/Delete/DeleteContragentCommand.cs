@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Contragents.Caching;
@@ -34,15 +35,18 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Dele
                  IRequestHandler<DeleteContragentCommand, Result>,
                  IRequestHandler<DeleteCheckedContragentsCommand, Result>
     {
+        private readonly IIdentityService _identityService;
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<DeleteContragentCommandHandler> _localizer;
         public DeleteContragentCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteContragentCommandHandler> localizer,
-             IMapper mapper
+             IMapper mapper,
+             IIdentityService identityService
             )
         {
+            _identityService = identityService;
             _context = context;
             _localizer = localizer;
             _mapper = mapper;
@@ -51,8 +55,11 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Dele
         {
            //TODO:Implementing DeleteContragentCommandHandler method 
            var item = await _context.Contragents.FindAsync(new object[] { request.Id }, cancellationToken);
-            _context.Contragents.Remove(item);
+            item.Status = Domain.Enums.ContragentStatus.Deleted;
+            //_context.Contragents.Remove(item);
             await _context.SaveChangesAsync(cancellationToken);
+            if (!string.IsNullOrEmpty(item.ApplicationUserId))
+                await AppUserBlock(item.ApplicationUserId);
             return Result.Success();
         }
 
@@ -62,10 +69,22 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Dele
            var items = await _context.Contragents.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {
-                _context.Contragents.Remove(item);
+                //_context.Contragents.Remove(item);
+                item.Status = Domain.Enums.ContragentStatus.Deleted;
             }
             await _context.SaveChangesAsync(cancellationToken);
+            foreach (var item in items)
+            {
+                //_context.Contragents.Remove(item);
+                //item.Status = Domain.Enums.ContragentStatus.Deleted;
+                if (!string.IsNullOrEmpty(item.ApplicationUserId))
+                    await AppUserBlock(item.ApplicationUserId);
+            }
             return Result.Success();
+        }
+        private async Task<Result> AppUserBlock(string id)
+        {
+           return  await _identityService.DisableUserAsync(id);
         }
     }
 }

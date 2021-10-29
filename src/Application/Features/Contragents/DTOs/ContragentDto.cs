@@ -85,7 +85,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         [Required(ErrorMessage = "Не выбрано 'Направление'")]
         public virtual DirectionDto Direction { get; set; }
         public string DirectionName { get; set; }
-        
+
+        public DateTime Created { get; set; }
         public virtual ICollection<ContragentCategoryDto> ContragentCategories { get; set; }
     }
 }

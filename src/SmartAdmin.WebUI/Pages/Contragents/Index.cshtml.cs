@@ -149,6 +149,50 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 //}
                 if (ModelState.IsValid)
                 {
+
+                    var checking = new CheckExistByParamsQuery
+                    {
+                        Email = Input.Email,
+                        INN = Input.INN,
+                        Name = Input.Name
+                    };
+                    var checkExist = await _mediator.Send(checking);
+                    if (checkExist.Data != null)
+                    {
+                        throw new Exception($"Контрагент c такими ключевыми параметрами уже существует  ('{Input.Email}' '{Input.INN}' '{Input.Name}')!"); ;
+                    }
+                    //create app user
+                    var userApp = await CheckUser(Input.ApplicationUserId);
+
+                    if (!userApp.Item2)
+                    {
+                        var user = await CreateUser(userApp.Item1);
+                        if (!user.Item1.Succeeded)
+                        {
+                            var errors = user.Item1.Errors.Select(x => $"{ string.Join(",", x.Description) }");
+                            return BadRequest(errors);
+                        }
+                        else
+                        {
+                            Input.ApplicationUserId = user.Item2;
+
+                        }
+                    }
+                    else
+                    {
+                        var user = await UpdateUser(userApp.Item1, UserFormModel, Input.Email, Input.Phone);
+                        if (!user.Succeeded)
+                        {
+                            var errors = user.Errors.Select(x => $"{ string.Join(",", x.Description) }");
+                            return BadRequest(errors);
+                        }
+                    }
+                    if (UserFormModel.Active)
+                        Input.Status =  ContragentStatus.Registered;
+                    else
+                        Input.Status = ContragentStatus.NotActive;
+                    _logger.LogInformation($"Contragent {Input.Name} set status {Input.Status}");
+
                     var result = await _mediator.Send(Input);
                     if (result.Succeeded)
                     {
@@ -169,33 +213,9 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
                         }
 
-                        var userApp = await CheckUser(Input.ApplicationUserId);
-
-                        if (!userApp.Item2)
-                        {
-                            var user = await CreateUser(userApp.Item1);
-                            if (!user.Item1.Succeeded)
-                            {
-                                var errors = user.Item1.Errors.Select(x => $"{ string.Join(",", x.Description) }");
-                                return BadRequest(errors);
-                            }
-                            else
-                            {
-                                Input.ApplicationUserId = user.Item2;
-                                
-                            }
-                        }else
-                        {
-                            var user = await UpdateUser(userApp.Item1, UserFormModel, Input.Email, Input.Phone);
-                            if (!user.Succeeded)
-                            {
-                                var errors = user.Errors.Select(x => $"{ string.Join(",", x.Description) }");
-                                return BadRequest(errors);
-                            }
-                        }
-                        Input.Status = CleanArchitecture.Razor.Domain.Enums.ContragentStatus.Registered;
-                        _logger.LogInformation($"Contragent {Input.Name} set status {Input.Status}");
-                        result = await _mediator.Send(Input);
+                        
+                        
+                        
                         if (Request?.Form?.Files?.Count > 0)
                         {
                             await _uploadService.UploadContragentFileAsync(result.Data, Request.Form.Files.ToList());
