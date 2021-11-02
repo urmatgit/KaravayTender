@@ -108,6 +108,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         }
         public async Task<PartialViewResult> OnGetCategoriesAsync([FromQuery]int directionid,int contragentid=0)
         {
+            if (directionid == 0) return Partial("_CategoriesListPartial", new List<CategoryDto>());
             var command = new GetAllCategoriesQuery() { DirectionId = directionid };
             var result = await _mediator.Send(command);
             if (result?.Count()>0 && contragentid > 0)

@@ -64,10 +64,10 @@ namespace SmartAdmin.WebUI
                     // options.Conventions.AddAreaPageRoute("Identity","/Account/Login","");
                      
                  })
-                 //.AddMvcOptions(options =>
-                 //{
-                 //    options.Filters.Add<ApiExceptionFilterAttribute>();
-                 //})
+                 .AddMvcOptions(options =>
+                 {
+                     options.Filters.Add<ApiExceptionFilterAttribute>();
+                 })
                 .AddFluentValidation(fv =>
                 {
                     fv.DisableDataAnnotationsValidation = true;

@@ -149,23 +149,31 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 //}
                 if (ModelState.IsValid)
                 {
-
-                    var checking = new CheckExistByParamsQuery
+                    if (Input.Id == 0) //When adding new contragent, check exist contragent by key fields
                     {
-                        Email = Input.Email,
-                        INN = Input.INN,
-                        Name = Input.Name
-                    };
-                    var checkExist = await _mediator.Send(checking);
-                    if (checkExist.Data != null)
-                    {
-                        throw new Exception($"Контрагент c такими ключевыми параметрами уже существует  ('{Input.Email}' '{Input.INN}' '{Input.Name}')!"); ;
+                        var checking = new CheckExistByParamsQuery
+                        {
+                            Email = Input.Email,
+                            INN = Input.INN,
+                            Name = Input.Name
+                        };
+                        var checkExist = await _mediator.Send(checking);
+                        if (checkExist.Data != null)
+                        {
+                            throw new Exception($"Контрагент c такими ключевыми параметрами уже существует  ('{Input.Email}' '{Input.INN}' '{Input.Name}')!"); ;
+                        }
                     }
+                    
                     //create app user
                     var userApp = await CheckUser(Input.ApplicationUserId);
 
                     if (!userApp.Item2)
                     {
+                        if (string.IsNullOrEmpty(UserFormModel.Password))
+                        {
+
+                            return BadRequest("Пароль не задан!!!");
+                        }
                         var user = await CreateUser(userApp.Item1);
                         if (!user.Item1.Succeeded)
                         {
@@ -254,11 +262,12 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             }
             if (user==null)
             {
+               
                 user= new ApplicationUser
                 {
                     EmailConfirmed = true,
                     IsActive = UserFormModel.Active,
-                    PhoneNumber = UserFormModel.ManagerPhone,
+                    PhoneNumber = Input.Phone,
                     DisplayName = Input.Name,
                     UserName = UserFormModel.Login,
                     Email = Input.Email,

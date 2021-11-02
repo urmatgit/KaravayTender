@@ -31,7 +31,7 @@
 
       
 
-        <select type="text" asp-for="Input.DirectionId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Direction"]"  data-val-required= "Не выбрано 'Направление'">
+        <select type="text" asp-for="Input.DirectionId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Direction"]"  data-val-required= "Не выбрано 'Направление'" value="">
             <option value="">@_localizer["Choose direction"]</option>
         </select>
 
