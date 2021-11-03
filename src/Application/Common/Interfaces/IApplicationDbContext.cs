@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Audit;
+using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Entities.Log;
 
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
         DbSet<Contragent> Contragents { get; set; }
         
         DbSet<ContragentCategory> ContragentCategories { get; set; }
+         DbSet<StatusLog> StatusLogs { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

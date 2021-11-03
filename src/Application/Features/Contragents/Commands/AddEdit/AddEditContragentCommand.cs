@@ -56,6 +56,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddE
             {
                 var item = await _context.Contragents.FindAsync(new object[] { request.Id }, cancellationToken);
                 item = _mapper.Map(request, item);
+                var createevent = new ContragentUpdatedEvent(item);
+                item.DomainEvents.Add(createevent);
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
@@ -63,6 +65,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddE
             {
                 var item = _mapper.Map<Contragent>(request);
                 _context.Contragents.Add(item);
+                var createevent = new ContragentCreatedEvent(item);
+                item.DomainEvents.Add(createevent);
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }

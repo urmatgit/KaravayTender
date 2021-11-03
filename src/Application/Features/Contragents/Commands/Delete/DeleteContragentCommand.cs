@@ -57,6 +57,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Dele
            var item = await _context.Contragents.FindAsync(new object[] { request.Id }, cancellationToken);
             item.Status = Domain.Enums.ContragentStatus.Deleted;
             //_context.Contragents.Remove(item);
+            var createevent = new ContragentUpdatedEvent(item);
+            item.DomainEvents.Add(createevent);
             await _context.SaveChangesAsync(cancellationToken);
             if (!string.IsNullOrEmpty(item.ApplicationUserId))
                 await AppUserBlock(item.ApplicationUserId);
@@ -71,7 +73,10 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Dele
             {
                 //_context.Contragents.Remove(item);
                 item.Status = Domain.Enums.ContragentStatus.Deleted;
+                var createevent = new ContragentUpdatedEvent(item);
+                item.DomainEvents.Add(createevent);
             }
+            
             await _context.SaveChangesAsync(cancellationToken);
             foreach (var item in items)
             {
