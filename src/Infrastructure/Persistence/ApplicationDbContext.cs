@@ -54,7 +54,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            var auditEntries = OnBeforeSaveChanges(_currentUserService.UserId);
+            
 
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
             {
@@ -85,7 +85,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                     .SelectMany(x => x)
                     .Where(domainEvent => !domainEvent.IsPublished)
                     .ToArray();
-
+            var auditEntries = OnBeforeSaveChanges(_currentUserService.UserId);
             var result = await base.SaveChangesAsync(cancellationToken);
             await DispatchEvents(events);
             await OnAfterSaveChanges(auditEntries, cancellationToken);
