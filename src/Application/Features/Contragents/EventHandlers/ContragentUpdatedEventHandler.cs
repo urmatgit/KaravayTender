@@ -15,13 +15,16 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
     {
         private readonly ILogger<ContragentUpdatedEventHandler> _logger;
         private readonly IApplicationDbContext _context;
+        private readonly ICurrentUserService _currentUserService;
         public ContragentUpdatedEventHandler(
             ILogger<ContragentUpdatedEventHandler> logger,
-            IApplicationDbContext context
+            IApplicationDbContext context,
+             ICurrentUserService currentUserService
             )
         {
             _context = context;
             _logger = logger;
+            _currentUserService = currentUserService;
         }
         public async Task Handle(DomainEventNotification<ContragentUpdatedEvent> notification, CancellationToken cancellationToken)
         {
@@ -37,7 +40,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
 
                 var statusLog = new StatusLog
                 {
-                    ApplicationUserId = domainEvent.Item.ApplicationUserId,
+                    ManagerId = _currentUserService.UserId,
                     ContragentId = domainEvent.Item.Id,
                     Status = domainEvent.Item.Status,
                     DateTime = domainEvent.Item.Created

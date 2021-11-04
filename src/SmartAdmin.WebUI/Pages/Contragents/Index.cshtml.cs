@@ -23,6 +23,7 @@ using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetCount;
 using CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagination;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
+using CleanArchitecture.Razor.Application.Features.StatusLogs.Queries.Pagination;
 using CleanArchitecture.Razor.Domain.Enums;
 using CleanArchitecture.Razor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
@@ -119,6 +120,28 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             var count = await _mediator.Send(new GetByStatusQuery() { Status = ContragentStatus.OnRegistration });
             return new JsonResult(count);
         }
+        public async Task<IActionResult> OnGetStatusLogsAsync([FromQuery] StatusLogsWithPaginationQuery command)
+        {
+            try
+            {
+
+                if (command.ContragentId is null || command.ContragentId == 0)
+                    return new JsonResult("");
+
+                var result = await _mediator.Send(command);
+                return new JsonResult(result);
+            }
+            catch (CleanArchitecture.Razor.Application.Common.Exceptions.ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
+
         public async Task<IActionResult> OnGetDataAsync([FromQuery] ContragentsWithPaginationQuery command)
         {
             try
@@ -138,6 +161,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
+
         public async Task<IActionResult> OnPostAsync()
         {
 
@@ -371,6 +395,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
+        
         public async Task<IActionResult> OnGetManagerAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);

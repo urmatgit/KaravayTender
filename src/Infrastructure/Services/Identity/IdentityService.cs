@@ -271,11 +271,22 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
         }
         public async Task<List<IApplicationUser>>  FetchUsersEx(string roleName)
         {
-            var result = await _userManager.Users
-                .Where(x => x.UserRoles.Where(y => y.Role.Name == roleName).Any())
-                .Include(x => x.UserRoles)
-                .ToListAsync();  //ToDictionaryAsync(x => x.UserName, y => y.DisplayName);
-            return result.Cast<IApplicationUser>().ToList();
+            if (string.IsNullOrEmpty(roleName))
+            {
+                var result = await _userManager.Users
+                    .Where(x => x.IsActive)
+                    .Include(x => x.UserRoles)
+                    .ToListAsync();  //ToDictionaryAsync(x => x.UserName, y => y.DisplayName);
+                return result.Cast<IApplicationUser>().ToList();
+            }
+            else
+            {
+                var result = await _userManager.Users
+                    .Where(x => x.UserRoles.Where(y => y.Role.Name == roleName).Any())
+                    .Include(x => x.UserRoles)
+                    .ToListAsync();  //ToDictionaryAsync(x => x.UserName, y => y.DisplayName);
+                return result.Cast<IApplicationUser>().ToList();
+            }
         }
     }
 }

@@ -17,7 +17,8 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public virtual Contragent Contragent { get; set; }
         public DateTime DateTime { get; set; }
         public ContragentStatus Status { get; set; }
-        public string ApplicationUserId { get; set; }
+        public string ManagerId { get; set; }
+        public string Description { get; set; }
         public List<DomainEvent> DomainEvents { get; set ; } = new();
     }
 }

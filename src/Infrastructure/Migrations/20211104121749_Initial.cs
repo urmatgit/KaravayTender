@@ -393,6 +393,33 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "StatusLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ContragentId = table.Column<int>(type: "INTEGER", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Status = table.Column<short>(type: "INTEGER", nullable: false),
+                    ManagerId = table.Column<string>(type: "TEXT", nullable: true),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StatusLogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StatusLogs_Contragents_ContragentId",
+                        column: x => x.ContragentId,
+                        principalTable: "Contragents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -454,6 +481,11 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                 name: "IX_Customers_ProductId",
                 table: "Customers",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StatusLogs_ContragentId",
+                table: "StatusLogs",
+                column: "ContragentId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -489,16 +521,19 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                 name: "Serilogs");
 
             migrationBuilder.DropTable(
+                name: "StatusLogs");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Contragents");
+                name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Contragents");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

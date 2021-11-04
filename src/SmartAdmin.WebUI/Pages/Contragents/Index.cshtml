@@ -110,6 +110,7 @@
     </div>
 </div>
 <partial name="../Contragents/Index/RejectDialog" />
+<partial name="../Contragents/Index/StatusLogDialog"/>
 @await Component.InvokeAsync("ImportExcel", new
 {
     importUri = Url.Page("/Contragents/Index") + "?handler=Import",
@@ -127,6 +128,7 @@
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/inputmask/inputmask.bundle.js"></script>
     <script src="~/js/Karavay/Contragents.js" type="text/javascript"></script>
+    <script src="~/js/Karavay/StatusLog.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $(":input").inputmask();
@@ -135,7 +137,11 @@
             FileSizeToBig: '@_localizer["File too big!"]',
 			GetCategoriesFail: '@_localizer["Get categories fail"]',
 			IconPrefix: '@(Settings.Theme.IconPrefix)',
-            Download_Success: '@_localizer["Download Success"]'
+			Download_Success: '@_localizer["Download Success"]',
+			Manager: '@_localizer["Manager"]',
+			Name:'@_localizer["Name"]',
+			Status: '@_localizer["Status"]',
+            loadfail:'@_localizer["load fail"]'
 		}
 
 		var YesNotList = [
@@ -153,7 +159,7 @@
             }
 
 		]
-		let currentEditRow = "";
+		var currentEditRow = "";
 		function GetManagerPhone(val) {
             axios.get('/Contragents/Index?handler=Manager&id=' + val)
                 .then(res => {
@@ -235,10 +241,10 @@
 		if ($(form).valid() === false) {
 			form.classList.add('was-validated');
 		} else {
-			   
+
             UpdateFiles();
 			//const request = $('#contragent_form').serialize();
-			
+
    //         for (var i = 0; i != uploadfileinputs.files.length; i++) {
    //             request.append("files", files[i]);
 			//}
@@ -335,6 +341,7 @@
 								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
 								   <button class="dropdown-item" onclick="onEdit(${index})" @(_canEdit.Succeeded? "":"disabled")><i class="fal fa-edit mr-1"></i> @_localizer["Edit"]</button>
 								   <button class="dropdown-item" onclick="onDelete('${row.Id}')" @(_canDelete.Succeeded? "":"disabled") ><i class="fal fa-trash-alt mr-1"></i> @_localizer["Delete"]</button>
+								   <button class="dropdown-item" onclick="onShowStatusLog('${row.Id}')" @(_canAcceditation.Succeeded? "":"disabled") ><i class="fal fa-trash-alt mr-1"></i> @_localizer["Status log"]</button>
 								 </div>
 							  </div>`;
 					}
@@ -490,14 +497,15 @@
 
 		$(() => {
 			$("#contragent_form").data("validator").settings.ignore = "";
-		initdatagrid();
+			initdatagrid();
+			initdatagridSL();
 	})
 	var popupmodal = (contragent) => {
 		$('#contragent_modal').modal('toggle');
         $('#contragent_modal #Main-modal-title').html('@_localizer["Add Contragent"]');
 		$('#contragent_form').clearForm();
 		$('#contragent_form')[0].reset();
-       
+
 		if (contragent) {
 			currentEditRow = contragent;
 			console.log(contragent);
@@ -526,8 +534,17 @@
 
 		}
 	}
+		var CurrentContragentId = 0;
+		$('#StatusLogModal').on('shown.bs.modal', function () {
+            $dgStatusLog.datagrid('load', '@Url.Page("/Contragents/Index")?handler=StatusLogs&ContragentId='+ CurrentContragentId);
 
+			$dgStatusLog.datagrid('resize');
 
+        })
+		var onShowStatusLog = (id) => {
+			CurrentContragentId = id;
+            $('#StatusLogModal').modal('toggle');
+        }
 	var onEdit = (index) => {
 		var contragent = $dg.datagrid('getRows')[index];
 		getCategoriesByDirectionId(contragent.DirectionId, contragent.Id);

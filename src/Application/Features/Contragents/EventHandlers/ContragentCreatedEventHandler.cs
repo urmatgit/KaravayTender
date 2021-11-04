@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
@@ -15,13 +15,16 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
     {
         private readonly ILogger<ContragentCreatedEventHandler> _logger;
         private readonly IApplicationDbContext _context;
+        private readonly ICurrentUserService _currentUserService;
         public ContragentCreatedEventHandler(
             ILogger<ContragentCreatedEventHandler> logger,
-               IApplicationDbContext context
+               IApplicationDbContext context,
+               ICurrentUserService currentUserService
             )
         {
             _context = context;
             _logger = logger;
+            _currentUserService = currentUserService;
         }
         public async Task Handle(DomainEventNotification<ContragentCreatedEvent> notification, CancellationToken cancellationToken)
         {
@@ -30,7 +33,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
             _logger.LogInformation("CleanArchitecture Domain Event: {DomainEvent}", domainEvent.GetType().Name);
             var statusLog = new StatusLog
             {
-                ApplicationUserId = domainEvent.Item.ApplicationUserId,
+                ManagerId =_currentUserService.UserId,
                 ContragentId = domainEvent.Item.Id,
                 Status=domainEvent.Item.Status,
                 DateTime=domainEvent.Item.Created

@@ -309,9 +309,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("ContragentId")
                         .HasColumnType("INTEGER");
 
@@ -324,10 +321,16 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastModifiedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ManagerId")
                         .HasColumnType("TEXT");
 
                     b.Property<short>("Status")
