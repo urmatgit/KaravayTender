@@ -341,7 +341,7 @@
 								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
 								   <button class="dropdown-item" onclick="onEdit(${index})" @(_canEdit.Succeeded? "":"disabled")><i class="fal fa-edit mr-1"></i> @_localizer["Edit"]</button>
 								   <button class="dropdown-item" onclick="onDelete('${row.Id}')" @(_canDelete.Succeeded? "":"disabled") ><i class="fal fa-trash-alt mr-1"></i> @_localizer["Delete"]</button>
-								   <button class="dropdown-item" onclick="onShowStatusLog('${row.Id}')" @(_canAcceditation.Succeeded? "":"disabled") ><i class="fal fa-trash-alt mr-1"></i> @_localizer["Status log"]</button>
+								   <button class="dropdown-item" onclick="onShowStatusLog('${row.Id}')" @(_canAcceditation.Succeeded? "":"disabled") ><i class="fal fa-clipboard-list-check mr-1"></i> @_localizer["Status log"]</button>
 								 </div>
 							  </div>`;
 					}
