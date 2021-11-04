@@ -1,7 +1,7 @@
 var $dgStatusLog = {};
 var initdatagridSL = () => {
     $dgStatusLog = $('#statuslog_dg').datagrid({
-        height: (window.innerHeight - 320),
+        height: (window.innerHeight /3),
         method: 'GET',
         rownumbers: false,
         singleSelect: true,
@@ -38,7 +38,7 @@ var initdatagridSL = () => {
             //</div>`;
             //       }
             //   },
-
+            { field: 'DateTime', title: window.translations.Status, sortable: true, width: 140, formatter: datetimeformatter },
             { field: 'StatusStr', title: window.translations.Status, sortable: true, width: 140 },
             { field: 'ContragentName', title: window.translations.Name, sortable: true, width: 100 },
 
