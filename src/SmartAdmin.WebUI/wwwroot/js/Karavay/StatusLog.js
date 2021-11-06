@@ -1,3 +1,4 @@
+ 
 var $dgStatusLog = {};
 var initdatagridSL = () => {
     $dgStatusLog = $('#statuslog_dg').datagrid({
@@ -55,21 +56,24 @@ var initdatagridSL = () => {
                 type: 'combobox',
                 options: {
                     panelHeight: 'auto',
-                    data: [
-                        {
-                            value: null,
-                            text: 'Все'
-                        },
-						//@foreach(var val in Enum.GetValues(typeof (CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
+                    valueField: 'id',
+                    textField: 'text',
+                    data: Statuses,
+      //              data: [
       //                  {
-      //                  <text>
-      //                      {
-      //                          value: '@val',
-      //                          text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'
-						//	},
-      //                  </text>
-      //                  }
-						],
+      //                      value: null,
+      //                      text: 'Все'
+      //                  },
+						////@foreach(var val in Enum.GetValues(typeof (CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
+      ////                  {
+      ////                  <text>
+      ////                      {
+      ////                          value: '@val',
+      ////                          text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'
+						////	},
+      ////                  </text>
+      ////                  }
+						//],
                     onChange: function (newValue, oldValue) {
 
                         $dgStatusLog.datagrid('addFilterRule', {

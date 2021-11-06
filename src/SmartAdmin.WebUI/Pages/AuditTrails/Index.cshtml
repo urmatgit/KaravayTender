@@ -62,11 +62,13 @@
 
 @section ScriptsBlock {
     <script src="~/js/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.js"></script>
-    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
-<script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>
-    
- 
+    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/easyui/locale/easyui-lang-ru.js" asp-append-version="true"></script>*@
+
+
     <script src="~/lib/easyui/plugins/datagrid-detailview.js"></script>
     <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
     <script src="~/lib/axios/dist/axios.js"></script>
@@ -130,16 +132,17 @@
 					{
 						field: 'DateTime',
 						type: 'dateRange',
-                        op: 'between',
+                        op: ['between','equal', 'notequal', 'less', 'greater']
+
 					},
 					{
 						field: 'AuditType',
 						type: 'combobox',
-                        op: 'equal',
+
 						options: {
 							panelHeight: 'auto',
 							data: [
-								 
+
                                 {
                                     value: 'null',
                                     text: 'Все'

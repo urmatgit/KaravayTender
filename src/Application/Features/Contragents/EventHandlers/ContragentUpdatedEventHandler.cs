@@ -16,12 +16,15 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
         private readonly ILogger<ContragentUpdatedEventHandler> _logger;
         private readonly IApplicationDbContext _context;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IDateTime _dateTime;
         public ContragentUpdatedEventHandler(
             ILogger<ContragentUpdatedEventHandler> logger,
             IApplicationDbContext context,
-             ICurrentUserService currentUserService
+             ICurrentUserService currentUserService,
+             IDateTime dateTime
             )
         {
+            _dateTime = dateTime;
             _context = context;
             _logger = logger;
             _currentUserService = currentUserService;
@@ -43,7 +46,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
                     ManagerId = _currentUserService.UserId,
                     ContragentId = domainEvent.Item.Id,
                     Status = domainEvent.Item.Status,
-                    DateTime = domainEvent.Item.Created
+                    DateTime = domainEvent.Item.LastModified?? _dateTime.Now
                 };
                 _context.StatusLogs.Add(statusLog);
                 var createevent = new StatusLogCreatedEvent(statusLog);

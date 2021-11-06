@@ -53,9 +53,10 @@
 @Html.AntiForgeryToken()
 @section ScriptsBlock{
     <partial name="_ValidationScriptsPartial" />
-    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
-    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
     @*<script type="text/javascript" src="~/js/formplugins/dropzone/dropzone.js" asp-append-version="true"></script>*@
     
     <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
