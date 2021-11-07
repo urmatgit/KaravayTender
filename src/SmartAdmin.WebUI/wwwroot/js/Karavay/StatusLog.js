@@ -52,6 +52,10 @@ var initdatagridSL = () => {
     })
         .datagrid('enableFilter', [
             {
+                field: 'DateTime',
+                type: 'dateRange'
+            },
+            {
                 field: 'StatusStr',
                 type: 'combobox',
                 options: {

@@ -296,7 +296,7 @@
           input.unbind('.filter')
             .unbind('apply.daterangepicker')
             .bind('apply.daterangepicker', function (e,picker) {
-                $(this).val(picker.startDate.format('YYYY/MM/DD') + '-' + picker.endDate.format('YYYY/MM/DD'));
+                $(this).val(picker.startDate.format('DD.MM.YYYY') + '-' + picker.endDate.format('DD.MM.YYYY'));
                 var t = $(this);
                 if (this.timer) {
                     clearTimeout(this.timer);
