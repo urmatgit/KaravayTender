@@ -93,6 +93,17 @@
         </div>
     </div>
     <div class="card-body">
+        <div class="row pb-3 pl-3">
+            
+                <label class="form-label">@_localizer["Roles"]</label>
+                <select class="select2" multiple="multiple" id="multiple-basic">
+                    @foreach (var role in Model.Roles){
+                    <option value="@role">"@role"</option>
+                }
+                </select>
+            
+            
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <table id="user_dg">
@@ -814,7 +825,8 @@ return `<a href="javascript:onUnlock('${row.Id}');" class="btn btn-outline-dange
                                                 $('#resetpassword_form')[0].reset();
                                                 $('#resetpassword_form').jsonToForm(user)
                                                 }
-                                                $(() => {
+        $(() => {
+            $('.select2').select2();
                                                 initdatagrid();
                                                 if(connection){
                                                 connection.on("@SignalR.ConnectUser", function (user) {
