@@ -133,16 +133,16 @@
     <value>Вы уверены, что удалите отмеченных пользователей?</value>
   </data>
   <data name="Assign roles" xml:space="preserve">
-    <value>Назначьте роли</value>
+    <value>Присваение ролей</value>
   </data>
   <data name="Assign success" xml:space="preserve">
-    <value>Назначить успех</value>
+    <value>Присваение прашло успешно</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Закрывать</value>
+    <value>Закрыть</value>
   </data>
   <data name="Command" xml:space="preserve">
-    <value>Командование</value>
+    <value>Команда</value>
   </data>
   <data name="Confirm your password" xml:space="preserve">
     <value>Подтвердите ваш пароль</value>
@@ -199,7 +199,7 @@
     <value>Состояние блокировки</value>
   </data>
   <data name="Locked success" xml:space="preserve">
-    <value>Заблокированный успех</value>
+    <value>Блокирование прошло успешно</value>
   </data>
   <data name="Login user name" xml:space="preserve">
     <value>Имя пользователя для входа</value>
@@ -226,7 +226,7 @@
     <value>Сохранить</value>
   </data>
   <data name="Save Success" xml:space="preserve">
-    <value>Сохранить успех</value>
+    <value>Сохранение прошло успешно</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Поиск</value>
@@ -262,13 +262,13 @@
     <value>Аватар</value>
   </data>
   <data name="Assign fail" xml:space="preserve">
-    <value>Назначить сбой</value>
+    <value>Сбой при присваение</value>
   </data>
   <data name="Reset password success" xml:space="preserve">
     <value>Сброс пароля успешно</value>
   </data>
   <data name="Save fail" xml:space="preserve">
-    <value>Сохранить не удается</value>
+    <value>Сохранить не удалось</value>
   </data>
   <data name="Register fail" xml:space="preserve">
     <value>Сбой регистрации</value>
@@ -286,15 +286,27 @@
     <value>Активный сбой</value>
   </data>
   <data name="Unlock fail" xml:space="preserve">
-    <value>Сбой разблокиров</value>
+    <value>Сбой разблокировки</value>
   </data>
   <data name="Unlocked success" xml:space="preserve">
-    <value>Разблокированный успех</value>
+    <value>Разблокировка прошла успешно</value>
   </data>
   <data name="Lock fail" xml:space="preserve">
     <value>Сбой блокировки</value>
   </data>
   <data name="Reset password fail" xml:space="preserve">
     <value>Сбой сброса пароля</value>
+  </data>
+  <data name="Email for verification" xml:space="preserve">
+    <value>Электронная почта</value>
+  </data>
+  <data name="Password for verification (minimum 6 characters)" xml:space="preserve">
+    <value>Пароль для подтверждения (минимум 6 символов)</value>
+  </data>
+  <data name="Sorry, you missed this one." xml:space="preserve">
+    <value>Извините, вы пропустили это.</value>
+  </data>
+  <data name="Your password must be 6-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emojis." xml:space="preserve">
+    <value>Ваш пароль должен состоять из 6-20 символов, содержать буквы и цифры и не должен содержать пробелов, специальных символов или смайликов.</value>
   </data>
 </root>
