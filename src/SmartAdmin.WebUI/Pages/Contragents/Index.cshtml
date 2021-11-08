@@ -63,7 +63,7 @@
                     @_localizer["Search"]
                 </button>
             }
-            @if (_canImport.Succeeded)
+            @*@if (_canImport.Succeeded)
             {
                 <div class="btn-group" role="group">
                     <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
@@ -76,7 +76,7 @@
                         <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
                     </div>
                 </div>
-            }
+            }*@
             @if (_canExport.Succeeded)
             {
                 <button class="btn btn-sm btn-outline-primary " id="exportbutton">
