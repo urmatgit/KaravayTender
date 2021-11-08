@@ -175,7 +175,9 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                             }
 
                         await _uploadService.UploadContragentFileAsync(result.Data, Files);
-
+                        //send emailt
+                        var messageBody = $"Заявка на регистрацию, поставщик  {Input.Name}({Input.Phone}) от {Input.Created} ";
+                        await _emailSender.SendEmailAsync("", "Заявка на регистрацию", messageBody);
                     return LocalRedirect(returnUrl);
                 }
                 else

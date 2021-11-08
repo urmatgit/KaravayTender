@@ -46,6 +46,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
                     ManagerId = _currentUserService.UserId,
                     ContragentId = domainEvent.Item.Id,
                     Status = domainEvent.Item.Status,
+                    Description=domainEvent.Description,
                     DateTime = domainEvent.Item.LastModified?? _dateTime.Now
                 };
                 _context.StatusLogs.Add(statusLog);

@@ -131,6 +131,7 @@
     <script src="~/js/formplugins/inputmask/inputmask.bundle.js"></script>
     <script src="~/js/Karavay/Contragents.js" type="text/javascript"></script>
     <script src="~/js/Karavay/StatusLog.js" type="text/javascript"></script>
+    <script src="~/js/Karavay/GeneratePass.js" type="text/javascript"></script>
     <script type="text/javascript">
 
         var Statuses = [{
@@ -157,7 +158,9 @@
             Manager: '@_localizer["Manager"]',
             Name:'@_localizer["Name"]',
             Status: '@_localizer["Status"]',
-            loadfail:'@_localizer["load fail"]'
+            Date: '@_localizer["Date"]',
+            loadfail: '@_localizer["load fail"]',
+            Description: '@_localizer["Description"]',
         }
 
 
@@ -199,8 +202,14 @@
                     getCheckedCategories();
 
 
-                });
+        });
+        $('#GeneratePass').click(function () {
 
+            let pass = generatePassword();
+            console.log(pass);
+            $('#UserFormModel_Password').val(pass);
+            $('#UserFormModel_ConfirmPassword').val(pass);
+        });
 	$('#searchbutton').click(function () {
                     reloadData();
                 });

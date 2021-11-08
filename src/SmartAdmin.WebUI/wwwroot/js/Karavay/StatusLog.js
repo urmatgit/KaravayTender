@@ -39,11 +39,12 @@ var initdatagridSL = () => {
             //</div>`;
             //       }
             //   },
-            { field: 'DateTime', title: window.translations.Status, sortable: true, width: 140, formatter: datetimeformatter },
+            { field: 'DateTime', title: window.translations.Date, sortable: true, width: 140, formatter: datetimeformatter },
             { field: 'StatusStr', title: window.translations.Status, sortable: true, width: 140 },
-            { field: 'ContragentName', title: window.translations.Name, sortable: true, width: 100 },
+            { field: 'ContragentName', title: window.translations.Name, sortable: true, width: 200 },
 
-            { field: 'UserName', title: window.translations.Manager, sortable: true, width: 140 }
+            { field: 'UserName', title: window.translations.Manager, sortable: true, width: 140 },
+            { field: 'Description', title: window.translations.Description, sortable: true, width: 200 }
 
 
 

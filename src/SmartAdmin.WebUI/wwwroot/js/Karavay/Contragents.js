@@ -48,6 +48,9 @@ function getConragentStatusCount() {
             console.log(res);
             //ContragentOnRegistrationCount
             $('*[id*=ContragentOnRegistrationCount]:visible').each(function () {
+                if (res.data.Data <= 0) {
+                    $(this).hide();
+                }else 
                 $(this).text(res.data.Data);
             });
         })

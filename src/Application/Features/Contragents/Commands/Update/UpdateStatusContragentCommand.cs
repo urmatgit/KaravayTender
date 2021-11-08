@@ -11,6 +11,7 @@ using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Domain.Enums;
+using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Localization;
 
@@ -18,7 +19,10 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Upda
 {
     public class UpdateStatusContragentCommand :   IRequest<Result>
     {
+
         public int Id { get; set; }
+        public string Description { get; set; }
+            
         public ContragentStatus Status { get; set; }
     }
     public class UpdateStatusContragentCommandHandler : IRequestHandler<UpdateStatusContragentCommand, Result>
@@ -43,6 +47,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Upda
             if (item != null)
             {
                 item.Status = request.Status;
+                var createevent = new ContragentUpdatedEvent(item,request.Description);
+                item.DomainEvents.Add(createevent);
                 await _context.SaveChangesAsync(cancellationToken);
             }
             return Result.Success();

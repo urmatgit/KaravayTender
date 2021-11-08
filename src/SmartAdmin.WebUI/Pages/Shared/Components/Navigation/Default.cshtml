@@ -22,9 +22,12 @@
                 <a href="#" title="@group.Title" data-filter-tags="@group.Tags">
                     <i class="@group.Icon"></i>
                     <span class="nav-link-text" data-i18n="@group.I18n">@_localizer[group.Text]</span>
-                    @if (group.Span.HasValue())
+                    @{
+                        var spanText = @Model.FindInSpanValues(group.Span.Text);
+                    }
+                    @if (group.Span.HasValue() && !string.IsNullOrEmpty(spanText))
                     {
-                        <span class="@group.Span.Class">@Model.FindInSpanValues(group.Span.Text).AsRaw()</span>
+                <span class="@group.Span.Class">@spanText.AsRaw()</span>
                     }
                 </a>
                 <ul>
@@ -57,11 +60,14 @@
                             <text>
                                 <a href="@item.Route" title="@item.Title" target="@item.Target" data-filter-tags="@item.Tags">
                                     <span class="nav-link-text" data-i18n="@item.I18n">@_localizer[item.Text]</span>
-                                    @if (item.Span.HasValue())
-                                    {
+                                    @{
+                                        var SpanTitle = @Model.FindInSpanValues(item.Span.Text);
+                                    }
+                                    @if (item.Span.HasValue() && !string.IsNullOrEmpty(SpanTitle))
+                                               {
                                 <span class="@item.Span.Class"  @(!string.IsNullOrEmpty(item.Span.id) ? $"id={@item.Span.id}":"")
 
-                                      >@Model.FindInSpanValues(item.Span.Text).AsRaw()</span>
+                                      >@SpanTitle.AsRaw()</span>
                                     }
                                 </a>
                             </text>
@@ -78,7 +84,7 @@
                                 </text>
                             }
                             else
-                            {
+                                    {
                                 <text>
                                 <li class="@(pageName == subItem.Href.ToPage() ? "active" : "")">
                                 </text>

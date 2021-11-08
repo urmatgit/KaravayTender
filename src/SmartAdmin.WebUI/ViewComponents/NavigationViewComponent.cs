@@ -41,7 +41,10 @@ namespace SmartAdmin.WebUI.ViewComponents
             
             var items = NavigationModel.GetNavigation(x=>!x.Roles.Any()  || (x.Roles.Any() && _roles.Any() && x.Roles.Where(x=>_roles.Contains(x)).Any()) );
             var count = await _mediator.Send(new GetByStatusQuery() { Status = ContragentStatus.OnRegistration });
-            items.SpanValues.Add("[ContragentOnRegistrationCount]", count?.Data.ToString());
+            if (count?.Data > 0)
+            {
+                items.SpanValues.Add("[ContragentOnRegistrationCount]", count?.Data.ToString());
+            }
             return View(items);
         }
     }

@@ -10,15 +10,21 @@
     {
       "title": "Режимы",
       "icon": "fal fa-cubes",
-      "roles": [ "Admin", "Manager", "Super" ],
-      "items": [
-        
-      ]
+      "roles": [
+        "Admin",
+        "Manager",
+        "Super"
+      ],
+      "items": []
     },
     {
       "title": "Справочники",
       "icon": "fal fa-cubes",
-      "roles": [ "Admin", "Manager", "Super" ],
+      "roles": [
+        "Admin",
+        "Manager",
+        "Super"
+      ],
       "items": [
         {
           "title": "Поставщики",
@@ -42,13 +48,13 @@
           "roles": []
         }
       ]
-      
-
     },
     {
       "title": "Master Data",
       "icon": "fal fa-cubes",
-      "roles": [ "Super" ],
+      "roles": [
+        "Super"
+      ],
       "items": [
         {
           "title": "Customers",
@@ -70,7 +76,9 @@
     {
       "title": "Documents",
       "icon": "fal fa-paperclip",
-      "roles": [  "Super" ],
+      "roles": [
+        "Super"
+      ],
       "items": [
         {
           "title": "Products",
@@ -84,11 +92,13 @@
         }
       ]
     },
-
     {
       "title": "Admin",
       "icon": "fal fa-shield-alt",
-      "roles": [ "Admin", "Super" ],
+      "roles": [
+        "Admin",
+        "Super"
+      ],
       "items": [
         {
           "title": "Users",
@@ -108,7 +118,7 @@
         {
           "title": "Logs",
           "href": "logs_index.html",
-          "roles": []
+          "roles": ["Super"]
         }
       ]
     },
@@ -117,7 +127,6 @@
       "icon": "fal fa-bolt",
       "roles": [
         "Super"
-
       ],
       "items": [
         {
@@ -211,7 +220,6 @@
       "icon": "fal fa-window",
       "roles": [
         "Super"
-
       ],
       "items": [
         {
@@ -338,7 +346,9 @@
         "class": "dl-ref bg-primary-500 hidden-nav-function-minify hidden-nav-function-top",
         "text": "7,500+"
       },
-      "roles": [ "Super" ],
+      "roles": [
+        "Super"
+      ],
       "items": [
         {
           "title": "FontAwesome",
@@ -409,7 +419,5 @@
         }
       ]
     }
-
-
   ]
 }

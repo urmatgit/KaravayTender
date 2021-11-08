@@ -33,6 +33,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -54,6 +55,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         private readonly ILogger<IndexModel> _logger;
         private readonly  UserManager<ApplicationUser> _userManager;
         private readonly IUploadService _uploadService;
+        private readonly IEmailSender _emailSender;
         [BindProperty]
         public AddEditContragentCommand Input { get; set; }
         [BindProperty]
@@ -80,9 +82,11 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             IStringLocalizer<IndexModel> localizer,
                ILogger<IndexModel> logger,
                UserManager<ApplicationUser> userManager,
-                IUploadService uploadService
+                IUploadService uploadService,
+                IEmailSender emailSender
             )
         {
+            _emailSender = emailSender;
             _uploadService = uploadService;
             _userManager = userManager;
             _logger = logger;
@@ -253,6 +257,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                             await _uploadService.UploadContragentFileAsync(result.Data, Request.Form.Files.ToList());
                         }
 
+                        await SendMessageToCustomer();
                     }
                     return new JsonResult(result);
                 }
@@ -274,6 +279,23 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 return BadRequest(new string[] { ex.Message });
             }
 
+        }
+        private async Task SendMessageToCustomer()
+        {
+            var StatusStr = "";
+            switch (Input.Status)
+            {
+                case ContragentStatus.Registered:
+                    StatusStr = $"Зарегистрирован.\n Ваш логин: {UserFormModel.Login},   пароль: {UserFormModel.Password} \n Войдите в личный кабинет, перейдя по следующей ссылке: https://localhost:44340/Identity/Account/Login";
+                    break;
+                case ContragentStatus.Reject:
+                    StatusStr = "Отклонена";
+                    break;
+                default:
+                    return ;
+            }
+            var messageBody = $"Уважаемый поставщик  Ваша заявка на регистрацию от {Input.Created} числа, {StatusStr}";
+            await _emailSender.SendEmailAsync("", "Ответ заявку на регистрацию", messageBody);
         }
         private async Task<(ApplicationUser,bool)> CheckUser(string id)
         {
@@ -362,7 +384,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             var command = new UpdateStatusContragentCommand()
             {
                 Id = model.Id,
-                Status = ContragentStatus.Reject
+                Status = ContragentStatus.Reject,
+                Description=model.Description
             };
             var result = await _mediator.Send(command);
             if (!result.Succeeded)

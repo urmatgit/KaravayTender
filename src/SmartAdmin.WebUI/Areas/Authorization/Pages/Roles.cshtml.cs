@@ -77,11 +77,11 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         {
             try
             {
-                //using (var sw = new StreamWriter(@"nav.json", false))
-                //{
-                //  await sw.WriteAsync(this.NavJsonStr);
-                //  await  sw.FlushAsync();
-                //}
+                using (var sw = new StreamWriter(@"nav.json", false))
+                {
+                    await sw.WriteAsync(this.NavJsonStr);
+                    await sw.FlushAsync();
+                }
                 await Task.CompletedTask;
             }
             catch

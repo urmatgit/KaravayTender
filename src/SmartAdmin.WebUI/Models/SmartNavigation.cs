@@ -47,11 +47,13 @@ namespace SmartAdmin.WebUI.Models
         public Dictionary<string, string> SpanValues = new Dictionary<string, string>();
         public string FindInSpanValues(string key)
         {
+            if (string.IsNullOrEmpty(key)) return key;
 
-            if (!string.IsNullOrEmpty(key) && SpanValues.ContainsKey(key))
+            if (SpanValues.ContainsKey(key))
                 return SpanValues[key];
             else
-                return key;
+                return 
+                    key.StartsWith('[') && key.EndsWith(']')? "": key;
 
         }
         public List<ListItem> Lists { get; set; } = new List<ListItem>();
