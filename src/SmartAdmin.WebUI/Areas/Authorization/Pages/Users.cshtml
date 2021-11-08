@@ -235,7 +235,7 @@
                     @Html.AntiForgeryToken()
                     <div class="form-group">
                         <label class="col-xl-12 form-label">@_localizer["User Name"]</label>
-                        <input type="text" asp-for="ResetFormModel.UserName" class="form-control" placeholder="User Name" readonly="readonly" />
+                        <input type="text" asp-for="ResetFormModel.UserName" class="form-control" placeholder='@_localizer["User Name"]' readonly="readonly" />
                         <span class="invalid-feedback" asp-validation-for="ResetFormModel.UserName">@_localizer["Sorry, you missed this one."]</span>
                     </div>
                     <div class="form-group">
@@ -248,7 +248,8 @@
                         <input type="password" asp-for="ResetFormModel.Password" class="form-control" placeholder='@_localizer["Password (minimum 6 characters)"]' value="" required="required" pattern="^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{6,}$" />
                         <span class="invalid-feedback" asp-validation-for="ResetFormModel.Password">@_localizer["Sorry, you missed this one."]</span>
                         <div class="help-block">
-                            @_localizer["Your password must be 6-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emojis."]</div>
+                            @_localizer["Your password must be 6-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emojis."]
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" asp-for="ResetFormModel.ConfirmPassword">@_localizer["Confirm your password"]</label>
@@ -298,10 +299,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
-                        <button type="submit" class="btn btn-primary">@_localizer["Update roles"]</button>
-                    </div>
+                    @*<div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
+                            <button type="submit" class="btn btn-primary">@_localizer["Update roles"]</button>
+                        </div>*@
             </form>
         </div>
     </div>
@@ -315,14 +316,14 @@ onImportedSucceeded = "reload()"
 @section ScriptsBlock {
     <partial name="_ValidationScriptsPartial" />
     <partial name="_EasyUIScriptsPartial" />
-                            @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
         <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>
         <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>*@
-<script>jQuery.fn.tooltip = bootstrapTooltip;</script>
-<script src="~/lib/axios/dist/axios.js"></script>
-<script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
-<script src="~/js/formplugins/select2/select2.bundle.js"></script>
-<script>
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script>
 $('#searchbutton').click(function () {
 reload();
 });
@@ -828,5 +829,5 @@ return `<a href="javascript:onUnlock('${row.Id}');" class="btn btn-outline-dange
                                                 })
 
 
-                                                </script>
-                                                }
+    </script>
+}
