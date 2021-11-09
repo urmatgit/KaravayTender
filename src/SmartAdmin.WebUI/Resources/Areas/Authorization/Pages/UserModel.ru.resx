@@ -312,7 +312,13 @@
   <data name="Confirm password (minimum 6 characters)" xml:space="preserve">
     <value>Подтвердите пароль (минимум 6 символов)</value>
   </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Фильтр</value>
+  </data>
   <data name="Password (minimum 6 characters)" xml:space="preserve">
     <value>Пароль (минимум 6 символов)</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Роли</value>
   </data>
 </root>

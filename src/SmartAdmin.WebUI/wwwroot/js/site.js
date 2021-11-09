@@ -1,3 +1,19 @@
+function password_show_hide(group,id) {
+    var x = document.getElementById(id);
+    var show_eye = $(group).children('#show_eye');//  document.getElementById("show_eye");
+
+    var hide_eye = $(group).children('#hide_eye');// document.getElementById("hide_eye");
+    hide_eye.removeClass("d-none");// classList.remove("d-none");
+    if (x.type === "password") {
+        x.type = "text";
+        show_eye.css("display", "none");
+        hide_eye.css("display", "block");
+    } else {
+        x.type = "password";
+        show_eye.css("display", "block");
+        hide_eye.css("display", "none");
+    }
+}
 function datetimeformatter(value, row, index) {
     if (typeof value === "undefined") {
         return null;
