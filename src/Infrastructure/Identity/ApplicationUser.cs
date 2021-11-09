@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace CleanArchitecture.Razor.Infrastructure.Identity
 {
@@ -18,10 +19,15 @@ namespace CleanArchitecture.Razor.Infrastructure.Identity
         public bool IsLive { get; set; }
         public string RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
+        [JsonIgnore]
         public virtual ICollection<ApplicationUserClaim> Claims { get; set; }
+        [JsonIgnore]
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
+        [JsonIgnore]
         public virtual ICollection<ApplicationUserLogin> Logins { get; set; }
+        [JsonIgnore]
         public virtual ICollection<ApplicationUserToken> Tokens { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Contragent> Contragents { get; set; }
     }
 }

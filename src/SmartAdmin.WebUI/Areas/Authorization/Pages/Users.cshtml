@@ -96,7 +96,7 @@
         <div class="row pb-1 pl-3 col-sm-12">
             <div class="col-11">
                 <label class="form-label">@_localizer["Roles"]</label>
-                <select class="select2" multiple="multiple" id="multiple-basic">
+                <select class="select2" multiple="multiple" id="multiple-basic" >
                     @foreach (var role in Model.Roles){
                     <option value="@role">"@role"</option>
                 }
@@ -835,7 +835,10 @@ return `<a href="javascript:onUnlock('${row.Id}');" class="btn btn-outline-dange
                                                 $('#resetpassword_form').jsonToForm(user)
                                                 }
         $(() => {
-            $('.select2').select2();
+            $('.select2').select2({
+                placeholder: "Выберите роли для фильтра",
+                allowClear: true
+            });
                                                 initdatagrid();
                                                 if(connection){
                                                 connection.on("@SignalR.ConnectUser", function (user) {
