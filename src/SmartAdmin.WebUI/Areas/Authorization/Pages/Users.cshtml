@@ -93,15 +93,18 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="row pb-3 pl-3">
-            
+        <div class="row pb-1 pl-3 col-sm-12">
+            <div class="col-11">
                 <label class="form-label">@_localizer["Roles"]</label>
                 <select class="select2" multiple="multiple" id="multiple-basic">
                     @foreach (var role in Model.Roles){
                     <option value="@role">"@role"</option>
                 }
                 </select>
-            
+            </div>
+            <div class="col-1 pt-4" >
+                <button class="btn btn-sm btn-primary" id="btnFilter">@_localizer["Filter"]</button>
+            </div>
             
         </div>
         <div class="row">
@@ -335,6 +338,9 @@ onImportedSucceeded = "reload()"
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/select2/select2.bundle.js"></script>
     <script>
+        $('#btnFilter').click(function () {
+            reload();
+        });
 $('#searchbutton').click(function () {
 reload();
 });
@@ -356,9 +362,12 @@ showImportModal();
 $('#gettemplatebutton').click(function () {
 onGetTemplate();
 });
-var reload = () => {
-$dg.datagrid('load', '/authorization/users?handler=Data');
-}
+        var reload = () => {
+            var rolesJson = JSON.stringify($('.select2').val());
+            console.log($('.select2').val());
+            $dg.datagrid('load', '/authorization/users?handler=Data&roles='+rolesJson);
+
+    }
 var $dg={};
 var initdatagrid = () => {
 $dg = $('#user_dg').datagrid({

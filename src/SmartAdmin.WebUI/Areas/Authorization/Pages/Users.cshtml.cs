@@ -20,6 +20,7 @@ using System.IO;
 using System;
 using System.Data;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using Newtonsoft.Json;
 
 namespace SmartAdmin.WebUI.Areas.Authorization.Pages
 {
@@ -65,12 +66,19 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         {
            Roles = await _roleManager.Roles.Select(x => x.Name).ToArrayAsync();
         }
-        public async Task<IActionResult> OnGetDataAsync(int page=1,int rows=15,string sort="UserName",string order="asc",string filterRules="") {
+        public async Task<IActionResult> OnGetDataAsync([FromQuery(Name ="roles")] string roles, int page=1,int rows=15,string sort="UserName",string order="asc",string filterRules="") {
+            List<string> array = JsonConvert.DeserializeObject<List<string>>(roles);
             var filters = PredicateBuilder.FromFilter<ApplicationUser>(filterRules);
+            if (array.Count > 0)
+            {
+                filters.And(f => f.UserRoles.Where(r => array.Contains(r.Role.Name)).Any());
+            }
             var data=await _userManager.Users.Where(filters)
+                   .Include(ur=>ur.UserRoles)
+                   .ThenInclude(r=>r.Role)
                    .OrderBy($"{sort} {order}")
-                   .PaginatedDataAsync(page, rows);
-            return new JsonResult(data);
+                   .PaginatedDataAsync(page, rows) ;
+            return new JsonResult(data,);
         }
 
         public async Task<IActionResult> OnPostRegisterAsync()
