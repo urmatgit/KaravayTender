@@ -4,9 +4,9 @@ using CleanArchitecture.Razor.Domain.Entities.Karavay;
 
 namespace CleanArchitecture.Razor.Domain.Events
 {
-    public class StatusLogDeletedEvent : DomainEvent
+    public class StatusLogEvent : DomainEvent
     {
-        public StatusLogDeletedEvent(StatusLog item)
+        public StatusLogEvent(StatusLog item)
         {
             Item = item;
         }

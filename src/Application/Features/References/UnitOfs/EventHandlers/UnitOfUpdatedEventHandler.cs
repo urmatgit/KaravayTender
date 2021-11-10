@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Razor.Application.Features.References.UnitOfs.EventHandlers
 {
-    public class UnitOfUpdatedEventHandler : INotificationHandler<DomainEventNotification<UnitOfUpdatedEvent>>
+    public class UnitOfUpdatedEventHandler : INotificationHandler<DomainEventNotification<UnitOfEvent>>
     {
         private readonly ILogger<UnitOfUpdatedEventHandler> _logger;
 
@@ -20,7 +20,7 @@ namespace CleanArchitecture.Razor.Application.Features.References.UnitOfs.EventH
         {
             _logger = logger;
         }
-        public Task Handle(DomainEventNotification<UnitOfUpdatedEvent> notification, CancellationToken cancellationToken)
+        public Task Handle(DomainEventNotification<UnitOfEvent> notification, CancellationToken cancellationToken)
         {
             var domainEvent = notification.DomainEvent;
 

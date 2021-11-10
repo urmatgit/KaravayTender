@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Razor.Application.Features.Directions.EventHandlers
 {
-    public class DirectionDeletedEventHandler : INotificationHandler<DomainEventNotification<DirectionDeletedEvent>>
+    public class DirectionDeletedEventHandler : INotificationHandler<DomainEventNotification<DirectionEvent>>
     {
         private readonly ILogger<DirectionDeletedEventHandler> _logger;
 
@@ -20,7 +20,7 @@ namespace CleanArchitecture.Razor.Application.Features.Directions.EventHandlers
         {
             _logger = logger;
         }
-        public Task Handle(DomainEventNotification<DirectionDeletedEvent> notification, CancellationToken cancellationToken)
+        public Task Handle(DomainEventNotification<DirectionEvent> notification, CancellationToken cancellationToken)
         {
             var domainEvent = notification.DomainEvent;
 

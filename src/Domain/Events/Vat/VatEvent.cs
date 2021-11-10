@@ -4,13 +4,13 @@ using CleanArchitecture.Razor.Domain.Entities.Karavay;
 
 namespace CleanArchitecture.Razor.Domain.Events
 {
-    public class UnitOfUpdatedEvent : DomainEvent
+    public class VatEvent : DomainEvent
     {
-        public UnitOfUpdatedEvent(UnitOf item)
+        public VatEvent(Vat item)
         {
             Item = item;
         }
 
-        public UnitOf Item { get; }
+        public Vat Item { get; }
     }
 }

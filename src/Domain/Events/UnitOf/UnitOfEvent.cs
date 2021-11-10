@@ -4,9 +4,9 @@ using CleanArchitecture.Razor.Domain.Entities.Karavay;
 
 namespace CleanArchitecture.Razor.Domain.Events
 {
-    public class UnitOfDeletedEvent : DomainEvent
+    public class UnitOfEvent : DomainEvent
     {
-        public UnitOfDeletedEvent(UnitOf item)
+        public UnitOfEvent(UnitOf item)
         {
             Item = item;
         }

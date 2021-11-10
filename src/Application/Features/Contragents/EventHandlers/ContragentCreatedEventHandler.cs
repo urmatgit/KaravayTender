@@ -39,7 +39,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
                 DateTime=domainEvent.Item.Created
             };
             _context.StatusLogs.Add(statusLog);
-            var createevent = new StatusLogCreatedEvent(statusLog);
+            var createevent = new StatusLogEvent(statusLog);
             statusLog.DomainEvents.Add(createevent);
             await _context.SaveChangesAsync(cancellationToken);
             

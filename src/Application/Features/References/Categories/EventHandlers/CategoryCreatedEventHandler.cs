@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Razor.Application.Features.Categories.EventHandlers
 {
-    public class CategoryCreatedEventHandler : INotificationHandler<DomainEventNotification<CategoryCreatedEvent>>
+    public class CategoryCreatedEventHandler : INotificationHandler<DomainEventNotification<CategoryEvent>>
     {
         private readonly ILogger<CategoryCreatedEventHandler> _logger;
 
@@ -20,7 +20,7 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.EventHandlers
         {
             _logger = logger;
         }
-        public Task Handle(DomainEventNotification<CategoryCreatedEvent> notification, CancellationToken cancellationToken)
+        public Task Handle(DomainEventNotification<CategoryEvent> notification, CancellationToken cancellationToken)
         {
             var domainEvent = notification.DomainEvent;
 

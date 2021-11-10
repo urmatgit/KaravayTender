@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Razor.Application.Features.StatusLogs.EventHandlers
 {
-    public class StatusLogDeletedEventHandler : INotificationHandler<DomainEventNotification<StatusLogDeletedEvent>>
+    public class StatusLogDeletedEventHandler : INotificationHandler<DomainEventNotification<StatusLogEvent>>
     {
         private readonly ILogger<StatusLogDeletedEventHandler> _logger;
 
@@ -17,7 +17,7 @@ namespace CleanArchitecture.Razor.Application.Features.StatusLogs.EventHandlers
         {
             _logger = logger;
         }
-        public Task Handle(DomainEventNotification<StatusLogDeletedEvent> notification, CancellationToken cancellationToken)
+        public Task Handle(DomainEventNotification<StatusLogEvent> notification, CancellationToken cancellationToken)
         {
             var domainEvent = notification.DomainEvent;
 

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
@@ -8,19 +8,19 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 
-namespace CleanArchitecture.Razor.Application.Features.Categories.EventHandlers
+namespace CleanArchitecture.Razor.Application.Features.References.Vats.EventHandlers
 {
-    public class CategoryDeletedEventHandler : INotificationHandler<DomainEventNotification<CategoryEvent>>
+    public class VatCreatedEventHandler : INotificationHandler<DomainEventNotification<VatEvent>>
     {
-        private readonly ILogger<CategoryDeletedEventHandler> _logger;
+        private readonly ILogger<VatCreatedEventHandler> _logger;
 
-        public CategoryDeletedEventHandler(
-            ILogger<CategoryDeletedEventHandler> logger
+        public VatCreatedEventHandler(
+            ILogger<VatCreatedEventHandler> logger
             )
         {
             _logger = logger;
         }
-        public Task Handle(DomainEventNotification<CategoryEvent> notification, CancellationToken cancellationToken)
+        public Task Handle(DomainEventNotification<VatEvent> notification, CancellationToken cancellationToken)
         {
             var domainEvent = notification.DomainEvent;
 

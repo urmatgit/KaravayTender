@@ -1,11 +1,11 @@
-﻿using CleanArchitecture.Razor.Domain.Common;
+using CleanArchitecture.Razor.Domain.Common;
 using CleanArchitecture.Razor.Domain.Entities;
 
 namespace CleanArchitecture.Razor.Domain.Events
 {
-    public class CategoryDeletedEvent : DomainEvent
+    public class CategoryEvent : DomainEvent
     {
-        public CategoryDeletedEvent(Category item)
+        public CategoryEvent(Category item)
         {
             Item = item;
         }

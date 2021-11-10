@@ -47,7 +47,7 @@ namespace CleanArchitecture.Razor.Application.Features.StatusLogs.Commands.AddEd
             else
             {
                 var customer = _mapper.Map<StatusLog>(request);
-                var createevent = new StatusLogCreatedEvent(customer);
+                var createevent = new StatusLogEvent(customer);
                 customer.DomainEvents.Add(createevent);
                 _context.StatusLogs.Add(customer);
                 await _context.SaveChangesAsync(cancellationToken);

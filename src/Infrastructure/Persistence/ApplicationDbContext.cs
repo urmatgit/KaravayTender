@@ -58,6 +58,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         public DbSet<ContragentCategory> ContragentCategories { get; set; }
         public DbSet<StatusLog> StatusLogs { get; set; }
         public DbSet<UnitOf> UnitOfs { get; set; }
+        public DbSet<Vat> Vats { get; set; }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             

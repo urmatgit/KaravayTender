@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Razor.Application.Features.Categories.EventHandlers
 {
-    public class CategoryUpdatedEventHandler : INotificationHandler<DomainEventNotification<CategoryUpdatedEvent>>
+    public class CategoryUpdatedEventHandler : INotificationHandler<DomainEventNotification<CategoryEvent>>
     {
         private readonly ILogger<CategoryUpdatedEventHandler> _logger;
 
@@ -20,7 +20,7 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.EventHandlers
         {
             _logger = logger;
         }
-        public Task Handle(DomainEventNotification<CategoryUpdatedEvent> notification, CancellationToken cancellationToken)
+        public Task Handle(DomainEventNotification<CategoryEvent> notification, CancellationToken cancellationToken)
         {
             var domainEvent = notification.DomainEvent;
 
