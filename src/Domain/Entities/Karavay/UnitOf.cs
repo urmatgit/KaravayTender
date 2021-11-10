@@ -11,12 +11,12 @@ using CleanArchitecture.Razor.Domain.Common;
 
 namespace CleanArchitecture.Razor.Domain.Entities.Karavay
 {
-    public class Unit: AuditableEntity// BaseAuditableEntity
+    /// <summary>
+    /// Ед. измерения,  the entity why called "UnitOf", because the word "Unit"   using in Mediator class
+    /// </summary>
+    public class UnitOf:  BaseAuditableEntity
     {
-        public int Id { get; set; }
-        [Required]
-        [MaxLength(50)]
-        public string Name { get; set; }
+       
         public virtual ICollection<Nomenclature> Nomenclatures { get; set; }
     }
 }

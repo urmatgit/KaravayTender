@@ -16,7 +16,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public int DirectionId { get; set; }
         public virtual Direction Direction { get; set; }
         public int UnitId { get; set; }
-        public virtual Unit Unit {get;set;}
+        public virtual UnitOf Unit {get;set;}
         public int VatId { get; set; }
         public virtual Vat Vat { get; set; }
         public List<DomainEvent> DomainEvents { get; set; }

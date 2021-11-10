@@ -26,6 +26,7 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
         
         DbSet<ContragentCategory> ContragentCategories { get; set; }
          DbSet<StatusLog> StatusLogs { get; set; }
+        public DbSet<UnitOf> UnitOfs { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
