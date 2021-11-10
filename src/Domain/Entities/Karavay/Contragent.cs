@@ -14,16 +14,15 @@ using CleanArchitecture.Razor.Domain.Enums;
 
 namespace CleanArchitecture.Razor.Domain.Entities
 {
-    public class Contragent : AuditableEntity, IHasDomainEvent, IAuditTrial
+    public class Contragent : BaseAuditableEntity, IHasDomainEvent, IAuditTrial
     {
         
         
-        public int Id { get; set; }
+       
         //[ForeignKey("ApplicationUserId")]
         public string ApplicationUserId { get; set; }
-        [Required]
-        [MaxLength(50)]
-        public string Name { get; set; }
+       
+       
 
         [Required]
         [MaxLength(100)]

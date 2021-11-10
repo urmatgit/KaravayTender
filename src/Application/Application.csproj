@@ -11,16 +11,25 @@
     <Compile Remove="Documents\**" />
     <Compile Remove="DocumentTypes\**" />
     <Compile Remove="Features\ApprovalDatas\**" />
+    <Compile Remove="Features\References\Categories\Commands\AcceptChanges\**" />
+    <Compile Remove="Features\References\ContragentCategories\Commands\AcceptChanges\**" />
+    <Compile Remove="Features\References\Directions\Commands\AcceptChanges\**" />
     <Compile Remove="Workflow\**" />
     <EmbeddedResource Remove="Customers\Import\**" />
     <EmbeddedResource Remove="Documents\**" />
     <EmbeddedResource Remove="DocumentTypes\**" />
     <EmbeddedResource Remove="Features\ApprovalDatas\**" />
+    <EmbeddedResource Remove="Features\References\Categories\Commands\AcceptChanges\**" />
+    <EmbeddedResource Remove="Features\References\ContragentCategories\Commands\AcceptChanges\**" />
+    <EmbeddedResource Remove="Features\References\Directions\Commands\AcceptChanges\**" />
     <EmbeddedResource Remove="Workflow\**" />
     <None Remove="Customers\Import\**" />
     <None Remove="Documents\**" />
     <None Remove="DocumentTypes\**" />
     <None Remove="Features\ApprovalDatas\**" />
+    <None Remove="Features\References\Categories\Commands\AcceptChanges\**" />
+    <None Remove="Features\References\ContragentCategories\Commands\AcceptChanges\**" />
+    <None Remove="Features\References\Directions\Commands\AcceptChanges\**" />
     <None Remove="Workflow\**" />
   </ItemGroup>
 
