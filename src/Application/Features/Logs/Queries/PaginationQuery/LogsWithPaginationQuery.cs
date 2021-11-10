@@ -15,6 +15,7 @@ using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Features.Logs.DTOs;
 using CleanArchitecture.Razor.Domain.Entities.Audit;
 using CleanArchitecture.Razor.Domain.Entities.Log;
+using CleanArchitecture.Razor.Application.Common.Models;
 
 namespace CleanArchitecture.Razor.Application.Logs.Queries.PaginationQuery
 {

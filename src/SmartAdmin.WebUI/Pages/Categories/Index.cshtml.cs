@@ -12,10 +12,11 @@ using MediatR;
 using CleanArchitecture.Razor.Application.Features.Categories.Commands.AddEdit;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Models;
 using Microsoft.Extensions.Localization;
 using CleanArchitecture.Razor.Application.Features.Categories.Queries.Pagination;
 
-using CleanArchitecture.Razor.Application.Common.Models;
+
 using CleanArchitecture.Razor.Application.Features.Categories.Commands.Delete;
 using CleanArchitecture.Razor.Application.Features.Categories.Queries.Export;
 using System.IO;

@@ -15,6 +15,7 @@ using Microsoft.Extensions.Localization;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Application.Common.Mappings;
+using CleanArchitecture.Razor.Application.Common.Models;
 
 namespace CleanArchitecture.Razor.Application.Features.Categories.Queries.Pagination
 {

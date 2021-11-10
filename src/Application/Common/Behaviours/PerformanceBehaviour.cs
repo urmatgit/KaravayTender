@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Razor.Application.Common.Behaviours
 {
-    public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
     {
         private readonly Stopwatch _timer;
         private readonly ILogger<TRequest> _logger;
@@ -37,7 +37,7 @@ namespace CleanArchitecture.Razor.Application.Common.Behaviours
 
             var elapsedMilliseconds = _timer.ElapsedMilliseconds;
 
-            if (elapsedMilliseconds > 1000)
+            if (elapsedMilliseconds > 500)
             {
                 var requestName = typeof(TRequest).Name;
                 var userId = _currentUserService.UserId ?? string.Empty;

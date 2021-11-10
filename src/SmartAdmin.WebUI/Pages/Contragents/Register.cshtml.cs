@@ -31,7 +31,7 @@ using CleanArchitecture.Razor.Application.Features.ContragentCategories.Queries.
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetAll;
-
+using CleanArchitecture.Razor.Infrastructure.Configurations;
 namespace SmartAdmin.WebUI.Pages.Contragents
 {
     [AllowAnonymous]

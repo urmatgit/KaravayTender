@@ -19,6 +19,7 @@ using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using CleanArchitecture.Razor.Application.Features.Directions.Caching;
+using CleanArchitecture.Razor.Application.Common.Models;
 
 namespace CleanArchitecture.Razor.Application.Features.Directions.Queries.Pagination
 {

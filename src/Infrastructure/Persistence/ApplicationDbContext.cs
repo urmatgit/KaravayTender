@@ -27,11 +27,15 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         private readonly IDateTime _dateTime;
         private readonly IDomainEventService _domainEventService;
 
+        public ApplicationDbContext() : base()
+        {
+        }
         public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options,
             ICurrentUserService currentUserService,
             IDomainEventService domainEventService,
-            IDateTime dateTime) : base(options)
+            IDateTime dateTime
+            ) : base(options)
         {
             _currentUserService = currentUserService;
             _domainEventService = domainEventService;

@@ -19,6 +19,7 @@ using Serilog;
 using SmartAdmin.WebUI.Filters;
 using SmartAdmin.WebUI.Models;
 using System.IO;
+using CleanArchitecture.Razor.Infrastructure.Configurations;
 
 namespace SmartAdmin.WebUI
 {

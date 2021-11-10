@@ -36,7 +36,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
                 }
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
-                    await streamData.CopyToAsync(stream);
+                   await streamData.CopyToAsync(stream);
                 }
                 return dbPath;
             }

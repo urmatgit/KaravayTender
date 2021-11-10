@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,6 +15,7 @@ using Microsoft.Extensions.Localization;
 using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
 using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Application.Common.Mappings;
+using CleanArchitecture.Razor.Application.Common.Models;
 
 namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Queries.Pagination
 {

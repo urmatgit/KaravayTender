@@ -19,6 +19,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using CleanArchitecture.Razor.Application.KeyValues.Caching;
 using System.Text.Json;
+using CleanArchitecture.Razor.Application.Common.Models;
 
 namespace CleanArchitecture.Razor.Application.KeyValues.Queries.PaginationQuery
 {

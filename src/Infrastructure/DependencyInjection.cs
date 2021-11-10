@@ -4,8 +4,7 @@ using System.Reflection;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Razor.Application.Settings;
-
-
+using CleanArchitecture.Razor.Infrastructure.Configurations;
 using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Razor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
@@ -19,6 +18,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using WorkflowCore.Interface;
 
 namespace CleanArchitecture.Razor.Infrastructure
@@ -51,6 +51,8 @@ namespace CleanArchitecture.Razor.Infrastructure
                     
                     );
             }
+            services.Configure<SmartSettings>(configuration.GetSection(SmartSettings.SectionName));
+            services.AddSingleton(s => s.GetRequiredService<IOptions<SmartSettings>>().Value);
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
             services.AddScoped<IDomainEventService, DomainEventService>();

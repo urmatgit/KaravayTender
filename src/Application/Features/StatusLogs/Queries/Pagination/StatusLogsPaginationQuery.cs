@@ -18,6 +18,7 @@ using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Specification;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Razor.Application.Common.Models;
 
 namespace CleanArchitecture.Razor.Application.Features.StatusLogs.Queries.Pagination
 {

@@ -17,6 +17,7 @@ using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using System.Diagnostics;
+using CleanArchitecture.Razor.Application.Common.Models;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagination
 {
