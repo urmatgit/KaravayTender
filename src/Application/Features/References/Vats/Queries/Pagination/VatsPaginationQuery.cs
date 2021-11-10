@@ -48,7 +48,7 @@ namespace CleanArchitecture.Razor.Application.Features.References.Vats.Queries.P
             //TODO:Implementing VatsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<Vat>(request.FilterRules);
            var data = await _context.Vats.Where(filters)
-                .OrderBy("{request.Sort} {request.Order}")
+                .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<VatDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
             return data;

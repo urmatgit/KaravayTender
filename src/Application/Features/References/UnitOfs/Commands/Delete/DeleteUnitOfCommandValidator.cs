@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.References.UnitOfs.Commands.Delete
 {
@@ -16,8 +16,8 @@ namespace CleanArchitecture.Razor.Application.Features.References.UnitOfs.Comman
         public DeleteCheckedUnitOfsCommandValidator()
         {
             //TODO:Implementing DeleteProductCommandValidator method 
-            //ex. RuleFor(v => v.Id).NotNull().NotEmpty();
-            throw new System.NotImplementedException();
+            RuleFor(v => v.Id).NotNull().NotEmpty();
+            
         }
     }
 }

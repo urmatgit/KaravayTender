@@ -14,9 +14,9 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
     /// <summary>
     /// Ед. измерения,  the entity why called "UnitOf", because the word "Unit"   using in Mediator class
     /// </summary>
-    public class UnitOf:  BaseAuditableEntity
+    public class UnitOf:  BaseAuditableEntity,IAuditTrial
     {
-       
+        public string  FullName { get; set; }
         public virtual ICollection<Nomenclature> Nomenclatures { get; set; }
     }
 }

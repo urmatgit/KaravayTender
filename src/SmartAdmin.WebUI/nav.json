@@ -46,6 +46,16 @@
           "title": "Категории",
           "href": "categories_index.html",
           "roles": []
+        },
+        {
+          "title": "Ед. измерения",
+          "href": "unitofs_index.html",
+          "roles": []
+        },
+        {
+          "title": "НДС",
+          "href": "vats_index.html",
+          "roles": []
         }
       ]
     },

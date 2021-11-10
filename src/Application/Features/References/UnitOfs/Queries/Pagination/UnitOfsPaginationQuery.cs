@@ -47,8 +47,8 @@ namespace CleanArchitecture.Razor.Application.Features.References.UnitOfs.Querie
         {
             //TODO:Implementing UnitOfsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<UnitOf>(request.FilterRules);
-           var data = await _context.UnitOfs.Where(filters)
-                .OrderBy("{request.Sort} {request.Order}")
+            var data = await _context.UnitOfs.Where(filters)
+                 .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<UnitOfDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
             return data;

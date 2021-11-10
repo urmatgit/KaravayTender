@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Domain.Entities;
@@ -14,8 +15,12 @@ namespace CleanArchitecture.Razor.Application.Features.References.UnitOfs.DTOs
 
         }
         public int Id { get; set; }
-        
+
+        [Required(ErrorMessage = "'Наименование' является обязательным ")]
         public string Name { get; set; }
-      // public virtual ICollection<NomenclatureDto> Nomenclatures { get; set; }
+
+        [Required(ErrorMessage = "'Полное наименование' является обязательным")]
+        public string FullName { get; set; }
+        // public virtual ICollection<NomenclatureDto> Nomenclatures { get; set; }
     }
 }

@@ -10,7 +10,7 @@ using CleanArchitecture.Razor.Domain.Common;
 
 namespace CleanArchitecture.Razor.Domain.Entities.Karavay
 {
-    public class Nomenclature : BaseAuditableEntity, IHasDomainEvent, IAuditTrial
+    public class Nomenclature : BaseAuditableEntity, IAuditTrial//, IHasDomainEvent
     {
 
         public int DirectionId { get; set; }
@@ -19,6 +19,6 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public virtual UnitOf Unit {get;set;}
         public int VatId { get; set; }
         public virtual Vat Vat { get; set; }
-        public List<DomainEvent> DomainEvents { get; set; }
+       // public List<DomainEvent> DomainEvents { get; set; }
     }
 }

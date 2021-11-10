@@ -195,6 +195,39 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Import = "Permissions.Contragents.Import";
             public const string Acceditation = "Permissions.Contragents.Acceditation";
         }
+        [DisplayName("StatusLogs")]
+        [Description("StatusLogs Permissions")]
+        public static class StatusLogs
+        {
+            public const string View = "Permissions.StatusLogs.View";
+            
+        }
+
+        [DisplayName("UnitOfs")]
+        [Description("UnitOfs Permissions")]
+        public static class UnitOfs
+        {
+            public const string View = "Permissions.UnitOfs.View";
+            public const string Create = "Permissions.UnitOfs.Create";
+            public const string Edit = "Permissions.UnitOfs.Edit";
+            public const string Delete = "Permissions.UnitOfs.Delete";
+            public const string Search = "Permissions.UnitOfs.Search";
+            public const string Export = "Permissions.UnitOfs.Export";
+            public const string Import = "Permissions.UnitOfs.Import";
+        }
+
+        [DisplayName("Vats")]
+        [Description("Vats Permissions")]
+        public static class Vats
+        {
+            public const string View = "Permissions.Vats.View";
+            public const string Create = "Permissions.Vats.Create";
+            public const string Edit = "Permissions.Vats.Edit";
+            public const string Delete = "Permissions.Vats.Delete";
+            public const string Search = "Permissions.Vats.Search";
+            public const string Export = "Permissions.Vats.Export";
+            public const string Import = "Permissions.Vats.Import";
+        }
         /// <summary>
         /// Returns a list of Permissions.
         /// </summary>
