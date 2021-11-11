@@ -23,7 +23,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public int DirectionId { get; set; }
         public virtual Direction Direction { get; set; }
         public int UnitOfId { get; set; }
-        public virtual UnitOf Unit { get; set; }
+        public virtual UnitOf UnitOf { get; set; }
         public int VatId { get; set; }
         public virtual Vat Vat { get; set; }
         public virtual ICollection<NomenclatureQualityDoc> NomenclatureQualityDocs { get; set; }

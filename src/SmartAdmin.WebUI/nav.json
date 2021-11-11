@@ -38,6 +38,11 @@
           "roles": []
         },
         {
+          "title": "Номенклатура",
+          "href": "nomenclatures_index.html",
+          "roles": []
+        },
+        {
           "title": "Направление",
           "href": "directions_index.html",
           "roles": []

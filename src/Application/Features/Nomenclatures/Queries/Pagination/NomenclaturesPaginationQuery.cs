@@ -48,6 +48,12 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.Pag
             //TODO:Implementing NomenclaturesWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<Nomenclature>(request.FilterRules);
            var data = await _context.Nomenclatures.Where(filters)
+                .Include(d=>d.Direction)
+                .Include(c=>c.Category)
+                .Include(u=>u.UnitOf)
+                .Include(v=>v.Vat)
+                .Include(q=>q.NomenclatureQualityDocs)
+                .ThenInclude(qn=>qn.Nomenclature)
                 .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<NomenclatureDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);

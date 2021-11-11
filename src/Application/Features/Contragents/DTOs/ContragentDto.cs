@@ -19,8 +19,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         public void Mapping(Profile profile)
         {
             //profile.CreateMap<Contragent, ContragentDto>().ReverseMap();
-            profile.CreateMap<Contragent, ContragentDto>()
-                .ForMember(x => x.DirectionName, s => s.MapFrom(y => y.Direction.Name));
+            //profile.CreateMap<Contragent, ContragentDto>()
+            //    .ForMember(x => x.DirectionName, s => s.MapFrom(y => y.Direction.Name));
             profile.CreateMap<Contragent, ContragentDto>()
                 .ForMember(x => x.StatusStr, s => s.MapFrom(y => y.Status.ToDescriptionString()));
             profile.CreateMap<ContragentDto, Contragent>(MemberList.None);
@@ -87,7 +87,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         public int DirectionId { get; set; }
         [Required(ErrorMessage = "Не выбрано 'Направление'")]
         public virtual DirectionDto Direction { get; set; }
-        public string DirectionName { get; set; }
+        public string DirectionName => Direction?.Name; //{ get; set; }
 
         public DateTime Created { get; set; }
         public virtual ICollection<ContragentCategoryDto> ContragentCategories { get; set; }

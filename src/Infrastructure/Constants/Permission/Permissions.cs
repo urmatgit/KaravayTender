@@ -243,6 +243,19 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Export = "Permissions.QualityDocs.Export";
             public const string Import = "Permissions.QualityDocs.Import";
         }
+        //Nomenclatures
+        [DisplayName("Nomenclatures")]
+        [Description("Nomenclatures Permissions")]
+        public static class Nomenclatures
+        {
+            public const string View = "Permissions.Nomenclatures.View";
+            public const string Create = "Permissions.Nomenclatures.Create";
+            public const string Edit = "Permissions.Nomenclatures.Edit";
+            public const string Delete = "Permissions.Nomenclatures.Delete";
+            public const string Search = "Permissions.Nomenclatures.Search";
+            public const string Export = "Permissions.Nomenclatures.Export";
+            public const string Import = "Permissions.Nomenclatures.Import";
+        }
         /// <summary>
         /// Returns a list of Permissions.
         /// </summary>
