@@ -61,6 +61,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         public DbSet<StatusLog> StatusLogs { get; set; }
         public DbSet<UnitOf> UnitOfs { get; set; }
         public DbSet<Vat> Vats { get; set; }
+        public DbSet<QualityDoc> QualityDocs { get; set; }
+        public DbSet<Nomenclature> Nomenclatures { get; set; }
+        public DbSet<NomenclatureQualityDoc> NomenclatureQualityDocs { get; set; }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
 

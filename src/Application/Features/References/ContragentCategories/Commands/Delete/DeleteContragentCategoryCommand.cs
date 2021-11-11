@@ -16,8 +16,8 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
 {
     public class DeleteContragentCategoryCommand : IRequest<Result>
     {
-        public int[] ContragentId { get; set; }
-        public int[] CategoryId { get; set; }
+        public int ContragentId { get; set; }
+        public int CategoryId { get; set; }
 
         public string CacheKey => ContragentCategoryCacheKey.GetAllCacheKey;
 

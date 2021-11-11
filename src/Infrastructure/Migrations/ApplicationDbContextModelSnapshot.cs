@@ -309,6 +309,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
@@ -329,21 +332,61 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UnitId")
+                    b.Property<string>("Specification")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UnitOfId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("VatId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("Volume")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("DirectionId");
 
-                    b.HasIndex("UnitId");
+                    b.HasIndex("UnitOfId");
 
                     b.HasIndex("VatId");
 
-                    b.ToTable("Nomenclature");
+                    b.ToTable("Nomenclatures");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.QualityDoc", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QualityDocs");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.StatusLog", b =>
@@ -527,6 +570,33 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Serilogs");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.NomenclatureQualityDoc", b =>
+                {
+                    b.Property<int>("NomenclatureId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("QualityDocId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("NomenclatureId", "QualityDocId");
+
+                    b.HasIndex("QualityDocId");
+
+                    b.ToTable("NomenclatureQualityDocs");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Product", b =>
@@ -840,6 +910,12 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.Nomenclature", b =>
                 {
+                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CleanArchitecture.Razor.Domain.Entities.Direction", "Direction")
                         .WithMany()
                         .HasForeignKey("DirectionId")
@@ -848,7 +924,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
 
                     b.HasOne("CleanArchitecture.Razor.Domain.Entities.Karavay.UnitOf", "Unit")
                         .WithMany("Nomenclatures")
-                        .HasForeignKey("UnitId")
+                        .HasForeignKey("UnitOfId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -857,6 +933,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .HasForeignKey("VatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("Direction");
 
@@ -874,6 +952,25 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Contragent");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.NomenclatureQualityDoc", b =>
+                {
+                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Karavay.Nomenclature", "Nomenclature")
+                        .WithMany("NomenclatureQualityDocs")
+                        .HasForeignKey("NomenclatureId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Karavay.QualityDoc", "QualityDoc")
+                        .WithMany("NomenclatureQualityDocs")
+                        .HasForeignKey("QualityDocId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Nomenclature");
+
+                    b.Navigation("QualityDoc");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Infrastructure.Identity.ApplicationRoleClaim", b =>
@@ -954,6 +1051,16 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Direction", b =>
                 {
                     b.Navigation("Categories");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.Nomenclature", b =>
+                {
+                    b.Navigation("NomenclatureQualityDocs");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.QualityDoc", b =>
+                {
+                    b.Navigation("NomenclatureQualityDocs");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.UnitOf", b =>

@@ -56,6 +56,11 @@
           "title": "НДС",
           "href": "vats_index.html",
           "roles": []
+        },
+        {
+          "title": "Документы по качеству",
+          "href": "qualitydocs_index.html",
+          "roles": []
         }
       ]
     },

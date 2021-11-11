@@ -52,7 +52,7 @@ namespace CleanArchitecture.Razor.Application.Features.References.UnitOfs.Querie
             //TODO:Implementing ExportUnitOfsQueryHandler method 
             var filters = PredicateBuilder.FromFilter<UnitOf>(request.FilterRules);
             var data = await _context.UnitOfs.Where(filters)
-                       .OrderBy("{request.Sort} {request.Order}")
+                       .OrderBy($"{request.Sort} {request.Order}")
                        .ProjectTo<UnitOfDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,

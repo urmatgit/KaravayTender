@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
@@ -52,7 +52,7 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Quer
             //TODO:Implementing ExportContragentCategoriesQueryHandler method 
             var filters = PredicateBuilder.FromFilter<ContragentCategory>(request.FilterRules);
             var data = await _context.ContragentCategories.Where(filters)
-                       .OrderBy("{request.Sort} {request.Order}")
+                       .OrderBy($"{request.Sort} {request.Order}")
                        .ProjectTo<ContragentCategoryDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,

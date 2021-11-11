@@ -120,9 +120,6 @@
   <data name="Add" xml:space="preserve">
     <value>Добавить</value>
   </data>
-  <data name="Add Direction" xml:space="preserve">
-    <value>Добавить направление</value>
-  </data>
   <data name="Add vat" xml:space="preserve">
     <value>Добавить НДС</value>
   </data>
@@ -153,14 +150,8 @@
   <data name="Description" xml:space="preserve">
     <value>Описание</value>
   </data>
-  <data name="Directions" xml:space="preserve">
-    <value>Направление</value>
-  </data>
   <data name="Edit" xml:space="preserve">
     <value>Редактировать</value>
-  </data>
-  <data name="Edit Direction" xml:space="preserve">
-    <value>Редактировать направление</value>
   </data>
   <data name="Edit vat" xml:space="preserve">
     <value>Редактировать НДС</value>

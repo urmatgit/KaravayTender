@@ -52,7 +52,7 @@ namespace CleanArchitecture.Razor.Application.Features.References.Vats.Queries.E
             //TODO:Implementing ExportVatsQueryHandler method 
             var filters = PredicateBuilder.FromFilter<Vat>(request.FilterRules);
             var data = await _context.Vats.Where(filters)
-                       .OrderBy("{request.Sort} {request.Order}")
+                       .OrderBy($"{request.Sort} {request.Order}")
                        .ProjectTo<VatDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,

@@ -231,6 +231,18 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Export = "Permissions.Vats.Export";
             public const string Import = "Permissions.Vats.Import";
         }
+        [DisplayName("QualityDocs")]
+        [Description("QualityDocs Permissions")]
+        public static class QualityDocs
+        {
+            public const string View = "Permissions.QualityDocs.View";
+            public const string Create = "Permissions.QualityDocs.Create";
+            public const string Edit = "Permissions.QualityDocs.Edit";
+            public const string Delete = "Permissions.QualityDocs.Delete";
+            public const string Search = "Permissions.QualityDocs.Search";
+            public const string Export = "Permissions.QualityDocs.Export";
+            public const string Import = "Permissions.QualityDocs.Import";
+        }
         /// <summary>
         /// Returns a list of Permissions.
         /// </summary>
