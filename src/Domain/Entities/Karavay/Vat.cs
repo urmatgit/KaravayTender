@@ -18,7 +18,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
     public class Vat:  BaseAuditableEntity, IAuditTrial
     {
 
-        [Column(TypeName = "decimal(18,2)")]
+        
         public decimal Value { get; set; }
         public string Description { get; set; }
         public virtual ICollection<Nomenclature> Nomenclatures { get; set; }

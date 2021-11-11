@@ -118,7 +118,7 @@
                             </div>
                             <div class="col-md-12">
                                 <label class="form-label" for="Comments">@_localizer["Description"] </label>
-                                <input type="text" asp-for="Input.Description" class="form-control" placeholder="Comments" />
+                                <textarea  asp-for="Input.Description" class="form-control" placeholder="Comments" ></textarea>
                                 <span class="invalid-feedback" asp-validation-for="Input.Description"></span>
                             </div>
                         </div>
