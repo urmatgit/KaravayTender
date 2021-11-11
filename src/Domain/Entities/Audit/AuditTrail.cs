@@ -4,15 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CleanArchitecture.Razor.Domain.Common;
 using CleanArchitecture.Razor.Domain.Enums;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CleanArchitecture.Razor.Domain.Entities.Audit
 {
-    public class AuditTrail: IEntity
+    public class AuditTrail : IEntity
     {
         public int Id { get; set; }
         public string UserId { get; set; }

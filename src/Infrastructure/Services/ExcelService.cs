@@ -1,13 +1,16 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Localization;
-using System.IO;
-using System.Data;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using ClosedXML.Excel;
 using CleanArchitecture.Razor.Application.Common.Models;
+using ClosedXML.Excel;
+using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Infrastructure.Services
 {
@@ -106,7 +109,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
 
         public async Task<IResult<IEnumerable<TEntity>>> ImportAsync<TEntity>(byte[] data, Dictionary<string, Func<DataRow, TEntity, object>> mappers, string sheetName = "Sheet1")
         {
-         
+
             using (var workbook = new XLWorkbook(new MemoryStream(data)))
             {
                 if (!workbook.Worksheets.Contains(sheetName))
@@ -133,7 +136,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
                 }
                 if (errors.Any())
                 {
-                    return await  Result<IEnumerable<TEntity>>.FailureAsync(errors);
+                    return await Result<IEnumerable<TEntity>>.FailureAsync(errors);
                 }
                 var lastrow = ws.LastRowUsed();
                 var list = new List<TEntity>();

@@ -1,36 +1,35 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.References.Vats.Caching;
-using CleanArchitecture.Razor.Application.Features.References.Vats.DTOs;
-using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.References.Vats.Commands.Delete
 {
-    public class DeleteVatCommand: IRequest<Result>
+    public class DeleteVatCommand : IRequest<Result>
     {
-      public int Id {  get; set; }
-       public string CacheKey => VatCacheKey.GetAllCacheKey;
+        public int Id { get; set; }
+        public string CacheKey => VatCacheKey.GetAllCacheKey;
 
-       public CancellationTokenSource ResetCacheToken => VatCacheTokenSource.ResetCacheToken;
+        public CancellationTokenSource ResetCacheToken => VatCacheTokenSource.ResetCacheToken;
     }
     public class DeleteCheckedVatsCommand : IRequest<Result>
     {
-      public int[] Id {  get; set; }
-       public string CacheKey => VatCacheKey.GetAllCacheKey;
+        public int[] Id { get; set; }
+        public string CacheKey => VatCacheKey.GetAllCacheKey;
 
-       public CancellationTokenSource ResetCacheToken => VatCacheTokenSource.ResetCacheToken;
+        public CancellationTokenSource ResetCacheToken => VatCacheTokenSource.ResetCacheToken;
     }
 
-    public class DeleteVatCommandHandler : 
+    public class DeleteVatCommandHandler :
                  IRequestHandler<DeleteVatCommand, Result>,
                  IRequestHandler<DeleteCheckedVatsCommand, Result>
     {
@@ -49,8 +48,8 @@ namespace CleanArchitecture.Razor.Application.Features.References.Vats.Commands.
         }
         public async Task<Result> Handle(DeleteVatCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing DeleteVatCommandHandler method 
-           var item = await _context.Vats.FindAsync(new object[] { request.Id }, cancellationToken);
+            //TODO:Implementing DeleteVatCommandHandler method 
+            var item = await _context.Vats.FindAsync(new object[] { request.Id }, cancellationToken);
             _context.Vats.Remove(item);
             await _context.SaveChangesAsync(cancellationToken);
             return Result.Success();
@@ -58,8 +57,8 @@ namespace CleanArchitecture.Razor.Application.Features.References.Vats.Commands.
 
         public async Task<Result> Handle(DeleteCheckedVatsCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing DeleteCheckedVatsCommandHandler method 
-           var items = await _context.Vats.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            //TODO:Implementing DeleteCheckedVatsCommandHandler method 
+            var items = await _context.Vats.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {
                 _context.Vats.Remove(item);

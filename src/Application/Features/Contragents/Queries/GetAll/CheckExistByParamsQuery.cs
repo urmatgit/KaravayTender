@@ -1,10 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -20,7 +17,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetAl
     public class CheckExistByParamsQuery : IRequest<Result<ContragentDto>>
     {
         public string Name { get; set; }
-        public string  Email {get;set;}
+        public string Email { get; set; }
         public string INN { get; set; }
     }
     public class CheckExistByParamsQueryHandler : IRequestHandler<CheckExistByParamsQuery, Result<ContragentDto>>
@@ -41,7 +38,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetAl
                         .ProjectTo<ContragentDto>(_mapper.ConfigurationProvider)
                         .FirstOrDefaultAsync(cancellationToken);
 
-            return   Result<ContragentDto>.Success(data);
+            return Result<ContragentDto>.Success(data);
         }
     }
 }

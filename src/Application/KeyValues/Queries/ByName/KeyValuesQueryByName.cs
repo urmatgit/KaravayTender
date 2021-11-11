@@ -18,7 +18,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace CleanArchitecture.Razor.Application.KeyValues.Queries.ByName
 {
-    public class KeyValuesQueryByName:IRequest<IEnumerable<KeyValueDto>>, ICacheable
+    public class KeyValuesQueryByName : IRequest<IEnumerable<KeyValueDto>>, ICacheable
     {
         public string Name { get; set; }
 

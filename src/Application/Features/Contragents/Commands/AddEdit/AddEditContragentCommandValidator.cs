@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit
@@ -6,7 +9,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddE
     {
         public AddEditContragentCommandValidator()
         {
-           //TODO:Implementing AddEditContragentCommandValidator method 
+            //TODO:Implementing AddEditContragentCommandValidator method 
             RuleFor(v => v.Name)
                  .MaximumLength(50)
                  .NotEmpty();
@@ -20,7 +23,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddE
                  .MaximumLength(20);
             RuleFor(v => v.Site)
                  .MaximumLength(50);
-                 
+
             RuleFor(v => v.Phone)
                  .MaximumLength(30)
                  .NotEmpty();

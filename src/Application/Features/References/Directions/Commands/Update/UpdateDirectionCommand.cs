@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,17 +10,16 @@ using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Directions.Caching;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Directions.Commands.Update
 {
-    public class UpdateDirectionCommand: DirectionDto,IRequest<Result>, IMapFrom<Direction>
+    public class UpdateDirectionCommand : DirectionDto, IRequest<Result>, IMapFrom<Direction>
     {
-         public string CacheKey => DirectionCacheKey.GetAllCacheKey;
+        public string CacheKey => DirectionCacheKey.GetAllCacheKey;
 
-         public CancellationTokenSource ResetCacheToken => DirectionCacheTokenSource.ResetCacheToken;
+        public CancellationTokenSource ResetCacheToken => DirectionCacheTokenSource.ResetCacheToken;
     }
 
     public class UpdateDirectionCommandHandler : IRequestHandler<UpdateDirectionCommand, Result>
@@ -37,14 +39,14 @@ namespace CleanArchitecture.Razor.Application.Features.Directions.Commands.Updat
         }
         public async Task<Result> Handle(UpdateDirectionCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing UpdateDirectionCommandHandler method 
-           var item =await _context.Directions.FindAsync( new object[] { request.Id }, cancellationToken);
-           if (item != null)
-           {
+            //TODO:Implementing UpdateDirectionCommandHandler method 
+            var item = await _context.Directions.FindAsync(new object[] { request.Id }, cancellationToken);
+            if (item != null)
+            {
                 item = _mapper.Map(request, item);
                 await _context.SaveChangesAsync(cancellationToken);
-           }
-           return Result.Success();
+            }
+            return Result.Success();
         }
     }
 }

@@ -1,20 +1,22 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Domain.Common;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Audit;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Entities.Log;
-using CleanArchitecture.Razor.Domain.Entities.Worflow;
 using CleanArchitecture.Razor.Domain.Enums;
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using CleanArchitecture.Razor.Infrastructure.Persistence.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CleanArchitecture.Razor.Infrastructure.Persistence
 {
@@ -50,7 +52,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
 
         public DbSet<KeyValue> KeyValues { get; set; }
         //  public DbSet<ApprovalData> ApprovalDatas { get; set; }
-        
+
 
         public DbSet<Direction> Directions { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -61,7 +63,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         public DbSet<Vat> Vats { get; set; }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            
+
 
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
             {
@@ -111,10 +113,11 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
         }
-        
+
         private async Task DispatchEvents(DomainEvent[] events)
         {
-            foreach (var @event in events) {
+            foreach (var @event in events)
+            {
                 @event.IsPublished = true;
                 await _domainEventService.Publish(@event);
             }

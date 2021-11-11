@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,19 +10,18 @@ using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Categories.Caching;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Categories.Commands.Create
 {
-    public class CreateCategoryCommand: CategoryDto,IRequest<Result<int>>, IMapFrom<Category>
+    public class CreateCategoryCommand : CategoryDto, IRequest<Result<int>>, IMapFrom<Category>
     {
         public string CacheKey => CategoryCacheKey.GetAllCacheKey;
 
         public CancellationTokenSource ResetCacheToken => CategoryCacheTokenSource.ResetCacheToken;
     }
-    
+
     public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, Result<int>>
     {
         private readonly IApplicationDbContext _context;
@@ -37,11 +39,11 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.Commands.Creat
         }
         public async Task<Result<int>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing CreateCategoryCommandHandler method 
-           var item = _mapper.Map<Category>(request);
-           _context.Categories.Add(item);
-           await _context.SaveChangesAsync(cancellationToken);
-           return  Result<int>.Success(item.Id);
+            //TODO:Implementing CreateCategoryCommandHandler method 
+            var item = _mapper.Map<Category>(request);
+            _context.Categories.Add(item);
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result<int>.Success(item.Id);
         }
     }
 }

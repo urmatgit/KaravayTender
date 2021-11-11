@@ -7,7 +7,7 @@ using CleanArchitecture.Razor.Domain.Entities.Log;
 
 namespace CleanArchitecture.Razor.Application.Features.Logs.DTOs
 {
-    public  class LogDto : IMapFrom<Serilog>
+    public class LogDto : IMapFrom<Serilog>
     {
         public int Id { get; set; }
         public string Message { get; set; }
@@ -17,6 +17,6 @@ namespace CleanArchitecture.Razor.Application.Features.Logs.DTOs
         public string Exception { get; set; }
         public string UserName { get; set; }
         public string Properties { get; set; }
-    
+
     }
 }

@@ -1,27 +1,29 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Extensions;
+using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Mappings;
+using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Localization;
-using System.Linq.Dynamic.Core;
-using CleanArchitecture.Razor.Application.Common.Mappings;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using CleanArchitecture.Razor.Application.Common.Models;
-using Microsoft.EntityFrameworkCore;
-using CleanArchitecture.Razor.Application.Common.Interfaces;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using System.IO;
-using System;
-using System.Data;
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
-using System.Text.Json.Serialization;
 
 namespace SmartAdmin.WebUI.Areas.Authorization.Pages
 {
@@ -65,35 +67,37 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
 
         public async Task OnGetAsync()
         {
-           Roles = await _roleManager.Roles.Select(x => x.Name).ToArrayAsync();
+            Roles = await _roleManager.Roles.Select(x => x.Name).ToArrayAsync();
         }
-        public async Task<IActionResult> OnGetDataAsync([FromQuery(Name ="roles")] string roles, int page=1,int rows=15,string sort="UserName",string order="asc",string filterRules="") {
-            
+        public async Task<IActionResult> OnGetDataAsync([FromQuery(Name = "roles")] string roles, int page = 1, int rows = 15, string sort = "UserName", string order = "asc", string filterRules = "")
+        {
+
             var filters = PredicateBuilder.FromFilter<ApplicationUser>(filterRules);
             if (!string.IsNullOrEmpty(roles))
             {
                 List<string> array = JsonConvert.DeserializeObject<List<string>>(roles);
                 if (array.Count > 0)
                 {
-                    filters= filters.And(f => f.UserRoles.Where(r => array.Contains(r.Role.Name)).Any());
+                    filters = filters.And(f => f.UserRoles.Where(r => array.Contains(r.Role.Name)).Any());
                 }
             }
-            var data=await _userManager.Users.Where(filters)
-                   .Include(ur=>ur.UserRoles)
-                   
+            var data = await _userManager.Users.Where(filters)
+                   .Include(ur => ur.UserRoles)
+
                    .OrderBy($"{sort} {order}")
-                   .PaginatedDataAsync(page, rows) ;
+                   .PaginatedDataAsync(page, rows);
             //var result= new JsonResult(data, new System.Text.Json.JsonSerializerOptions ()
             //{
             //    ReferenceHandler =
 
             //});
-            return  new JsonResult(data);
+            return new JsonResult(data);
         }
 
         public async Task<IActionResult> OnPostRegisterAsync()
         {
-            var user = new ApplicationUser {
+            var user = new ApplicationUser
+            {
                 EmailConfirmed = true,
                 IsActive = false,
                 //Site = RegisterFormModel.Site,
@@ -109,20 +113,20 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         public async Task<IActionResult> OnPostEditAsync()
         {
             var user = await _userManager.FindByIdAsync(EditFormModel.Id);
-            user.DisplayName=EditFormModel.DisplayName;
-            user.PhoneNumber=EditFormModel.PhoneNumber;
-            user.Email=EditFormModel.Email;
+            user.DisplayName = EditFormModel.DisplayName;
+            user.PhoneNumber = EditFormModel.PhoneNumber;
+            user.Email = EditFormModel.Email;
             //user.Site=EditFormModel.Site;
             var result = await _userManager.UpdateAsync(user);
             return new JsonResult(result.ToApplicationResult());
         }
         public async Task<IActionResult> OnPostResetPasswordAsync()
         {
-           
+
             var user = await _userManager.FindByIdAsync(ResetFormModel.Id);
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, code, ResetFormModel.Password);
-            
+
             return new JsonResult(result.ToApplicationResult());
         }
         public async Task<IActionResult> OnGetLockAsync(string id)
@@ -159,7 +163,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         }
         public async Task<IActionResult> OnGetDeleteCheckedAsync([FromQuery] string[] id)
         {
-            foreach(var key in id)
+            foreach (var key in id)
             {
                 var user = await _userManager.FindByIdAsync(key);
                 if (user.UserName == "administrator")
@@ -186,7 +190,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             }, _localizer["ApplicationUsers"]);
             return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", _localizer["ApplicationUsers"] + ".xlsx");
         }
-        public async  Task<FileResult> OnGetCreateTemplate()
+        public async Task<FileResult> OnGetCreateTemplate()
         {
             var fields = new string[] {
               //  _localizer["Site"],
@@ -224,7 +228,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
                         {
                             EmailConfirmed = true,
                             IsActive = false,
-                           // Site = item.Site,
+                            // Site = item.Site,
                             DisplayName = item.DisplayName,
                             UserName = item.UserName,
                             Email = item.Email,
@@ -251,8 +255,8 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
 
         public async Task<IActionResult> OnGetAssignedRolesAsync(string id)
         {
-            var user=await _userManager.FindByIdAsync(id);
-            var roles=await _userManager.GetRolesAsync(user);
+            var user = await _userManager.FindByIdAsync(id);
+            var roles = await _userManager.GetRolesAsync(user);
             return new JsonResult(roles);
         }
         public async Task<IActionResult> OnPostAssignRolesAsync()
@@ -293,7 +297,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-         
+
         }
         public class EditUserModel
         {

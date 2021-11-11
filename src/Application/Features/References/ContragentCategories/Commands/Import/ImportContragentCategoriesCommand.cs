@@ -1,24 +1,21 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
-using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands.Import
 {
-    public class ImportContragentCategoriesCommand: IRequest<Result>
+    public class ImportContragentCategoriesCommand : IRequest<Result>
     {
         public string FileName { get; set; }
         public byte[] Data { get; set; }
@@ -29,7 +26,7 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
         public string SheetName { get; set; }
     }
 
-    public class ImportContragentCategoriesCommandHandler : 
+    public class ImportContragentCategoriesCommandHandler :
                  IRequestHandler<CreateContragentCategoriesTemplateCommand, byte[]>,
                  IRequestHandler<ImportContragentCategoriesCommand, Result>
     {
@@ -52,13 +49,13 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
         }
         public async Task<Result> Handle(ImportContragentCategoriesCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing ImportContragentCategoriesCommandHandler method
-           var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, ContragentCategoryDto, object>>
+            //TODO:Implementing ImportContragentCategoriesCommandHandler method
+            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, ContragentCategoryDto, object>>
             {
                 //ex. { _localizer["Name"], (row,item) => item.Name = row[_localizer["Name"]]?.ToString() },
 
             }, _localizer["ContragentCategories"]);
-           throw new System.NotImplementedException();
+            throw new System.NotImplementedException();
         }
         public async Task<byte[]> Handle(CreateContragentCategoriesTemplateCommand request, CancellationToken cancellationToken)
         {

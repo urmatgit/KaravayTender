@@ -1,20 +1,19 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
-using CleanArchitecture.Razor.Application.Features.StatusLogs.DTOs;
-using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.StatusLogs.Commands.Delete
 {
-    public class DeleteStatusLogCommand: IRequest<Result>
+    public class DeleteStatusLogCommand : IRequest<Result>
     {
         public int Id { get; set; }
     }
@@ -23,7 +22,7 @@ namespace CleanArchitecture.Razor.Application.Features.StatusLogs.Commands.Delet
         public int[] Id { get; set; }
     }
 
-    public class DeleteStatusLogCommandHandler : 
+    public class DeleteStatusLogCommandHandler :
                  IRequestHandler<DeleteStatusLogCommand, Result>,
                  IRequestHandler<DeleteCheckedStatusLogsCommand, Result>
     {
@@ -42,7 +41,7 @@ namespace CleanArchitecture.Razor.Application.Features.StatusLogs.Commands.Delet
         }
         public async Task<Result> Handle(DeleteStatusLogCommand request, CancellationToken cancellationToken)
         {
-            
+
             var item = await _context.StatusLogs.FindAsync(new object[] { request.Id }, cancellationToken);
             _context.StatusLogs.Remove(item);
             await _context.SaveChangesAsync(cancellationToken);

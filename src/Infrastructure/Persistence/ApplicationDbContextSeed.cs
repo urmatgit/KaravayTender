@@ -1,16 +1,18 @@
-using CleanArchitecture.Razor.Application.Common.Extensions;
-using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
-using CleanArchitecture.Razor.Infrastructure.Identity;
-using CleanArchitecture.Razor.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Identity;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CleanArchitecture.Razor.Application.Common.Extensions;
+using CleanArchitecture.Razor.Domain.Entities;
+using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
+using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Razor.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Razor.Infrastructure.Persistence
 {
@@ -18,7 +20,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
     {
         public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
-            var administratorRole = new ApplicationRole("Admin") { Description= "Admin Group" };
+            var administratorRole = new ApplicationRole("Admin") { Description = "Admin Group" };
             var ManagerRole = new ApplicationRole("Manager") { Description = "Manager" };
             var userRole = new ApplicationRole("Basic") { Description = "Basic Group" };
             var super = new ApplicationRole("Super") { Description = "Super Group" };
@@ -31,16 +33,16 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                 await roleManager.CreateAsync(super);
                 await roleManager.CreateAsync(Supplier);
                 var Permissions = GetAllPermissions();
-                foreach(var permission in Permissions)
+                foreach (var permission in Permissions)
                 {
                     await roleManager.AddClaimAsync(administratorRole, new System.Security.Claims.Claim(ApplicationClaimTypes.Permission, permission));
                     await roleManager.AddClaimAsync(super, new System.Security.Claims.Claim(ApplicationClaimTypes.Permission, permission));
                 }
             }
 
-            var superUser =new ApplicationUser { UserName = "Super", IsActive = true,   DisplayName = "Super user", Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://cn.gravatar.com/avatar/{"neozhu@126.com".ToMD5()}?s=120&d=retro" };
-            var administrator = new ApplicationUser { UserName = "administrator" , IsActive=true,DisplayName="Administrator", Email = "new163@163.com" , EmailConfirmed=true, ProfilePictureDataUrl=$"https://cn.gravatar.com/avatar/{"new163@163.com".ToMD5()}?s=120&d=retro" };
-            var demo = new ApplicationUser { UserName = "Demo", IsActive = true,   DisplayName = "Demo", Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://cn.gravatar.com/avatar/{"neozhu@126.com".ToMD5()}?s=120&d=retro" };
+            var superUser = new ApplicationUser { UserName = "Super", IsActive = true, DisplayName = "Super user", Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://cn.gravatar.com/avatar/{"neozhu@126.com".ToMD5()}?s=120&d=retro" };
+            var administrator = new ApplicationUser { UserName = "administrator", IsActive = true, DisplayName = "Administrator", Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://cn.gravatar.com/avatar/{"new163@163.com".ToMD5()}?s=120&d=retro" };
+            var demo = new ApplicationUser { UserName = "Demo", IsActive = true, DisplayName = "Demo", Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://cn.gravatar.com/avatar/{"neozhu@126.com".ToMD5()}?s=120&d=retro" };
             var supplier = new ApplicationUser { UserName = "Supplier", IsActive = true, Email = "supplier@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "" };
             var manager = new ApplicationUser { UserName = "Manager1", IsActive = true, Email = "Manager1@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "" };
             if (userManager.Users.All(u => u.UserName != administrator.UserName))
@@ -77,7 +79,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                     var propertyValue = fi.GetValue(null);
 
                     if (propertyValue is not null)
-                        allPermissions.Add( propertyValue.ToString() );
+                        allPermissions.Add(propertyValue.ToString());
                 }
             }
 
@@ -97,10 +99,10 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
             //    }
             if (!context.KeyValues.Any())
             {
-                context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value= "initialization",Text= "initialization", Description = "Status of workflow" });
-                context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "processing", Text = "processing", Description = "Status of workflow"  });
-                context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "pending", Text = "pending", Description = "Status of workflow"  });
-                context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "finished", Text = "finished", Description = "Status of workflow"  });
+                context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "initialization", Text = "initialization", Description = "Status of workflow" });
+                context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "processing", Text = "processing", Description = "Status of workflow" });
+                context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "pending", Text = "pending", Description = "Status of workflow" });
+                context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "finished", Text = "finished", Description = "Status of workflow" });
                 context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Region", Value = "CNC", Text = "CNC", Description = "Region of Customer" });
                 context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Region", Value = "CNN", Text = "CNN", Description = "Region of Customer" });
                 context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Region", Value = "CNS", Text = "CNS", Description = "Region of Customer" });
@@ -111,7 +113,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
             }
             if (!context.Customers.Any())
             {
-                context.Customers.Add(new Domain.Entities.Customer() { Name = "SmartAdmin", AddressOfEnglish= "https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0", GroupName= "SmartAdmin", Address= "https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0", Sales= "GotBootstrap",RegionSalesDirector= "GotBootstrap",Region= "CNC", NameOfEnglish="SmartAdmin", PartnerType= Domain.Enums.PartnerType.TP,Contact= "GotBootstrap", Email= "drlantern@gotbootstrap.com" });
+                context.Customers.Add(new Domain.Entities.Customer() { Name = "SmartAdmin", AddressOfEnglish = "https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0", GroupName = "SmartAdmin", Address = "https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0", Sales = "GotBootstrap", RegionSalesDirector = "GotBootstrap", Region = "CNC", NameOfEnglish = "SmartAdmin", PartnerType = Domain.Enums.PartnerType.TP, Contact = "GotBootstrap", Email = "drlantern@gotbootstrap.com" });
                 await context.SaveChangesAsync();
 
                 context.Serilogs.Add(new Domain.Entities.Log.Serilog() { Message = "Initial add customer", Level = "Information", UserName = "System", TimeStamp = System.DateTime.Now });
@@ -131,7 +133,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                 Direction directionMuka = new Direction
                 {
                     Name = "Мука"
-                    ,Created=DateTime.UtcNow
+                    ,
+                    Created = DateTime.UtcNow
                 };
                 Direction directionMeterial = new Direction
                 {
@@ -168,7 +171,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                     {
                         Created = DateTime.UtcNow,
                         Name = "Сахар",
-                        DirectionId=directionMeterial.Id
+                        DirectionId = directionMeterial.Id
                     };
                     Category categoryYeast = new Category
                     {
@@ -209,13 +212,13 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                     };
                     products.Add(product);
                 }
-                await context.Products.AddRangeAsync (products);
+                await context.Products.AddRangeAsync(products);
                 await context.SaveChangesAsync();
                 List<Customer> customers = new List<Customer>();
-                for (int i =1; i < 1001; i++)
+                for (int i = 1; i < 1001; i++)
                 {
                     int customerCount = randomNumber.Next(1, 500);
-                    
+
                     for (int j = 0; j < customerCount; j++)
                     {
                         var customer = new Customer
@@ -230,7 +233,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
 
                         customers.Add(customer);
                     }
-                    
+
 
                     Debug.WriteLine($"Product {i} customer count {customerCount}");
 

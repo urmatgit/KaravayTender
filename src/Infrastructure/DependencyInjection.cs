@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Linq;
 using System.Reflection;
@@ -19,7 +22,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using WorkflowCore.Interface;
 
 namespace CleanArchitecture.Razor.Infrastructure
 {
@@ -42,13 +44,13 @@ namespace CleanArchitecture.Razor.Infrastructure
 
                     );
             }
-            else 
+            else
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(
                         configuration.GetConnectionString("DefaultConnection"),
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
-                    
+
                     );
             }
             services.Configure<SmartSettings>(configuration.GetSection(SmartSettings.SectionName));
@@ -56,7 +58,7 @@ namespace CleanArchitecture.Razor.Infrastructure
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
             services.AddScoped<IDomainEventService, DomainEventService>();
-           
+
 
             services
                 .AddDefaultIdentity<ApplicationUser>()
@@ -80,7 +82,7 @@ namespace CleanArchitecture.Razor.Infrastructure
                 options.SignIn.RequireConfirmedEmail = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
                 //options.User.RequireUniqueEmail = true;
-                
+
                 // Default Lockout settings.
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;

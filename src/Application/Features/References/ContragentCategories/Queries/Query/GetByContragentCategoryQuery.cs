@@ -1,27 +1,27 @@
-using System;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using CleanArchitecture.Razor.Application.Common.Extensions;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Domain.Entities;
-using System.Linq.Dynamic.Core;
+using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Localization;
-using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
 
 namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Queries.GetAll
 {
     public class GetByContragentCategoryQuery : IRequest<IEnumerable<ContragentCategoryDto>>
     {
-       public int ContragentId { get; set; }
-        
+        public int ContragentId { get; set; }
+
     }
-    
+
     public class GetByContragentCategoryQueryHandler :
          IRequestHandler<GetByContragentCategoryQuery, IEnumerable<ContragentCategoryDto>>
     {
@@ -44,8 +44,8 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Quer
         {
             //TODO:Implementing GetAllContragentCategoriesQueryHandler method 
             var data = await _context.ContragentCategories
-                         .Include(c=>c.Category)
-                         .Where(c=>c.ContragentId==request.ContragentId)
+                         .Include(c => c.Category)
+                         .Where(c => c.ContragentId == request.ContragentId)
                          .ProjectTo<ContragentCategoryDto>(_mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;

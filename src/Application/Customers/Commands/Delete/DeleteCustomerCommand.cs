@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Razor.Application.Customers.Commands.Delete
 {
-    public class DeleteCustomerCommand: IRequest<Result>, ICacheInvalidator
+    public class DeleteCustomerCommand : IRequest<Result>, ICacheInvalidator
     {
         public int Id { get; set; }
         public string CacheKey => CustomerCacheKey.GetAllCacheKey;
@@ -41,7 +41,7 @@ namespace CleanArchitecture.Razor.Application.Customers.Commands.Delete
         }
         public async Task<Result> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
-            var item =await _context.Customers.FindAsync(new object[] { request.Id }, cancellationToken);
+            var item = await _context.Customers.FindAsync(new object[] { request.Id }, cancellationToken);
             _context.Customers.Remove(item);
             await _context.SaveChangesAsync(cancellationToken);
             return Result.Success();
@@ -50,7 +50,7 @@ namespace CleanArchitecture.Razor.Application.Customers.Commands.Delete
         public async Task<Result> Handle(DeleteCheckedCustomersCommand request, CancellationToken cancellationToken)
         {
             var items = await _context.Customers.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 _context.Customers.Remove(item);
             }

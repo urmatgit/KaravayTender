@@ -1,10 +1,10 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Models;
-using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -31,7 +31,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         public string UserName { get; set; }
         [BindProperty]
         public string DisplayName { get; set; }
-        
+
         [BindProperty]
         public string Email { get; set; }
         [BindProperty]
@@ -58,17 +58,17 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             _signInManager = signInManager;
             _uploadService = uploadService;
             UserId = currentUserService.UserId;
-           
+
         }
 
         public async Task OnGet()
         {
-            var user =await _userManager.FindByIdAsync(UserId);
+            var user = await _userManager.FindByIdAsync(UserId);
             if (user != null)
             {
                 UserName = user.UserName;
                 Email = user.Email;
-                
+
                 DisplayName = user.DisplayName;
                 IsActive = user.IsActive;
                 PhoneNumber = user.PhoneNumber;
@@ -87,7 +87,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
                 FileName = Guid.NewGuid().ToString() + ".png",
                 UploadType = CleanArchitecture.Razor.Domain.Enums.UploadType.ProfilePicture
             };
-            var result =await  _uploadService.UploadAsync(uploadrequet);
+            var result = await _uploadService.UploadAsync(uploadrequet);
             var user = await _userManager.FindByIdAsync(UserId);
             user.ProfilePictureDataUrl = result.Replace(@"\", @"/");
             await _userManager.UpdateAsync(user);
@@ -108,11 +108,11 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
                 }
                 else
                 {
-                    foreach(var error in result.Errors)
+                    foreach (var error in result.Errors)
                     {
-                        ModelState.AddModelError(error.Code,error.Description);
+                        ModelState.AddModelError(error.Code, error.Description);
                     }
-                   
+
                     return Page();
                 }
             }
@@ -125,7 +125,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             if (user != null)
             {
                 user.DisplayName = DisplayName;
-                
+
                 user.PhoneNumber = PhoneNumber;
                 user.Email = Email;
                 var result = await _userManager.UpdateAsync(user);

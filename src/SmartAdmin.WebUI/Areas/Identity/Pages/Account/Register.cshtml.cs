@@ -1,22 +1,17 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using CleanArchitecture.Razor.Application.Common.Extensions;
+using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
 using CleanArchitecture.Razor.Infrastructure.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using MediatR;
-using CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit;
-using System;
-using CleanArchitecture.Razor.Application.Common.Models;
-using CleanArchitecture.Razor.Application.Common.Exceptions;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
+using Microsoft.Extensions.Logging;
 using SmartAdmin.WebUI.Pages.Shared.Components.Contragent;
 
 namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
@@ -45,9 +40,9 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _mediator = mediator;
         }
-        
 
-      //  public void OnGet(string returnUrl = null) => contragentForm.ReturnUrl = returnUrl;
+
+        //  public void OnGet(string returnUrl = null) => contragentForm.ReturnUrl = returnUrl;
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -59,21 +54,21 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-             
+
             //try
             //{
-                var result = await _mediator.Send(contragentForm.Input);
-                
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation($"Заявка на регистрацию создана - {contragentForm.Input.Name}- {contragentForm.Input.ContactPhone}");
-                    return LocalRedirect(returnUrl);
-                }
-                //else
-                //{
-                //    return BadRequest(Result.Failure(result.Errors));
-                //}
-                
+            var result = await _mediator.Send(contragentForm.Input);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation($"Заявка на регистрацию создана - {contragentForm.Input.Name}- {contragentForm.Input.ContactPhone}");
+                return LocalRedirect(returnUrl);
+            }
+            //else
+            //{
+            //    return BadRequest(Result.Failure(result.Errors));
+            //}
+
             //}
             //catch (ValidationException ex)
             //{
@@ -90,7 +85,7 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
             //    ModelState.AddModelError(string.Empty, ex.Message);
             //    //return BadRequest(Result.Failure(new string[] { ex.Message }));
             //}
-            
+
             return Page();
         }
         //    public async Task<IActionResult> OnPostAsync(string returnUrl = null)

@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -12,11 +15,11 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Products.Commands.Create
 {
-    public class CreateProductCommand: ProductDto,IRequest<Result>, IMapFrom<Product>
+    public class CreateProductCommand : ProductDto, IRequest<Result>, IMapFrom<Product>
     {
-      
+
     }
-    
+
 
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Result>
     {

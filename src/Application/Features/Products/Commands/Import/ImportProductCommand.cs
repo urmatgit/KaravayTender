@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,13 +10,12 @@ using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Products.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Products.Commands.Import
 {
-    public class ImportProductCommand: ProductDto,IRequest<Result>, IMapFrom<Product>
+    public class ImportProductCommand : ProductDto, IRequest<Result>, IMapFrom<Product>
     {
         public string FileName { get; set; }
         public byte[] Data { get; set; }
@@ -41,8 +43,8 @@ namespace CleanArchitecture.Razor.Application.Products.Commands.Import
         }
         public async Task<Result> Handle(ImportProductCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing ImportProductCommandHandler method 
-           throw new System.NotImplementedException();
+            //TODO:Implementing ImportProductCommandHandler method 
+            throw new System.NotImplementedException();
         }
     }
 }

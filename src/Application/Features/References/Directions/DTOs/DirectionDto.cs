@@ -1,4 +1,6 @@
-using System;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Collections.Generic;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
@@ -8,7 +10,7 @@ using CleanArchitecture.Razor.Domain.Entities;
 
 namespace CleanArchitecture.Razor.Application.Features.Directions.DTOs
 {
-    public class DirectionDto:IMapFrom<Direction>
+    public class DirectionDto : IMapFrom<Direction>
     {
         public void Mapping(Profile profile)
         {

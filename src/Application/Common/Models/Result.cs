@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +11,10 @@ namespace CleanArchitecture.Razor.Application.Common.Models
 {
     public class Result : IResult
     {
-        internal Result() {
+        internal Result()
+        {
 
-            }
+        }
         internal Result(bool succeeded, IEnumerable<string> errors)
         {
             Succeeded = succeeded;
@@ -25,26 +29,26 @@ namespace CleanArchitecture.Razor.Application.Common.Models
         {
             return new Result(true, Array.Empty<string>());
         }
-    public static Task<Result> SuccessAsync()
-    {
-      return Task.FromResult(new Result(true, Array.Empty<string>()));
-    }
-    public static Result Failure(IEnumerable<string> errors)
+        public static Task<Result> SuccessAsync()
+        {
+            return Task.FromResult(new Result(true, Array.Empty<string>()));
+        }
+        public static Result Failure(IEnumerable<string> errors)
         {
             return new Result(false, errors);
         }
-    public static Task<Result> FailureAsync(IEnumerable<string> errors)
-    {
-      return Task.FromResult(new Result(false, errors));
+        public static Task<Result> FailureAsync(IEnumerable<string> errors)
+        {
+            return Task.FromResult(new Result(false, errors));
+        }
     }
-  }
     public class Result<T> : Result, IResult<T>
     {
         public T Data { get; set; }
 
         public static new Result<T> Failure(IEnumerable<string> errors)
         {
-            return new Result<T> { Succeeded = false, Errors= errors.ToArray() };
+            return new Result<T> { Succeeded = false, Errors = errors.ToArray() };
         }
         public static new async Task<Result<T>> FailureAsync(IEnumerable<string> errors)
         {

@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +14,7 @@ using CleanArchitecture.Razor.Domain.Enums;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
 {
-    public class ContragentDto:IMapFrom<Contragent>
+    public class ContragentDto : IMapFrom<Contragent>
     {
         public void Mapping(Profile profile)
         {
@@ -34,9 +37,9 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
 
         [Required(ErrorMessage = "'ИНН' является обязательным")]
         public string INN { get; set; }
-        
+
         public string KPP { get; set; }
-       
+
         public string Site { get; set; }
 
         [Required(ErrorMessage = "'Телефон организации' является обязательным")]

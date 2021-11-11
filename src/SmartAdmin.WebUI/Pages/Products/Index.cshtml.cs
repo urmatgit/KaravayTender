@@ -1,27 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using CleanArchitecture.Razor.Application.Common.Exceptions;
+using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Razor.Application.Products.Commands.AddEdit;
+using CleanArchitecture.Razor.Application.Products.Commands.Delete;
+using CleanArchitecture.Razor.Application.Products.Commands.Import;
+using CleanArchitecture.Razor.Application.Products.Queries.Export;
+using CleanArchitecture.Razor.Application.Products.Queries.Pagination;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using CleanArchitecture.Razor.Application.Products.Commands.AddEdit;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Razor.Application.Common.Interfaces;
-using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Localization;
-using CleanArchitecture.Razor.Application.Products.Queries.Pagination;
-using CleanArchitecture.Razor.Application.Common.Exceptions;
-using System.Net;
-using CleanArchitecture.Razor.Application.Customers.Commands.Delete;
-using CleanArchitecture.Razor.Application.Customers.Queries.Export;
-using System.IO;
-using CleanArchitecture.Razor.Application.Products.Commands.Delete;
-using CleanArchitecture.Razor.Application.Products.Queries.Export;
-using CleanArchitecture.Razor.Application.Products.Commands.Import;
 
 namespace SmartAdmin.WebUI.Pages.Products
 {

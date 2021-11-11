@@ -1,18 +1,21 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Products.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using System.Linq.Dynamic.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Localization;
-using CleanArchitecture.Razor.Application.Products.DTOs;
 
 namespace CleanArchitecture.Razor.Application.Products.Queries.Export
 {
@@ -22,7 +25,7 @@ namespace CleanArchitecture.Razor.Application.Products.Queries.Export
         public string sort { get; set; } = "Id";
         public string order { get; set; } = "desc";
     }
-    
+
     public class ExportProductsQueryHandler :
          IRequestHandler<ExportProductsQuery, byte[]>
     {

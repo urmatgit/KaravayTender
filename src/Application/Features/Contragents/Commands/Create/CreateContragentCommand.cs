@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,19 +10,18 @@ using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Contragents.Caching;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Create
 {
-    public class CreateContragentCommand: ContragentDto,IRequest<Result<int>>, IMapFrom<Contragent>
+    public class CreateContragentCommand : ContragentDto, IRequest<Result<int>>, IMapFrom<Contragent>
     {
         public string CacheKey => ContragentCacheKey.GetAllCacheKey;
 
         public CancellationTokenSource ResetCacheToken => ContragentCacheTokenSource.ResetCacheToken;
     }
-    
+
     public class CreateContragentCommandHandler : IRequestHandler<CreateContragentCommand, Result<int>>
     {
         private readonly IApplicationDbContext _context;
@@ -37,11 +39,11 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Crea
         }
         public async Task<Result<int>> Handle(CreateContragentCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing CreateContragentCommandHandler method 
-           var item = _mapper.Map<Contragent>(request);
-           _context.Contragents.Add(item);
-           await _context.SaveChangesAsync(cancellationToken);
-           return  Result<int>.Success(item.Id);
+            //TODO:Implementing CreateContragentCommandHandler method 
+            var item = _mapper.Map<Contragent>(request);
+            _context.Contragents.Add(item);
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result<int>.Success(item.Id);
         }
     }
 }

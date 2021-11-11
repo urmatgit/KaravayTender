@@ -1,14 +1,14 @@
-using System;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
-using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 
 namespace CleanArchitecture.Razor.Application.Features.References.Vats.DTOs
 {
-    public class VatDto:IMapFrom<Vat>
+    public class VatDto : IMapFrom<Vat>
     {
         public void Mapping(Profile profile)
         {
@@ -22,7 +22,7 @@ namespace CleanArchitecture.Razor.Application.Features.References.Vats.DTOs
         [Required(ErrorMessage = "'Наименование' является обязательным ")]
         public string Name { get; set; }
 
-      
+
         public string Description { get; set; }
         [Required(ErrorMessage = "'НДС,%' является обязательным ")]
 

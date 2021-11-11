@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Infrastructure.Identity;
@@ -40,7 +43,7 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
             public string Code { get; set; }
         }
 
-        public IActionResult OnGet(string code = null,string email=null)
+        public IActionResult OnGet(string code = null, string email = null)
         {
             if (code == null)
             {
@@ -51,8 +54,8 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
                 Input = new InputModel
                 {
                     Code = code,
-                    Email=email
-                    
+                    Email = email
+
                 };
                 return Page();
             }

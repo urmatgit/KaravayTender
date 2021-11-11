@@ -1,11 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Razor.Infrastructure.Constants.Localization
@@ -32,6 +27,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Localization
         public override IdentityError PasswordRequiresDigit() { return new IdentityError { Code = nameof(PasswordRequiresDigit), Description = "Пароль должен содержать хотя бы одну цифру ('0'-'9')." }; }
         public override IdentityError PasswordRequiresLower() { return new IdentityError { Code = nameof(PasswordRequiresLower), Description = "Пароль должен содержать хотя бы один символ в нижнем регистре ('a'-'z')." }; }
         public override IdentityError PasswordRequiresUpper() { return new IdentityError { Code = nameof(PasswordRequiresUpper), Description = "Пароль должен содержать хотя бы один символ в верхнем регистре ('A'-'Z')" }; }
-        
+
     }
 }

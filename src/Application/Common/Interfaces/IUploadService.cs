@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Models;
-using CleanArchitecture.Razor.Application.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace CleanArchitecture.Razor.Application.Common.Interfaces

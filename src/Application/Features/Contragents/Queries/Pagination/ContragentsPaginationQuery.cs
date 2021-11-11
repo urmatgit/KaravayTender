@@ -1,31 +1,32 @@
-using System;
-using System.Collections.Generic;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System.Diagnostics;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Domain.Entities;
-using System.Linq.Dynamic.Core;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper.QueryableExtensions;
-using Microsoft.Extensions.Localization;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Razor.Application.Common.Mappings;
+using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
 using CleanArchitecture.Razor.Application.Models;
-using CleanArchitecture.Razor.Application.Common.Mappings;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
-using System.Diagnostics;
-using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Domain.Entities;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagination
 {
     public class ContragentsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<ContragentDto>>
     {
-       
+
     }
-    
+
     public class ContragentsWithPaginationQueryHandler :
          IRequestHandler<ContragentsWithPaginationQuery, PaginatedData<ContragentDto>>
     {
@@ -37,7 +38,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
             IApplicationDbContext context,
             IMapper mapper,
             IStringLocalizer<ContragentsWithPaginationQueryHandler> localizer,
-            IIdentityService identityService 
+            IIdentityService identityService
             )
         {
             _context = context;
@@ -49,14 +50,14 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
         public async Task<PaginatedData<ContragentDto>> Handle(ContragentsWithPaginationQuery request, CancellationToken cancellationToken)
         {
             //TODO:Implementing ContragentsWithPaginationQueryHandler method 
-           var filters = PredicateBuilder.FromFilter<Contragent>(request.FilterRules);
+            var filters = PredicateBuilder.FromFilter<Contragent>(request.FilterRules);
             var managers = await _identityService.FetchUsersEx("Manager");
             Debug.WriteLine(managers.Count);
             var data = await _context.Contragents.Where(filters)
-                .Include(i=>i.Direction)
+                .Include(i => i.Direction)
                 .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<ContragentDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.Page, request.Rows) ;
+                .PaginatedDataAsync(request.Page, request.Rows);
 
             foreach (var d in data.rows)
             {

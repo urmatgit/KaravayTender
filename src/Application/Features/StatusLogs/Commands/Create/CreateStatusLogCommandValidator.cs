@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.StatusLogs.Commands.Create
@@ -6,8 +9,8 @@ namespace CleanArchitecture.Razor.Application.Features.StatusLogs.Commands.Creat
     {
         public CreateStatusLogCommandValidator()
         {
-           //TODO:Implementing CreateStatusLogCommandValidator method 
-           
+            //TODO:Implementing CreateStatusLogCommandValidator method 
+
         }
     }
 }

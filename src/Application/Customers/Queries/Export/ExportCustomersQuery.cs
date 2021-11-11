@@ -4,18 +4,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Customers.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using System.Linq.Dynamic.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Localization;
-using CleanArchitecture.Razor.Application.Customers.DTOs;
 
 namespace CleanArchitecture.Razor.Application.Customers.Queries.Export
 {
@@ -25,7 +25,7 @@ namespace CleanArchitecture.Razor.Application.Customers.Queries.Export
         public string sort { get; set; } = "Id";
         public string order { get; set; } = "desc";
     }
-    
+
     public class ExportCustomersQueryHandler :
          IRequestHandler<ExportCustomersQuery, byte[]>
     {
@@ -77,6 +77,6 @@ namespace CleanArchitecture.Razor.Application.Customers.Queries.Export
             return result;
         }
 
-        
+
     }
 }

@@ -2,24 +2,23 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
+using CleanArchitecture.Razor.Application.Common.Mappings;
+using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.KeyValues.Caching;
+using CleanArchitecture.Razor.Application.KeyValues.DTOs;
 using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Domain.Entities;
-using System.Linq.Dynamic.Core;
 using MediatR;
-using CleanArchitecture.Razor.Application.Common.Mappings;
-using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Razor.Application.KeyValues.DTOs;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using CleanArchitecture.Razor.Application.KeyValues.Caching;
-using System.Text.Json;
-using CleanArchitecture.Razor.Application.Common.Models;
 
 namespace CleanArchitecture.Razor.Application.KeyValues.Queries.PaginationQuery
 {
@@ -36,12 +35,12 @@ namespace CleanArchitecture.Razor.Application.KeyValues.Queries.PaginationQuery
         private readonly IMapper _mapper;
 
         public KeyValuesQueryHandler(
-        
+
             IApplicationDbContext context,
             IMapper mapper
             )
         {
-    
+
             _context = context;
             _mapper = mapper;
         }

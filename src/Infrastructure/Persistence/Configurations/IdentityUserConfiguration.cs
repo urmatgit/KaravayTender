@@ -1,4 +1,6 @@
-using CleanArchitecture.Razor.Domain.Entities;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -66,7 +68,7 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
                   .WithMany(p => p.Claims)
                   .HasForeignKey(d => d.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
-            
+
         }
     }
     public class ApplicationUserLoginConfiguration : IEntityTypeConfiguration<ApplicationUserLogin>

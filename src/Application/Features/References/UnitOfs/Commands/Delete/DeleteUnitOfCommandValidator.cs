@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.References.UnitOfs.Commands.Delete
@@ -6,9 +9,9 @@ namespace CleanArchitecture.Razor.Application.Features.References.UnitOfs.Comman
     {
         public DeleteUnitOfCommandValidator()
         {
-           //TODO:Implementing DeleteUnitOfCommandValidator method 
-           //ex. RuleFor(v => v.Id).NotNull().GreaterThan(0);
-           throw new System.NotImplementedException();
+            //TODO:Implementing DeleteUnitOfCommandValidator method 
+            //ex. RuleFor(v => v.Id).NotNull().GreaterThan(0);
+            throw new System.NotImplementedException();
         }
     }
     public class DeleteCheckedUnitOfsCommandValidator : AbstractValidator<DeleteCheckedUnitOfsCommand>
@@ -17,7 +20,7 @@ namespace CleanArchitecture.Razor.Application.Features.References.UnitOfs.Comman
         {
             //TODO:Implementing DeleteProductCommandValidator method 
             RuleFor(v => v.Id).NotNull().NotEmpty();
-            
+
         }
     }
 }

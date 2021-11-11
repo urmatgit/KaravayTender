@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Linq;
-using System.Threading.Tasks;
-using CleanArchitecture.Razor.Infrastructure.Constants.Localization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using SmartAdmin.WebUI.Models;
 using SmartAdmin.WebUI.Pages.Shared.Components.LanguageSelector;
 
 namespace SmartAdmin.WebUI.ViewComponents

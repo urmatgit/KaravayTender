@@ -1,28 +1,27 @@
-using System.Collections.Generic;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Contragents.Caching;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
-using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit
 {
-    public class AddEditContragentCommand: ContragentDto,IRequest<Result<int>>, IMapFrom<Contragent>
+    public class AddEditContragentCommand : ContragentDto, IRequest<Result<int>>, IMapFrom<Contragent>
     {
         public string CacheKey => ContragentCacheKey.GetAllCacheKey;
 
         public CancellationTokenSource ResetCacheToken => ContragentCacheTokenSource.ResetCacheToken;
-        
+
     }
 
     public class AddEditContragentCommandHandler : IRequestHandler<AddEditContragentCommand, Result<int>>
@@ -39,7 +38,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddE
             _context = context;
             _localizer = localizer;
             _mapper = mapper;
-            
+
         }
         //private async Task LoadDirection()
         //{
@@ -70,7 +69,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddE
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
-           
+
         }
     }
 }

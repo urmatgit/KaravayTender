@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,17 +10,16 @@ using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Categories.Caching;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Categories.Commands.Update
 {
-    public class UpdateCategoryCommand: CategoryDto,IRequest<Result>, IMapFrom<Category>
+    public class UpdateCategoryCommand : CategoryDto, IRequest<Result>, IMapFrom<Category>
     {
-         public string CacheKey => CategoryCacheKey.GetAllCacheKey;
+        public string CacheKey => CategoryCacheKey.GetAllCacheKey;
 
-         public CancellationTokenSource ResetCacheToken => CategoryCacheTokenSource.ResetCacheToken;
+        public CancellationTokenSource ResetCacheToken => CategoryCacheTokenSource.ResetCacheToken;
     }
 
     public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, Result>
@@ -37,14 +39,14 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.Commands.Updat
         }
         public async Task<Result> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing UpdateCategoryCommandHandler method 
-           var item =await _context.Categories.FindAsync( new object[] { request.Id }, cancellationToken);
-           if (item != null)
-           {
+            //TODO:Implementing UpdateCategoryCommandHandler method 
+            var item = await _context.Categories.FindAsync(new object[] { request.Id }, cancellationToken);
+            if (item != null)
+            {
                 item = _mapper.Map(request, item);
                 await _context.SaveChangesAsync(cancellationToken);
-           }
-           return Result.Success();
+            }
+            return Result.Success();
         }
     }
 }

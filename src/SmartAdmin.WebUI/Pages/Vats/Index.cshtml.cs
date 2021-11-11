@@ -1,30 +1,27 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
-using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using MediatR;
-
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Razor.Application.Common.Interfaces;
-using Microsoft.Extensions.Localization;
-
-
-using CleanArchitecture.Razor.Application.Common.Models;
-using System.IO;
-
 using CleanArchitecture.Razor.Application.Common.Exceptions;
-using CleanArchitecture.Razor.Application.Features.References.Vats.Queries.Pagination;
+using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.References.Vats.Commands.AddEdit;
 using CleanArchitecture.Razor.Application.Features.References.Vats.Commands.Delete;
-using CleanArchitecture.Razor.Application.Features.References.Vats.Queries.Export;
 using CleanArchitecture.Razor.Application.Features.References.Vats.Commands.Import;
-using System.Globalization;
+using CleanArchitecture.Razor.Application.Features.References.Vats.Queries.Export;
+using CleanArchitecture.Razor.Application.Features.References.Vats.Queries.Pagination;
+using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Localization;
 
 namespace SmartAdmin.WebUI.Pages.Vats
 {

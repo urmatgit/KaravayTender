@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands.AddEdit
@@ -6,9 +9,9 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
     {
         public AddEditContragentCategoryCommandValidator()
         {
-           //TODO:Implementing AddEditContragentCategoryCommandValidator method 
+            //TODO:Implementing AddEditContragentCategoryCommandValidator method 
             RuleFor(v => v.ContragentId)
-            
+
                  .NotEmpty();
             RuleFor(v => v.CategoryId)
 

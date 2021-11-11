@@ -1,26 +1,26 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
+using CleanArchitecture.Razor.Application.Common.Exceptions;
+using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.Features.Directions.Commands.AddEdit;
+using CleanArchitecture.Razor.Application.Features.Directions.Commands.Delete;
+using CleanArchitecture.Razor.Application.Features.Directions.Commands.Import;
+using CleanArchitecture.Razor.Application.Features.Directions.Queries.Export;
+using CleanArchitecture.Razor.Application.Features.Directions.Queries.Pagination;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using MediatR;
-using CleanArchitecture.Razor.Application.Features.Directions.Commands.AddEdit;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Razor.Application.Common.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Localization;
-using CleanArchitecture.Razor.Application.Features.Directions.Queries.Pagination;
-
-using CleanArchitecture.Razor.Application.Common.Models;
-using CleanArchitecture.Razor.Application.Features.Directions.Commands.Delete;
-using CleanArchitecture.Razor.Application.Features.Directions.Queries.Export;
-using System.IO;
-using CleanArchitecture.Razor.Application.Features.Directions.Commands.Import;
-using CleanArchitecture.Razor.Application.Common.Exceptions;
 
 namespace SmartAdmin.WebUI.Pages.Directions
 {

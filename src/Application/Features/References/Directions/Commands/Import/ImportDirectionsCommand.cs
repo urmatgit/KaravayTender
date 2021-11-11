@@ -1,24 +1,21 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
-using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Directions.Commands.Import
 {
-    public class ImportDirectionsCommand: IRequest<Result>
+    public class ImportDirectionsCommand : IRequest<Result>
     {
         public string FileName { get; set; }
         public byte[] Data { get; set; }
@@ -29,7 +26,7 @@ namespace CleanArchitecture.Razor.Application.Features.Directions.Commands.Impor
         public string SheetName { get; set; }
     }
 
-    public class ImportDirectionsCommandHandler : 
+    public class ImportDirectionsCommandHandler :
                  IRequestHandler<CreateDirectionsTemplateCommand, byte[]>,
                  IRequestHandler<ImportDirectionsCommand, Result>
     {
@@ -52,13 +49,13 @@ namespace CleanArchitecture.Razor.Application.Features.Directions.Commands.Impor
         }
         public async Task<Result> Handle(ImportDirectionsCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing ImportDirectionsCommandHandler method
-           var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, DirectionDto, object>>
+            //TODO:Implementing ImportDirectionsCommandHandler method
+            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, DirectionDto, object>>
             {
                 //ex. { _localizer["Name"], (row,item) => item.Name = row[_localizer["Name"]]?.ToString() },
 
             }, _localizer["Directions"]);
-           throw new System.NotImplementedException();
+            throw new System.NotImplementedException();
         }
         public async Task<byte[]> Handle(CreateDirectionsTemplateCommand request, CancellationToken cancellationToken)
         {

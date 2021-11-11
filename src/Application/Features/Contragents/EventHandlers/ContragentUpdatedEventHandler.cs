@@ -1,13 +1,16 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using CleanArchitecture.Razor.Domain.Entities.Karavay;
+using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
 {
@@ -35,8 +38,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
             _logger.LogInformation("CleanArchitecture Domain Event: {DomainEvent}", domainEvent.GetType().Name);
             var lastStatusLog = await _context
                 .StatusLogs
-                .Where(s=>s.ContragentId==domainEvent.Item.Id)
-                .OrderBy(s=>s.Id)
+                .Where(s => s.ContragentId == domainEvent.Item.Id)
+                .OrderBy(s => s.Id)
                 .LastOrDefaultAsync(cancellationToken);
             if (lastStatusLog is null || !domainEvent.Item.Status.Equals(lastStatusLog.Status))
             {
@@ -46,15 +49,15 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
                     ManagerId = _currentUserService.UserId,
                     ContragentId = domainEvent.Item.Id,
                     Status = domainEvent.Item.Status,
-                    Description=domainEvent.Description,
-                    DateTime = domainEvent.Item.LastModified?? _dateTime.Now
+                    Description = domainEvent.Description,
+                    DateTime = domainEvent.Item.LastModified ?? _dateTime.Now
                 };
                 _context.StatusLogs.Add(statusLog);
                 var createevent = new StatusLogEvent(statusLog);
                 statusLog.DomainEvents.Add(createevent);
                 await _context.SaveChangesAsync(cancellationToken);
             }
-            
+
 
             //return Task.CompletedTask;
         }

@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -7,10 +10,8 @@ using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
-using CleanArchitecture.Razor.Application.Features.ContragentCategories.Caching;
 using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -18,10 +19,10 @@ using Newtonsoft.Json;
 
 namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands.AddEdit
 {
-    public class AddOrDelContragentCategorysCommand : ContragentCategoryDto,IRequest<Result<int>>, IMapFrom<ContragentCategory>
+    public class AddOrDelContragentCategorysCommand : ContragentCategoryDto, IRequest<Result<int>>, IMapFrom<ContragentCategory>
     {
         public string CategoriesJson { get; set; }
-         
+
     }
 
     public class AddOrDelContragentCategorysCommandHandler : IRequestHandler<AddOrDelContragentCategorysCommand, Result<int>>
@@ -29,7 +30,7 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<AddOrDelContragentCategorysCommandHandler> _localizer;
-        
+
         public AddOrDelContragentCategorysCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<AddOrDelContragentCategorysCommandHandler> localizer,
@@ -53,8 +54,8 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
                     {
                         foreach (CategoryDto category in categories)
                         {
-                            var item = await _context.ContragentCategories.AsNoTracking().FirstOrDefaultAsync(f => f.ContragentId == request.ContragentId && f.CategoryId == category.Id,cancellationToken); //FindAsync(new object[] { request.ContragentId, category.Id }, cancellationToken);
-                            
+                            var item = await _context.ContragentCategories.AsNoTracking().FirstOrDefaultAsync(f => f.ContragentId == request.ContragentId && f.CategoryId == category.Id, cancellationToken); //FindAsync(new object[] { request.ContragentId, category.Id }, cancellationToken);
+
                             if (item != null)
                             {
                                 //Finded
@@ -67,7 +68,7 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
                                         CategoryId = category.Id
                                     };
                                     _context.ContragentCategories.Remove(item1);
-                                    
+
                                 }
 
 
@@ -83,16 +84,17 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
                                         CategoryId = category.Id
                                     };
                                     _context.ContragentCategories.Add(item1);
-                                    
+
                                 }
                             }
                         }
                         await _context.SaveChangesAsync(cancellationToken);
                         return Result<int>.Success(request.ContragentId);
                     }
-                }catch (Exception er)
+                }
+                catch (Exception er)
                 {
-                   return Result<int>.Failure(new string[] { er.Message });
+                    return Result<int>.Failure(new string[] { er.Message });
                 }
             }
             //else
@@ -102,7 +104,7 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
             //    await _context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(request.ContragentId);
             //}
-           
+
         }
     }
 }

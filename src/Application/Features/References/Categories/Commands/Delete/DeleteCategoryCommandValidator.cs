@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.Categories.Commands.Delete
@@ -6,9 +9,9 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.Commands.Delet
     {
         public DeleteCategoryCommandValidator()
         {
-           //TODO:Implementing DeleteCategoryCommandValidator method 
-           //ex. RuleFor(v => v.Id).NotNull().GreaterThan(0);
-           //throw new System.NotImplementedException();
+            //TODO:Implementing DeleteCategoryCommandValidator method 
+            //ex. RuleFor(v => v.Id).NotNull().GreaterThan(0);
+            //throw new System.NotImplementedException();
         }
     }
     public class DeleteCheckedCategoriesCommandValidator : AbstractValidator<DeleteCheckedCategoriesCommand>

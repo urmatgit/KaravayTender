@@ -1,14 +1,13 @@
-using CleanArchitecture.Razor.Application.Common.Exceptions;
-using CleanArchitecture.Razor.Application.KeyValues.Commands.AddEdit;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Threading.Tasks;
+using CleanArchitecture.Razor.Application.Common.Exceptions;
+using CleanArchitecture.Razor.Application.KeyValues.Commands.SaveChanged;
+using CleanArchitecture.Razor.Application.KeyValues.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
-using CleanArchitecture.Razor.Application.KeyValues.Commands.SaveChanged;
-using System.Collections.Generic;
-using CleanArchitecture.Razor.Application.KeyValues.DTOs;
 
 namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
 {
@@ -38,7 +37,7 @@ namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
                     }
             };
             var result = await SendAsync(command);
-            
+
             var count = await CountAsync<KeyValue>();
 
             result.Succeeded.Should().BeTrue();

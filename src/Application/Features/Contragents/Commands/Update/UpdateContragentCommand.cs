@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,17 +10,16 @@ using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Contragents.Caching;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Update
 {
-    public class UpdateContragentCommand: ContragentDto,IRequest<Result>, IMapFrom<Contragent>
+    public class UpdateContragentCommand : ContragentDto, IRequest<Result>, IMapFrom<Contragent>
     {
-         public string CacheKey => ContragentCacheKey.GetAllCacheKey;
+        public string CacheKey => ContragentCacheKey.GetAllCacheKey;
 
-         public CancellationTokenSource ResetCacheToken => ContragentCacheTokenSource.ResetCacheToken;
+        public CancellationTokenSource ResetCacheToken => ContragentCacheTokenSource.ResetCacheToken;
     }
 
     public class UpdateContragentCommandHandler : IRequestHandler<UpdateContragentCommand, Result>
@@ -37,14 +39,14 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Upda
         }
         public async Task<Result> Handle(UpdateContragentCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing UpdateContragentCommandHandler method 
-           var item =await _context.Contragents.FindAsync( new object[] { request.Id }, cancellationToken);
-           if (item != null)
-           {
+            //TODO:Implementing UpdateContragentCommandHandler method 
+            var item = await _context.Contragents.FindAsync(new object[] { request.Id }, cancellationToken);
+            if (item != null)
+            {
                 item = _mapper.Map(request, item);
                 await _context.SaveChangesAsync(cancellationToken);
-           }
-           return Result.Success();
+            }
+            return Result.Success();
         }
     }
 }

@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,13 +25,13 @@ namespace SmartAdmin.WebUI.Models
         {
             var jsonText = File.ReadAllText("nav.json");
             var navigation = NavigationBuilder.FromJson(jsonText);
-            var menu = FillProperties(navigation.Lists, seedOnly,null, criteria);
+            var menu = FillProperties(navigation.Lists, seedOnly, null, criteria);
 
             return new SmartNavigation(menu);
         }
         public static SmartNavigation GetNavigation(Expression<Func<ListItem, bool>> criteria)
         {
-            return BuildNavigation(seedOnly: false, criteria:criteria);
+            return BuildNavigation(seedOnly: false, criteria: criteria);
         }
 
         private static List<ListItem> FillProperties(IEnumerable<ListItem> items, bool seedOnly, ListItem parent = null, Expression<Func<ListItem, bool>> criteria = null)

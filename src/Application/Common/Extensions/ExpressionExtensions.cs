@@ -1,13 +1,15 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using CleanArchitecture.Razor.Application.Models;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using CleanArchitecture.Razor.Application.Common.Models;
 
 namespace CleanArchitecture.Razor.Application.Common.Extensions
@@ -63,14 +65,15 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                 BinaryExpression body = null;
                 if (prop.PropertyType.IsEnum)
                 {
-                    if (Enum.IsDefined(prop.PropertyType, fieldValue)) {
-                        object value = Enum.Parse(prop.PropertyType, fieldValue.ToString(),true);
+                    if (Enum.IsDefined(prop.PropertyType, fieldValue))
+                    {
+                        object value = Enum.Parse(prop.PropertyType, fieldValue.ToString(), true);
                         body = Expression.Equal(expressionParameter, Expression.Constant(value));
                         return Expression.Lambda<Func<T, bool>>(body, parameter);
                     }
                     else
                     {
-                       return x=>false;
+                        return x => false;
                     }
                 }
                 switch (selectedOperator)
@@ -115,7 +118,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
             }
             else
             {
-               return x => false;
+                return x => false;
             }
         }
 
@@ -149,7 +152,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
 
 
 
-       
+
 
         #endregion
         #region -- Private methods --
@@ -384,7 +387,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
         }
     }
 
-   internal enum OperationExpression
+    internal enum OperationExpression
     {
         equal,
         notequal,

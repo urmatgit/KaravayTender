@@ -1,20 +1,23 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Domain.Entities;
-using System.Linq.Dynamic.Core;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper.QueryableExtensions;
-using Microsoft.Extensions.Localization;
-using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
+using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
+using CleanArchitecture.Razor.Domain.Entities;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Export
 {
@@ -24,7 +27,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Expor
         public string Sort { get; set; } = "Id";
         public string Order { get; set; } = "desc";
     }
-    
+
     public class ExportContragentsQueryHandler :
          IRequestHandler<ExportContragentsQuery, byte[]>
     {
@@ -33,7 +36,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Expor
         private readonly IMapper _mapper;
         private readonly IExcelService _excelService;
         private readonly IStringLocalizer<ExportContragentsQueryHandler> _localizer;
-        private   List<IApplicationUser> Managers ;
+        private List<IApplicationUser> Managers;
         public ExportContragentsQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
@@ -48,7 +51,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Expor
             _excelService = excelService;
             _localizer = localizer;
         }
-        private (IApplicationUser,bool) findManager( string id)
+        private (IApplicationUser, bool) findManager(string id)
         {
             (IApplicationUser, bool) result = (null, false);
             var manager = Managers.FirstOrDefault(m => m.Id == id);
@@ -67,7 +70,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Expor
                        .OrderBy($"{request.Sort} {request.Order}")
                        .ProjectTo<ContragentDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
-              Managers = await _identityService.FetchUsersEx("Manager");
+            Managers = await _identityService.FetchUsersEx("Manager");
             var result = await _excelService.ExportAsync(data,
                 new Dictionary<string, Func<ContragentDto, object>>()
                 {

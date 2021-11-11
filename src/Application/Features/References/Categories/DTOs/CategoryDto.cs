@@ -1,4 +1,6 @@
-using System;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Collections.Generic;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
@@ -9,14 +11,14 @@ using CleanArchitecture.Razor.Domain.Entities;
 
 namespace CleanArchitecture.Razor.Application.Features.Categories.DTOs
 {
-    public class CategoryDto:IMapFrom<Category>
+    public class CategoryDto : IMapFrom<Category>
     {
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Category, CategoryDto>()
                 .ForMember(x => x.DirectionName, s => s.MapFrom(y => y.Direction.Name));
             profile.CreateMap<CategoryDto, Category>(MemberList.None);
-                
+
 
         }
         public int Id { get; set; }

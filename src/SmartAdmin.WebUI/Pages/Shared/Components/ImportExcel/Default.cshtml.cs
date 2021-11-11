@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace SmartAdmin.WebUI.Pages.Shared.Components.ImportExcel
 {
-    public class DefaultModel 
+    public class DefaultModel
     {
         [BindProperty, Display(Name = "File")]
         public IFormFile UploadedFile { get; set; }

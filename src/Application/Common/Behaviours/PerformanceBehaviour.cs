@@ -1,10 +1,13 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CleanArchitecture.Razor.Application.Common.Behaviours
 {
@@ -16,7 +19,7 @@ namespace CleanArchitecture.Razor.Application.Common.Behaviours
         private readonly IIdentityService _identityService;
 
         public PerformanceBehaviour(
-            ILogger<TRequest> logger, 
+            ILogger<TRequest> logger,
             ICurrentUserService currentUserService,
             IIdentityService identityService)
         {

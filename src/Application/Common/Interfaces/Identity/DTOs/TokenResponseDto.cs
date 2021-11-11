@@ -5,7 +5,7 @@ using System;
 
 namespace CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs
 {
-    public  class TokenResponseDto
+    public class TokenResponseDto
     {
         public string Token { get; set; }
         public string RefreshToken { get; set; }

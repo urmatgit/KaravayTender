@@ -1,20 +1,19 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
-using CleanArchitecture.Razor.Application.Products.DTOs;
-using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Products.Commands.Delete
 {
-    public class DeleteProductCommand: IRequest<Result>
+    public class DeleteProductCommand : IRequest<Result>
     {
         public int Id { get; set; }
     }
@@ -23,7 +22,7 @@ namespace CleanArchitecture.Razor.Application.Products.Commands.Delete
         public int[] Id { get; set; }
     }
 
-    public class DeleteProductCommandHandler : 
+    public class DeleteProductCommandHandler :
                  IRequestHandler<DeleteProductCommand, Result>,
                  IRequestHandler<DeleteCheckedProductsCommand, Result>
     {

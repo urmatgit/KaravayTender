@@ -15,9 +15,9 @@ using MediatR;
 
 namespace CleanArchitecture.Razor.Application.KeyValues.Commands.SaveChanged
 {
-    public class SaveChangedKeyValuesCommand:IRequest<Result>, ICacheInvalidator
+    public class SaveChangedKeyValuesCommand : IRequest<Result>, ICacheInvalidator
     {
-      public KeyValueDto[] Items { get; set; }
+        public KeyValueDto[] Items { get; set; }
 
         public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
 
@@ -39,7 +39,7 @@ namespace CleanArchitecture.Razor.Application.KeyValues.Commands.SaveChanged
         }
         public async Task<Result> Handle(SaveChangedKeyValuesCommand request, CancellationToken cancellationToken)
         {
-            foreach(var item in request.Items)
+            foreach (var item in request.Items)
             {
                 switch (item.TrackingState)
                 {
@@ -48,7 +48,7 @@ namespace CleanArchitecture.Razor.Application.KeyValues.Commands.SaveChanged
                         await _context.KeyValues.AddAsync(newitem, cancellationToken);
                         break;
                     case TrackingState.Deleted:
-                        var delitem =await _context.KeyValues.FindAsync(new object[] { item.Id }, cancellationToken);
+                        var delitem = await _context.KeyValues.FindAsync(new object[] { item.Id }, cancellationToken);
                         _context.KeyValues.Remove(delitem);
                         break;
                     case TrackingState.Modified:
@@ -64,7 +64,7 @@ namespace CleanArchitecture.Razor.Application.KeyValues.Commands.SaveChanged
                         break;
                 }
             }
-            
+
             await _context.SaveChangesAsync(cancellationToken);
             return Result.Success();
 

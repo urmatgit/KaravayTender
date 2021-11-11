@@ -12,5 +12,5 @@ namespace CleanArchitecture.Razor.Application.Customers.Commands.Import
             RuleFor(x => x.Data).NotNull().NotEmpty();
         }
     }
-   
+
 }

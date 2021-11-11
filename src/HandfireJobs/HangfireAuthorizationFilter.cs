@@ -2,11 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
 using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +15,7 @@ namespace HandfireJobs
         public bool Authorize(DashboardContext context)
         {
             //TODO implement authorization logic
-              return true;
+            return true;
             var httpContext = context.GetHttpContext();
             string jwtToken = "";
             var read = httpContext.Request.Query.TryGetValue("token", out var jwtTokenFromQuery);

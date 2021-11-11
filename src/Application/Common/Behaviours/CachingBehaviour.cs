@@ -1,10 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
@@ -35,7 +31,7 @@ namespace CleanArchitecture.Razor.Application.Common.Behaviours
 
             var response = await _cache.GetOrAddAsync(
                 request.CacheKey,
-                async ()=> await next(),
+                async () => await next(),
                 request.Options);
             return response;
         }

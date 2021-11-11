@@ -3,10 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Domain.Common;
@@ -39,6 +36,6 @@ namespace CleanArchitecture.Razor.Application.Common.Specification
             return Criteria = Criteria == null ? query : Criteria.Or(query);
         }
     }
-    
-    
+
+
 }

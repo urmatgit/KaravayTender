@@ -1,37 +1,30 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Text.Encodings.Web;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using CleanArchitecture.Razor.Application.Common.Extensions;
+using CleanArchitecture.Razor.Application.Common.Exceptions;
+using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
+using CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll;
+using CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands.AddEdit;
+using CleanArchitecture.Razor.Application.Features.ContragentCategories.Queries.GetAll;
+using CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit;
+using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetAll;
+using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
+using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
 using CleanArchitecture.Razor.Infrastructure.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using MediatR;
-using CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit;
-using System;
-using CleanArchitecture.Razor.Application.Common.Models;
-using CleanArchitecture.Razor.Application.Common.Exceptions;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
-using SmartAdmin.WebUI.Pages.Shared.Components.Contragent;
-using System.Collections.Generic;
-using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
-using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
-using CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll;
-using Microsoft.AspNetCore.Http;
-using CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands.AddEdit;
-using Newtonsoft.Json;
-using System.Diagnostics;
-using CleanArchitecture.Razor.Application.Features.ContragentCategories.Queries.GetAll;
-using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetAll;
-using CleanArchitecture.Razor.Infrastructure.Configurations;
+using Microsoft.Extensions.Logging;
 namespace SmartAdmin.WebUI.Pages.Contragents
 {
     [AllowAnonymous]
@@ -51,13 +44,13 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public List<IFormFile> Files { get; set; }
         [BindProperty]
         public string CategoryIds { get; set; }
-        public SelectList Directions { get; set; } 
+        public SelectList Directions { get; set; }
         public List<CategoryDto> Categories { get; set; } = new();
         //[BindProperty]
         //    public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
-        
+
         public RegisterModel(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
@@ -81,7 +74,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             Input.ContactPhone = "+7(999)9303433";
             Input.Email = "test@gmail.com";
             Input.INN = "123456789011";
-            Input.Phone= "+7(999)9303433";
+            Input.Phone = "+7(999)9303433";
             Input.DirectionId = 3;
             Input.TypeOfActivity = "Haltura";
 #endif
@@ -96,33 +89,33 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
             await LoadDirection();
             //contragentForm.Categories = directionsDtos.SelectMany(d => d.Categories).ToList();
-                                        
+
         }
         private async Task LoadDirection()
         {
             var request = new GetAllDirectionsQuery();
             var directionsDtos = (List<DirectionDto>)await _mediator.Send(request);
-           // Debug.WriteLine(JsonConvert.SerializeObject(directionsDtos));
+            // Debug.WriteLine(JsonConvert.SerializeObject(directionsDtos));
             //Input.Directions = directionsDtos;
             Directions = new SelectList(directionsDtos, "Id", "Name");
         }
-        public async Task<PartialViewResult> OnGetCategoriesAsync([FromQuery]int directionid,int contragentid=0)
+        public async Task<PartialViewResult> OnGetCategoriesAsync([FromQuery] int directionid, int contragentid = 0)
         {
             if (directionid == 0) return Partial("_CategoriesListPartial", new List<CategoryDto>());
             var command = new GetAllCategoriesQuery() { DirectionId = directionid };
             var result = await _mediator.Send(command);
-            if (result?.Count()>0 && contragentid > 0)
+            if (result?.Count() > 0 && contragentid > 0)
             {
                 var contragent = new GetByContragentCategoryQuery() { ContragentId = contragentid };
                 var resultContragent = await _mediator.Send(contragent);
-                if (resultContragent?.Count()>0)
+                if (resultContragent?.Count() > 0)
                 {
                     foreach (var cat in resultContragent)
                     {
                         var ResCat = result.FirstOrDefault(c => c.Id == cat.CategoryId);
                         if (ResCat != null)
                             ResCat.IsCheck = true;
-                        
+
                     }
                 }
             }
@@ -131,68 +124,69 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/Contragents/SendedRegister");
-            try {
+            try
+            {
                 if (Files.Count == 0)
                 {
                     throw new Exception("Не добавлены файлы! ");
                 }
-            if (ModelState.IsValid)
-            {
+                if (ModelState.IsValid)
+                {
                     var checking = new CheckExistByParamsQuery
                     {
                         Email = Input.Email,
                         INN = Input.INN,
                         Name = Input.Name
                     };
-                 var checkExist = await _mediator.Send(checking);
-                    if (checkExist.Data!=null)
+                    var checkExist = await _mediator.Send(checking);
+                    if (checkExist.Data != null)
                     {
                         throw new Exception($"Контрагент ключевыми параметрами уже существует  ('{Input.Email}' '{Input.INN}' '{Input.Name}')!"); ;
                     }
-                 var result = await _mediator.Send(Input);
+                    var result = await _mediator.Send(Input);
 
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation($"Заявка на регистрацию создана - {Input.Name}- {Input.ContactPhone}");
-                    
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation($"Заявка на регистрацию создана - {Input.Name}- {Input.ContactPhone}");
+
                         var ContragetnCategory = new AddOrDelContragentCategorysCommand()
                         {
                             ContragentId = result.Data,
                             CategoriesJson = CategoryIds
                         };
                         var resultContragentCategory = await _mediator.Send(ContragetnCategory);
-                        
-                            if (resultContragentCategory.Succeeded)
+
+                        if (resultContragentCategory.Succeeded)
+                        {
+                            _logger.LogInformation($"Категории добавлены {resultContragentCategory.Data} - {Input.Name} ");
+                        }
+                        else
+                        {
+                            foreach (var error in resultContragentCategory.Errors)
                             {
-                                _logger.LogInformation($"Категории добавлены {resultContragentCategory.Data} - {Input.Name} ");
+                                ModelState.AddModelError(string.Empty, error);
                             }
-                            else
-                            {
-                                foreach (var error in resultContragentCategory.Errors)
-                                {
-                                    ModelState.AddModelError(string.Empty, error);
-                                }
-                            }
+                        }
 
                         await _uploadService.UploadContragentFileAsync(result.Data, Files);
                         //send emailt
                         var messageBody = $"Заявка на регистрацию, поставщик  {Input.Name}({Input.Phone}) от {Input.Created} ";
                         await _emailSender.SendEmailAsync("", "Заявка на регистрацию", messageBody);
-                    return LocalRedirect(returnUrl);
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error);
+                        return LocalRedirect(returnUrl);
                     }
-                    //return BadRequest(Result.Failure(result.Errors));
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error);
+                        }
+                        //return BadRequest(Result.Failure(result.Errors));
+                    }
                 }
-            }
-            //    else
-            //{
-            //    await LoadDirection();
-            //}
+                //    else
+                //{
+                //    await LoadDirection();
+                //}
 
             }
             catch (ValidationException ex)
@@ -213,7 +207,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             await LoadDirection();
             return Page();
         }
-         
+
         //    public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         //{
         //  returnUrl = returnUrl ?? Url.Content("~/");

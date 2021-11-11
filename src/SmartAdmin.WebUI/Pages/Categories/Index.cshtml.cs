@@ -1,30 +1,26 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using CleanArchitecture.Razor.Application.Common.Exceptions;
+using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.Features.Categories.Commands.AddEdit;
+using CleanArchitecture.Razor.Application.Features.Categories.Commands.Delete;
+using CleanArchitecture.Razor.Application.Features.Categories.Commands.Import;
+using CleanArchitecture.Razor.Application.Features.Categories.Queries.Export;
+using CleanArchitecture.Razor.Application.Features.Categories.Queries.Pagination;
+using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using MediatR;
-using CleanArchitecture.Razor.Application.Features.Categories.Commands.AddEdit;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Common.Models;
-using Microsoft.Extensions.Localization;
-using CleanArchitecture.Razor.Application.Features.Categories.Queries.Pagination;
-
-
-using CleanArchitecture.Razor.Application.Features.Categories.Commands.Delete;
-using CleanArchitecture.Razor.Application.Features.Categories.Queries.Export;
-using System.IO;
-using CleanArchitecture.Razor.Application.Features.Categories.Commands.Import;
-using CleanArchitecture.Razor.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
-using CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll;
+using Microsoft.Extensions.Localization;
 
 namespace SmartAdmin.WebUI.Pages.Categories
 {
@@ -34,8 +30,8 @@ namespace SmartAdmin.WebUI.Pages.Categories
     {
         [BindProperty]
         public AddEditCategoryCommand Input { get; set; }
-        
-        
+
+
         public SelectList Directions { get; set; }
         public string[] filterDirection = new string[]
         {
@@ -75,7 +71,7 @@ namespace SmartAdmin.WebUI.Pages.Categories
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
-        
+
         //public async Task<IActionResult> OnGetDataAsync(int directionid)
         //{
         //    var command = new GetAllCategoriesQuery() { DirectionId = directionid };

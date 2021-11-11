@@ -1,27 +1,24 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CleanArchitecture.Razor.Infrastructure.Identity
 {
- public  class ApplicationRoleClaim:IdentityRoleClaim<string>
-  {
-    public string Description { get; set; }
-    public string Group { get; set; }
-    public virtual ApplicationRole Role { get; set; }
-
-    public ApplicationRoleClaim() : base()
+    public class ApplicationRoleClaim : IdentityRoleClaim<string>
     {
-    }
+        public string Description { get; set; }
+        public string Group { get; set; }
+        public virtual ApplicationRole Role { get; set; }
 
-    public ApplicationRoleClaim(string roleClaimDescription = null, string roleClaimGroup = null) : base()
-    {
-      Description = roleClaimDescription;
-      Group = roleClaimGroup;
+        public ApplicationRoleClaim() : base()
+        {
+        }
+
+        public ApplicationRoleClaim(string roleClaimDescription = null, string roleClaimGroup = null) : base()
+        {
+            Description = roleClaimDescription;
+            Group = roleClaimGroup;
+        }
     }
-  }
 }

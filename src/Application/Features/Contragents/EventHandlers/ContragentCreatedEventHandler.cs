@@ -1,13 +1,14 @@
-using System.Linq;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using CleanArchitecture.Razor.Domain.Entities.Karavay;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
 {
@@ -28,21 +29,21 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.EventHandlers
         }
         public async Task Handle(DomainEventNotification<ContragentCreatedEvent> notification, CancellationToken cancellationToken)
         {
-            
+
             var domainEvent = notification.DomainEvent;
             _logger.LogInformation("CleanArchitecture Domain Event: {DomainEvent}", domainEvent.GetType().Name);
             var statusLog = new StatusLog
             {
-                ManagerId =_currentUserService.UserId,
+                ManagerId = _currentUserService.UserId,
                 ContragentId = domainEvent.Item.Id,
-                Status=domainEvent.Item.Status,
-                DateTime=domainEvent.Item.Created
+                Status = domainEvent.Item.Status,
+                DateTime = domainEvent.Item.Created
             };
             _context.StatusLogs.Add(statusLog);
             var createevent = new StatusLogEvent(statusLog);
             statusLog.DomainEvents.Add(createevent);
             await _context.SaveChangesAsync(cancellationToken);
-            
+
 
             //return Task.CompletedTask;
         }

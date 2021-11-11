@@ -1,6 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Extensions;
@@ -24,7 +24,7 @@ namespace SmartAdmin.WebUI.Pages.Karavay
         {
             _logger = logger;
             _diagnosticContext = diagnosticContext;
-            
+
         }
 
         public void OnGet()
@@ -33,13 +33,13 @@ namespace SmartAdmin.WebUI.Pages.Karavay
             _logger.LogInformation("Welcome. Karavay");
             _diagnosticContext.Set("IndexCallCount", Interlocked.Increment(ref _callCount));
         }
-    public async Task<JsonResult> OnGetFilter(string input)
-    {
-      return new JsonResult(input);
+        public async Task<JsonResult> OnGetFilter(string input)
+        {
+            return new JsonResult(input);
+        }
+        public async Task<JsonResult> OnPost(string input)
+        {
+            return new JsonResult("");
+        }
     }
-    public async Task<JsonResult> OnPost(string input)
-    {
-      return new JsonResult("");
-    }
-  }
 }

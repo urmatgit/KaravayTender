@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -52,8 +55,8 @@ namespace SmartAdmin.WebUI.Models
             if (SpanValues.ContainsKey(key))
                 return SpanValues[key];
             else
-                return 
-                    key.StartsWith('[') && key.EndsWith(']')? "": key;
+                return
+                    key.StartsWith('[') && key.EndsWith(']') ? "" : key;
 
         }
         public List<ListItem> Lists { get; set; } = new List<ListItem>();

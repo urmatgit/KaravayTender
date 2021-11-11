@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Razor.Application.KeyValues.Commands.Delete
 {
-    public class DeleteKeyValueCommand: IRequest<Result>
+    public class DeleteKeyValueCommand : IRequest<Result>
     {
         public int Id { get; set; }
     }
@@ -33,7 +33,7 @@ namespace CleanArchitecture.Razor.Application.KeyValues.Commands.Delete
         }
         public async Task<Result> Handle(DeleteKeyValueCommand request, CancellationToken cancellationToken)
         {
-            var item =await _context.KeyValues.FindAsync(new object[] { request.Id }, cancellationToken);
+            var item = await _context.KeyValues.FindAsync(new object[] { request.Id }, cancellationToken);
             _context.KeyValues.Remove(item);
             await _context.SaveChangesAsync(cancellationToken);
             return Result.Success();
@@ -42,7 +42,7 @@ namespace CleanArchitecture.Razor.Application.KeyValues.Commands.Delete
         public async Task<Result> Handle(DeleteCheckedKeyValuesCommand request, CancellationToken cancellationToken)
         {
             var items = await _context.KeyValues.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 _context.KeyValues.Remove(item);
             }

@@ -1,10 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -22,9 +19,9 @@ namespace CleanArchitecture.Razor.Application.KeyValues.Queries.ByName
     public class GetAllKeyValuesQuery : IRequest<IEnumerable<KeyValueDto>>, ICacheable
     {
 
-        public string CacheKey =>KeyValueCacheKey.GetAllCacheKey;
+        public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
 
-        public MemoryCacheEntryOptions Options =>null;
+        public MemoryCacheEntryOptions Options => null;
     }
     public class GetAllKeyValuesQueryHandler : IRequestHandler<KeyValuesQueryByName, IEnumerable<KeyValueDto>>
     {

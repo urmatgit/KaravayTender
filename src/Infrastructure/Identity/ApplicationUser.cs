@@ -1,18 +1,21 @@
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
-using CleanArchitecture.Razor.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
+using CleanArchitecture.Razor.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CleanArchitecture.Razor.Infrastructure.Identity
 {
     public class ApplicationUser : IdentityUser, IApplicationUser
     {
         public string DisplayName { get; set; }
-        
+
         [Column(TypeName = "text")]
         public string ProfilePictureDataUrl { get; set; }
         public bool IsActive { get; set; }

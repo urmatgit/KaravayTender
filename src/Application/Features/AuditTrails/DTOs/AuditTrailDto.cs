@@ -2,18 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Domain.Entities.Audit;
 
 namespace CleanArchitecture.Razor.Application.Features.AuditTrails.DTOs
 {
-    public  class AuditTrailDto : IMapFrom<AuditTrail>
+    public class AuditTrailDto : IMapFrom<AuditTrail>
     {
         public void Mapping(Profile profile)
         {
@@ -24,15 +20,15 @@ namespace CleanArchitecture.Razor.Application.Features.AuditTrails.DTOs
                .ForMember(x => x.PrimaryKey, s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, (JsonSerializerOptions)null)))
                .ForMember(x => x.AffectedColumns, s => s.MapFrom(y => JsonSerializer.Serialize(y.AffectedColumns, (JsonSerializerOptions)null)))
                ;
-           
+
         }
         public int Id { get; set; }
         public string UserId { get; set; }
         public string AuditType { get; set; }
         public string TableName { get; set; }
         public DateTime DateTime { get; set; }
-        public string OldValues { get; set; } 
-        public string NewValues { get; set; } 
+        public string OldValues { get; set; }
+        public string NewValues { get; set; }
         public string AffectedColumns { get; set; }
         public string PrimaryKey { get; set; }
     }

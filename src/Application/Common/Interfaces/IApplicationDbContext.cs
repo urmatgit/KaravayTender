@@ -1,6 +1,8 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Audit;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
@@ -23,9 +25,9 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
         DbSet<Category> Categories { get; set; }
         DbSet<Direction> Directions { get; set; }
         DbSet<Contragent> Contragents { get; set; }
-        
+
         DbSet<ContragentCategory> ContragentCategories { get; set; }
-         DbSet<StatusLog> StatusLogs { get; set; }
+        DbSet<StatusLog> StatusLogs { get; set; }
         public DbSet<UnitOf> UnitOfs { get; set; }
         public DbSet<Vat> Vats { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

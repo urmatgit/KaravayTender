@@ -8,7 +8,7 @@ namespace CleanArchitecture.Razor.Domain.Common
 {
     public interface IHasDomainEvent
     {
-         List<DomainEvent> DomainEvents { get; set; }
+        List<DomainEvent> DomainEvents { get; set; }
     }
 
     public abstract class DomainEvent

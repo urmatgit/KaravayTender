@@ -1,11 +1,12 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CleanArchitecture.Razor.Application.Common.Exceptions;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
@@ -25,7 +26,6 @@ using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.StatusLogs.Queries.Pagination;
 using CleanArchitecture.Razor.Domain.Enums;
-using CleanArchitecture.Razor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Razor.Infrastructure.Constants.Role;
 using CleanArchitecture.Razor.Infrastructure.Identity;
@@ -53,7 +53,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         private readonly ISender _mediator;
         private readonly IStringLocalizer<IndexModel> _localizer;
         private readonly ILogger<IndexModel> _logger;
-        private readonly  UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUploadService _uploadService;
         private readonly IEmailSender _emailSender;
         [BindProperty]
@@ -191,7 +191,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                             throw new Exception($"Контрагент c такими ключевыми параметрами уже существует  ('{Input.Email}' '{Input.INN}' '{Input.Name}')!"); ;
                         }
                     }
-                    
+
                     //create app user
                     var userApp = await CheckUser(Input.ApplicationUserId);
 
@@ -224,7 +224,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                         }
                     }
                     if (UserFormModel.Active)
-                        Input.Status =  ContragentStatus.Registered;
+                        Input.Status = ContragentStatus.Registered;
                     else
                         Input.Status = ContragentStatus.NotActive;
                     _logger.LogInformation($"Contragent {Input.Name} set status {Input.Status}");
@@ -249,9 +249,9 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
                         }
 
-                        
-                        
-                        
+
+
+
                         if (Request?.Form?.Files?.Count > 0)
                         {
                             await _uploadService.UploadContragentFileAsync(result.Data, Request.Form.Files.ToList());
@@ -292,24 +292,24 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                     StatusStr = "Отклонена";
                     break;
                 default:
-                    return ;
+                    return;
             }
             var messageBody = $"Уважаемый поставщик  Ваша заявка на регистрацию от {Input.Created} числа, {StatusStr}";
             await _emailSender.SendEmailAsync("", "Ответ заявку на регистрацию", messageBody);
         }
-        private async Task<(ApplicationUser,bool)> CheckUser(string id)
+        private async Task<(ApplicationUser, bool)> CheckUser(string id)
         {
-            ApplicationUser user=null;
+            ApplicationUser user = null;
             bool IsExist = false;
             if (!string.IsNullOrEmpty(id))
             {
                 user = await _userManager.FindByIdAsync(id);
                 IsExist = user != null;
             }
-            if (user==null)
+            if (user == null)
             {
-               
-                user= new ApplicationUser
+
+                user = new ApplicationUser
                 {
                     EmailConfirmed = true,
                     IsActive = UserFormModel.Active,
@@ -322,11 +322,11 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             }
             return (user, IsExist);
         }
-        private async Task<IdentityResult> UpdateUser(ApplicationUser user, UserModel userModel,string email,string phone)
+        private async Task<IdentityResult> UpdateUser(ApplicationUser user, UserModel userModel, string email, string phone)
         {
 
             var checkEmail = await _userManager.FindByEmailAsync(email);
-            if (checkEmail!=null && checkEmail.UserName != userModel.Login)
+            if (checkEmail != null && checkEmail.UserName != userModel.Login)
             {
                 return IdentityResult.Failed(new IdentityError
                 {
@@ -338,20 +338,20 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             user.Email = email;
             if (!string.IsNullOrEmpty(userModel.Password))
             {
-                var code =await _userManager.GeneratePasswordResetTokenAsync(user);
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var resultPass = await _userManager.ResetPasswordAsync(user, code, userModel.Password);
                 if (resultPass.Succeeded)
                     _logger.LogInformation($"User changed password.({userModel.Login})");
                 else
                     _logger.LogError($"User changed password.({userModel.Login})", resultPass.Errors);
             }
-            
+
             var result = await _userManager.UpdateAsync(user);
             return result;
         }
-        private async Task< (IdentityResult,string)> CreateUser(ApplicationUser user)
+        private async Task<(IdentityResult, string)> CreateUser(ApplicationUser user)
         {
-             
+
             var result = await _userManager.CreateAsync(user, UserFormModel.Password);
             if (result.Succeeded)
             {
@@ -361,9 +361,9 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             else
             {
                 _logger.LogError($"User created error.({UserFormModel.Login} {Input.Name})", result.Errors);
-                
+
             }
-            return (result,user.Id);
+            return (result, user.Id);
         }
 
         public async Task<IActionResult> OnGetDeleteCheckedAsync([FromQuery] int[] id)
@@ -380,12 +380,12 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         }
         public async Task<IActionResult> OnPostRejectAsync([FromBody] RejectFormModel model)
         {
-            
+
             var command = new UpdateStatusContragentCommand()
             {
                 Id = model.Id,
                 Status = ContragentStatus.Reject,
-                Description=model.Description
+                Description = model.Description
             };
             var result = await _mediator.Send(command);
             if (!result.Succeeded)
@@ -418,19 +418,19 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
-        
+
         public async Task<IActionResult> OnGetManagerAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
-                
+
                 UserModel userModel = new UserModel()
                 {
                     Login = user.UserName,
                     ManagerPhone = user.PhoneNumber
                 };
-                
+
                 return new JsonResult(userModel);
             }
             return new JsonResult("");
@@ -441,7 +441,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             var user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
-                
+
                 UserModel userModel = new UserModel()
                 {
                     Login = user.UserName,
@@ -468,14 +468,14 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
         public class RejectFormModel
         {
-            
+
             public string Description { get; set; }
             public int Id { get; set; }
         }
-             
+
         public class UserModel
         {
-            
+
             [Display(Name = "User Name")]
             [Required(ErrorMessage = "'Логин' является обязательным")]
             public string Login { get; set; }
@@ -484,7 +484,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             [Required(ErrorMessage = "Телефон номер менеджера не указан")]
             public string ManagerPhone { get; set; }
 
-          //  [Required(ErrorMessage = "'Пароль' является обязательным")]
+            //  [Required(ErrorMessage = "'Пароль' является обязательным")]
             [StringLength(20, ErrorMessage = "Пароль должен содержать не менее {2} и не более {1} символов.", MinimumLength = 6)]
             [RegularExpression("^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{6,}$", ErrorMessage = "Пароли должны состоять не менее чем из 6 символов и содержать 3 из 4 следующих символов: верхний регистр (A-Z), нижний регистр (a-z), число (0-9) и специальный символ (например !@#$%^&*)")]
             [DataType(DataType.Password)]
@@ -496,8 +496,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             [Compare("Password", ErrorMessage = "Пароль и пароль подтверждения не совпадают.")]
             public string ConfirmPassword { get; set; }
             public bool Active { get; set; }
-                 
-            
+
+
         }
     }
 }

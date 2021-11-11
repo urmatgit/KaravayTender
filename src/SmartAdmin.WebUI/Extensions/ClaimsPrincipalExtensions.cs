@@ -1,11 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
 
 namespace SmartAdmin.WebUI.Extensions
@@ -28,7 +25,7 @@ namespace SmartAdmin.WebUI.Extensions
              => claimsPrincipal.FindFirstValue(ClaimTypes.GivenName);
         public static string GetProfilePictureDataUrl(this ClaimsPrincipal claimsPrincipal)
             => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.ProfilePictureDataUrl);
-        
+
 
         public static string[] GetRoles(this ClaimsPrincipal claimsPrincipal)
             => claimsPrincipal.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToArray();

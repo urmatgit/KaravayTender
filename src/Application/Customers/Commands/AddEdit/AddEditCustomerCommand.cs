@@ -38,12 +38,12 @@ namespace CleanArchitecture.Razor.Application.Customers.Commands.AddEdit
         }
         public async Task<Result<int>> Handle(AddEditCustomerCommand request, CancellationToken cancellationToken)
         {
-           
+
             if (request.Id > 0)
             {
                 var customer = await _context.Customers.FindAsync(new object[] { request.Id }, cancellationToken);
-                customer=_mapper.Map(request, customer);
-           //     _context.Customers.Update(customer);
+                customer = _mapper.Map(request, customer);
+                //     _context.Customers.Update(customer);
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(customer.Id);
             }
@@ -56,7 +56,7 @@ namespace CleanArchitecture.Razor.Application.Customers.Commands.AddEdit
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(customer.Id);
             }
-            
+
 
         }
     }

@@ -33,7 +33,7 @@ namespace CleanArchitecture.Razor.Application.Customers.Commands.Import
     public class CreateCustomerTemplateCommand : IRequest<byte[]>
     {
         public IEnumerable<string> Fields { get; set; }
-        public string SheetName  { get;set; }
+        public string SheetName { get; set; }
     }
     public class ImportCustomersCommandHandler :
         IRequestHandler<CreateCustomerTemplateCommand, byte[]>,
@@ -89,7 +89,7 @@ namespace CleanArchitecture.Razor.Application.Customers.Commands.Import
                     var validationResult = await _addValidator.ValidateAsync(_mapper.Map<AddEditCustomerCommand>(item), cancellationToken);
                     if (validationResult.IsValid)
                     {
-                        var exist = await _context.Customers.AnyAsync(x => x.Name==item.Name,cancellationToken);
+                        var exist = await _context.Customers.AnyAsync(x => x.Name == item.Name, cancellationToken);
                         if (!exist)
                         {
                             await _context.Customers.AddAsync(_mapper.Map<Customer>(item), cancellationToken);

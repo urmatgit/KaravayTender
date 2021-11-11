@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs
 {
-    public  class RefreshTokenRequestDto
+    public class RefreshTokenRequestDto
     {
         public string Token { get; set; }
         public string RefreshToken { get; set; }

@@ -1,18 +1,21 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using System.Linq.Dynamic.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Localization;
-using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
 
 namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Queries.Export
 {
@@ -22,7 +25,7 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Quer
         public string Sort { get; set; } = "Id";
         public string Order { get; set; } = "desc";
     }
-    
+
     public class ExportContragentCategoriesQueryHandler :
          IRequestHandler<ExportContragentCategoriesQuery, byte[]>
     {

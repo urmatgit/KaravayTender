@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Models;
-using CleanArchitecture.Razor.Application.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace CleanArchitecture.Razor.Infrastructure.Services
@@ -36,7 +35,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
                 }
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
-                   await streamData.CopyToAsync(stream);
+                    await streamData.CopyToAsync(stream);
                 }
                 return dbPath;
             }
@@ -111,31 +110,36 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
                         file.CopyTo(stream);
                     }
                 }
-            } catch (Exception er)
+            }
+            catch (Exception er)
             {
                 return await Result.FailureAsync(new string[] { er.Message });
             }
             return await Result.SuccessAsync();
 
         }
-        public async Task<IResult<List<string>>> LoadContragentFilesAsync(int Id){
+        public async Task<IResult<List<string>>> LoadContragentFilesAsync(int Id)
+        {
             List<string> Result = new List<string>();
             try
             {
                 var folder = Id.ToString();// request.UploadType.ToDescriptionString();
                 var folderName = Path.Combine("Files", "Documents", folder);
-                if (Directory.Exists(folderName)) {
-                    foreach (string file in  Directory.GetFiles(folderName)) {
-                        
-                        Result.Add(Path.Combine(folderName,Path.GetFileName(file)));
-                        }
+                if (Directory.Exists(folderName))
+                {
+                    foreach (string file in Directory.GetFiles(folderName))
+                    {
+
+                        Result.Add(Path.Combine(folderName, Path.GetFileName(file)));
+                    }
                 }
-            } catch(Exception er)
+            }
+            catch (Exception er)
             {
                 return await Result<List<string>>.FailureAsync(new string[] { er.Message });
             }
             return await Result<List<string>>.SuccessAsync(Result);
-           }
+        }
 
         public async Task<IResult> RemoveFileAsync(int Id, string name)
         {
@@ -150,12 +154,12 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
                 }
                 catch (Exception er)
                 {
-                    return  await Result.FailureAsync(new string[] { er.Message });
+                    return await Result.FailureAsync(new string[] { er.Message });
                 }
-                
+
             }
             return await Result.SuccessAsync();
         }
-        
+
     }
 }

@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,13 +10,12 @@ using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.Directions.Caching;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Directions.Commands.AddEdit
 {
-    public class AddEditDirectionCommand: DirectionDto,IRequest<Result<int>>, IMapFrom<Direction>
+    public class AddEditDirectionCommand : DirectionDto, IRequest<Result<int>>, IMapFrom<Direction>
     {
         public string CacheKey => DirectionCacheKey.GetAllCacheKey;
 
@@ -52,7 +54,7 @@ namespace CleanArchitecture.Razor.Application.Features.Directions.Commands.AddEd
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
-           
+
         }
     }
 }

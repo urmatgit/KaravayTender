@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,9 +51,9 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
             _logger = logger;
         }
 
-        public async Task OnGetAsync(string userName="", string returnUrl="")
+        public async Task OnGetAsync(string userName = "", string returnUrl = "")
         {
-            UserName= userName;
+            UserName = userName;
             ReturnUrl = returnUrl;
             if (!string.IsNullOrEmpty(UserName))
             {

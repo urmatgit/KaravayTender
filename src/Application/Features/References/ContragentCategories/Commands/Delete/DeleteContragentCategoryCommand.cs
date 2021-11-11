@@ -1,39 +1,38 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.ContragentCategories.Caching;
-using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
-using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Commands.Delete
 {
-    public class DeleteContragentCategoryCommand: IRequest<Result>
+    public class DeleteContragentCategoryCommand : IRequest<Result>
     {
         public int[] ContragentId { get; set; }
         public int[] CategoryId { get; set; }
 
         public string CacheKey => ContragentCategoryCacheKey.GetAllCacheKey;
 
-       public CancellationTokenSource ResetCacheToken => ContragentCategoryCacheTokenSource.ResetCacheToken;
+        public CancellationTokenSource ResetCacheToken => ContragentCategoryCacheTokenSource.ResetCacheToken;
     }
     public class DeleteCheckedContragentCategoriesCommand : IRequest<Result>
     {
-      public int[] ContragentId {  get; set; }
+        public int[] ContragentId { get; set; }
         public int[] CategoryId { get; set; }
         public string CacheKey => ContragentCategoryCacheKey.GetAllCacheKey;
 
-       public CancellationTokenSource ResetCacheToken => ContragentCategoryCacheTokenSource.ResetCacheToken;
+        public CancellationTokenSource ResetCacheToken => ContragentCategoryCacheTokenSource.ResetCacheToken;
     }
 
-    public class DeleteContragentCategoryCommandHandler : 
+    public class DeleteContragentCategoryCommandHandler :
                  IRequestHandler<DeleteContragentCategoryCommand, Result>,
                  IRequestHandler<DeleteCheckedContragentCategoriesCommand, Result>
     {
@@ -52,8 +51,8 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
         }
         public async Task<Result> Handle(DeleteContragentCategoryCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing DeleteContragentCategoryCommandHandler method 
-           var item = await _context.ContragentCategories.FindAsync(new object[] { request.ContragentId,request.CategoryId }, cancellationToken);
+            //TODO:Implementing DeleteContragentCategoryCommandHandler method 
+            var item = await _context.ContragentCategories.FindAsync(new object[] { request.ContragentId, request.CategoryId }, cancellationToken);
             _context.ContragentCategories.Remove(item);
             await _context.SaveChangesAsync(cancellationToken);
             return Result.Success();
@@ -61,8 +60,8 @@ namespace CleanArchitecture.Razor.Application.Features.ContragentCategories.Comm
 
         public async Task<Result> Handle(DeleteCheckedContragentCategoriesCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing DeleteCheckedContragentCategoriesCommandHandler method 
-           var items = await _context.ContragentCategories.Where(x => request.ContragentId.Contains(x.ContragentId) && request.CategoryId.Contains(x.CategoryId)).ToListAsync(cancellationToken);
+            //TODO:Implementing DeleteCheckedContragentCategoriesCommandHandler method 
+            var items = await _context.ContragentCategories.Where(x => request.ContragentId.Contains(x.ContragentId) && request.CategoryId.Contains(x.CategoryId)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {
                 _context.ContragentCategories.Remove(item);

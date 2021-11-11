@@ -1,10 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -17,12 +13,12 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Update
 {
-    public class UpdateStatusContragentCommand :   IRequest<Result>
+    public class UpdateStatusContragentCommand : IRequest<Result>
     {
 
         public int Id { get; set; }
         public string Description { get; set; }
-            
+
         public ContragentStatus Status { get; set; }
     }
     public class UpdateStatusContragentCommandHandler : IRequestHandler<UpdateStatusContragentCommand, Result>
@@ -47,7 +43,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Commands.Upda
             if (item != null)
             {
                 item.Status = request.Status;
-                var createevent = new ContragentUpdatedEvent(item,request.Description);
+                var createevent = new ContragentUpdatedEvent(item, request.Description);
                 item.DomainEvents.Add(createevent);
                 await _context.SaveChangesAsync(cancellationToken);
             }

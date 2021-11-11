@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -6,7 +9,6 @@ using CleanArchitecture.Razor.Application.Settings;
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -20,18 +22,18 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
         private readonly ILogger<LogoutModel> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMailService _mailService;
-  
+
 
         public ForgotPasswordModel(SignInManager<ApplicationUser> signInManager,
             ILogger<LogoutModel> logger,
             UserManager<ApplicationUser> userManager,
-            IMailService mailService  )
+            IMailService mailService)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
             _mailService = mailService;
-         
+
         }
 
         [BindProperty]
@@ -68,9 +70,9 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
                 var callbackUrl = Url.Page(
                     "/Account/ResetPassword",
                     pageHandler: null,
-                    values: new { code,user.Email },
+                    values: new { code, user.Email },
                     protocol: Request.Scheme);
-                var request=new MailRequest();
+                var request = new MailRequest();
                 request.Subject = "Reset Password";
                 request.To = Input.Email;
                 request.Body = $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";

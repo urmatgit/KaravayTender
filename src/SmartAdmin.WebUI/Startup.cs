@@ -1,9 +1,13 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System.IO;
 using CleanArchitecture.Razor.Application;
-using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.HandfireJobs;
 using CleanArchitecture.Razor.Application.Hubs;
 using CleanArchitecture.Razor.Application.Hubs.Constants;
+using CleanArchitecture.Razor.HandfireJobs;
 using CleanArchitecture.Razor.Infrastructure;
+using CleanArchitecture.Razor.Infrastructure.Configurations;
 using CleanArchitecture.Razor.Infrastructure.Localization;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -17,9 +21,6 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Serilog;
 using SmartAdmin.WebUI.Filters;
-using SmartAdmin.WebUI.Models;
-using System.IO;
-using CleanArchitecture.Razor.Infrastructure.Configurations;
 
 namespace SmartAdmin.WebUI
 {
@@ -37,7 +38,7 @@ namespace SmartAdmin.WebUI
         {
             services.Configure<SmartSettings>(Configuration.GetSection(SmartSettings.SectionName));
 
-          
+
             // Note: This line is for demonstration purposes only, I would not recommend using this as a shorthand approach for accessing settings
             // While having to type '.Value' everywhere is driving me nuts (>_<), using this method means reloaded appSettings.json from disk will not work
             services.AddSingleton(s => s.GetRequiredService<IOptions<SmartSettings>>().Value);
@@ -48,22 +49,22 @@ namespace SmartAdmin.WebUI
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-        
-        services.AddHangfire(Configuration);
+
+            services.AddHangfire(Configuration);
             services.AddApplication()
                     .AddInfrastructure(Configuration);
-                    
-          
+
+
             services.AddDatabaseDeveloperPageExceptionFilter();
-           
+
             services.AddControllers();
 
             services
                  .AddRazorPages(options =>
                  {
-                    options.Conventions.AddPageRoute("/Karavay/Welcome", "");
-                    // options.Conventions.AddAreaPageRoute("Identity","/Account/Login","");
-                     
+                     options.Conventions.AddPageRoute("/Karavay/Welcome", "");
+                     // options.Conventions.AddAreaPageRoute("Identity","/Account/Login","");
+
                  })
                  .AddMvcOptions(options =>
                  {
@@ -80,25 +81,26 @@ namespace SmartAdmin.WebUI
                   {
                       options.JsonSerializerOptions.PropertyNamingPolicy = null;
 
-                  
+
                   })
                 .AddRazorRuntimeCompilation();
-                 
 
-            services.ConfigureApplicationCookie(options => {
-                        options.LoginPath = "/Identity/Account/Login";
-                        options.LogoutPath = "/Identity/Account/Logout";
-                        options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-                  });
 
-        
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Account/Login";
+                options.LogoutPath = "/Identity/Account/Logout";
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+            });
+
+
             services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IStringLocalizer<Startup> localizer)
         {
-           
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -117,19 +119,20 @@ namespace SmartAdmin.WebUI
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Files")),
                 RequestPath = new PathString("/Files")
             });
-           
+
             app.UseRequestLocalization();
             app.UseRequestLocalizationCookies();
             app.UseSerilogRequestLogging(options =>
             {
-                options.EnrichDiagnosticContext = (diagnosticContext, httpContext) => {
+                options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+                {
                     diagnosticContext.Set("UserName", httpContext.User?.Identity?.Name ?? string.Empty);
                 };
             });
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-           // app.UseWorkflow();
+            // app.UseWorkflow();
             app.UseHandfire(localizer["Karavay Jobs"]);
             app.UseEndpoints(endpoints =>
             {
@@ -137,7 +140,7 @@ namespace SmartAdmin.WebUI
                 endpoints.MapRazorPages();
                 endpoints.MapHub<SignalRHub>(SignalR.HubUrl);
             });
-            
+
         }
     }
 }
