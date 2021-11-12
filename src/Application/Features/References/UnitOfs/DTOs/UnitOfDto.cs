@@ -20,8 +20,7 @@ namespace CleanArchitecture.Razor.Application.Features.References.UnitOfs.DTOs
         [Required(ErrorMessage = "'Наименование' является обязательным ")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "'Полное наименование' является обязательным")]
-        public string FullName { get; set; }
+        
         // public virtual ICollection<NomenclatureDto> Nomenclatures { get; set; }
     }
 }

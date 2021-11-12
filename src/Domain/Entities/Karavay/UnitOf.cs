@@ -11,7 +11,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
     /// </summary>
     public class UnitOf : BaseAuditableEntity, IAuditTrial
     {
-        public string FullName { get; set; }
+        
         public virtual ICollection<Nomenclature> Nomenclatures { get; set; }
     }
 }

@@ -336,6 +336,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             user.UserName = userModel.Login;
             user.PhoneNumber = phone;
             user.Email = email;
+            user.IsActive = userModel.Active;
             if (!string.IsNullOrEmpty(userModel.Password))
             {
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -381,6 +382,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public async Task<IActionResult> OnPostRejectAsync([FromBody] RejectFormModel model)
         {
 
+            if (Input.Status != ContragentStatus.OnRegistration)
+                return BadRequest("Отклонение только для статуса 'На регистрации'");
             var command = new UpdateStatusContragentCommand()
             {
                 Id = model.Id,
@@ -495,7 +498,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "Пароль и пароль подтверждения не совпадают.")]
             public string ConfirmPassword { get; set; }
-            public bool Active { get; set; }
+            public bool Active { get; set; } = true;
 
 
         }

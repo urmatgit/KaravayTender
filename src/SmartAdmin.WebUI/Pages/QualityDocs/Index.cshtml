@@ -25,7 +25,7 @@
 	<link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
 	<link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
 	<link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
-	<link rel="stylesheet" media="screen, print" href="~/css/formplugins/summernote/summernote.css">
+	@*<link rel="stylesheet" media="screen, print" href="~/css/formplugins/summernote/summernote.css">*@
 	<style>
 
 		.main_dg_datagrid-cell-c1-_action {
@@ -113,12 +113,12 @@
 							<span class="invalid-feedback" asp-validation-for="Input.Name"></span>
 						</div>
 
-						<div class="col-md-12">
+						@*<div class="col-md-12">
 							<label class="form-label" for="Contents">@_localizer["Content"] </label>
 							<textarea asp-for="Input.Content" class="form-control summernote" placeholder="Contents"></textarea>
 							<span class="invalid-feedback" asp-validation-for="Input.Content"></span>
 
-						</div>
+						</div>*@
 
 					</div>
 				</div>
@@ -146,9 +146,9 @@ onImportedSucceeded = "reloadData()"
 	<script>jQuery.fn.tooltip = bootstrapTooltip;</script>
 	<script src="~/lib/axios/dist/axios.js"></script>
 	<script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
-	<script src="~/js/formplugins/summernote/summernote.js"></script>
+	@*<script src="~/js/formplugins/summernote/summernote.js"></script>*@
 	<script src="~/js/TableBase.js"></script>
-	<script type="text/javascript">
+    <script type="text/javascript">
         var pagelink = '@Url.Page("/QualityDocs/Index")';
         var translations = {
             SaveSuccess: '@_localizer["Save Success."]',
@@ -167,23 +167,25 @@ onImportedSucceeded = "reloadData()"
 			DeleteRowsDialog: '@_localizer["Are you sure delete checked rows?"]',
             Success: '@_localizer["Success"]',
             ExportFail: '@_localizer["Export fail"]',
-
+            Name: '@_localizer["Name"]',
 		}
-		var _canEdit = true;//@(_canEdit.Succeeded );
-		var _canDelete = true;// @(_canDelete.Succeeded );
+		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
+		var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
 		$(() => {
+			//columns.push([{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 }]);
+			tblColumns = [{ field: 'Name', title: `${window.translations.Name} `, sortable: true, width: 180 }];
 			initdatagrid();
-            $('.summernote').summernote({
-                focus: true,
-                height: (window.innerHeight / 2),
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['fontsize', ['fontsize']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ["view", ["fullscreen", "codeview"]]
-                ]
-            });
+            //$('.summernote').summernote({
+            //    focus: true,
+            //    height: (window.innerHeight / 2),
+            //    toolbar: [
+            //        ['style', ['bold', 'italic', 'underline', 'clear']],
+            //        ['fontsize', ['fontsize']],
+            //        ['color', ['color']],
+            //        ['para', ['ul', 'ol', 'paragraph']],
+            //        ["view", ["fullscreen", "codeview"]]
+            //    ]
+            //});
 		})
-	</script>
+    </script>
 }

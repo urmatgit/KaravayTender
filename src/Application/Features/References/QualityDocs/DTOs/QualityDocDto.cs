@@ -17,7 +17,7 @@ namespace CleanArchitecture.Razor.Application.Features.References.QualityDocs.DT
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public string Content { get; set; }
+    //    public string Content { get; set; }
         //public virtual ICollection<NomenclatureQualityDocDto> NomenclatureQualityDocs { get; set; }
     }
 }

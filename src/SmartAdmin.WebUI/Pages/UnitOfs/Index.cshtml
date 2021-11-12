@@ -27,7 +27,7 @@
     <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
     <style>
 
-        .unitOf_dg_datagrid-cell-c1-_action {
+        .main_dg_datagrid-cell-c1-_action {
             overflow: visible !important
         }
     </style>
@@ -86,13 +86,13 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <table id="unitOf_dg">
+                    <table id="main_dg">
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="unitOf_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -106,16 +106,12 @@
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="Input.Id" />
                         <div class="form-row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <label class="form-label" for="name">@_localizer["Name"] <span class="text-danger">*</span></label>
                                 <input type="text" asp-for="Input.Name" class="form-control" placeholder='@_localizer["Name"]' />
                                 <span class="invalid-feedback" asp-validation-for="Input.Name"></span>
                             </div>
-                            <div class="col-md-12">
-                                <label class="form-label" for="name">@_localizer["Full Name"] <span class="text-danger">*</span> </label>
-                                <input type="text" asp-for="Input.FullName" class="form-control" placeholder='@_localizer["Full name"]' />
-                                <span class="invalid-feedback" asp-validation-for="Input.FullName"></span>
-                            </div>
+                            
                             
                         </div>
                     </div>
@@ -140,249 +136,40 @@
     <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+    <script src="~/js/TableBase.js"></script>
 
     <script type="text/javascript">
-	$('#searchbutton').click(function () {
-		reloadData();
-	});
-	$('#addbutton').click(function () {
-		popupmodal(null);
-	});
-	$('#deletebutton').click(function () {
-		onDeleteChecked();
-	});
-	$('#exportbutton').click(function () {
-		onExport();
-	});
-	$('#importbutton').click(function () {
-		showImportModal();
-	});
-	$('#gettemplatebutton').click(function () {
-		onGetTemplate();
-	});
-	$('#unitOf_form :submit').click(function (e) {
-		const form = document.querySelector('#unitOf_form');
-		if ($(form).valid() === false) {
-			form.classList.add('was-validated');
-		} else {
-			const request = $('#unitOf_form').serialize();
-			axios.post('@Url.Page("/UnitOfs/Index")', request).then(res => {
-				toastr["info"]('@_localizer["Save Success."]');
-				$('#unitOf_modal').modal('toggle');
-				reloadData();
-			}).catch((error) => {
-				if (error.response.data.Errors) {
-					const errors = error.response.data.Errors;
-					errors.forEach(item => {
-						toastr["error"](item);
-					});
-				} else {
-					toastr["error"](`@_localizer["Save fail"],${error.response.data}`);
-				}
-			});
+		  var pagelink = '@Url.Page("/UnitOfs/Index")';
+        var translations = {
+            SaveSuccess: '@_localizer["Save Success."]',
+            SaveFail: '@_localizer["Save fail"]',
+            IconPrefix: '@(Settings.Theme.IconPrefix)',
+            Command: '@_localizer["Command"]',
+            Edit: '@_localizer["Edit"]',
+            Delete: '@_localizer["Delete"]',
+            AddCaption: '@_localizer["Add unit"]',
+            EditCaption: '@_localizer["Edit unit"]',
+            DeleteRowDialog: '@_localizer["Are you sure delete a row?"]',
+			Yes: '@_localizer["Yes"]',
+			No: '@_localizer["No"]',
+            DeleteSuccess: '@_localizer["Delete Success"]',
+            DeleteFail: '@_localizer["Delete fail"]',
+			DeleteRowsDialog: '@_localizer["Are you sure delete checked rows?"]',
+            Success: '@_localizer["Success"]',
+            ExportFail: '@_localizer["Export fail"]',
+            Name: '@_localizer["Name"]',
 		}
-		event.preventDefault();
-		event.stopPropagation();
-	})
-	var $dg={};
-	var initdatagrid = () => {
-		$dg = $('#unitOf_dg').datagrid({
-			height: (window.innerHeight-320),
-			method: 'GET',
-			rownumbers: false,
-			singleSelect: true,
-			selectOnCheck: false,
-			checkOnSelect: false,
-			pagination: true,
-			clientPaging: false,
-			remoteFilter: true,
-			sortName: 'Id',
-			sortOrder:'desc',
-			pageSize: 15,
-			pageList: [10, 15, 30, 50, 100, 1000],
-			onBeforeLoad: function () {
-				$('#deletebutton').prop('disabled', true);
-			},
-			onCheckAll: function (rows) {
-				const checked = $(this).datagrid('getChecked').length > 0;
-				$('#deletebutton').prop('disabled', !checked);
-			},
-			onUncheckAll: function () {
-				$('#deletebutton').prop('disabled', true);
-			},
-			onCheck: function () {
-				$('#deletebutton').prop('disabled', false);
-			},
-			onUncheck: function () {
-				const checked = $(this).datagrid('getChecked').length > 0;
-				$('#deletebutton').prop('disabled', !checked);
-			},
-			columns: [[
-				{ field: 'ck', checkbox: true },
-				{
-					field: '_action',
-					title: '@_localizer["Command"]',
-					width: 100,
-					align: 'center',
-					formatter: function (value, row, index) {
-						return `<div class="btn-group" role="group">
-								  <button id="commandbtngroup" type="button" @(_canEdit.Succeeded? "":"disabled")  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="@(Settings.Theme.IconPrefix) fa-edit"></i>
-								 </button>
-								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
-								   <button class="dropdown-item" onclick="onEdit(${index})" @(_canEdit.Succeeded? "":"disabled")><i class="fal fa-edit mr-1"></i> @_localizer["Edit"]</button>
-								   <button class="dropdown-item" onclick="onDelete('${row.Id}')" @(_canDelete.Succeeded? "":"disabled") ><i class="fal fa-trash-alt mr-1"></i> @_localizer["Delete"]</button>
-								 </div>
-							  </div>`;
-					}
-				},
-				{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
-				{ field: 'FullName', title: '@_localizer["Full name"]', sortable: true, width: 280 }
-
-
-
-			]]
+		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
+		var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
+		$(() => {
+			
+			tblColumns = [{ field: 'Name', title: `${window.translations.Name} `, sortable: true, width: 180 }];
+			initdatagrid();
+            
 		})
-			.datagrid('enableFilter', {})
-			.datagrid('load', '@Url.Page("/UnitOfs/Index")?handler=Data');
-
-	}
-
-	var reloadData = () => {
-		$dg.datagrid('load', '@Url.Page("/UnitOfs/Index")?handler=Data');
-	}
-
-	$(() => {
-		initdatagrid();
-	})
-	var popupmodal = (unitOf) => {
-		$('#unitOf_modal').modal('toggle');
-		$('#unitOf_modal .modal-title').html('@_localizer["Add unit"]');
-		$('#unitOf_form').clearForm();
-		$('#unitOf_form')[0].reset();
-		if (unitOf) {
-			$('#unitOf_modal .modal-title').html('@_localizer["Edit unit"]');
-			$('#unitOf_form').jsonToForm(unitOf)
-		} else {
-			$('#unitOf_form #Input_Id').val(0)
-
-		}
-	}
-
-	var onEdit = (index) => {
-		var unitOf = $dg.datagrid('getRows')[index];
-		popupmodal(unitOf);
-	}
-	var onDelete = (id) => {
-		bootbox.confirm({
-			message: "@_localizer["Are you sure delete a row?"]",
-			buttons: {
-				confirm: {
-					label: '@_localizer["Yes"]',
-					className: 'btn-success'
-				},
-				cancel: {
-					label: '@_localizer["No"]',
-					className: 'btn-danger'
-				}
-			},
-			callback: function (result) {
-				if (result) {
-					axios.get('@Url.Page("/UnitOfs/Index")?handler=Delete&id=' + id).then(res => {
-						toastr["info"]('@_localizer["Delete Success"]');
-						reloadData();
-					})
-						.catch((error) => {
-							if (error.response.data.Errors) {
-								const errors = error.response.data.Errors;
-								errors.forEach(item => {
-									toastr["error"](item);
-								});
-							} else {
-								toastr["error"](`@_localizer["Delete fail"],${error.response.data}`);
-							}
-						});
-				}
-			}
-		})
-	}
-	var onDeleteChecked = () => {
-		var checkedId = $dg.datagrid('getChecked').map(x => x.Id);
-		if (checkedId.length > 0) {
-			bootbox.confirm({
-				message: "@_localizer["Are you sure delete checked rows?"]",
-				buttons: {
-					confirm: {
-						label: '@_localizer["Yes"]',
-						className: 'btn-success'
-					},
-					cancel: {
-						label: '@_localizer["No"]',
-						className: 'btn-danger'
-					}
-				},
-				callback: function (result) {
-					if (result) {
-						var paras = new URLSearchParams(checkedId.map(s => ['id', s]));
-						console.log(paras.toString())
-						axios.get('@Url.Page("/UnitOfs/Index")?handler=DeleteChecked&' + paras.toString()).then(res => {
-							toastr["info"](`@_localizer["Delete ${checkedId.length} Success"]`);
-							reloadData();
-						})
-							.catch((error) => {
-								if (error.response.data.Errors) {
-									const errors = error.response.data.Errors;
-									errors.forEach(item => {
-										toastr["error"](item);
-									});
-								} else {
-									toastr["error"](`@_localizer["Delete fail"],${error.response.data}`);
-								}
-							});
-					}
-				}
-			});
-
-		}
-	}
-	var onExport = () => {
-		var options = $dg.datagrid('options');
-		var data = {
-			filterRules: JSON.stringify(options.filterRules),
-			sort: options.sortName,
-			order: options.sortOrder,
-		}
-		console.log(options,data)
-		var headers = {
-			"RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
-		}
-		axios.post('@Url.Page("/UnitOfs/Index")?handler=Export',
-			data,
-			{
-				headers: headers,
-				responseType: "blob"
-			})
-			.then(response => {
-				const filename = getFileName(response.headers['content-disposition']);
-				const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' }));
-				const link = document.createElement('a');
-				link.href = url;
-				link.setAttribute('download', filename);
-				document.body.appendChild(link);
-				link.click();
-			}).catch(error => {
-				if (error.response.data.Errors) {
-					const errors = error.response.data.Errors;
-					errors.forEach(item => {
-						toastr["error"](item);
-					});
-				} else {
-					toastr["error"](`@_localizer["Export fail"],${error.response.data}`);
-				}
-			})
 
 
-	}
+	 
 
 
     </script>
