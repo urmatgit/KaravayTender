@@ -13,6 +13,7 @@ using CleanArchitecture.Razor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using CleanArchitecture.Razor.Infrastructure.Localization;
+using CleanArchitecture.Razor.Infrastructure.Middlewares;
 using CleanArchitecture.Razor.Infrastructure.Persistence;
 using CleanArchitecture.Razor.Infrastructure.Services;
 using CleanArchitecture.Razor.Infrastructure.Services.Identity;
@@ -106,7 +107,7 @@ namespace CleanArchitecture.Razor.Infrastructure
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationClaimsIdentityFactory>();
             // Localization
             services.AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
-            services.AddScoped<RequestLocalizationCookiesMiddleware>();
+            services.AddScoped<LocalizationCookiesMiddleware>();
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());

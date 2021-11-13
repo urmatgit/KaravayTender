@@ -27,7 +27,7 @@ $('#edit_form :submit').click(function (e) {
         form.classList.add('was-validated');
     } else {
         const request = $('#edit_form').serialize();
-        axios.post(`${pagelink})`, request).then(res => {
+        axios.post(`${pagelink}`, request).then(res => {
             toastr["info"](`${translations.SaveSuccess} `);
             $('#edit_modal').modal('toggle');
             reloadData();

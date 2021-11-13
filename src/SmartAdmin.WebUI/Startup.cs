@@ -8,6 +8,7 @@ using CleanArchitecture.Razor.Application.Hubs.Constants;
 using CleanArchitecture.Razor.HandfireJobs;
 using CleanArchitecture.Razor.Infrastructure;
 using CleanArchitecture.Razor.Infrastructure.Configurations;
+using CleanArchitecture.Razor.Infrastructure.Extensions;
 using CleanArchitecture.Razor.Infrastructure.Localization;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -98,7 +99,7 @@ namespace SmartAdmin.WebUI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IStringLocalizer<Startup> localizer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IStringLocalizer<Startup> localizer,IConfiguration config)
         {
 
             if (env.IsDevelopment())
@@ -112,16 +113,12 @@ namespace SmartAdmin.WebUI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Files")),
-                RequestPath = new PathString("/Files")
-            });
+
+            app.UseInfrastructure(config);
+             
 
             app.UseRequestLocalization();
-            app.UseRequestLocalizationCookies();
+            //app.UseRequestLocalizationCookies();
             app.UseSerilogRequestLogging(options =>
             {
                 options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
@@ -129,17 +126,12 @@ namespace SmartAdmin.WebUI
                     diagnosticContext.Set("UserName", httpContext.User?.Identity?.Name ?? string.Empty);
                 };
             });
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
+            
+           
+          
             // app.UseWorkflow();
             app.UseHandfire(localizer["Karavay Jobs"]);
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-                endpoints.MapRazorPages();
-                endpoints.MapHub<SignalRHub>(SignalR.HubUrl);
-            });
+             
 
         }
     }

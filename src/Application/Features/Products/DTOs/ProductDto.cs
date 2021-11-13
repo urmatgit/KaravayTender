@@ -6,6 +6,7 @@ using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Customers.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
+using CleanArchitecture.Razor.Domain.Enums;
 
 namespace CleanArchitecture.Razor.Application.Products.DTOs
 {
@@ -17,6 +18,7 @@ namespace CleanArchitecture.Razor.Application.Products.DTOs
 
         }
         //TODO:Define field properties
+        public TrackingState TrackingState { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal? Price { get; set; }

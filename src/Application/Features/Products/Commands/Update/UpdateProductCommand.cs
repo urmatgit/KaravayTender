@@ -36,8 +36,14 @@ namespace CleanArchitecture.Razor.Application.Products.Commands.Update
         }
         public async Task<Result> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing UpdateProductCommandHandler method 
-            throw new System.NotImplementedException();
+           //TODO:Implementing UpdateProductCommandHandler method 
+           var item =await _context.Products.FindAsync( new object[] { request.Id }, cancellationToken);
+           if (item != null)
+           {
+                item = _mapper.Map(request, item);
+                await _context.SaveChangesAsync(cancellationToken);
+           }
+           return Result.Success();
         }
     }
 }

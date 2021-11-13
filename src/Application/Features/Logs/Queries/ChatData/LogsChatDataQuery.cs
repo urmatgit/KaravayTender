@@ -40,7 +40,7 @@ namespace CleanArchitecture.Razor.Application.Features.Logs.Queries.ChatData
         public async Task<IEnumerable<LogTimeLineDto>> Handle(LogsTimeLineChatDataQuery request, CancellationToken cancellationToken)
         {
             var levels = new string[] { "Information", "Trace", "Debug", "Warning", "Error", "Fatal" };
-            var data = await _context.Serilogs.Where(x => x.TimeStamp >= request.LastDateTime)
+            var data = await _context.Loggers.Where(x => x.TimeStamp >= request.LastDateTime)
                       .GroupBy(x => new { x.Level, x.TimeStamp.Date, x.TimeStamp.Hour })
                       .Select(x => new { x.Key.Level, x.Key.Date, x.Key.Hour, Total = x.Count() })
                       .OrderBy(x => x.Level).ThenBy(x => x.Date)
@@ -82,7 +82,7 @@ namespace CleanArchitecture.Razor.Application.Features.Logs.Queries.ChatData
         public async Task<IEnumerable<LogLevelChartDto>> Handle(LogsLevelChatDataQuery request, CancellationToken cancellationToken)
         {
             var levels = new string[] { "Information", "Trace", "Debug", "Warning", "Error", "Fatal" };
-            var data = await _context.Serilogs.Where(x => x.TimeStamp >= request.LastDateTime)
+            var data = await _context.Loggers.Where(x => x.TimeStamp >= request.LastDateTime)
                       .GroupBy(x => new { x.Level })
                       .Select(x => new LogLevelChartDto() { level = x.Key.Level, total = x.Count() })
                       .OrderBy(x => x.level)
