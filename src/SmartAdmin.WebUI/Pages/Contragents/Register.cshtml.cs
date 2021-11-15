@@ -25,6 +25,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using SmartAdmin.WebUI.Extensions;
+
 namespace SmartAdmin.WebUI.Pages.Contragents
 {
     [AllowAnonymous]
@@ -87,18 +89,18 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         {
             ReturnUrl = returnUrl;
 
-            await LoadDirection();
+            Directions= await _mediator.LoadDirection();
             //contragentForm.Categories = directionsDtos.SelectMany(d => d.Categories).ToList();
 
         }
-        private async Task LoadDirection()
-        {
-            var request = new GetAllDirectionsQuery();
-            var directionsDtos = (List<DirectionDto>)await _mediator.Send(request);
-            // Debug.WriteLine(JsonConvert.SerializeObject(directionsDtos));
-            //Input.Directions = directionsDtos;
-            Directions = new SelectList(directionsDtos, "Id", "Name");
-        }
+        //private async Task LoadDirection()
+        //{
+        //    var request = new GetAllDirectionsQuery();
+        //    var directionsDtos = (List<DirectionDto>)await _mediator.Send(request);
+        //    // Debug.WriteLine(JsonConvert.SerializeObject(directionsDtos));
+        //    //Input.Directions = directionsDtos;
+        //    Directions = new SelectList(directionsDtos, "Id", "Name");
+        //}
         public async Task<PartialViewResult> OnGetCategoriesAsync([FromQuery] int directionid, int contragentid = 0)
         {
             if (directionid == 0) return Partial("_CategoriesListPartial", new List<CategoryDto>());
@@ -204,7 +206,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 ModelState.AddModelError(string.Empty, ex.Message);
                 //return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
-            await LoadDirection();
+            Directions = await _mediator.LoadDirection();
             return Page();
         }
 

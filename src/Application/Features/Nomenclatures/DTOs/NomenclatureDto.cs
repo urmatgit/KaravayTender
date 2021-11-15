@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
@@ -16,7 +17,10 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
     {
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Nomenclature, NomenclatureDto>().ReverseMap();
+            profile.CreateMap<Nomenclature, NomenclatureDto>()
+                .ForMember(d => d.QualityDocsIds, s => s.MapFrom(y =>  (y.NomenclatureQualityDocs !=null ? y.NomenclatureQualityDocs.Select(n => n.QualityDocId).ToArray(): Array.Empty<int>())));
+            profile.CreateMap<NomenclatureDto, Nomenclature>(MemberList.None);
+                
 
         }
         public int Id { get; set; }
@@ -26,6 +30,7 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         /// название файла Спецификации
         /// </summary>
         public string Specification { get; set; }
+        public bool Archive { get; set; }
         /// <summary>
         /// Объем Потребление в месяц
         /// </summary>
@@ -43,6 +48,7 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         public int VatId { get; set; }
         public string VatName => $"{Vat?.Name} ({Vat?.Stavka}%)";
         public virtual VatDto Vat { get; set; }
+        public virtual int[] QualityDocsIds { get; set; }
         public virtual ICollection<NomenclatureQualityDocDto> NomenclatureQualityDocs { get; set; }
     }
 }

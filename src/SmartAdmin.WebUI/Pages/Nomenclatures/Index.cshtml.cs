@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,9 @@ using CleanArchitecture.Razor.Application.Common.Exceptions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll;
+using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
+using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Commands.AddEdit;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Commands.Delete;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Commands.Import;
@@ -20,7 +24,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
+using SmartAdmin.WebUI.Extensions;
 
 namespace SmartAdmin.WebUI.Pages.Nomenclatures
 {
@@ -31,6 +37,12 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
         public AddEditNomenclatureCommand Input { get; set; }
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
+
+        public SelectList Directions { get; set; }
+        public SelectList Categories { get; set; }
+        public SelectList UnitOfs { get; set; }
+        public SelectList Vats { get; set; }
+        public SelectList QualityDocs { get; set; }
 
         private readonly IIdentityService _identityService;
         private readonly IAuthorizationService _authorizationService;
@@ -56,7 +68,15 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
 
         public async Task OnGetAsync()
         {
-            var result = await _identityService.FetchUsers("Admin");
+            //var result = await _identityService.FetchUsers("Admin");
+            Directions = await _mediator.LoadDirection();
+            var fistelement = Directions.FirstOrDefault();
+            if (fistelement != null) {
+                Categories = await _mediator.LoadCategory(Convert.ToInt32(fistelement.Value));
+            }
+            UnitOfs = await _mediator.LoadUnitOf();
+            Vats = await _mediator.LoadVats();
+            QualityDocs = await _mediator.LoadQualityDocs();
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] NomenclaturesWithPaginationQuery command)
         {
@@ -67,7 +87,12 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
         {
             try
             {
+                
                 var result = await _mediator.Send(Input);
+                //if (result.Succeeded && Input.QualityDocsIds?.Length>0)
+                //{
+                //    Input.
+                //}
                 return new JsonResult(result);
             }
             catch (ValidationException ex)
@@ -116,6 +141,21 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
-
+        #region other
+        public  async Task<IActionResult> OnGetCategoriesAsync(int directionid)
+        {
+            var command = new GetAllCategoriesQuery() { DirectionId = directionid };
+            var result = await _mediator.Send(command);
+            return new JsonResult(result);
+        }
+        private async Task LoadDirection()
+        {
+            var request = new GetAllDirectionsQuery();
+            var directionsDtos = (List<DirectionDto>)await _mediator.Send(request);
+            //Debug.WriteLine(JsonConvert.SerializeObject(directionsDtos));
+            //Input.Directions = directionsDtos;
+            Directions = new SelectList(directionsDtos, "Id", "Name");
+        }
+        #endregion
     }
 }

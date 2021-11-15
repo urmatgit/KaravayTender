@@ -13,11 +13,15 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         /// <summary>
         /// название файла Спецификации
         /// </summary>
-        public string Specification { get; set; }
+        public string Specifications { get; set; }
         /// <summary>
         /// Объем Потребление в месяц
         /// </summary>
         public decimal Volume { get; set; }
+        /// <summary>
+        /// состяние
+        /// </summary>
+        public bool Archive { get; set; }
         public int CategoryId { get; set; }
         public virtual Category  Category { get; set; }
         public int DirectionId { get; set; }

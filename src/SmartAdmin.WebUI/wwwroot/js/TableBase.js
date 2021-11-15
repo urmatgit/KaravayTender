@@ -131,15 +131,7 @@ var popupmodal = (nomenclature) => {
     $('#edit_form')[0].reset();
     if (nomenclature) {
         $('#edit_modal .modal-title').html(`${translations.EditCaption}`);
-        $('#edit_form').jsonToForm(nomenclature, {
-            PartnerType: function (value) {
-                if (value == 'TP') {
-                    $('#edit_form [name*="PartnerType"]').val(0);
-                } else {
-                    $('#edit_form [name*="PartnerType"]').val(1);
-                }
-            }
-        })
+        $('#edit_form').jsonToForm(nomenclature, jsonToFormCallBack);
     } else {
         $('#edit_form #Input_Id').val(0)
 

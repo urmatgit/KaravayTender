@@ -122,3 +122,23 @@ pre.prettyprint {
 .form-group {
     margin-bottom: 1rem;
 }
+.datagrid-header-row .datagrid-cell  {
+    line-height: normal;
+    height: auto;
+    white-space: normal;
+    text-align: center;
+}
+/*@media (max-width: 992px) {
+    .datagrid-header{
+        height: 121px;
+    }
+}
+*/
+/*.select2-close-mask {
+    z-index: 2099;
+}
+
+.select2-dropdown {
+    z-index: 3051;
+}
+*/
