@@ -13,7 +13,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
     {
 
 
-        public decimal Value { get; set; }
+        public decimal Stavka { get; set; }
         public string Description { get; set; }
         public virtual ICollection<Nomenclature> Nomenclatures { get; set; }
     }

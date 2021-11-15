@@ -68,7 +68,7 @@ namespace SmartAdmin.WebUI.Pages.Vats
         {
             try
             {
-                Input.Value = decimal.Parse(Input.Value_str, CultureInfo.InvariantCulture);
+                Input.Stavka = decimal.Parse(Input.Stavka_str, CultureInfo.InvariantCulture);
                 var result = await _mediator.Send(Input);
                 return new JsonResult(result);
             }

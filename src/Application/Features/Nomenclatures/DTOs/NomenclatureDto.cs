@@ -41,7 +41,7 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         public string UnitOfName => UnitOf?.Name;
         public virtual UnitOfDto UnitOf { get; set; }
         public int VatId { get; set; }
-        public string VatName => $"{Vat?.Name} ({Vat?.Value}%)";
+        public string VatName => $"{Vat?.Name} ({Vat?.Stavka}%)";
         public virtual VatDto Vat { get; set; }
         public virtual ICollection<NomenclatureQualityDocDto> NomenclatureQualityDocs { get; set; }
     }

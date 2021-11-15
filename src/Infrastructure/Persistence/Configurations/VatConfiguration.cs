@@ -15,7 +15,7 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
             builder.Property(t => t.Name)
                 .IsRequired()
                 .HasMaxLength(50);
-            builder.Property(t => t.Value)
+            builder.Property(t => t.Stavka)
                 .IsRequired();
 
 
