@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add" xml:space="preserve">
-    <value>Добавлять</value>
+    <value>Добавить</value>
   </data>
   <data name="Application Roles" xml:space="preserve">
     <value>Роли приложений</value>
@@ -127,13 +127,13 @@
     <value>Вы уверены, что удалили отмеченные роли?</value>
   </data>
   <data name="Assign Success" xml:space="preserve">
-    <value>Назначить успех</value>
+    <value>Назначение прошло успешно</value>
   </data>
   <data name="Authorization" xml:space="preserve">
     <value>Авторизация</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Закрывать</value>
+    <value>Закрыть</value>
   </data>
   <data name="Create a role" xml:space="preserve">
     <value>Создать роль</value>
@@ -142,10 +142,10 @@
     <value>Удалить</value>
   </data>
   <data name="Delete ${checkedId.length} Success" xml:space="preserve">
-    <value>Удалите $ {checkedId.length} успешно</value>
+    <value>${checkedId.length} записей удалены</value>
   </data>
   <data name="Delete success" xml:space="preserve">
-    <value>Удалить успех</value>
+    <value>Строка удалена</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Описание</value>
@@ -181,7 +181,7 @@
     <value>Сохранить</value>
   </data>
   <data name="Save success" xml:space="preserve">
-    <value>Сохранить успех</value>
+    <value>Данные успешно сохранились.</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Поиск</value>
@@ -196,7 +196,7 @@
     <value>да</value>
   </data>
   <data name="Command" xml:space="preserve">
-    <value>Командование</value>
+    <value>Команда</value>
   </data>
   <data name="Manage Navigation" xml:space="preserve">
     <value>Управление навигацией</value>
@@ -211,15 +211,15 @@
     <value>Авторизация не пройденная</value>
   </data>
   <data name="Delete fail" xml:space="preserve">
-    <value>Удалить не удаляем</value>
+    <value>Ошибка при удалении</value>
   </data>
   <data name="Load permissions fail" xml:space="preserve">
     <value>Сбой разрешений на загрузку</value>
   </data>
   <data name="Save fail" xml:space="preserve">
-    <value>Сохранить не удается</value>
+    <value>Ошибка сохранения</value>
   </data>
   <data name="Authorize success" xml:space="preserve">
-    <value>Авторизуйтесь на успех</value>
+    <value>Авторизация прошла успешно</value>
   </data>
 </root>

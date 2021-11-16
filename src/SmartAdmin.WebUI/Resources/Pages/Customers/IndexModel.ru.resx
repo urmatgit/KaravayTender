@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add" xml:space="preserve">
-    <value>Добавлять</value>
+    <value>Добавить</value>
   </data>
   <data name="Add Customer" xml:space="preserve">
     <value>Добавить клиента</value>
@@ -214,12 +214,12 @@
     <value>Выберите регион</value>
   </data>
   <data name="Delete fail" xml:space="preserve">
-    <value>Удалить не удаляем</value>
+    <value>Ошибка при удалении</value>
   </data>
   <data name="Export fail" xml:space="preserve">
     <value>Сбой экспорта</value>
   </data>
   <data name="Save fail" xml:space="preserve">
-    <value>Сохранить не удается</value>
+    <value>Ошибка сохранения</value>
   </data>
 </root>

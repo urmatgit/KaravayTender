@@ -121,7 +121,7 @@
     <value>Экспорт в Excel</value>
   </data>
   <data name="Add" xml:space="preserve">
-    <value>Добавлять</value>
+    <value>Добавить</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
@@ -157,7 +157,7 @@
     <value>Вы уверены, что удалили отмеченные строки?</value>
   </data>
   <data name="Delete ${checkedId.length} Success" xml:space="preserve">
-    <value>Удалите $ {checkedId.length} успешно</value>
+    <value>${checkedId.length} записей удалены</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Ошибка</value>
@@ -172,7 +172,7 @@
     <value>Пожалуйста, загрузите файл</value>
   </data>
   <data name="Save Success" xml:space="preserve">
-    <value>Сохранить успех</value>
+    <value>Данные успешно сохранились.</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>да</value>

@@ -190,7 +190,7 @@
     <value>Удалить</value>
   </data>
   <data name="Delete ${checkedId.length} Success" xml:space="preserve">
-    <value>${checkedId.length} записи удалены</value>
+    <value>${checkedId.length} записей удалены</value>
   </data>
   <data name="Delete fail" xml:space="preserve">
     <value>Ошибка при удалении</value>
