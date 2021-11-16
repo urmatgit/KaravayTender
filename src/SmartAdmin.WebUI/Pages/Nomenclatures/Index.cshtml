@@ -146,6 +146,8 @@ onImportedSucceeded = "reloadData()"
         var jsonToFormCallBack = {
             QualityDocsIds: function (value) {
                 $('#QualityDocsIds').val(value);
+                $('#QualityDocsIds').trigger('change');
+
             }
         }
 

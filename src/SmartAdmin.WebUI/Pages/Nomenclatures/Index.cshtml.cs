@@ -37,6 +37,8 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
         public AddEditNomenclatureCommand Input { get; set; }
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
+        [BindProperty]
+        public List<IFormFile> Files { get; set; }
 
         public SelectList Directions { get; set; }
         public SelectList Categories { get; set; }

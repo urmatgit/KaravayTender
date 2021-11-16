@@ -129,9 +129,11 @@
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/inputmask/inputmask.bundle.js"></script>
+    <script src="~/js/Karavay/Files.js" type="text/javascript"></script>
     <script src="~/js/Karavay/Contragents.js" type="text/javascript"></script>
     <script src="~/js/Karavay/StatusLog.js" type="text/javascript"></script>
     <script src="~/js/Karavay/GeneratePass.js" type="text/javascript"></script>
+    
     <script type="text/javascript">
 
         var Statuses = [{
@@ -637,7 +639,7 @@
                             }
                         });
                     }
-                    getConragentFiles(contragent.Id);
+                    getConragentFiles('/Contragents/Index?handler=FilesList&id=' + contragent.Id);
                     popupmodal(contragent);
 
                 }

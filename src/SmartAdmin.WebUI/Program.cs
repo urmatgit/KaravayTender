@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CleanArchitecture.Razor.Infrastructure.Constants.Files;
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using CleanArchitecture.Razor.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
@@ -21,15 +22,21 @@ namespace SmartAdmin.WebUI
     {
         public static async Task Main(string[] args)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files");
+            PathConstants.CurrentDirectory = Directory.GetCurrentDirectory();
+            var filePath = Path.Combine(PathConstants.CurrentDirectory, PathConstants.FilesPath);
             if (!Directory.Exists(filePath))
             {
                 Directory.CreateDirectory(filePath);
             }
-            filePath = Path.Combine(filePath, "Documents");
-            if (!Directory.Exists(filePath))
+            var  filePathDoc = Path.Combine(filePath, PathConstants.DocumentsPath);
+            if (!Directory.Exists(filePathDoc))
             {
-                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(filePathDoc);
+            }
+            var filePathSpec= Path.Combine(filePath, PathConstants.SpecificationsPath);
+            if (!Directory.Exists(filePathSpec))
+            {
+                Directory.CreateDirectory(filePathSpec);
             }
             var host = CreateHostBuilder(args).Build();
 
