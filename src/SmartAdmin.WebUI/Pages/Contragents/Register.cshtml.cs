@@ -15,6 +15,7 @@ using CleanArchitecture.Razor.Application.Features.Contragents.Commands.AddEdit;
 using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
+using CleanArchitecture.Razor.Infrastructure.Constants.Files;
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -170,7 +171,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                             }
                         }
 
-                        await _uploadService.UploadContragentFileAsync(result.Data, Files);
+                        await _uploadService.UploadFileAsync(result.Data, PathConstants.DocumentsPath, Files);
                         //send emailt
                         var messageBody = $"Заявка на регистрацию, поставщик  {Input.Name}({Input.Phone}) от {Input.Created} ";
                         await _emailSender.SendEmailAsync("", "Заявка на регистрацию", messageBody);

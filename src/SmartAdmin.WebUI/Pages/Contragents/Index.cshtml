@@ -288,8 +288,8 @@
                         var data = new FormData();
 
                         var form_data = $('#contragent_form').serializeArray();
-            $.each(form_data, function (key, input) {
-                            data.append(input.name, input.value);
+                        $.each(form_data, function (key, input) {
+                             data.append(input.name, input.value);
                         });
 
                         //File data
@@ -297,10 +297,11 @@
                         //for (var i = 0; i < file_data.length; i++) {
                         //    data.append("my_images[]", file_data[i]);
                         //}
-                        var uploadfileinputs = document.getElementById("Files");
-                        for (var i = 0; i != uploadfileinputs.files.length; i++) {
-                            data.append("files[]", uploadfileinputs.files[i]);
-                        }
+                        AppendFilesToFormData(data);
+                        //var uploadfileinputs = document.getElementById("Files");
+                        //for (var i = 0; i != uploadfileinputs.files.length; i++) {
+                        //    data.append("files[]", uploadfileinputs.files[i]);
+                        //}
 
                         axios.post('@Url.Page("/Contragents/Index")', data).then(res => {
                             toastr["info"]('@_localizer["Save Success."]');
@@ -529,7 +530,8 @@
 		}
 		$('#contragent_modal').on('shown.bs.modal', function () {
                     var IsAddClick = $('#contragent_form #Input_Id').val();
-                    if (!IsAddClick || IsAddClick == 0) return;
+            if (!IsAddClick || IsAddClick == 0) return;
+            clienUploadfilename();
             $('#contragent_form #UserFormModel_ManagerPhone').val(currentEditRow.ManagerPhone);
                     if (currentEditRow && currentEditRow.ContragentCategories && currentEditRow.ContragentCategories.length > 0) {
                         var categories = $('#contragent_form [name*="category.Name"]');//  document.getElementsByName("category.Name");
@@ -639,7 +641,7 @@
                             }
                         });
                     }
-                    getConragentFiles('/Contragents/Index?handler=FilesList&id=' + contragent.Id);
+                    getFiles('/Contragents/Index?handler=FilesList&id=' + contragent.Id);
                     popupmodal(contragent);
 
                 }

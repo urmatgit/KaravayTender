@@ -70,8 +70,9 @@
         $(document).ready(function () {
             $(":input").inputmask();
             $("#js-login").data("validator").settings.ignore = "";
-            $('#categories').innerHTML = '';
-            $('#Input_DirectionId').val('');
+            //$('#categories').innerHTML = '';
+            //$('#Input_DirectionId').val('');
+            getCategoriesByDirectionId($('#Input_DirectionId').val());
            
         });
         

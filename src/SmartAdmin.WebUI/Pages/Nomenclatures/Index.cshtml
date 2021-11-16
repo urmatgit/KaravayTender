@@ -113,6 +113,7 @@ onImportedSucceeded = "reloadData()"
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/select2/select2.bundle.js"></script>
     <script src="~/js/TableBase.js"></script>
+    <script src="~/js/Karavay/Files.js" type="text/javascript"></script>
     <script type="text/javascript">
         var pagelink = '@Url.Page("/Nomenclatures/Index")';
         var translations = {
@@ -139,7 +140,8 @@ onImportedSucceeded = "reloadData()"
             UnitOf: '@_localizer["UnitOf"]',
             Volume: '@_localizer["Volume"]',
             ChooseQualityDoc: '@_localizer["Choose quality documents"]',
-            ChooseCategory: '@_localizer["Choose a category"]'
+            ChooseCategory: '@_localizer["Choose a category"]',
+            Download_Success:'@_localizer["Download Success"]'
 		}
 		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
         var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );

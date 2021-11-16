@@ -26,6 +26,7 @@ using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.StatusLogs.Queries.Pagination;
 using CleanArchitecture.Razor.Domain.Enums;
+using CleanArchitecture.Razor.Infrastructure.Constants.Files;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Razor.Infrastructure.Constants.Role;
 using CleanArchitecture.Razor.Infrastructure.Identity;
@@ -111,7 +112,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         {
             try
             {
-                var files = await _uploadService.LoadContragentFilesAsync(id);
+                var files = await _uploadService.LoadFilesAsync(id, PathConstants.DocumentsPath);
                 return new JsonResult(files?.Data);
             }
             catch (Exception er)
@@ -254,7 +255,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
                         if (Request?.Form?.Files?.Count > 0)
                         {
-                            await _uploadService.UploadContragentFileAsync(result.Data, Request.Form.Files.ToList());
+                            await _uploadService.UploadFileAsync(result.Data,PathConstants.DocumentsPath,  Request.Form.Files.ToList());
                         }
 
                         await SendMessageToCustomer();

@@ -26,8 +26,14 @@ $('#edit_form :submit').click(function (e) {
     if ($(form).valid() === false) {
         form.classList.add('was-validated');
     } else {
-        const request = $('#edit_form').serialize();
-        axios.post(`${pagelink}`, request).then(res => {
+        let request = $('#edit_form').serialize();
+        if (typeof UpdateFiles == 'function')
+            UpdateFiles();
+        var form_data = new FormData($('#edit_form')[0]);
+        //if (AppendFilesToFormData) {
+        //    AppendFilesToFormData(request);
+        //}
+        axios.post(`${pagelink}`, form_data).then(res => {
             toastr["info"](`${translations.SaveSuccess} `);
             $('#edit_modal').modal('toggle');
             reloadData();
@@ -129,9 +135,14 @@ var popupmodal = (nomenclature) => {
     $('#edit_modal .modal-title').html(`${translations.AddCaption}`);
     $('#edit_form').clearForm();
     $('#edit_form')[0].reset();
+    if (typeof clienUploadfilename == 'function')
+        clienUploadfilename();
     if (nomenclature) {
         $('#edit_modal .modal-title').html(`${translations.EditCaption}`);
-        $('#edit_form').jsonToForm(nomenclature, jsonToFormCallBack);
+        if (typeof jsonToFormCallBack !== 'undefined')
+            $('#edit_form').jsonToForm(nomenclature, jsonToFormCallBack);
+        else
+            $('#edit_form').jsonToForm(nomenclature);
     } else {
         $('#edit_form #Input_Id').val(0)
 
@@ -140,6 +151,8 @@ var popupmodal = (nomenclature) => {
 
 var onEdit = (index) => {
     var nomenclature = $dg.datagrid('getRows')[index];
+    if (typeof getFiles == 'function')
+        getFiles(pagelink + '?handler=FilesList&id=' + nomenclature.Id);
     popupmodal(nomenclature);
 }
 var onDelete = (id) => {

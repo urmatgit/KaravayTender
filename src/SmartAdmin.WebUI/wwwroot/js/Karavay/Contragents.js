@@ -95,71 +95,7 @@ getCheckedCategories = () => {
     categoryIds.value = `[${resJson.slice(0, -1)}]`;
     // console.log(`[${resJson.slice(0, -1)}]`);
 }
-let uploadFiles = {};
-uploadfileinput.onchange = (e) => {
-    //const files = uploadfileinput.taget.files;
-    console.log(e);
 
-    console.log(e.target.files);
-
-    Array.from(e.target.files).forEach(file => {
-        console.log(file.name);
-        let isBigFile = "";
-        let UnderLineText = "";
-        if (IsBigFile(file)) {
-            isBigFile = window.translations.FileSizeToBig;
-            UnderLineText = 'style="text-decoration: line-through"';
-        }
-        if (file.name in uploadFiles) {
-
-        }
-        else {
-            fileName = file.name;//uploadfileinput.value.split('\\').pop();
-            uploadfilename.innerHTML += `
-              <div class="alert ${isBigFile == "" ? "alert-info" : "alert-danger"}   alert-dismissible fadeup show mb-2 mt-2" role="alert" id="${fileName}">
-                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                         <span aria-hidden="true"><i class="${window.translations.IconPrefix} fa-times"></i></span>
-                      </button>
-                      <div class="d-flex align-items-center">
-							<div class="alert-icon">
-									<i class="${window.translations.IconPrefix} fa-upload fs-xl"></i>
-							</div>
-							<div class="flex-1">
-	    						 <span ${UnderLineText}>${fileName}  (${(file.size / 1024 / 1024).toFixed(3)} Mb)</span> ${isBigFile}
-							</div>
-					</div>
-             </div>
-        `
-        }
-        if (isBigFile === "")
-            uploadFiles[file.name] = file;
-
-    });
-    UpdateFiles();
-    $('#uploadfilename .alert').on('closed.bs.alert', (e) => {
-        console.log(e);
-        delete uploadFiles[e.currentTarget.id];
-        UpdateFiles();
-        uploadfileinput.value = null;
-
-    })
-};
-function IsBigFile(file) {
-
-    if (file.size > maxFileSize) {
-        return true;
-    }
-    return false;
-}
-UpdateFiles = function () {
-    const dT = new DataTransfer();
-
-    $.map(uploadFiles, function (value, key) {
-        dT.items.add(value);
-    });
-    uploadfileinputs.files = dT.files;
-    console.log(uploadfileinputs.files);
-}
 //axios.get('@Url.Page("/Customers/Index")?handler=Delete&id=' + id)
 $("#Input_DirectionId").change(function () {
 

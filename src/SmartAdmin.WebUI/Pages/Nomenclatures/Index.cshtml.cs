@@ -18,6 +18,7 @@ using CleanArchitecture.Razor.Application.Features.Nomenclatures.Commands.Delete
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Commands.Import;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.Export;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.Pagination;
+using CleanArchitecture.Razor.Infrastructure.Constants.Files;
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -51,15 +52,18 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
         private readonly ICurrentUserService _currentUserService;
         private readonly ISender _mediator;
         private readonly IStringLocalizer<IndexModel> _localizer;
+        private readonly IUploadService _uploadService;
 
         public IndexModel(
            IIdentityService identityService,
             IAuthorizationService authorizationService,
             ICurrentUserService currentUserService,
+            IUploadService uploadService,
             ISender mediator,
             IStringLocalizer<IndexModel> localizer
             )
         {
+            _uploadService = uploadService;
             _identityService = identityService;
             _authorizationService = authorizationService;
             _currentUserService = currentUserService;
@@ -91,10 +95,10 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
             {
                 
                 var result = await _mediator.Send(Input);
-                //if (result.Succeeded && Input.QualityDocsIds?.Length>0)
-                //{
-                //    Input.
-                //}
+                if (result.Succeeded && Files.Count > 0)
+                {
+                     await _uploadService.UploadFileAsync(result.Data, PathConstants.SpecificationsPath, Files);
+                }
                 return new JsonResult(result);
             }
             catch (ValidationException ex)
@@ -143,8 +147,22 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
+
+        public async Task<IActionResult> OnGetFilesListAsync(int id)
+        {
+            try
+            {
+                var files = await _uploadService.LoadFilesAsync(id, PathConstants.SpecificationsPath);
+                return new JsonResult(files?.Data);
+            }
+            catch (Exception er)
+            {
+                return BadRequest(new string[] { er.Message });
+            }
+        }
+
         #region other
-        public  async Task<IActionResult> OnGetCategoriesAsync(int directionid)
+        public async Task<IActionResult> OnGetCategoriesAsync(int directionid)
         {
             var command = new GetAllCategoriesQuery() { DirectionId = directionid };
             var result = await _mediator.Send(command);

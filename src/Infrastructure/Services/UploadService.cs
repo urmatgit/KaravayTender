@@ -90,13 +90,13 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
             return string.Format(pattern, max);
         }
 
-        public async Task<IResult> UploadContragentFileAsync(int Id, List<IFormFile> files)
+        public async Task<IResult> UploadFileAsync(int Id, string subfolder, List<IFormFile> files)
         {
 
             try
             {
                 var folder = Id.ToString();// request.UploadType.ToDescriptionString();
-                var folderName = Path.Combine("Files", "Documents", folder);
+                var folderName = Path.Combine("Files", subfolder, folder);
                 if (!Directory.Exists(folderName))
                 {
                     Directory.CreateDirectory(folderName);
@@ -118,13 +118,13 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
             return await Result.SuccessAsync();
 
         }
-        public async Task<IResult<List<string>>> LoadContragentFilesAsync(int Id)
+        public async Task<IResult<List<string>>> LoadFilesAsync(int Id, string subfolder)
         {
             List<string> Result = new List<string>();
             try
             {
                 var folder = Id.ToString();// request.UploadType.ToDescriptionString();
-                var folderName = Path.Combine("Files", "Documents", folder);
+                var folderName = Path.Combine("Files", subfolder, folder);
                 if (Directory.Exists(folderName))
                 {
                     foreach (string file in Directory.GetFiles(folderName))
@@ -141,10 +141,10 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
             return await Result<List<string>>.SuccessAsync(Result);
         }
 
-        public async Task<IResult> RemoveFileAsync(int Id, string name)
+        public async Task<IResult> RemoveFileAsync(int Id, string name, string subfolder)
         {
             var folder = Id.ToString();// request.UploadType.ToDescriptionString();
-            var folderName = Path.Combine("Files", "Documents", folder, name);
+            var folderName = Path.Combine("Files", subfolder, folder, name);
             if (File.Exists(folderName))
             {
                 try
