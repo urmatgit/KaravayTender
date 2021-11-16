@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,6 +39,7 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
         public AddEditNomenclatureCommand Input { get; set; }
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
+        [Required(ErrorMessage = "Please select a file.")]
         [BindProperty]
         public List<IFormFile> Files { get; set; }
 
@@ -101,7 +103,7 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
                 }
                 return new JsonResult(result);
             }
-            catch (ValidationException ex)
+            catch (CleanArchitecture.Razor.Application.Common.Exceptions.ValidationException ex)
             {
                 var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
                 return BadRequest(Result.Failure(errors));

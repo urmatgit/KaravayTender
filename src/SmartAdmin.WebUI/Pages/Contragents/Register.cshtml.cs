@@ -44,6 +44,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         [BindProperty]
         public AddEditContragentCommand Input { get; set; }
         [BindProperty]
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage ="Не загружены документы!")]
         public List<IFormFile> Files { get; set; }
         [BindProperty]
         public string CategoryIds { get; set; }

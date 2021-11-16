@@ -153,7 +153,8 @@ onImportedSucceeded = "reloadData()"
             }
         }
 
-		$(() => {
+        $(() => {
+            
 			//columns.push([{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 }]);
             tblColumns = [
                 { field: 'Name', title: `${window.translations.Name} `, sortable: true, width: 180 },
@@ -168,12 +169,13 @@ onImportedSucceeded = "reloadData()"
             initdatagrid();
             $('.select2').select2({
                 placeholder: '@Html.Raw(@_localizer["Choose quality documents"])',
+                
                 allowClear: true,
                 dropdownParent: $('#edit_modal')
             });
 
         })
-
+        
         $("#Input_DirectionId").change(function () {
 
 

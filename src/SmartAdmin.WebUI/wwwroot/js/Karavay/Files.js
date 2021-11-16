@@ -12,6 +12,8 @@ function clienUploadfilename() {
     uploadfilename.innerHTML = "";
     uploadFiles = {};
     uploadfileinputs.files = null;
+    var files_table = document.querySelector("#files_panel");
+    files_table.innerHTML = "";
 }
 var onDownloadFile = (index) => {
 

@@ -77,14 +77,11 @@
                             </div>
                             <div class="form-row">
                                 <div class="col-md-12">
-                                    <label class="form-label">@_localizer["Quality documents"]</label>
-                                    <select class="select2" multiple="multiple" asp-items="Model.QualityDocs" id="QualityDocsIds" asp-for="Input.QualityDocsIds">
+                                    <label class="form-label">@_localizer["Quality documents"] <span class="text-danger">*</span></label>
+                                    <select class="select2" multiple="multiple" asp-items="Model.QualityDocs" id="QualityDocsIds" asp-for="Input.QualityDocsIds" required>
                                         <option value="">@_localizer["Choose quality documents"]</option>
-                                        @*@foreach (var role in Model.QualityDocs)
-                        {
-                            <option value="@Id">"@Value"</option>
-                        }*@
                                     </select>
+                                    <span class="invalid-feedback" asp-validation-for="Input.QualityDocsIds"></span>
                                 </div>
                             </div>
                             <div class="form-row">

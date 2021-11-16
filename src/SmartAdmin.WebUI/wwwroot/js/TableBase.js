@@ -130,13 +130,20 @@ var initdatagrid = () => {
 //$(() => {
 //    initdatagrid();
 //})
+$('#edit_modal').on('shown.bs.modal', function () {
+    //var IsAddClick = $('#edit_form #Input_Id').val();
+    //if (!IsAddClick || IsAddClick == 0) return;
+    //if (typeof clienUploadfilename == 'function')
+    //    clienUploadfilename();
+    
+
+})
 var popupmodal = (nomenclature) => {
     $('#edit_modal').modal('toggle');
     $('#edit_modal .modal-title').html(`${translations.AddCaption}`);
     $('#edit_form').clearForm();
     $('#edit_form')[0].reset();
-    if (typeof clienUploadfilename == 'function')
-        clienUploadfilename();
+    
     if (nomenclature) {
         $('#edit_modal .modal-title').html(`${translations.EditCaption}`);
         if (typeof jsonToFormCallBack !== 'undefined')
@@ -145,6 +152,8 @@ var popupmodal = (nomenclature) => {
             $('#edit_form').jsonToForm(nomenclature);
     } else {
         $('#edit_form #Input_Id').val(0)
+        if (typeof clienUploadfilename == 'function')
+            clienUploadfilename();
 
     }
 }
@@ -266,4 +275,10 @@ var onExport = () => {
 
 }
 
+$(document).ready(function () {
+
+    $("#edit_form").data("validator").settings.ignore = "";
+
+
+});
 

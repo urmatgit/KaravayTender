@@ -87,12 +87,13 @@
             getCheckedCategories();
             var form = $("#js-login");
 
-            if (form[0].checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
+            if (form[0].valid() === false) {
+                form.addClass('was-validated');
+                
             }
-
-            form.addClass('was-validated');
+            event.preventDefault();
+            event.stopPropagation();
+            
             // Perform ajax submit here...
 
 

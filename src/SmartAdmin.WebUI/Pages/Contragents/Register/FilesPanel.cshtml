@@ -5,9 +5,9 @@
 }
 <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
 <div class="form-group ">
-    <label class="form-label" for=""></label>
-    <input type="file" asp-for="Files" multiple style="display:none"  />
-    <input type="file" id="file" multiple style="display:none"  />
+    <label class="form-label" for=""><span class="text-danger">*</span></label>
+    <input type="file" asp-for="Files" multiple style="display:none" required data-val-required="Не загружены документы!" />
+    <input type="file" id="file" multiple style="display:none" />
     <div class="">
         <button name="uploadbutton" type="button" class="btn btn-primary btn-icon waves-effect waves-themed mr-2">
             <i class="fal fa-paperclip"></i>
@@ -17,10 +17,11 @@
         <div id="uploadfilename">
             @*<div class="alert alert-danger mt-2 mb-2" role="alert">
 
-            </div>*@
+                </div>*@
         </div>
 
     </div>
+    <span class="invalid-feedback" asp-validation-for="Files">"Загрузите файлы"</span>
 
 </div>
 

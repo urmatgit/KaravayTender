@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
@@ -25,6 +26,7 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         }
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "'Наименование' является обязательным ")]
         public string Name { get; set; }
         /// <summary>
         /// название файла Спецификации
@@ -34,6 +36,7 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         /// <summary>
         /// Объем Потребление в месяц
         /// </summary>
+        [Required(ErrorMessage = "'Средний объем' не указано")]
         public decimal Volume { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName => Category?.Name;
@@ -48,6 +51,7 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         public int VatId { get; set; }
         public string VatName => $"{Vat?.Name} ({Vat?.Stavka}%)";
         public virtual VatDto Vat { get; set; }
+        [Required(ErrorMessage = "'Требования к документам по качеству' не выбрано ")]
         public virtual int[] QualityDocsIds { get; set; }
         public virtual ICollection<NomenclatureQualityDocDto> NomenclatureQualityDocs { get; set; }
     }
