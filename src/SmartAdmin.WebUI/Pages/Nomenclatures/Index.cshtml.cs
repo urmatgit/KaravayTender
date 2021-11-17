@@ -90,6 +90,7 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] NomenclaturesWithPaginationQuery command)
         {
+            throw new Exception("Test log error 222 !!!!!!");
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }

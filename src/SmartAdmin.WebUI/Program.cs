@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace SmartAdmin.WebUI
     {
         public static async Task Main(string[] args)
         {
+            Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
             PathConstants.CurrentDirectory = Directory.GetCurrentDirectory();
             var filePath = Path.Combine(PathConstants.CurrentDirectory, PathConstants.FilesPath);
             if (!Directory.Exists(filePath))
@@ -76,14 +78,15 @@ namespace SmartAdmin.WebUI
         private static string[] filters = new string[] { "Microsoft.EntityFrameworkCore.Model.Validation", "WorkflowCore.Services.WorkflowHost", "WorkflowCore.Services.BackgroundTasks.RunnablePoller", "Microsoft.Hosting.Lifetime", "Serilog.AspNetCore.RequestLoggingMiddleware" };
         public static IHostBuilder CreateHostBuilder(string[] args) =>
 
-            Host.CreateDefaultBuilder(args)
+            
+        Host.CreateDefaultBuilder(args)
                 .UseSerilog((context, services, configuration) => configuration
                     .ReadFrom.Configuration(context.Configuration)
                     .ReadFrom.Services(services)
                     .Enrich.FromLogContext()
                     .Enrich.WithClientIp()
                     .Enrich.WithClientAgent()
-
+                    
                     .Filter.ByExcluding(
                         /* (logevent) => {
                              Console.WriteLine(logevent);
@@ -92,6 +95,7 @@ namespace SmartAdmin.WebUI
                         Matching.WithProperty<string>("SourceContext", p => filters.Contains(p))
                         )
                     .WriteTo.Debug()
+                    
                     , writeToProviders: true)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

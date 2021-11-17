@@ -15,7 +15,7 @@ namespace HandfireJobs
         public bool Authorize(DashboardContext context)
         {
             //TODO implement authorization logic
-            return true;
+           
             var httpContext = context.GetHttpContext();
             string jwtToken = "";
             var read = httpContext.Request.Query.TryGetValue("token", out var jwtTokenFromQuery);

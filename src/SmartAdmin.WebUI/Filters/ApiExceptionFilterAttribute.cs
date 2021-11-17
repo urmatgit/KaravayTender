@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+
 using CleanArchitecture.Razor.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 
 namespace SmartAdmin.WebUI.Filters
 {
@@ -14,9 +16,10 @@ namespace SmartAdmin.WebUI.Filters
     {
 
         private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
-
-        public ApiExceptionFilterAttribute()
+        private readonly ILogger<ApiExceptionFilterAttribute> _logger;
+        public ApiExceptionFilterAttribute(ILogger<ApiExceptionFilterAttribute> logger)
         {
+            _logger = logger;
             // Register known exception types and handlers.
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
@@ -37,6 +40,7 @@ namespace SmartAdmin.WebUI.Filters
         private void HandleException(ExceptionContext context)
         {
             Type type = context.Exception.GetType();
+               _logger.LogError(context.Exception.Message, context.Exception);
             if (_exceptionHandlers.ContainsKey(type))
             {
                 _exceptionHandlers[type].Invoke(context);
@@ -84,8 +88,8 @@ namespace SmartAdmin.WebUI.Filters
 
             var details = new ProblemDetails()
             {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-                Title = "The specified resource was not found.",
+                Type = "",
+                Title = "Страница не найдена!",
                 Detail = exception.Message
             };
 

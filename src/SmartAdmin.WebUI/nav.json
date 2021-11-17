@@ -92,8 +92,7 @@
           "roles": []
         }
       ]
-    }
-    ,
+    },
     {
       "title": "Documents",
       "icon": "fal fa-paperclip",
@@ -142,9 +141,14 @@
           "roles": []
         }
       ]
+    },
+    {
+      "title": "Job!",
+      "href": "/jobs",
+      "icon": "fal fa-graduation-cap",
+      "roles": []
     }
-    
-    
-    
+
+
   ]
 }
