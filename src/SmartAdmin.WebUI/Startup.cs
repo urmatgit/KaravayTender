@@ -119,13 +119,8 @@ namespace SmartAdmin.WebUI
 
             app.UseRequestLocalization();
             //app.UseRequestLocalizationCookies();
-            app.UseSerilogRequestLogging(options =>
-            {
-                options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
-                {
-                    diagnosticContext.Set("UserName", httpContext.User?.Identity?.Name ?? string.Empty);
-                };
-            });
+            
+             
             
            
           

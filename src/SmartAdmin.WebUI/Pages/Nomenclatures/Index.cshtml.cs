@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CleanArchitecture.Razor.Application.Common.Behaviours;
 using CleanArchitecture.Razor.Application.Common.Exceptions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
@@ -19,7 +20,8 @@ using CleanArchitecture.Razor.Application.Features.Nomenclatures.Commands.Delete
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Commands.Import;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.Export;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.Pagination;
-using CleanArchitecture.Razor.Infrastructure.Constants.Files;
+using CleanArchitecture.Razor.Domain.Constants;
+
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -39,7 +41,7 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
         public AddEditNomenclatureCommand Input { get; set; }
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
-        [Required(ErrorMessage = "Please select a file.")]
+        [Required(ErrorMessage = "Загрузите спецификации!")]
         [BindProperty]
         public List<IFormFile> Files { get; set; }
 

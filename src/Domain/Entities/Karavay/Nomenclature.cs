@@ -6,7 +6,7 @@ using CleanArchitecture.Razor.Domain.Common;
 
 namespace CleanArchitecture.Razor.Domain.Entities.Karavay
 {
-    public class Nomenclature : BaseAuditableEntity, IAuditTrial, IHasDomainEvent
+    public class Nomenclature : BaseAuditableEntity, IAuditTrial, IHasDomainEvent, IBaseEntity
     {
 
          

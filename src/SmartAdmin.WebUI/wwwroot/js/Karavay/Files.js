@@ -8,12 +8,15 @@ var uploadfileinput = document.getElementById("file");
 uploadbutton.addEventListener('click', (e) => {
     uploadfileinput.click();
 })
-function clienUploadfilename() {
+function clienUploadfilename(withtablse=true) {
     uploadfilename.innerHTML = "";
     uploadFiles = {};
     uploadfileinputs.files = null;
-    var files_table = document.querySelector("#files_panel");
-    files_table.innerHTML = "";
+    if (withtablse) {
+        var files_table = document.querySelector("#files_panel");
+
+        files_table.innerHTML = "";
+    }
 }
 var onDownloadFile = (index) => {
 
@@ -49,7 +52,9 @@ function getFiles(path) {
                             <i class="${window.translations.IconPrefix} fa-download" ></i>
 							</button>`;
             });
-
+            if (res.data && res.data.length>0)
+            //    $('#Files').removeAttr('required');
+                $("#Files").rules("remove", "required");
         })
         .catch((error) => {
             if (error.response.data.Errors) {

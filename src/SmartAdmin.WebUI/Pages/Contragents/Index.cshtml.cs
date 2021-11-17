@@ -25,8 +25,9 @@ using CleanArchitecture.Razor.Application.Features.Contragents.Queries.Paginatio
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.StatusLogs.Queries.Pagination;
+using CleanArchitecture.Razor.Domain.Constants;
 using CleanArchitecture.Razor.Domain.Enums;
-using CleanArchitecture.Razor.Infrastructure.Constants.Files;
+
 using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Razor.Infrastructure.Constants.Role;
 using CleanArchitecture.Razor.Infrastructure.Identity;

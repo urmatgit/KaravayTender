@@ -36,6 +36,8 @@ $('#edit_form :submit').click(function (e) {
         axios.post(`${pagelink}`, form_data).then(res => {
             toastr["info"](`${translations.SaveSuccess} `);
             $('#edit_modal').modal('toggle');
+            if (typeof clienUploadfilename == 'function')
+                clienUploadfilename();
             reloadData();
         }).catch((error) => {
             if (error.response.data.Errors) {
@@ -51,6 +53,8 @@ $('#edit_form :submit').click(function (e) {
     event.preventDefault();
     event.stopPropagation();
 })
+tblFilters = [{}];
+
 tblColumns = [];
 function createColumns() {
     var InitColumns=
@@ -118,7 +122,7 @@ var initdatagrid = () => {
         },
         columns: [createColumns()]
     })
-        .datagrid('enableFilter', {})
+        .datagrid('enableFilter', tblFilters)
         .datagrid('load', `${pagelink}?handler=Data`);
 
 	}
@@ -138,12 +142,13 @@ $('#edit_modal').on('shown.bs.modal', function () {
     
 
 })
+var currentRow = null;
 var popupmodal = (nomenclature) => {
     $('#edit_modal').modal('toggle');
     $('#edit_modal .modal-title').html(`${translations.AddCaption}`);
     $('#edit_form').clearForm();
     $('#edit_form')[0].reset();
-    
+    currentRow = nomenclature;
     if (nomenclature) {
         $('#edit_modal .modal-title').html(`${translations.EditCaption}`);
         if (typeof jsonToFormCallBack !== 'undefined')
@@ -154,7 +159,8 @@ var popupmodal = (nomenclature) => {
         $('#edit_form #Input_Id').val(0)
         if (typeof clienUploadfilename == 'function')
             clienUploadfilename();
-
+        if (typeof OnNewRow == 'function')
+            OnNewRow();
     }
 }
 

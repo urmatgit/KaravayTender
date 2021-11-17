@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CleanArchitecture.Razor.Infrastructure.Constants.Files;
+using CleanArchitecture.Razor.Domain.Constants;
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using CleanArchitecture.Razor.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
@@ -91,7 +91,7 @@ namespace SmartAdmin.WebUI
                              }*/
                         Matching.WithProperty<string>("SourceContext", p => filters.Contains(p))
                         )
-                    .WriteTo.Console()
+                    .WriteTo.Debug()
                     , writeToProviders: true)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

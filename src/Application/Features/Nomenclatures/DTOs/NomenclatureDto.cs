@@ -33,6 +33,14 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         /// </summary>
         public string Specification { get; set; }
         public bool Archive { get; set; }
+
+        public bool ArchiveStr
+        {
+            get
+            {
+                return Archive;
+            }
+        }
         /// <summary>
         /// Объем Потребление в месяц
         /// </summary>

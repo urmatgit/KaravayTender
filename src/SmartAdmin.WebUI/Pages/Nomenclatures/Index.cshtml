@@ -141,8 +141,25 @@ onImportedSucceeded = "reloadData()"
             Volume: '@_localizer["Volume"]',
             ChooseQualityDoc: '@_localizer["Choose quality documents"]',
             ChooseCategory: '@_localizer["Choose a category"]',
-            Download_Success:'@_localizer["Download Success"]'
-		}
+            Download_Success: '@_localizer["Download Success"]',
+            Archiv:'@_localizer["Archive"]'
+        }
+        var YesNotList = [
+            {
+                id: '',
+                text: 'Все'
+
+            },
+            {
+                id: 'true',
+                text: 'Да'
+            },
+            {
+                id: 'false',
+                text: 'Нет'
+            }
+
+        ]
 		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
         var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
         var jsonToFormCallBack = {
@@ -150,14 +167,31 @@ onImportedSucceeded = "reloadData()"
                 $('#QualityDocsIds').val(value);
                 $('#QualityDocsIds').trigger('change');
 
+            },
+            Archive: function (value) {
+                if (value == true) {
+                    $('#edit_form [name*="Archive"]').prop('checked', true);
+                } else {
+                    $('#edit_form [name*="Archive"]').prop('checked', false);
+                }
+            },
+            DirectionId: function (value) {
+
+                console.log('$(Input_DirectionId).trigger(change);');
+                $('#Input_DirectionId').val(value);
+                $('#Input_DirectionId').trigger('change');
             }
         }
-
+        function OnNewRow() {
+            $('#QualityDocsIds').val([]);
+            $('#QualityDocsIds').trigger('change');
+        }
         $(() => {
-            
+
 			//columns.push([{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 }]);
             tblColumns = [
-                { field: 'Name', title: `${window.translations.Name} `, sortable: true, width: 180 },
+                { field: 'ArchiveStr', title: `${window.translations.Archiv} `, sortable: true, width: 80, formatter: checkboxformatter },
+                { field: 'Name', title: `${window.translations.Name} `, sortable: true, width: 280 },
                 { field: 'VatName', title: `${window.translations.VAT} `, sortable: true, width: 100 },
                 { field: 'CategoryName', title: `${window.translations.Category} `, sortable: true, width: 180 },
 
@@ -166,16 +200,41 @@ onImportedSucceeded = "reloadData()"
                 { field: 'Volume', title: `${window.translations.Volume} `, sortable: true, width: 120 },
 
             ];
+
+            tblFilters = [
+
+                {
+                    field: 'ArchiveStr',
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        valueField: 'id',
+                        textField: 'text',
+                        data: YesNotList,
+                        onChange: function (newValue, oldValue) {
+                            console.log(newValue);
+                            $dg.datagrid('addFilterRule', {
+                                field: 'Archive',
+                                op: 'equal',
+                                value: newValue
+                            });
+
+                        }
+
+                    }
+
+                }
+            ]
             initdatagrid();
             $('.select2').select2({
                 placeholder: '@Html.Raw(@_localizer["Choose quality documents"])',
-                
+
                 allowClear: true,
                 dropdownParent: $('#edit_modal')
             });
 
         })
-        
+
         $("#Input_DirectionId").change(function () {
 
 
@@ -198,6 +257,10 @@ onImportedSucceeded = "reloadData()"
                                 value: model.Id
                             }).text(model.Name)
                         );
+                        if (currentRow && currentRow.CategoryId == model.Id && currentRow.CategoryName) {
+                            modelDropDown.val(currentRow.CategoryId);
+                        }
+
                     });
                 })
                 .catch((error) => {
