@@ -10,7 +10,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
 {
     public static class Permissions
     {
-        [DisplayName("AuditTrails")]
+        [DisplayName("Журналы аудита")]
         [Description("AuditTrails Permissions")]
         public static class AuditTrails
         {
@@ -18,7 +18,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Search = "Permissions.AuditTrails.Search";
             public const string Export = "Permissions.AuditTrails.Export";
         }
-        [DisplayName("Logs")]
+        [DisplayName("Логи")]
         [Description("Logs Permissions")]
         public static class Logs
         {
@@ -37,30 +37,30 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
         //    public const string Export = "Permissions.Approval.Export";
         //}
 
-        [DisplayName("Products")]
-        [Description("Products Permissions")]
-        public static class Products
-        {
-            public const string View = "Permissions.Products.View";
-            public const string Create = "Permissions.Products.Create";
-            public const string Edit = "Permissions.Products.Edit";
-            public const string Delete = "Permissions.Products.Delete";
-            public const string Search = "Permissions.Products.Search";
-            public const string Export = "Permissions.Products.Export";
-            public const string Import = "Permissions.Products.Import";
-        }
-        [DisplayName("Customers")]
-        [Description("Customers Permissions")]
-        public static class Customers
-        {
-            public const string View = "Permissions.Customers.View";
-            public const string Create = "Permissions.Customers.Create";
-            public const string Edit = "Permissions.Customers.Edit";
-            public const string Delete = "Permissions.Customers.Delete";
-            public const string Search = "Permissions.Customers.Search";
-            public const string Export = "Permissions.Customers.Export";
-            public const string Import = "Permissions.Customers.Import";
-        }
+        //[DisplayName("Products")]
+        //[Description("Products Permissions")]
+        //public static class Products
+        //{
+        //    public const string View = "Permissions.Products.View";
+        //    public const string Create = "Permissions.Products.Create";
+        //    public const string Edit = "Permissions.Products.Edit";
+        //    public const string Delete = "Permissions.Products.Delete";
+        //    public const string Search = "Permissions.Products.Search";
+        //    public const string Export = "Permissions.Products.Export";
+        //    public const string Import = "Permissions.Products.Import";
+        //}
+        //[DisplayName("Customers")]
+        //[Description("Customers Permissions")]
+        //public static class Customers
+        //{
+        //    public const string View = "Permissions.Customers.View";
+        //    public const string Create = "Permissions.Customers.Create";
+        //    public const string Edit = "Permissions.Customers.Edit";
+        //    public const string Delete = "Permissions.Customers.Delete";
+        //    public const string Search = "Permissions.Customers.Search";
+        //    public const string Export = "Permissions.Customers.Export";
+        //    public const string Import = "Permissions.Customers.Import";
+        //}
 
 
 
@@ -89,20 +89,20 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
         //    public const string Export = "Permissions.Documents.Export";
         //    public const string Import = "Permissions.Categories.Import";
         //}
-        [DisplayName("Dictionaries")]
-        [Description("Dictionaries Permissions")]
-        public static class Dictionaries
-        {
-            public const string View = "Permissions.Dictionaries.View";
-            public const string Create = "Permissions.Dictionaries.Create";
-            public const string Edit = "Permissions.Dictionaries.Edit";
-            public const string Delete = "Permissions.Dictionaries.Delete";
-            public const string Search = "Permissions.Dictionaries.Search";
-            public const string Export = "Permissions.Dictionaries.Export";
-            public const string Import = "Permissions.Dictionaries.Import";
-        }
+        //[DisplayName("Dictionaries")]
+        //[Description("Dictionaries Permissions")]
+        //public static class Dictionaries
+        //{
+        //    public const string View = "Permissions.Dictionaries.View";
+        //    public const string Create = "Permissions.Dictionaries.Create";
+        //    public const string Edit = "Permissions.Dictionaries.Edit";
+        //    public const string Delete = "Permissions.Dictionaries.Delete";
+        //    public const string Search = "Permissions.Dictionaries.Search";
+        //    public const string Export = "Permissions.Dictionaries.Export";
+        //    public const string Import = "Permissions.Dictionaries.Import";
+        //}
 
-        [DisplayName("Users")]
+        [DisplayName("Пользователи")]
         [Description("Users Permissions")]
         public static class Users
         {
@@ -118,7 +118,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Active = "Permissions.Users.Active";
         }
 
-        [DisplayName("Roles")]
+        [DisplayName("Роли")]
         [Description("Roles Permissions")]
         public static class Roles
         {
@@ -133,7 +133,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string ManageNavigation = "Permissions.Roles.Navigation";
         }
 
-        [DisplayName("Role Claims")]
+        [DisplayName("Требования к Роли")]
         [Description("Role Claims Permissions")]
         public static class RoleClaims
         {
@@ -161,7 +161,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
         }
 
         //Karavay
-        [DisplayName("Directions")]
+        [DisplayName("Направления")]
         [Description("Directions Permissions")]
         public static class Directions
         {
@@ -173,7 +173,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Export = "Permissions.Directions.Export";
             public const string Import = "Permissions.Directions.Import";
         }
-        [DisplayName("Categories")]
+        [DisplayName("Категория")]
         [Description("Categories Permissions")]
         public static class Categories
         {
@@ -185,7 +185,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Export = "Permissions.Categories.Export";
             public const string Import = "Permissions.Categories.Import";
         }
-        [DisplayName("Contragents")]
+        [DisplayName("Поставщики")]
         [Description("Contragents Permissions")]
         public static class Contragents
         {
@@ -199,7 +199,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Import = "Permissions.Contragents.Import";
             public const string Acceditation = "Permissions.Contragents.Acceditation";
         }
-        [DisplayName("StatusLogs")]
+        [DisplayName("Статус лог")]
         [Description("StatusLogs Permissions")]
         public static class StatusLogs
         {
@@ -207,7 +207,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
 
         }
 
-        [DisplayName("UnitOfs")]
+        [DisplayName("Ед. измерения")]
         [Description("UnitOfs Permissions")]
         public static class UnitOfs
         {
@@ -220,7 +220,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Import = "Permissions.UnitOfs.Import";
         }
 
-        [DisplayName("Vats")]
+        [DisplayName("НДС")]
         [Description("Vats Permissions")]
         public static class Vats
         {
@@ -232,7 +232,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Export = "Permissions.Vats.Export";
             public const string Import = "Permissions.Vats.Import";
         }
-        [DisplayName("QualityDocs")]
+        [DisplayName("Документы по качеству")]
         [Description("QualityDocs Permissions")]
         public static class QualityDocs
         {
@@ -245,7 +245,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Import = "Permissions.QualityDocs.Import";
         }
         //Nomenclatures
-        [DisplayName("Nomenclatures")]
+        [DisplayName("Номенклатура")]
         [Description("Nomenclatures Permissions")]
         public static class Nomenclatures
         {

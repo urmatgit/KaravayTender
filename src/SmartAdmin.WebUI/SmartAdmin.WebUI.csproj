@@ -8,17 +8,33 @@
 
 <ItemGroup>
     <Compile Remove="Pages\Approval\**" />
+    <Compile Remove="Pages\Customers\**" />
+    <Compile Remove="Pages\DemoMasterDetail\**" />
     <Compile Remove="Pages\Documents\**" />
     <Compile Remove="Pages\DocumentTypes\**" />
+    <Compile Remove="Pages\KeyValues\**" />
+    <Compile Remove="Pages\Products\**" />
     <Content Remove="Pages\Approval\**" />
+    <Content Remove="Pages\Customers\**" />
+    <Content Remove="Pages\DemoMasterDetail\**" />
     <Content Remove="Pages\Documents\**" />
     <Content Remove="Pages\DocumentTypes\**" />
+    <Content Remove="Pages\KeyValues\**" />
+    <Content Remove="Pages\Products\**" />
     <EmbeddedResource Remove="Pages\Approval\**" />
+    <EmbeddedResource Remove="Pages\Customers\**" />
+    <EmbeddedResource Remove="Pages\DemoMasterDetail\**" />
     <EmbeddedResource Remove="Pages\Documents\**" />
     <EmbeddedResource Remove="Pages\DocumentTypes\**" />
+    <EmbeddedResource Remove="Pages\KeyValues\**" />
+    <EmbeddedResource Remove="Pages\Products\**" />
     <None Remove="Pages\Approval\**" />
+    <None Remove="Pages\Customers\**" />
+    <None Remove="Pages\DemoMasterDetail\**" />
     <None Remove="Pages\Documents\**" />
     <None Remove="Pages\DocumentTypes\**" />
+    <None Remove="Pages\KeyValues\**" />
+    <None Remove="Pages\Products\**" />
   </ItemGroup>
 
   <ItemGroup>

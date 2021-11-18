@@ -332,7 +332,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                     DisplayName = Input.Name,
                     UserName = UserFormModel.Login,
                     Email = Input.Email,
-                    ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ Input.Email.ToMD5() }?s=120&d=retro"
+                    ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ Input.Email.ToMD5() }?s=120&d=mp"
                 };
             }
             return (user, IsExist);

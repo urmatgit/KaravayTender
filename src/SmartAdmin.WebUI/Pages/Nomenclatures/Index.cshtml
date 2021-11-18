@@ -260,8 +260,8 @@ onImportedSucceeded = "reloadData()"
                                 value: model.Id
                             }).text(model.Name)
                         );
-                        if (currentRow && currentRow.CategoryId == model.Id && currentRow.CategoryName) {
-                            modelDropDown.val(currentRow.CategoryId);
+                        if (currentEditRow && currentEditRow.CategoryId == model.Id && currentEditRow.CategoryName) {
+                            modelDropDown.val(currentEditRow.CategoryId);
                         }
 
                     });

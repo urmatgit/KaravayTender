@@ -9,11 +9,15 @@ using CleanArchitecture.Razor.Application.Customers.DTOs;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
+using CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs;
+using CleanArchitecture.Razor.Application.Features.References.QualityDocs.DTOs;
+using CleanArchitecture.Razor.Application.Features.StatusLogs.DTOs;
 //using CleanArchitecture.Razor.Application.Documents.DTOs;
 //using CleanArchitecture.Razor.Application.DocumentTypes.DTOs;
 //using CleanArchitecture.Razor.Application.Features.ApprovalDatas.DTOs;
 using CleanArchitecture.Razor.Application.KeyValues.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
+using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Application.UnitTests.Common.Mappings
@@ -41,9 +45,9 @@ namespace CleanArchitecture.Application.UnitTests.Common.Mappings
         //}
 
         [Test]
-        //[TestCase(typeof(ApprovalData), typeof(ApprovalDataDto))]
-        //[TestCase(typeof(DocumentType), typeof(DocumentTypeDto))]
-        //[TestCase(typeof(Document), typeof(DocumentDto))]
+        [TestCase(typeof(StatusLog), typeof(StatusLogDto))]
+        [TestCase(typeof(QualityDoc), typeof(QualityDocDto))]
+        [TestCase(typeof(Nomenclature), typeof(NomenclatureDto))]
         [TestCase(typeof(Contragent), typeof(ContragentDto))]
         [TestCase(typeof(Category), typeof(CategoryDto))]
         [TestCase(typeof(Direction), typeof(DirectionDto))]

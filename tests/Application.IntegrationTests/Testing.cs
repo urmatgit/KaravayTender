@@ -43,7 +43,7 @@ public class Testing
 
         services.AddSingleton(Mock.Of<IWebHostEnvironment>(w =>
             w.EnvironmentName == "Development" &&
-            w.ApplicationName == "CleanArchitecture.WebUI"));
+            w.ApplicationName == "SmartAdmin.WebUI"));
 
         services.AddLogging();
 
@@ -134,7 +134,7 @@ public class Testing
 
     public static async Task ResetState()
     {
-        await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnectionSqlite"));
         _currentUserId = null;
     }
 
