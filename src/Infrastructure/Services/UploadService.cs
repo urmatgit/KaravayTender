@@ -9,11 +9,19 @@ using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Razor.Infrastructure.Services
 {
     public class UploadService : IUploadService
     {
+        private readonly ILogger<IUploadService> _logger;
+        private readonly ICurrentUserService _currentUserService;
+        public UploadService(ILogger<IUploadService> logger, ICurrentUserService currentUserService)
+        {
+            _logger = logger;
+            _currentUserService = currentUserService;
+        }
         public async Task<string> UploadAsync(UploadRequest request)
         {
             if (request.Data == null) return string.Empty;
@@ -149,11 +157,13 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
             {
                 try
                 {
-                    File.Delete(folder);
+                    File.Delete(folderName);
+                    _logger.LogInformation($"File deleted ({folderName})");
 
                 }
                 catch (Exception er)
                 {
+                    _logger.LogError($"File delete error ({folderName})",er);
                     return await Result.FailureAsync(new string[] { er.Message });
                 }
 

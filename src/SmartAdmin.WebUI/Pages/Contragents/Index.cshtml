@@ -20,7 +20,7 @@
     var _canImport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Import);
     var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Export);
     var _canAcceditation = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Acceditation);
-
+    var _canDeleteFile = await _authorizationService.AuthorizeAsync(User, null, Permissions.Nomenclatures.DeleteFile);
 }
 @section HeadBlock {
 
@@ -163,9 +163,14 @@
             Date: '@_localizer["Date"]',
             loadfail: '@_localizer["load fail"]',
             Description: '@_localizer["Description"]',
+            DeleteFileDialog: '@_localizer["Are you sure delete this file?"]',
+            Yes: '@_localizer["Yes"]',
+            No: '@_localizer["No"]',
+            DeleteSuccess: '@_localizer["Delete Success"]',
+            DeleteFail: '@_localizer["Delete fail"]'
         }
 
-
+        var _canDeleteFile =  @(_canDeleteFile.Succeeded ? "true" : "false" );
         var YesNotList = [
 			{
 				id: '',
@@ -531,7 +536,7 @@
 		$('#contragent_modal').on('shown.bs.modal', function () {
                     var IsAddClick = $('#contragent_form #Input_Id').val();
             if (!IsAddClick || IsAddClick == 0) return;
-            clienUploadfilename();
+            clienUploadfilename(false);
             $('#contragent_form #UserFormModel_ManagerPhone').val(currentEditRow.ManagerPhone);
                     if (currentEditRow && currentEditRow.ContragentCategories && currentEditRow.ContragentCategories.length > 0) {
                         var categories = $('#contragent_form [name*="category.Name"]');//  document.getElementsByName("category.Name");

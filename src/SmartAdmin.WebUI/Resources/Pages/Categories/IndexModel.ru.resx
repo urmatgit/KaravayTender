@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -127,10 +127,10 @@
     <value>Все</value>
   </data>
   <data name="Are you sure delete a row?" xml:space="preserve">
-    <value>Вы уверены, что удалите строку?</value>
+    <value>Вы уверены, удалить эту строку?</value>
   </data>
   <data name="Are you sure delete checked rows?" xml:space="preserve">
-    <value>Вы уверены, что удаляете отмеченные строки?</value>
+    <value>Вы уверены, удалять эти отмеченные строки?</value>
   </data>
   <data name="Categories" xml:space="preserve">
     <value>Категории</value>

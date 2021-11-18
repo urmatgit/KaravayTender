@@ -146,7 +146,7 @@
       "title": "Job!",
       "href": "/jobs",
       "icon": "fal fa-graduation-cap",
-      "roles": []
+      "roles": ["super"]
     }
 
 

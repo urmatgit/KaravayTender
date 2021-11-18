@@ -1,4 +1,5 @@
 // upload
+
 var maxFileSize = 5242880; // 5MB -> 5 * 1024 * 1024
 var maxFilesSize = 52428800; // 50MB -> 50 * 1024 * 1024
 var uploadfilename = document.querySelector("#uploadfilename");
@@ -29,6 +30,49 @@ var onDownloadFile = (index) => {
     link.click();
     toastr["info"](`${window.translations.Download_Success}`);
 }
+var onRemoveFile = (index, file) => {
+    bootbox.confirm({
+        message: `${window.translations.DeleteFileDialog}`,  //"@_localizer["Are you sure delete a row?"]",
+        buttons: {
+            confirm: {
+                label: `${window.translations.Yes}`, //'@_localizer["Yes"]',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: `${window.translations.No}`, //'@_localizer["No"]',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                
+                axios.get(pagelink + '?handler=DeleteFile&id=' + currentRow.Id + '&name=' + file)
+                    .then(res => {
+                        if (typeof currentRow != 'undefined') {
+                            getFiles(pagelink + '?handler=FilesList&id=' + currentRow.Id);
+
+                        } else {
+                            $(`#files_panel tr[id=${index - 1}]`).remove();
+                        }
+                        toastr["info"](`${window.translations.DeleteSuccess}`);// '@_localizer["Delete Success"]');
+                    })
+                    .catch((error) => {
+                        if (error.response.data.Errors) {
+                            const errors = error.response.data.Errors;
+                            errors.forEach(item => {
+                                toastr["error"](item);
+                            });
+                        } else {
+                            toastr["error"](`${window.translations.DeleteFail},${error.response.data}`);
+                        }
+                    });
+            }
+        }
+    })
+
+    
+    
+}
 
 
 function getFiles(path) {
@@ -43,14 +87,23 @@ function getFiles(path) {
             let index = 0;
             res.data.forEach(file => {
                 let row = files_table.insertRow();
+                row.id = index;
                 let rowvalue = row.insertCell(0);
                 rowvalue.innerHTML = ++index;
                 let colFile = row.insertCell(1);
                 colFile.innerHTML = file.replace(/^.*[\\\/]/, '');
                 let colAction = row.insertCell(2);
-                colAction.innerHTML = `<button type="button" name="download_files" class="btn btn-sm btn-outline-primary" onclick="onDownloadFile('${file.replaceAll('\\', '/')}')" >
+                colAction.innerHTML = `<button type="button" name="download_files" title="Загрузить файл" class="btn btn-sm btn-outline-primary" onclick="onDownloadFile('${file.replaceAll('\\', '/')}')" >
                             <i class="${window.translations.IconPrefix} fa-download" ></i>
-							</button>`;
+							</button> ` ;
+                if (typeof _canDeleteFile != 'undefined' && _canDeleteFile) {
+                
+                    colAction.innerHTML+=`
+                    <button type="button" name="remove_files" title="Удалить файл" class="btn btn-sm btn-outline-primary" onclick="onRemoveFile(${index}, '${colFile.innerHTML}')" >
+                        <i class="${window.translations.IconPrefix} fa-trash-alt" ></i>
+                    </button>`;
+                }
+               
             });
             if (res.data && res.data.length>0)
             //    $('#Files').removeAttr('required');
@@ -97,6 +150,7 @@ uploadfileinput.onchange = (e) => {
 							<div class="alert-icon">
 									<i class="${window.translations.IconPrefix} fa-upload fs-xl"></i>
 							</div>
+                            
 							<div class="flex-1">
 	    						 <span ${UnderLineText}>${fileName}  (${(file.size / 1024 / 1024).toFixed(3)} Mb)</span> ${isBigFile}
 							</div>

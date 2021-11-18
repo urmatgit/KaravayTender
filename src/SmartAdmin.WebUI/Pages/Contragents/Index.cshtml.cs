@@ -121,6 +121,19 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 return BadRequest(new string[] { er.Message });
             }
         }
+        public async Task<IActionResult> OnGetDeleteFileAsync([FromQuery] int id, [FromQuery] string name)
+        {
+            var _canDeleteFile = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.DeleteFile);
+            if (_canDeleteFile.Succeeded)
+            {
+                var result = _uploadService.RemoveFileAsync(id, name, PathConstants.DocumentsPath);
+
+                return new JsonResult(_localizer["Delete Success"]);
+            }
+            else
+                return BadRequest(Result.Failure(new string[] { "У вас нет прав на удаление файла!" }));
+
+        }
         public async Task<IActionResult> OnGetOnRegistraionCountAsync()
         {
             var count = await _mediator.Send(new GetByStatusQuery() { Status = ContragentStatus.OnRegistration });

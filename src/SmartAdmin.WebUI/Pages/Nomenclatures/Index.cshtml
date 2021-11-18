@@ -17,6 +17,7 @@
     var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.Nomenclatures.Search);
     var _canImport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Nomenclatures.Import);
     var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Nomenclatures.Export);
+var _canDeleteFile = await _authorizationService.AuthorizeAsync(User, null, Permissions.Nomenclatures.DeleteFile);
 
 }
 @section HeadBlock {
@@ -142,7 +143,8 @@ onImportedSucceeded = "reloadData()"
             ChooseQualityDoc: '@_localizer["Choose quality documents"]',
             ChooseCategory: '@_localizer["Choose a category"]',
             Download_Success: '@_localizer["Download Success"]',
-            Archiv:'@_localizer["Archive"]'
+            Archiv: '@_localizer["Archive"]',
+            DeleteFileDialog: '@_localizer["Are you sure delete this file?"]',
         }
         var YesNotList = [
             {
@@ -162,6 +164,7 @@ onImportedSucceeded = "reloadData()"
         ]
 		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
         var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
+        var _canDeleteFile =  @(_canDeleteFile.Succeeded ? "true" : "false" );
         var jsonToFormCallBack = {
             QualityDocsIds: function (value) {
                 $('#QualityDocsIds').val(value);

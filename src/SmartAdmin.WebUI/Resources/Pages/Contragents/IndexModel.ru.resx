@@ -145,10 +145,13 @@
     <value>Вы уверены, что хотите изменить состояние?</value>
   </data>
   <data name="Are you sure delete a row?" xml:space="preserve">
-    <value>Вы уверены, что удалите строку?</value>
+    <value>Вы уверены, удалить эту строку?</value>
   </data>
   <data name="Are you sure delete checked rows?" xml:space="preserve">
-    <value>Вы уверены, что удаляете отмеченные строки?</value>
+    <value>Вы уверены, удалять эти отмеченные строки?</value>
+  </data>
+  <data name="Are you sure delete this file?" xml:space="preserve">
+    <value>Вы уверены, удалить  файл?</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>

@@ -124,10 +124,10 @@
     <value>Добавить НДС</value>
   </data>
   <data name="Are you sure delete a row?" xml:space="preserve">
-    <value>Вы уверены, что удалите строку?</value>
+    <value>Вы уверены, удалить эту строку?</value>
   </data>
   <data name="Are you sure delete checked rows?" xml:space="preserve">
-    <value>Вы уверены, что удаляете отмеченные строки?</value>
+    <value>Вы уверены, удалять эти отмеченные строки?</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Закрыть</value>

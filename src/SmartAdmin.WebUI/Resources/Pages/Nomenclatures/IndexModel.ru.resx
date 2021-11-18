@@ -127,10 +127,13 @@
     <value>Архив</value>
   </data>
   <data name="Are you sure delete a row?" xml:space="preserve">
-    <value>Вы уверены, что удалите строку?</value>
+    <value>Вы уверены, удалить эту строку?</value>
   </data>
   <data name="Are you sure delete checked rows?" xml:space="preserve">
-    <value>Вы уверены, что удаляете отмеченные строки?</value>
+    <value>Вы уверены, удалять эти отмеченные строки?</value>
+  </data>
+  <data name="Are you sure delete this file?" xml:space="preserve">
+    <value>Вы уверены, удалить  файл?</value>
   </data>
   <data name="Average volume" xml:space="preserve">
     <value>Средний объем</value>
@@ -169,7 +172,7 @@
     <value>Ошибка при удалении</value>
   </data>
   <data name="Delete Success" xml:space="preserve">
-    <value>Строка удалена</value>
+    <value>Удаление прошло успешно</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Описание</value>

@@ -90,7 +90,7 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] NomenclaturesWithPaginationQuery command)
         {
-            throw new Exception("Test log error 222 !!!!!!");
+           // throw new Exception("Test log error 222 !!!!!!");
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
@@ -152,7 +152,19 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
-
+        public async Task<IActionResult> OnGetDeleteFileAsync([FromQuery] int id, [FromQuery] string name)
+        {
+            var _canDeleteFile= await _authorizationService.AuthorizeAsync(User, null, Permissions.Nomenclatures.DeleteFile);
+            if (_canDeleteFile.Succeeded)
+            {
+                var result= _uploadService.RemoveFileAsync(id, name, PathConstants.SpecificationsPath);
+                
+                return new JsonResult(_localizer["Delete Success"]);
+            }
+            else
+                return BadRequest(Result.Failure(new string[] { "У вас нет прав на удаление файла!" }));
+            
+        }
         public async Task<IActionResult> OnGetFilesListAsync(int id)
         {
             try
@@ -181,6 +193,7 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
             //Input.Directions = directionsDtos;
             Directions = new SelectList(directionsDtos, "Id", "Name");
         }
+
         #endregion
     }
 }

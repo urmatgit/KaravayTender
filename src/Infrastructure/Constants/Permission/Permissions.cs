@@ -193,6 +193,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Create = "Permissions.Contragents.Create";
             public const string Edit = "Permissions.Contragents.Edit";
             public const string Delete = "Permissions.Contragents.Delete";
+            public const string DeleteFile = "Permissions.Contragents.DeleteFile";
             public const string Search = "Permissions.Contragents.Search";
             public const string Export = "Permissions.Contragents.Export";
             public const string Import = "Permissions.Contragents.Import";
@@ -252,6 +253,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Create = "Permissions.Nomenclatures.Create";
             public const string Edit = "Permissions.Nomenclatures.Edit";
             public const string Delete = "Permissions.Nomenclatures.Delete";
+            public const string DeleteFile = "Permissions.Nomenclatures.DeleteFile";
             public const string Search = "Permissions.Nomenclatures.Search";
             public const string Export = "Permissions.Nomenclatures.Export";
             public const string Import = "Permissions.Nomenclatures.Import";
