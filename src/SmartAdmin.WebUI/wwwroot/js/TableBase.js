@@ -142,13 +142,13 @@ $('#edit_modal').on('shown.bs.modal', function () {
     
 
 })
-var currentRow = null;
+var currentEditRow = null;
 var popupmodal = (nomenclature) => {
     $('#edit_modal').modal('toggle');
     $('#edit_modal .modal-title').html(`${translations.AddCaption}`);
     $('#edit_form').clearForm();
     $('#edit_form')[0].reset();
-    currentRow = nomenclature;
+    currentEditRow = nomenclature;
     if (nomenclature) {
         $('#edit_modal .modal-title').html(`${translations.EditCaption}`);
         if (typeof jsonToFormCallBack !== 'undefined')

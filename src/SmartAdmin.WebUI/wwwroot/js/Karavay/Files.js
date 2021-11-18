@@ -46,10 +46,10 @@ var onRemoveFile = (index, file) => {
         callback: function (result) {
             if (result) {
                 
-                axios.get(pagelink + '?handler=DeleteFile&id=' + currentRow.Id + '&name=' + file)
+                axios.get(pagelink + '?handler=DeleteFile&id=' + currentEditRow.Id + '&name=' + file)
                     .then(res => {
-                        if (typeof currentRow != 'undefined') {
-                            getFiles(pagelink + '?handler=FilesList&id=' + currentRow.Id);
+                        if (typeof currentEditRow != 'undefined') {
+                            getFiles(pagelink + '?handler=FilesList&id=' + currentEditRow.Id);
 
                         } else {
                             $(`#files_panel tr[id=${index - 1}]`).remove();

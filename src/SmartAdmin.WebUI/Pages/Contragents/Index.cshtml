@@ -20,7 +20,7 @@
     var _canImport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Import);
     var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Export);
     var _canAcceditation = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Acceditation);
-    var _canDeleteFile = await _authorizationService.AuthorizeAsync(User, null, Permissions.Nomenclatures.DeleteFile);
+    var _canDeleteFile = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.DeleteFile);
 }
 @section HeadBlock {
 
@@ -151,7 +151,7 @@
                 }
 
                 });
-
+        var pagelink = '@Url.Page("/Contragents/Index")';
 		var translations = {
             FileSizeToBig: '@_localizer["File too big!"]',
             GetCategoriesFail: '@_localizer["Get categories fail"]',
