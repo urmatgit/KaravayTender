@@ -64,6 +64,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         public DbSet<QualityDoc> QualityDocs { get; set; }
         public DbSet<Nomenclature> Nomenclatures { get; set; }
         public DbSet<NomenclatureQualityDoc> NomenclatureQualityDocs { get; set; }
+
+        public DbSet<Area> Areas { get; set; }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
 

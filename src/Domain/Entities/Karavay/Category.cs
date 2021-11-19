@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using CleanArchitecture.Razor.Domain.Common;
+using CleanArchitecture.Razor.Domain.Entities.Karavay;
 
 namespace CleanArchitecture.Razor.Domain.Entities
 {
@@ -14,6 +15,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
         public int DirectionId { get; set; }
         public virtual Direction Direction { get; set; }
         public virtual ICollection<ContragentCategory> ContragentCategories { get; set; }
+        public virtual ICollection<Nomenclature> Nomenclatures { get; set; }
         public List<DomainEvent> DomainEvents { get; set; } = new();
 
     }

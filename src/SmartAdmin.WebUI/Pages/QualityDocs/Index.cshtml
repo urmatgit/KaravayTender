@@ -15,7 +15,7 @@
 	var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.QualityDocs.Edit);
 	var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.QualityDocs.Delete);
 	var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.QualityDocs.Search);
-	var _canImport = await _authorizationService.AuthorizeAsync(User, null, Permissions.QualityDocs.Import);
+	
 	var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.QualityDocs.Export);
 
 }

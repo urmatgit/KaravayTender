@@ -43,6 +43,11 @@
           "roles": []
         },
         {
+          "title": "Производственные площадки",
+          "href": "areas_index.html",
+          "roles": []
+        },
+        {
           "title": "Направление",
           "href": "directions_index.html",
           "roles": []

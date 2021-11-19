@@ -40,8 +40,4 @@
     <ProjectReference Include="..\..\src\SmartAdmin.WebUI\SmartAdmin.WebUI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contragents\" />
-  </ItemGroup>
-
 </Project>

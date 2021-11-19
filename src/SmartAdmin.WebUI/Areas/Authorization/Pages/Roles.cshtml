@@ -14,7 +14,7 @@
     var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Edit);
     var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Delete);
     var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Search);
-    var _canImport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Import);
+    
     var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Export);
     var _canManagePermissions = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.ManagePermissions);
     var _canManageNavigation = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.ManageNavigation);
@@ -70,7 +70,7 @@
                     @_localizer["Search"]
                 </button>
             }
-            @if (_canImport.Succeeded)
+            @*@if (_canImport.Succeeded)
             {
                 <div class="btn-group" role="group">
                     <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
@@ -83,7 +83,7 @@
                         <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
                     </div>
                 </div>
-            }
+            }*@
             @if (_canExport.Succeeded)
             {
                 <button class="btn btn-sm btn-outline-primary " id="exportbutton">

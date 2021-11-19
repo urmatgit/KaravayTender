@@ -12,11 +12,15 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence.Configurations
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Nomenclature> builder)
         {
             builder.Ignore(c => c.DomainEvents);
-
+            builder.HasOne(c => c.Direction)
+                .WithMany(d => d.Nomenclatures)
+                .HasForeignKey(d => d.DirectionId)
+                .OnDelete(DeleteBehavior.ClientCascade);
             builder.Property(c => c.Volume)
                   .IsRequired();
             builder.Property(c => c.DirectionId)
                   .IsRequired();
+                  
             builder.Property(c => c.CategoryId)
                   .IsRequired();
 

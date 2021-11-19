@@ -303,6 +303,41 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.ToTable("Directions");
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.Area", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Areas");
+                });
+
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.Nomenclature", b =>
                 {
                     b.Property<int>("Id")
@@ -905,15 +940,15 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.Nomenclature", b =>
                 {
                     b.HasOne("CleanArchitecture.Razor.Domain.Entities.Category", "Category")
-                        .WithMany()
+                        .WithMany("Nomenclatures")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CleanArchitecture.Razor.Domain.Entities.Direction", "Direction")
-                        .WithMany()
+                        .WithMany("Nomenclatures")
                         .HasForeignKey("DirectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("CleanArchitecture.Razor.Domain.Entities.Karavay.UnitOf", "UnitOf")
@@ -1033,6 +1068,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Category", b =>
                 {
                     b.Navigation("ContragentCategories");
+
+                    b.Navigation("Nomenclatures");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Contragent", b =>
@@ -1045,6 +1082,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Direction", b =>
                 {
                     b.Navigation("Categories");
+
+                    b.Navigation("Nomenclatures");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.Nomenclature", b =>

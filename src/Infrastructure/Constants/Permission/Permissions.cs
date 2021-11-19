@@ -111,7 +111,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Edit = "Permissions.Users.Edit";
             public const string Delete = "Permissions.Users.Delete";
             public const string Search = "Permissions.Users.Search";
-            public const string Import = "Permissions.Users.Import";
+            
             public const string Export = "Permissions.Dictionaries.Export";
             public const string ManageRoles = "Permissions.Users.ManageRoles";
             public const string RestPassword = "Permissions.Users.RestPassword";
@@ -128,7 +128,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Delete = "Permissions.Roles.Delete";
             public const string Search = "Permissions.Roles.Search";
             public const string Export = "Permissions.Roles.Export";
-            public const string Import = "Permissions.Roles.Import";
+            
             public const string ManagePermissions = "Permissions.Roles.Permissions";
             public const string ManageNavigation = "Permissions.Roles.Navigation";
         }
@@ -171,7 +171,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Delete = "Permissions.Directions.Delete";
             public const string Search = "Permissions.Directions.Search";
             public const string Export = "Permissions.Directions.Export";
-            public const string Import = "Permissions.Directions.Import";
+         
         }
         [DisplayName("Категория")]
         [Description("Categories Permissions")]
@@ -183,7 +183,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Delete = "Permissions.Categories.Delete";
             public const string Search = "Permissions.Categories.Search";
             public const string Export = "Permissions.Categories.Export";
-            public const string Import = "Permissions.Categories.Import";
+            
         }
         [DisplayName("Поставщики")]
         [Description("Contragents Permissions")]
@@ -196,7 +196,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string DeleteFile = "Permissions.Contragents.DeleteFile";
             public const string Search = "Permissions.Contragents.Search";
             public const string Export = "Permissions.Contragents.Export";
-            public const string Import = "Permissions.Contragents.Import";
+            
             public const string Acceditation = "Permissions.Contragents.Acceditation";
         }
         [DisplayName("Статус лог")]
@@ -217,7 +217,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Delete = "Permissions.UnitOfs.Delete";
             public const string Search = "Permissions.UnitOfs.Search";
             public const string Export = "Permissions.UnitOfs.Export";
-            public const string Import = "Permissions.UnitOfs.Import";
+            
         }
 
         [DisplayName("НДС")]
@@ -230,7 +230,19 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Delete = "Permissions.Vats.Delete";
             public const string Search = "Permissions.Vats.Search";
             public const string Export = "Permissions.Vats.Export";
-            public const string Import = "Permissions.Vats.Import";
+            
+        }
+        [DisplayName("Производственные площадки")]
+        [Description("Areas Permissions")]
+        public static class Areas
+        {
+            public const string View = "Permissions.Areas.View";
+            public const string Create = "Permissions.Areas.Create";
+            public const string Edit = "Permissions.Areas.Edit";
+            public const string Delete = "Permissions.Areas.Delete";
+            public const string Search = "Permissions.Areas.Search";
+            public const string Export = "Permissions.Areas.Export";
+            
         }
         [DisplayName("Документы по качеству")]
         [Description("QualityDocs Permissions")]
@@ -242,7 +254,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string Delete = "Permissions.QualityDocs.Delete";
             public const string Search = "Permissions.QualityDocs.Search";
             public const string Export = "Permissions.QualityDocs.Export";
-            public const string Import = "Permissions.QualityDocs.Import";
+            
         }
         //Nomenclatures
         [DisplayName("Номенклатура")]
@@ -256,7 +268,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
             public const string DeleteFile = "Permissions.Nomenclatures.DeleteFile";
             public const string Search = "Permissions.Nomenclatures.Search";
             public const string Export = "Permissions.Nomenclatures.Export";
-            public const string Import = "Permissions.Nomenclatures.Import";
+            
         }
         /// <summary>
         /// Returns a list of Permissions.

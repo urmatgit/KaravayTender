@@ -16,7 +16,7 @@
     var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.Users.Edit);
     var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.Users.Delete);
     var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.Users.Search);
-    var _canImport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Users.Import);
+    
     var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Users.Export);
     var _canActive = await _authorizationService.AuthorizeAsync(User, null, Permissions.Users.Active);
     var _canManageRoles = await _authorizationService.AuthorizeAsync(User, null, Permissions.Users.ManageRoles);

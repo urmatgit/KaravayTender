@@ -134,7 +134,7 @@ public class Testing
 
     public static async Task ResetState()
     {
-        await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnectionSqlite"));
+        await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
         _currentUserId = null;
     }
 
