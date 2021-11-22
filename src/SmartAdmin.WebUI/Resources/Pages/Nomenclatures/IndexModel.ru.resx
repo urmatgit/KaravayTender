@@ -213,6 +213,9 @@
   <data name="Nomenclature" xml:space="preserve">
     <value>Номенклатура</value>
   </data>
+  <data name="Nomenclatures" xml:space="preserve">
+    <value>Номенклатура</value>
+  </data>
   <data name="Please upload a file" xml:space="preserve">
     <value>Пожалуйста, загрузите файл.</value>
   </data>
