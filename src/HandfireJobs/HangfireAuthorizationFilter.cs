@@ -4,7 +4,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Razor.Application.Constants.Permission;
 using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Http;
 

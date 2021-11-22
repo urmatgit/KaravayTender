@@ -13,7 +13,7 @@ using CleanArchitecture.Razor.Application.Features.References.UnitOfs.Commands.D
 using CleanArchitecture.Razor.Application.Features.References.UnitOfs.Commands.Import;
 using CleanArchitecture.Razor.Application.Features.References.UnitOfs.Queries.Export;
 using CleanArchitecture.Razor.Application.Features.References.UnitOfs.Queries.Pagination;
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Razor.Application.Constants.Permission;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

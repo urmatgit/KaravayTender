@@ -21,6 +21,13 @@ public static class ApplicationBuilderExtensions
                     diagnosticContext.Set("UserName", httpContext.User?.Identity?.Name ?? "Anonymous");
                 };
             });
+            app.Use(async (httpContext, next) =>
+            {
+                //This is the correct implementation 
+                var userName = httpContext.User?.Identity?.Name ?? "Anonymous"; //Gets user Name from user Identity
+                LogContext.PushProperty("UserName", userName); //Push user in LogContext;
+                await next.Invoke();
+            });
             app.UseMiddlewares();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -34,13 +41,7 @@ public static class ApplicationBuilderExtensions
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.Use(async (httpContext, next) =>
-            {
-                //This is the correct implementation 
-                var userName = httpContext.User?.Identity?.Name ?? "Anonymous"; //Gets user Name from user Identity
-                LogContext.PushProperty("UserName", userName); //Push user in LogContext;
-                await next.Invoke();
-            });
+            
            // app.UseWorkflow();
 
 

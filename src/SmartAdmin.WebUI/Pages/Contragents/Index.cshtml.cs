@@ -28,7 +28,7 @@ using CleanArchitecture.Razor.Application.Features.StatusLogs.Queries.Pagination
 using CleanArchitecture.Razor.Domain.Constants;
 using CleanArchitecture.Razor.Domain.Enums;
 
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Razor.Application.Constants.Permission;
 using CleanArchitecture.Razor.Infrastructure.Constants.Role;
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using MediatR;

@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace CleanArchitecture.Razor.Infrastructure.Constants.Permission
+namespace CleanArchitecture.Razor.Application.Constants.Permission
 {
     public static class PermissionModules
     {

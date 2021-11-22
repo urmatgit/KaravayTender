@@ -4,7 +4,7 @@
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.AuditTrails.Queries.PaginationQuery;
 using CleanArchitecture.Razor.Application.Features.AuditTrails.Queries.Export;
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Razor.Application.Constants.Permission;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

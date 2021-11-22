@@ -19,6 +19,7 @@ using CleanArchitecture.Razor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Razor.Application.Features.ApprovalDatas.Queries.Pagination
 {
+    [Authorize(Policy = Permissions.Approval.View)]
     public class ApprovalDatasWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<ApprovalDataDto>>
     {
        

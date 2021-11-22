@@ -14,7 +14,7 @@ using CleanArchitecture.Razor.Application.Features.Categories.Commands.Import;
 using CleanArchitecture.Razor.Application.Features.Categories.Queries.Export;
 using CleanArchitecture.Razor.Application.Features.Categories.Queries.Pagination;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Razor.Application.Constants.Permission;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

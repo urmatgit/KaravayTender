@@ -9,6 +9,7 @@ using CleanArchitecture.Razor.HandfireJobs;
 using CleanArchitecture.Razor.Infrastructure;
 using CleanArchitecture.Razor.Infrastructure.Configurations;
 using CleanArchitecture.Razor.Infrastructure.Extensions;
+using CleanArchitecture.Razor.Infrastructure.Filters;
 using CleanArchitecture.Razor.Infrastructure.Localization;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -21,7 +22,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Serilog;
-using SmartAdmin.WebUI.Filters;
+
 
 namespace SmartAdmin.WebUI
 {

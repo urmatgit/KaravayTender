@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Events;
 using Serilog.Filters;
 namespace SmartAdmin.WebUI
 {
@@ -82,16 +83,23 @@ namespace SmartAdmin.WebUI
         Host.CreateDefaultBuilder(args)
                 .UseSerilog((context, services, configuration) => configuration
                     .ReadFrom.Configuration(context.Configuration)
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                     .ReadFrom.Services(services)
                     .Enrich.FromLogContext()
                     .Enrich.WithClientIp()
                     .Enrich.WithClientAgent()
                     
                     .Filter.ByExcluding(
-                        /* (logevent) => {
-                             Console.WriteLine(logevent);
-                             return false;
-                             }*/
+                        //(logevent) =>
+                        //{
+                        //    Console.WriteLine(logevent);
+                        //    var cxt = logevent.Properties.Where(x => x.Key == "SourceContext").Select(x => x.Value.ToString()).ToArray();
+                        //    if (cxt.Any(x => filters.Contains(x)))
+                        //    {
+                        //        return false;
+                        //    }
+                        //    return true;
+                        //}
                         Matching.WithProperty<string>("SourceContext", p => filters.Contains(p))
                         )
                     .WriteTo.Debug()

@@ -15,7 +15,7 @@ using CleanArchitecture.Razor.Application.Features.References.Vats.Commands.Dele
 using CleanArchitecture.Razor.Application.Features.References.Vats.Commands.Import;
 using CleanArchitecture.Razor.Application.Features.References.Vats.Queries.Export;
 using CleanArchitecture.Razor.Application.Features.References.Vats.Queries.Pagination;
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Razor.Application.Constants.Permission;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

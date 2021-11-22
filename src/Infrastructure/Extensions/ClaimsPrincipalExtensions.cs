@@ -5,8 +5,9 @@ using System.Linq;
 using System.Security.Claims;
 using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
 
-namespace SmartAdmin.WebUI.Extensions
+namespace CleanArchitecture.Razor.Infrastructure.Extensions
 {
+
     public static class ClaimsPrincipalExtensions
     {
         public static string GetEmail(this ClaimsPrincipal claimsPrincipal)
@@ -31,3 +32,4 @@ namespace SmartAdmin.WebUI.Extensions
             => claimsPrincipal.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToArray();
     }
 }
+

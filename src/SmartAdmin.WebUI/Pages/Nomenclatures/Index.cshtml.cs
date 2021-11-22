@@ -22,7 +22,7 @@ using CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.Export;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.Pagination;
 using CleanArchitecture.Razor.Domain.Constants;
 
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Razor.Application.Constants.Permission;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
