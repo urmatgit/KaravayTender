@@ -149,9 +149,9 @@
     },
     {
       "title": "Job!",
-      "href": "/jobs",
+      "href": "/Jobs",
       "icon": "fal fa-graduation-cap",
-      "roles": ["super"]
+      "roles": [ "super" ,"Admin" ]
     }
 
 

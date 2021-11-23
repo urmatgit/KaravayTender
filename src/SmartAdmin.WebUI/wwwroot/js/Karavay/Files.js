@@ -18,6 +18,7 @@ function clienUploadfilename(withtablse=true) {
 
         files_table.innerHTML = "";
     }
+    $("#Files").rules("add", "required");
 }
 var onDownloadFile = (index) => {
 
