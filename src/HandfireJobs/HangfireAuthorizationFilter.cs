@@ -8,6 +8,7 @@ using CleanArchitecture.Razor.Application.Constants.Permission;
 using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HandfireJobs
 {
@@ -22,10 +23,10 @@ namespace HandfireJobs
         {
             //TODO implement authorization logic
             var httpContext = context.GetHttpContext();
-            var  _authorizationService =(IAuthorizationService)httpContext.RequestServices.GetService(typeof(IAuthorizationService));
+            var _authorizationService =  httpContext.RequestServices.GetRequiredService<IAuthorizationService>();// ( GetService(typeof(IAuthorizationService));
             if (_authorizationService is not null)
             {
-                 var _canView =  _authorizationService.AuthorizeAsync(httpContext.User, null, Permissions.Hangfire.View).Result;
+                 var _canView =  _authorizationService.AuthorizeAsync(httpContext.User, null, Permissions.Hangfire.View).ConfigureAwait(false).GetAwaiter().GetResult();
                 return _canView.Succeeded;
             }return false;
             // var _canView =  _authorizationService.AuthorizeAsync(httpContext.User, null, Permissions.Hangfire.View).Result;

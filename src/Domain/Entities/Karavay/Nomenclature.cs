@@ -11,7 +11,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
 
          
         /// <summary>
-        /// название файла Спецификации
+        /// название файлов Спецификации
         /// </summary>
         public string Specifications { get; set; }
         /// <summary>

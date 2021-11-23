@@ -126,8 +126,12 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             var _canDeleteFile = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.DeleteFile);
             if (_canDeleteFile.Succeeded)
             {
-                var result = _uploadService.RemoveFileAsync(id, name, PathConstants.DocumentsPath);
+                var result =await  _uploadService.RemoveFileAsync(id, name, PathConstants.DocumentsPath);
+                if (result.Succeeded)
+                {
+                    result = await _mediator.Send(new UpdateFilesContragentCommand { Id = id });
 
+                }
                 return new JsonResult(_localizer["Delete Success"]);
             }
             else
@@ -269,7 +273,15 @@ namespace SmartAdmin.WebUI.Pages.Contragents
 
                         if (Request?.Form?.Files?.Count > 0)
                         {
-                            await _uploadService.UploadFileAsync(result.Data,PathConstants.DocumentsPath,  Request.Form.Files.ToList());
+                            var uploadREsult= await _uploadService.UploadFileAsync(result.Data,PathConstants.DocumentsPath,  Request.Form.Files.ToList());
+                            if (uploadREsult.Succeeded)
+                            {
+                                var files= await _uploadService.LoadFilesAsync(result.Data, PathConstants.DocumentsPath);
+                                if (files.Succeeded) {
+                                    Input.Files = string.Join(PathConstants.FilesStringSeperator, files.Data.Select(f => Path.GetFileName(f)));
+                                    result = await _mediator.Send(Input);
+                                }
+                            }
                         }
 
                         await SendMessageToCustomer();

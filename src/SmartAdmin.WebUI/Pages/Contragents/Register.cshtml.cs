@@ -147,6 +147,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                     {
                         throw new Exception($"Контрагент ключевыми параметрами уже существует  ('{Input.Email}' '{Input.INN}' '{Input.Name}')!"); ;
                     }
+                    Input.Files = string.Join(PathConstants.FilesStringSeperator, Files.Select(f => f.FileName));
                     var result = await _mediator.Send(Input);
 
                     if (result.Succeeded)

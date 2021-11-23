@@ -19,5 +19,6 @@ namespace CleanArchitecture.Razor.Domain.Constants
         public static string GetSpecificationsPath => Path.Combine(CurrentDirectory, FilesPath, SpecificationsPath);
         public static string GetDocumentsPath => Path.Combine(CurrentDirectory, FilesPath, DocumentsPath);
         public static string GetSubFolder(string subFolder)=> Path.Combine(CurrentDirectory, FilesPath, subFolder);
+        public static char FilesStringSeperator = ',';
     }
 }

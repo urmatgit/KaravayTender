@@ -54,6 +54,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
         public bool IsService { get; set; }
         public string ManagerId { get; set; }
 
+        public string Files { get; set; }
         /// <summary>
         /// Логин
         /// </summary>

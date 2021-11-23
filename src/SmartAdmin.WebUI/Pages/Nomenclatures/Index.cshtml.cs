@@ -31,6 +31,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using SmartAdmin.WebUI.Extensions;
+using CleanArchitecture.Razor.Application.Features.Nomenclatures.Commands.Update;
 
 namespace SmartAdmin.WebUI.Pages.Nomenclatures
 {
@@ -157,8 +158,11 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
             var _canDeleteFile= await _authorizationService.AuthorizeAsync(User, null, Permissions.Nomenclatures.DeleteFile);
             if (_canDeleteFile.Succeeded)
             {
-                var result= _uploadService.RemoveFileAsync(id, name, PathConstants.SpecificationsPath);
-                
+                var result= await _uploadService.RemoveFileAsync(id, name, PathConstants.SpecificationsPath);
+                if (result.Succeeded)
+                {
+                    result = await _mediator.Send(new UpdateSpecificationsNomenclatureCommand { Id = id });
+                }
                 return new JsonResult(_localizer["Delete Success"]);
             }
             else

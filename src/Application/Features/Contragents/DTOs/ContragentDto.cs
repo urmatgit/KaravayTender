@@ -76,6 +76,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         public string ManagerPhone { get; set; }
         public string Manager { get; set; }
 
+        public string Files { get; set; }
         /// <summary>
         /// Логин
         /// </summary>
