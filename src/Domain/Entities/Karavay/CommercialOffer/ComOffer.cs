@@ -13,24 +13,38 @@ using CleanArchitecture.Razor.Domain.Enums;
 
 namespace CleanArchitecture.Razor.Domain.Entities.Karavay
 {
-    public class Lot : AuditableSoftDeleteEntity, IAuditTrial, IHasDomainEvent
+    public class ComOffer : AuditableSoftDeleteEntity, IAuditTrial, IHasDomainEvent
     {
 
         public int Id { get; set; }
+        
+
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }
+        [Required]
+        public LotStatus Status { get; set; } = LotStatus.Preparation;
         /// <summary>
         /// Номер лота
         /// </summary>
-         [Required]
-        public string Number { get; set; }
         [Required]
-        public LotStatus Status { get; set; }
+        public string Number { get; set; }
+        
         [Required]
         public DateTime DateBegin { get; set; }
         [Required]
         public DateTime  DateEnd { get; set; }
+        [Required]
+        public int DirectionId { get; set; }
+        public virtual Direction Direction { get; set; }
+
+        [Required]
+        public DateTime TermBegin { get; set; }
+        [Required]
+        public DateTime TermEnd { get; set; }
+        [Required]
+        public string ManagerId { get; set; }
+
         /// <summary>
         /// Отсрочка платежа, дней
         /// </summary>
@@ -39,17 +53,18 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         /// Отсрочка в  Банковских днях
         /// </summary>
         public bool IsBankDays { get; set; }
-        [Required]
-        public string ManagerId { get; set; }
+        
 
         public int WinnerId { get; set; }
         public virtual Contragent Winner { get; set; }
-
-        public bool IsIncludeDelivery { get; set; }
-        [Required]
-        public int DirectionId { get; set; }
-        public virtual Direction Direction { get; set; }
+        /// <summary>
+        /// Цена доставки включена в стоимость 
+        /// </summary>
+        public bool IsPriceInDelivery { get; set; }
+        
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new();
+
+        //
     }
 }

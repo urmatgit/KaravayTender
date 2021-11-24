@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchitecture.Infrastructure.Persistence.Configurations
 {
-    public class LotConfiguration : IEntityTypeConfiguration<Lot>
+    public class LotConfiguration : IEntityTypeConfiguration<ComOffer>
     {
-        public void Configure(EntityTypeBuilder<Lot> builder)
+        public void Configure(EntityTypeBuilder<ComOffer> builder)
         {
             builder.Ignore(e => e.DomainEvents);
             builder.Property(t => t.Name)

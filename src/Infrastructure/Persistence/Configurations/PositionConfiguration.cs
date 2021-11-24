@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchitecture.Infrastructure.Persistence.Configurations
 {
-    public class PositionConfiguration : IEntityTypeConfiguration<Position>
+    public class PositionConfiguration : IEntityTypeConfiguration<ComPosition>
     {
-        public void Configure(EntityTypeBuilder<Position> builder)
+        public void Configure(EntityTypeBuilder<ComPosition> builder)
         {
             builder.Ignore(e => e.DomainEvents);
             builder.Property(t => t.Volume)

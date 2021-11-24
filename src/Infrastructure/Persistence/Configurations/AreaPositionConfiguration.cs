@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchitecture.Razor.Infrastructure.Persistence.Configurations
 {
-    public class AreaPositionConfiguration : IEntityTypeConfiguration<AreaPosition>
+    public class AreaPositionConfiguration : IEntityTypeConfiguration<AreaComPosition>
     {
 
-        public void Configure(EntityTypeBuilder<AreaPosition> builder)
+        public void Configure(EntityTypeBuilder<AreaComPosition> builder)
         {
             builder.Ignore(e => e.DomainEvents);
-            builder.HasKey(dc => new { dc.AreaId, dc.PositionId });
+            builder.HasKey(dc => new { dc.AreaId, dc.ComPositionId });
 
             //  builder.HasKey(tp => new { tp.UserId, tp.InterestId });
 
@@ -26,14 +26,14 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence.Configurations
             //    .HasForeignKey(ui => ui.UserId);
 
             builder.HasOne(d => d.Area)
-                .WithMany(d => d.AreaPositions)
+                .WithMany(d => d.AreaComPositions)
                 .HasForeignKey(d => d.AreaId)
                 .OnDelete(DeleteBehavior.ClientCascade);
 
 
-            builder.HasOne(c => c.Position)
-                .WithMany(c => c.AreaPositions)
-                .HasForeignKey(c => c.PositionId)
+            builder.HasOne(c => c.ComPosition)
+                .WithMany(c => c.AreaComPositions)
+                .HasForeignKey(c => c.ComPositionId)
                 .OnDelete(DeleteBehavior.ClientCascade);
 
 
