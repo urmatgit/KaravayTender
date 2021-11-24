@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Domain.Common;
 
-namespace CleanArchitecture.Razor.Domain.Entities.Karavay.CommercialOffer
+namespace CleanArchitecture.Razor.Domain.Entities.Karavay
 {
     public class StageComposition : AuditableSoftDeleteEntity, IAuditTrial
     {
@@ -16,8 +16,8 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay.CommercialOffer
         public virtual ComStage ComStage {get;set;}
         public int ContragentId { get; set; }
         public virtual Contragent Contragent { get; set; }
-        public int ComOfferId { get; set; }
-        public virtual ComOffer ComOffer { get; set; }
+        public int ComPositionId { get; set; }
+        public virtual ComPosition ComPosition { get; set; }
 
     }
 }

@@ -34,6 +34,12 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
         public DbSet<Nomenclature> Nomenclatures { get; set; }
         public DbSet<NomenclatureQualityDoc> NomenclatureQualityDocs { get; set; }
         public DbSet<Area> Areas { get; set; }
+
+        public DbSet<ComOffer> ComOffers { get; set; }
+        public DbSet<ComParticipant> ComParticipants { get; set; }
+        public DbSet<ComStage> ComStages { get; set; }
+        public DbSet<ComPosition> ComPositions { get; set; }
+        public DbSet<StageComposition> StageCompositions { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

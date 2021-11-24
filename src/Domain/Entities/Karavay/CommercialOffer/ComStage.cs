@@ -30,6 +30,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public int Deadline { get; set; }
         public int  ComOfferId { get; set; }
         public ComOffer ComOffer { get; set; }
+        public virtual ICollection<StageComposition> StageCompositions { get; set; }
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new();
     }

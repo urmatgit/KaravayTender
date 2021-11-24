@@ -61,7 +61,10 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         /// Цена доставки включена в стоимость 
         /// </summary>
         public bool IsPriceInDelivery { get; set; }
-        
+
+        public virtual ICollection<ComParticipant> ComParticipants { get; set; }
+        public virtual ICollection<ComStage> ComStages { get; set; }
+        public virtual ICollection<ComPosition> ComPositions { get; set; }
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new();
 

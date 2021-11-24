@@ -65,6 +65,10 @@ namespace CleanArchitecture.Razor.Domain.Entities
         public virtual Direction Direction { get; set; }
         public virtual ICollection<ContragentCategory> ContragentCategories { get; set; }
         public virtual ICollection<StatusLog> StatusLogs { get; set; }
+        public virtual ICollection<ComOffer> ComOffers { get; set; }
+        public virtual ICollection<ComParticipant> ComParticipants { get; set; }
+        public virtual ICollection<StageComposition> StageCompositions { get; set; }
+
         public List<DomainEvent> DomainEvents { get; set; } = new();
     }
 }

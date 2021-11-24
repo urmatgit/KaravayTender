@@ -66,6 +66,12 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         public DbSet<NomenclatureQualityDoc> NomenclatureQualityDocs { get; set; }
 
         public DbSet<Area> Areas { get; set; }
+
+        public DbSet<ComOffer> ComOffers { get; set; }
+        public DbSet<ComParticipant> ComParticipants {get;set;}
+        public DbSet<ComStage> ComStages { get; set; }
+        public DbSet<ComPosition>  ComPositions { get; set; }
+        public DbSet<StageComposition> StageCompositions { get; set; }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
 
