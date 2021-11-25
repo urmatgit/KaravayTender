@@ -15,7 +15,14 @@
         "Manager",
         "Super"
       ],
-      "items": []
+      "items": [
+        {
+          "title": "Коммерческие предложения",
+          "icon": "fal fa-comments-alt-dollar",
+          "href": "comoffers_index.html",
+          "roles": []
+        }
+      ]
     },
     {
       "title": "Справочники",

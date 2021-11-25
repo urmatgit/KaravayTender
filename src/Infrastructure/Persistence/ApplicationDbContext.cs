@@ -72,6 +72,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         public DbSet<ComStage> ComStages { get; set; }
         public DbSet<ComPosition>  ComPositions { get; set; }
         public DbSet<StageComposition> StageCompositions { get; set; }
+        public DbSet<AreaComPosition> AreaComPositions { get; set; }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
 

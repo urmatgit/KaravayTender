@@ -39,7 +39,7 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
         public async Task<Result> Handle(UpdateStageCompositionCommand request, CancellationToken cancellationToken)
         {
            //TODO:Implementing UpdateStageCompositionCommandHandler method 
-           var item =await _context.StageCompositions.FindAsync( new object[] { request.Id }, cancellationToken);
+           var item =await _context.StageCompositions.FindAsync( new object[] { request.ComStageId, request.ContragentId, request.ComPositionId }, cancellationToken);
            if (item != null)
            {
                 item = _mapper.Map(request, item);

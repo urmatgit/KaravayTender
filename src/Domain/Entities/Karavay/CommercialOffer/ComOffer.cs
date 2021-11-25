@@ -23,7 +23,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         [MaxLength(100)]
         public string Name { get; set; }
         [Required]
-        public LotStatus Status { get; set; } = LotStatus.Preparation;
+        public ComOfferStatus Status { get; set; } = ComOfferStatus.Preparation;
         /// <summary>
         /// Номер лота
         /// </summary>
@@ -60,7 +60,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         /// <summary>
         /// Цена доставки включена в стоимость 
         /// </summary>
-        public bool IsPriceInDelivery { get; set; }
+        public bool IsDeliveryInPrice { get; set; }
 
         public virtual ICollection<ComParticipant> ComParticipants { get; set; }
         public virtual ICollection<ComStage> ComStages { get; set; }

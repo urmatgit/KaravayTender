@@ -8,7 +8,7 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
         {
            //TODO:Implementing DeleteStageCompositionCommandValidator method 
            //ex. RuleFor(v => v.Id).NotNull().GreaterThan(0);
-           throw new System.NotImplementedException();
+          // throw new System.NotImplementedException();
         }
     }
     

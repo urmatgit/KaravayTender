@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Features.ComOffers.DTOs;
+using CleanArchitecture.Razor.Application.Features.StageCompositions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 

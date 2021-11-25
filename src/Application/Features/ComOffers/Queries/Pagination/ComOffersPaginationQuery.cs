@@ -48,6 +48,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
             //TODO:Implementing ComOffersWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<ComOffer>(request.FilterRules);
            var data = await _context.ComOffers.Where(filters)
+                .Include(c=>c.Direction)
+                .Include(c=>c.Winner)
                 .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);

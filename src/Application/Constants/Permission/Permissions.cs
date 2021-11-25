@@ -270,6 +270,21 @@ namespace CleanArchitecture.Razor.Application.Constants.Permission
             public const string Export = "Permissions.Nomenclatures.Export";
             
         }
+
+        //ComOffers
+        [DisplayName("Коммерческое предложения")]
+        [Description("Offers Permissions")]
+        public static class ComOffers
+        {
+            public const string View = "Permissions.ComOffers.View";
+            public const string Create = "Permissions.ComOffers.Create";
+            public const string Edit = "Permissions.ComOffers.Edit";
+            public const string Delete = "Permissions.ComOffers.Delete";
+            public const string DeleteFile = "Permissions.ComOffers.DeleteFile";
+            public const string Search = "Permissions.ComOffers.Search";
+            public const string Export = "Permissions.ComOffers.Export";
+
+        }
         /// <summary>
         /// Returns a list of Permissions.
         /// </summary>
