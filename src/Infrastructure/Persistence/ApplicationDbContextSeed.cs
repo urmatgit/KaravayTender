@@ -13,6 +13,7 @@ using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Razor.Application.Constants.Permission;
 using CleanArchitecture.Razor.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using CleanArchitecture.Razor.Domain.Entities.Karavay;
 
 namespace CleanArchitecture.Razor.Infrastructure.Persistence
 {
@@ -44,7 +45,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
             var administrator = new ApplicationUser { UserName = "administrator", IsActive = true, DisplayName = "Administrator", Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://cn.gravatar.com/avatar/{"new163@163.com".ToMD5()}?s=120&d=retro" };
             var demo = new ApplicationUser { UserName = "Demo", IsActive = true, DisplayName = "Demo", Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://cn.gravatar.com/avatar/{"neozhu@126.com".ToMD5()}?s=120&d=retro" };
             var supplier = new ApplicationUser { UserName = "Supplier", IsActive = true, Email = "supplier@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "" };
-            var manager = new ApplicationUser { UserName = "Manager1", IsActive = true, Email = "Manager1@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "" };
+            var manager = new ApplicationUser { UserName = "Manager1", IsActive = true, Email = "Manager1@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "",PhoneNumber="+7(999) 111-11-11" };
             if (userManager.Users.All(u => u.UserName != administrator.UserName))
             {
                 await userManager.CreateAsync(administrator, "Password123!");
@@ -195,6 +196,71 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
 
 
             }
+            if (!context.Areas.Any())
+            {
+                Area area = new Area()
+                {
+                    Name = "Каравай",
+                    Address = "Херсонская 22"
+                };
+                context.Areas.Add(area);
+                area = new Area()
+                {
+                    Name = "Заря",
+                    Address = "Стачек 39"
+                };
+                context.Areas.Add(area);
+                await context.SaveChangesAsync();
+
+            }
+            if (!context.UnitOfs.Any())
+            {
+                UnitOf unitOf = new UnitOf
+                {
+                    Name = "Кг"
+                };
+                context.UnitOfs.Add(unitOf);
+                 unitOf = new UnitOf
+                {
+                    Name = "шт"
+                };
+                context.UnitOfs.Add(unitOf);
+                await context.SaveChangesAsync();
+
+            }
+            if (!context.Vats.Any())
+            {
+                Vat vat = new Vat
+                {
+                    Name = "Налог1",
+                    Stavka = 10
+                };
+                context.Vats.Add(vat);
+                 vat = new Vat
+                {
+                    Name = "Налог2",
+                    Stavka = 13
+                };
+                context.Vats.Add(vat);
+                await context.SaveChangesAsync();
+            }
+            if (!context.QualityDocs.Any())
+            {
+                QualityDoc qualityDoc = new QualityDoc
+                {
+                    Name = "Документ1",
+
+                };
+                context.QualityDocs.Add(qualityDoc);
+                qualityDoc = new QualityDoc
+                {
+                    Name = "Документ2",
+
+                };
+                context.QualityDocs.Add(qualityDoc);
+                await context.SaveChangesAsync();
+
+            }
         }
         public static async Task SeedSampleProductDataAsync(ApplicationDbContext context)
         {
@@ -243,5 +309,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
             }
 
         }
+        
     }
 }

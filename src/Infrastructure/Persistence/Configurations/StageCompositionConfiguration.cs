@@ -35,6 +35,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence.Configurations
                 .WithMany(c => c.StageCompositions)
                 .HasForeignKey(c => c.ContragentId)
                 .OnDelete(DeleteBehavior.ClientCascade);
+
             builder.HasOne(c => c.ComPosition)
                .WithMany(c => c.StageCompositions)
                .HasForeignKey(c => c.ComPositionId)
