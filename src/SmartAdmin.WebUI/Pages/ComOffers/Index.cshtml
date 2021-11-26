@@ -1,5 +1,6 @@
 ﻿@page
 @using CleanArchitecture.Razor.Domain.Enums
+@using  CleanArchitecture.Razor.Application.Common.Extensions
 @using CleanArchitecture.Razor.Application.Constants.Permission
 @model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
 @inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
@@ -12,10 +13,12 @@
     ViewData["PageDescription"] = _localizer["Managing supplier referral parameters"].Value;
     ViewData["PreemptiveClass"] = "Default";
     var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Create);
+    var _canStart = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Start);
+
     var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
     var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Delete);
     var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Search);
-    
+
     var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Export);
 
 }
@@ -39,6 +42,14 @@
             <small>@_localizer["See all available options"]</small>
         </h4>
         <div class="ml-auto">
+            @if (_canStart.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-primary " id="startbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-bolt mr-1"></span>
+                    @_localizer["Start"]
+                </button>
+            }
+
             @if (_canCreate.Succeeded)
             {
                 <button class="btn btn-sm btn-outline-primary " id="addbutton">
@@ -61,19 +72,19 @@
                 </button>
             }
             @*@if (_canImport.Succeeded)
-                {
-                <div class="btn-group" role="group">
-                    <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
-                        <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="importbutton">
-                        <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
-                    </div>
-                </div>
-                }*@
+        {
+        <div class="btn-group" role="group">
+            <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
+                <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="importbutton">
+                <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
+            </div>
+        </div>
+        }*@
             @if (_canExport.Succeeded)
             {
                 <button class="btn btn-sm btn-outline-primary " id="exportbutton">
@@ -110,7 +121,7 @@ onImportedSucceeded = "reloadData()"
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
 
-    
+
     <script src="~/js/TableBase.js"></script>
     <script type="text/javascript">
         var pagelink = '@Url.Page("/ComOffers/Index")';
@@ -152,23 +163,48 @@ onImportedSucceeded = "reloadData()"
             }
 
         ]
+        var jsonToFormCallBack = {
+
+            IsDeliveryInPrice: function (value) {
+                if (value == true) {
+                    $('#edit_form [name*="IsDeliveryInPrice"]').prop('checked', true);
+                } else {
+                    $('#edit_form [name*="IsDeliveryInPrice"]').prop('checked', false);
+                }
+            },
+            IsBankDays: function (value) {
+                if (value == true) {
+                    $('#edit_form [name*="IsBankDays"]').prop('checked', true);
+                } else {
+                    $('#edit_form [name*="IsBankDays"]').prop('checked', false);
+                }
+            },
+        }
+        document.addEventListener("rowCheck", function (event) { // (1)
+            console.log(event.detail.check);
+            $('#startbutton').prop('disabled', event.detail.check);
+        });
+
+        $('#startbutton').click(function () {
+            alert("Start");
+        });
 
 		$(() => {
 
             tblColumns = [
-                { field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 150 },
-                { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 150 },
+                { field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 130 },
+                { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
 
-                { field: 'DateBegin', title: '@_localizer["Date open"]', sortable: true, width: 165, formatter: datetimeformatter  },
-                { field: 'DateEnd', title: '@_localizer["Date close"]', sortable: true, width: 165, formatter: datetimeformatter  },
-                { field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 180 },
-                { field: 'TermBegin', title: '@_localizer["Term from"]', sortable: true, width: 165, formatter: datetimeformatter  },
-                { field: 'TermEnd', title: '@_localizer["Term to"]', sortable: true, width: 165, formatter: datetimeformatter  },
+                { field: 'DateBegin', title: '@_localizer["Date open"]', sortable: true, width: 130, formatter: dateformatter  },
+                { field: 'DateEnd', title: '@_localizer["Date close"]', sortable: true, width: 130, formatter: dateformatter  },
+                { field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 150 },
+                { field: 'TermBegin', title: '@_localizer["Term from"]', sortable: true, width: 130, formatter: dateformatter  },
+                { field: 'TermEnd', title: '@_localizer["Term to"]', sortable: true, width: 130, formatter: dateformatter  },
 
-                { field: 'Manager', title: '@_localizer["Manager"]', sortable: true, width: 180 },
-                { field: 'WinnerName', title: '@_localizer["Winner"]', sortable: true, width: 180 },
+                { field: 'Manager', title: '@_localizer["Manager"]', sortable: true, width: 150 },
+                { field: 'WinnerName', title: '@_localizer["Winner"]', sortable: true, width: 150 },
                 { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
-                { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 180 },
+                { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 100 },
                 { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 80, formatter: checkboxformatter },
                 { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter }
 
@@ -216,6 +252,36 @@ onImportedSucceeded = "reloadData()"
 
                     }
 
+                },
+                {
+                    field: 'StatusStr',
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        data: [{
+                            value: null,
+                            text:'Все'
+                        },
+                            @foreach(var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ComOfferStatus)))
+                {
+                    <text>
+                            {
+                                value: '@val',
+                                text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ComOfferStatus)val).ToDescriptionString()))'
+                            },
+                            </text>
+                }
+                        ],
+                        onChange: function (newValue, oldValue) {
+                            console.log('Sttus change ' + newValue);
+                            $dg.datagrid('addFilterRule', {
+                                field: 'Status',
+                                op: 'equal',
+                                value: newValue
+                            });
+                        }
+                    }
+
                 }
             ]
 			initdatagrid();
@@ -232,7 +298,7 @@ onImportedSucceeded = "reloadData()"
             //});
         })
         function TogleFullScreen() {
-            
+
             if ($('#edit_modal').hasClass("modal-fullscreen")) {
                 $('#edit_modal').removeClass("modal-fullscreen");
             } else

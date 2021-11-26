@@ -3,6 +3,7 @@
 // pagelink
 //_canEdit
 //_catDelete
+
 $('#searchbutton').click(function () {
     reloadData();
 });
@@ -87,6 +88,13 @@ function createColumns() {
     }
     return InitColumns;
 };
+var checkRowEvent = new CustomEvent("rowCheck", {
+    detail: {
+        check: true
+    },
+    bubbles: true,
+    cancelable: false
+});
 var $dg = {};
 var initdatagrid = () => {
     $dg = $('#main_dg').datagrid({
@@ -105,20 +113,32 @@ var initdatagrid = () => {
         pageList: [10, 15, 30, 50, 100, 1000],
         onBeforeLoad: function () {
             $('#deletebutton').prop('disabled', true);
+            checkRowEvent.detail.check = true;
+            this.dispatchEvent(checkRowEvent);
         },
         onCheckAll: function (rows) {
             const checked = $(this).datagrid('getChecked').length > 0;
             $('#deletebutton').prop('disabled', !checked);
+            checkRowEvent.detail.check = !checked;
+            this.dispatchEvent(checkRowEvent);
+           
         },
         onUncheckAll: function () {
             $('#deletebutton').prop('disabled', true);
+            checkRowEvent.detail.check = true;
+            this.dispatchEvent(checkRowEvent);
         },
         onCheck: function () {
             $('#deletebutton').prop('disabled', false);
+            checkRowEvent.detail.check = false;
+            this.dispatchEvent(checkRowEvent);
+            
         },
         onUncheck: function () {
             const checked = $(this).datagrid('getChecked').length > 0;
             $('#deletebutton').prop('disabled', !checked);
+            checkRowEvent.detail.check = !checked;
+            this.dispatchEvent(checkRowEvent);
         },
         columns: [createColumns()]
     })

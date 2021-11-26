@@ -283,6 +283,7 @@ namespace CleanArchitecture.Razor.Application.Constants.Permission
             public const string DeleteFile = "Permissions.ComOffers.DeleteFile";
             public const string Search = "Permissions.ComOffers.Search";
             public const string Export = "Permissions.ComOffers.Export";
+            public const string Start = "Permissions.ComOffers.Start";
 
         }
         /// <summary>

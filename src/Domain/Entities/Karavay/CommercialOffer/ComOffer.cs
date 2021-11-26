@@ -32,8 +32,8 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         
         [Required]
         public DateTime DateBegin { get; set; }
-        [Required]
-        public DateTime  DateEnd { get; set; }
+        
+        public DateTime?  DateEnd { get; set; }
         [Required]
         public int DirectionId { get; set; }
         public virtual Direction Direction { get; set; }
@@ -43,6 +43,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         [Required]
         public DateTime TermEnd { get; set; }
         [Required]
+        //[ForeignKey("ManagerId")]
         public string ManagerId { get; set; }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public bool IsBankDays { get; set; }
         
 
-        public int WinnerId { get; set; }
+        public int? WinnerId { get; set; }
         public virtual Contragent Winner { get; set; }
         /// <summary>
         /// Цена доставки включена в стоимость 
@@ -65,6 +66,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public virtual ICollection<ComParticipant> ComParticipants { get; set; }
         public virtual ICollection<ComStage> ComStages { get; set; }
         public virtual ICollection<ComPosition> ComPositions { get; set; }
+        
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new();
 

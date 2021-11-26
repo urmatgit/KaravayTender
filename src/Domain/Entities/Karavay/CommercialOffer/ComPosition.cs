@@ -55,7 +55,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
         public virtual ICollection<AreaComPosition> AreaComPositions { get; set; }
-        [Required]
+        
         public int ComOfferId { get; set; }
         public virtual  ComOffer ComOffer { get; set; }
 

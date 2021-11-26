@@ -16,6 +16,8 @@ namespace CleanArchitecture.Razor.Domain.Entities
         public virtual ICollection<Category> Categories { get; set; }
         //public virtual ICollection<Customer> Customers { get; set; }
         public virtual ICollection<Nomenclature> Nomenclatures { get; set; }
+        public virtual ICollection<ComOffer> ComOffers { get; set; }
+        
         public List<DomainEvent> DomainEvents { get; set; } = new();
     }
 }

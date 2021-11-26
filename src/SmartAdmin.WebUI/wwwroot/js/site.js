@@ -24,6 +24,16 @@ function datetimeformatter(value, row, index) {
         return null;
     }
 }
+function dateformatter(value, row, index) {
+    if (typeof value === "undefined") {
+        return null;
+    }
+    else if (moment(value).isValid() && !moment(value).isSame(moment('/Date(-62135596800000)/'))) {
+        return moment(value).format('DD.MM.YYYY');
+    } else {
+        return null;
+    }
+}
 (function ($) {
 
     /* Trigger app shortcut menu on CTRL+Q press */

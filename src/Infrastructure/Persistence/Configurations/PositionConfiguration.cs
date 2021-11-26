@@ -14,9 +14,16 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
             builder.Ignore(e => e.DomainEvents);
             builder.Property(t => t.Volume)
                 .IsRequired();
-                
-            
-                
+
+            builder.HasOne(c => c.ComOffer)
+             .WithMany(d => d.ComPositions)
+             .HasForeignKey(d => d.ComOfferId)
+             .OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne(c => c.Nomenclature)
+             .WithMany(d => d.ComPositions)
+             .HasForeignKey(d => d.NomenclatureId)
+             .OnDelete(DeleteBehavior.ClientCascade);
+
 
 
 

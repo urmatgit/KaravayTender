@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchitecture.Infrastructure.Persistence.Configurations
 {
-    public class LotConfiguration : IEntityTypeConfiguration<ComOffer>
+    public class ComOfferConfiguration : IEntityTypeConfiguration<ComOffer>
     {
         public void Configure(EntityTypeBuilder<ComOffer> builder)
         {
@@ -15,8 +15,12 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
             builder.Property(t => t.Name)
                 .IsRequired()
                 .HasMaxLength(100);
-            
-                
+            builder.HasOne(c => c.Direction)
+               .WithMany(d => d.ComOffers)
+               .HasForeignKey(d => d.DirectionId)
+               .OnDelete(DeleteBehavior.ClientCascade);
+
+
 
 
 

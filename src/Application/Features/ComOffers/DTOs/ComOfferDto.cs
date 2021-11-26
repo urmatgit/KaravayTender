@@ -38,7 +38,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
         
         public DateTime DateBegin { get; set; }
         
-        public DateTime DateEnd { get; set; }
+        public DateTime? DateEnd { get; set; }
         [Required]
         public int DirectionId { get; set; }
         public virtual DirectionDto Direction { get; set; }
@@ -65,7 +65,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
         public bool IsBankDaysStr => IsBankDays;
 
 
-        public int WinnerId { get; set; }
+        public int? WinnerId { get; set; }
         public virtual Contragent Winner { get; set; }
         public string WinnerName
         {
