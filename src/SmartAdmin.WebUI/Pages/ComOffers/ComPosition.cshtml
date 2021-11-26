@@ -1,0 +1,93 @@
+﻿
+@using CleanArchitecture.Razor.Domain.Enums
+@using  CleanArchitecture.Razor.Application.Common.Extensions
+@using CleanArchitecture.Razor.Application.Constants.Permission
+@model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Create);
+    var _canStart = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Start);
+
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Search);
+
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Export);
+
+}
+
+
+    
+
+
+
+
+<div  class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+       
+        <div class="ml-auto">
+
+
+            @if (_canCreate.Succeeded)
+            {
+            <a   role="button" class="btn btn-sm btn-outline-primary" id="composition_addbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
+                @_localizer["Add"]
+            </a>
+                
+            }
+            @if (_canDelete.Succeeded)
+            {
+                <a role="button" class="btn btn-sm btn-outline-danger" disabled id="composition_deletebutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
+                    @_localizer["Delete"]
+                </a>
+            }
+            @if (_canSearch.Succeeded)
+            {
+                <a role="button" class="btn btn-sm btn-outline-primary " id="composition_searchbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                    @_localizer["Search"]
+                </a>
+            }
+            @*@if (_canImport.Succeeded)
+        {
+        <div class="btn-group" role="group">
+            <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
+                <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="importbutton">
+                <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
+            </div>
+        </div>
+        }*@
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="composition_dg">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<partial name="AddOrEditPosition" />
+
+@section ScriptsBlock {
+
+    <script type="text/javascript">
+       
+	     
+
+      
+
+	 
+    </script>
+}

@@ -33,6 +33,10 @@
         .main_dg_datagrid-cell-c1-_action {
             overflow: visible !important
         }
+        .composition_dg_datagrid-cell-c2-_action {
+            overflow: visible !important
+        }
+
     </style>
 }
 <div id="js-page-content-demopanels" class="card mb-g">
@@ -72,19 +76,19 @@
                 </button>
             }
             @*@if (_canImport.Succeeded)
-        {
-        <div class="btn-group" role="group">
-            <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
-                <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
-            </button>
-            <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <div class="dropdown-menu" aria-labelledby="importbutton">
-                <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
-            </div>
-        </div>
-        }*@
+                {
+                <div class="btn-group" role="group">
+                    <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
+                        <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="importbutton">
+                        <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
+                    </div>
+                </div>
+                }*@
             @if (_canExport.Succeeded)
             {
                 <button class="btn btn-sm btn-outline-primary " id="exportbutton">
@@ -123,7 +127,9 @@ onImportedSucceeded = "reloadData()"
 
 
     <script src="~/js/TableBase.js"></script>
+    <script src="~/js/TableBaseClass.js"></script>
     <script type="text/javascript">
+        var clscomposition = null;
         var pagelink = '@Url.Page("/ComOffers/Index")';
         var translations = {
             SaveSuccess: '@_localizer["Save Success."]',
@@ -188,7 +194,10 @@ onImportedSucceeded = "reloadData()"
         $('#startbutton').click(function () {
             alert("Start");
         });
+        $('#edit_modal').on('shown.bs.modal', function () {
 
+            clscomposition.ResizeGrid();
+        });
 		$(() => {
 
             tblColumns = [
@@ -284,7 +293,27 @@ onImportedSucceeded = "reloadData()"
 
                 }
             ]
-			initdatagrid();
+            initdatagrid();
+             clscomposition = new clsBaseTable("composition");
+            clscomposition.tblColumns= [
+                { field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 130 },
+                { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
+
+                { field: 'DateBegin', title: '@_localizer["Date open"]', sortable: true, width: 130, formatter: dateformatter  },
+                { field: 'DateEnd', title: '@_localizer["Date close"]', sortable: true, width: 130, formatter: dateformatter  },
+                { field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 150 },
+                { field: 'TermBegin', title: '@_localizer["Term from"]', sortable: true, width: 130, formatter: dateformatter  },
+                { field: 'TermEnd', title: '@_localizer["Term to"]', sortable: true, width: 130, formatter: dateformatter  },
+
+                { field: 'ManagerName', title: '@_localizer["Manager"]', sortable: true, width: 150 },
+                { field: 'WinnerName', title: '@_localizer["Winner"]', sortable: true, width: 150 },
+                { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
+                { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 100 },
+                { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 80, formatter: checkboxformatter },
+                { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter }
+
+            ];
+            clscomposition.Init();
             //$('.summernote').summernote({
             //    focus: true,
             //    height: (window.innerHeight / 2),
