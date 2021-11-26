@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Mappings;
@@ -23,7 +24,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
         public int Id { get; set; }
 
 
-        
+        [Required(ErrorMessage = "'Наименование' является обязательным ")]
         public string Name { get; set; }
         
         public ComOfferStatus Status { get; set; } = ComOfferStatus.Preparation;
@@ -31,24 +32,28 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
         /// <summary>
         /// Номер лота
         /// </summary>
-
+        [Required(ErrorMessage = "'№ ком. предложения' является обязательным ")]
         public string Number { get; set; }
 
         
         public DateTime DateBegin { get; set; }
         
         public DateTime DateEnd { get; set; }
-        
+        [Required]
         public int DirectionId { get; set; }
         public virtual DirectionDto Direction { get; set; }
 
         public string DirectionName => Direction?.Name;
+
+        [Required(ErrorMessage = "'Срок контракта с' является обязательным ")]
         public DateTime TermBegin { get; set; }
-        
+
+        [Required(ErrorMessage = "'Срок контракта по' является обязательным ")]
         public DateTime TermEnd { get; set; }
-        
+        [Required(ErrorMessage = "Не выбрано 'Менеджер'")]
         public string ManagerId { get; set; }
 
+        [Required(ErrorMessage = "'Отсрочка платежа' является обязательным ")]
         /// <summary>
         /// Отсрочка платежа, дней
         /// </summary>

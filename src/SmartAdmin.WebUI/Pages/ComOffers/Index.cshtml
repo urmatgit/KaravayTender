@@ -230,6 +230,13 @@ onImportedSucceeded = "reloadData()"
             //        ["view", ["fullscreen", "codeview"]]
             //    ]
             //});
-		})
+        })
+        function TogleFullScreen() {
+            
+            if ($('#edit_modal').hasClass("modal-fullscreen")) {
+                $('#edit_modal').removeClass("modal-fullscreen");
+            } else
+                $('#edit_modal').addClass("modal-fullscreen");
+        }
     </script>
 }

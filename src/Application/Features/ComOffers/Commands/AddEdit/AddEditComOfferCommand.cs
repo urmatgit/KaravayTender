@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -26,8 +27,10 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<AddEditComOfferCommandHandler> _localizer;
+        private readonly IDateTime _dateTime;
         public AddEditComOfferCommandHandler(
             IApplicationDbContext context,
+            IDateTime dateTime,
             IStringLocalizer<AddEditComOfferCommandHandler> localizer,
             IMapper mapper
             )
@@ -35,6 +38,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
             _context = context;
             _localizer = localizer;
             _mapper = mapper;
+            _dateTime = dateTime;
         }
         public async Task<Result<int>> Handle(AddEditComOfferCommand request, CancellationToken cancellationToken)
         {
@@ -42,12 +46,17 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
             if (request.Id > 0)
             {
                 var item = await _context.ComOffers.FindAsync(new object[] { request.Id }, cancellationToken);
+                if (request.Status==Domain.Enums.ComOfferStatus.Cancelled && item.DateEnd == default(DateTime))
+                {
+                    request.DateEnd = _dateTime.Now;
+                }
                 item = _mapper.Map(request, item);
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
             else
             {
+                request.DateBegin = _dateTime.Now;
                 var item = _mapper.Map<ComOffer>(request);
                 _context.ComOffers.Add(item);
                 await _context.SaveChangesAsync(cancellationToken);

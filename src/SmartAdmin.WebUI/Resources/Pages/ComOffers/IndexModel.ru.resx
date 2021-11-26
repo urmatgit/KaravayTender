@@ -205,7 +205,7 @@
     <value>Нет</value>
   </data>
   <data name="Number" xml:space="preserve">
-    <value>Номер</value>
+    <value>№ ком. предложения</value>
   </data>
   <data name="Price include delivery" xml:space="preserve">
     <value>Цена доставки включенав стоимость</value>
