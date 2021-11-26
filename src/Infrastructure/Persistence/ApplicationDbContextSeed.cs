@@ -11,7 +11,7 @@ using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Razor.Application.Constants.Permission;
-using CleanArchitecture.Razor.Infrastructure.Identity;
+using CleanArchitecture.Razor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 

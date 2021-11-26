@@ -55,20 +55,21 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
             Debug.WriteLine(managers.Count);
             var data = await _context.Contragents.Where(filters)
                 .Include(i => i.Direction)
+                .Include(u=>u.Manager)
                 .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<ContragentDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
 
-            foreach (var d in data.rows)
-            {
-                if (!string.IsNullOrEmpty(d.ManagerId))
-                {
-                    var manager = managers.FirstOrDefault(m => m.Id == d.ManagerId);
-                    d.ManagerPhone = manager?.PhoneNumber;
-                    d.Manager = manager?.DisplayName ?? manager?.UserName;
-                    Debug.WriteLine(d.ManagerPhone);
-                }
-            }
+            //foreach (var d in data.rows)
+            //{
+            //    if (!string.IsNullOrEmpty(d.ManagerId))
+            //    {
+            //        var manager = managers.FirstOrDefault(m => m.Id == d.ManagerId);
+            //        d.ManagerPhone = manager?.PhoneNumber;
+            //        d.Manager = manager?.DisplayName ?? manager?.UserName;
+            //        Debug.WriteLine(d.ManagerPhone);
+            //    }
+            //}
             return data;
         }
     }

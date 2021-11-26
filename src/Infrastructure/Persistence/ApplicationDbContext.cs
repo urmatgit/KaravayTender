@@ -13,7 +13,7 @@ using CleanArchitecture.Razor.Domain.Entities.Audit;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Entities.Log;
 using CleanArchitecture.Razor.Domain.Enums;
-using CleanArchitecture.Razor.Infrastructure.Identity;
+using CleanArchitecture.Razor.Domain.Identity;
 using CleanArchitecture.Razor.Infrastructure.Persistence.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

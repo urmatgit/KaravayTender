@@ -30,7 +30,7 @@ using CleanArchitecture.Razor.Domain.Enums;
 
 using CleanArchitecture.Razor.Application.Constants.Permission;
 using CleanArchitecture.Razor.Infrastructure.Constants.Role;
-using CleanArchitecture.Razor.Infrastructure.Identity;
+using CleanArchitecture.Razor.Domain.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

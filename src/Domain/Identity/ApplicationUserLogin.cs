@@ -3,9 +3,9 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace CleanArchitecture.Razor.Infrastructure.Identity
+namespace CleanArchitecture.Razor.Domain.Identity
 {
-    public class ApplicationUserToken : IdentityUserToken<string>
+    public class ApplicationUserLogin : IdentityUserLogin<string>
     {
         public virtual ApplicationUser User { get; set; }
     }

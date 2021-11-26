@@ -11,6 +11,7 @@ using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Enums;
+using CleanArchitecture.Razor.Domain.Identity;
 
 namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
 {
@@ -52,7 +53,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
         public DateTime TermEnd { get; set; }
         [Required(ErrorMessage = "Не выбрано 'Менеджер'")]
         public string ManagerId { get; set; }
-
+        public virtual ApplicationUser Manager { get; set; }
+        public string ManagerName => Manager?.DisplayName ?? Manager?.UserName;
         [Required(ErrorMessage = "'Отсрочка платежа' является обязательным ")]
         /// <summary>
         /// Отсрочка платежа, дней

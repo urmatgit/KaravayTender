@@ -25,7 +25,7 @@ using CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdit;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SmartAdmin.WebUI.Extensions;
 using Microsoft.AspNetCore.Identity;
-using CleanArchitecture.Razor.Infrastructure.Identity;
+using CleanArchitecture.Razor.Domain.Identity;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {

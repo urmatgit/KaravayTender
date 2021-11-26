@@ -5,12 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
+
 using CleanArchitecture.Razor.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace CleanArchitecture.Razor.Infrastructure.Identity
+namespace CleanArchitecture.Razor.Domain.Identity
 {
     public class ApplicationUser : IdentityUser, IApplicationUser
     {

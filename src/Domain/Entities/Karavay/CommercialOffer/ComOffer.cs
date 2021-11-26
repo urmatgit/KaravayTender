@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Domain.Common;
 using CleanArchitecture.Razor.Domain.Enums;
+using CleanArchitecture.Razor.Domain.Identity;
 
 namespace CleanArchitecture.Razor.Domain.Entities.Karavay
 {
@@ -45,7 +46,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         [Required]
         //[ForeignKey("ManagerId")]
         public string ManagerId { get; set; }
-
+        public virtual ApplicationUser Manager { get; set; }
         /// <summary>
         /// Отсрочка платежа, дней
         /// </summary>

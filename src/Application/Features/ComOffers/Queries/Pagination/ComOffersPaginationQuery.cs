@@ -50,6 +50,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
            var data = await _context.ComOffers.Where(filters)
                 .Include(c=>c.Direction)
                 .Include(c=>c.Winner)
+                .Include(u=>u.Manager)
                 .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);

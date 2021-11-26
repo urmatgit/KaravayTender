@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using CleanArchitecture.Razor.Domain.Common;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Enums;
+using CleanArchitecture.Razor.Domain.Identity;
 
 namespace CleanArchitecture.Razor.Domain.Entities
 {
@@ -53,6 +54,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
         /// </summary>
         public bool IsService { get; set; }
         public string ManagerId { get; set; }
+        public virtual ApplicationUser Manager { get; set; }
 
         public string Files { get; set; }
         /// <summary>

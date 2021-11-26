@@ -14,13 +14,14 @@ using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Settings;
 using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
-using CleanArchitecture.Razor.Infrastructure.Identity;
+using CleanArchitecture.Razor.Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using CleanArchitecture.Razor.Infrastructure.Identity;
 
 namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
 {

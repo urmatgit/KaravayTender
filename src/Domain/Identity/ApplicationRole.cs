@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
-namespace CleanArchitecture.Razor.Infrastructure.Identity
+namespace CleanArchitecture.Razor.Domain.Identity
 {
     public class ApplicationRole : IdentityRole
     {

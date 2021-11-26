@@ -11,6 +11,7 @@ using CleanArchitecture.Razor.Application.Features.ContragentCategories.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Enums;
+using CleanArchitecture.Razor.Domain.Identity;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
 {
@@ -74,8 +75,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
         [Required(ErrorMessage = "Не выбран 'Менеджер'")]
         public string ManagerId { get; set; }
         public string ManagerPhone { get; set; }
-        public string Manager { get; set; }
-
+        public virtual ApplicationUser Manager { get; set; }
+        public string ManagerName => Manager?.DisplayName?? Manager?.UserName;
         public string Files { get; set; }
         /// <summary>
         /// Логин

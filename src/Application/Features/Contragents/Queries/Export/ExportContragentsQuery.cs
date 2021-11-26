@@ -15,6 +15,7 @@ using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
+using CleanArchitecture.Razor.Domain.Identity;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -67,10 +68,11 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Expor
             var filters = PredicateBuilder.FromFilter<Contragent>(request.FilterRules);
             var data = await _context.Contragents.Where(filters)
                        .Include(i => i.Direction)
+                       .Include(u=>u.Manager)
                        .OrderBy($"{request.Sort} {request.Order}")
                        .ProjectTo<ContragentDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
-            Managers = await _identityService.FetchUsersEx("Manager");
+           // Managers = await _identityService.FetchUsersEx("Manager");
             var result = await _excelService.ExportAsync(data,
                 new Dictionary<string, Func<ContragentDto, object>>()
                 {
@@ -87,10 +89,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Expor
                     { _localizer["TypeOfActivity"], item => item.TypeOfActivity },
                     { _localizer["Service"], item => item.IsService?"Да": "Нет"},
                     { _localizer["Status"], item => item.Status.ToDescriptionString() },
-                    { _localizer["Manager"], item => {
-                        var manger=findManager(item.ManagerId);
-                        return manger.Item2? manger.Item1.DisplayName: "";
-                        } },
+                    { _localizer["Manager"], item =>item.Manager?.DisplayName },
                     { _localizer["ManagerPhone"], item => {
                         var manger=findManager(item.ManagerId);
                         return manger.Item2? manger.Item1.PhoneNumber: "";

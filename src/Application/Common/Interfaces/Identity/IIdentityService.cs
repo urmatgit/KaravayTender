@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Domain.Identity;
 
 namespace CleanArchitecture.Razor.Application.Common.Interfaces.Identity
 {

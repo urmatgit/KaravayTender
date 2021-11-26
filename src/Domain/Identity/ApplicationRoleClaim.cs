@@ -3,7 +3,7 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace CleanArchitecture.Razor.Infrastructure.Identity
+namespace CleanArchitecture.Razor.Domain.Identity
 {
     public class ApplicationRoleClaim : IdentityRoleClaim<string>
     {
