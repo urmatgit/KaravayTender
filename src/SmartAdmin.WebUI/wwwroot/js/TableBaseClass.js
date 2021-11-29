@@ -23,13 +23,14 @@ class clsBaseTable {
         var self = this;
       //  $(`#${this._name}_edit_form`).data("validator").settings.ignore = "";
         $(`#${this._name}_searchbutton`).click(function () {
-            alert(`#${this._name}_searchbutton`);
+            alert(`#${self._name}_searchbutton`);
             
             //this.reloadData();
             
         });
         $(`#${this._name}_addbutton`).click( function () {
             self.popupmodal(null);
+            self.updateClickSubmit(self._name);
         });
         $(`#${this._name}_deletebutton`).click(function () {
             self.onDeleteChecked();
@@ -43,7 +44,17 @@ class clsBaseTable {
         $(`#${this._name}_gettemplatebutton`).click(function () {
             self.onGetTemplate();
         });
-        $(`#${this._name}_edit_form :submit`).click(function (e) {
+       
+        this.initdatagrid1();
+        this.dg.datagrid('resize');
+    }
+
+    ResizeGrid() {
+        this.dg.datagrid('resize');
+    }
+
+    updateClickSubmit(nametag) {
+        $(`#${nametag}_edit_form :submit`).click(function (e) {
             const form = document.querySelector(`#${self._name}_edit_form`);
             if ($(form).valid() === false) {
                 form.classList.add('was-validated');
@@ -75,15 +86,7 @@ class clsBaseTable {
             event.preventDefault();
             event.stopPropagation();
         });
-        this.initdatagrid1();
-        this.dg.datagrid('resize');
     }
-
-    ResizeGrid() {
-        this.dg.datagrid('resize');
-    }
-
-    
  createColumns() {
     var InitColumns =
         [
