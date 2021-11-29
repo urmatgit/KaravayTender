@@ -30,7 +30,7 @@ class clsBaseTable {
         });
         $(`#${this._name}_addbutton`).click( function () {
             self.popupmodal(null);
-            self.updateClickSubmit(self._name);
+            
         });
         $(`#${this._name}_deletebutton`).click(function () {
             self.onDeleteChecked();
@@ -44,21 +44,12 @@ class clsBaseTable {
         $(`#${this._name}_gettemplatebutton`).click(function () {
             self.onGetTemplate();
         });
-       
-        this.initdatagrid1();
-        this.dg.datagrid('resize');
-    }
-
-    ResizeGrid() {
-        this.dg.datagrid('resize');
-    }
-
-    updateClickSubmit(nametag) {
-        $(`#${nametag}_edit_form :submit`).click(function (e) {
+        $(`#${this._name}_edit_form :submit`).click(function (e) {
             const form = document.querySelector(`#${self._name}_edit_form`);
             if ($(form).valid() === false) {
                 form.classList.add('was-validated');
             } else {
+                $(form).removeClass("was-validated");
                 let request = $(`#${self._name}_edit_form`).serialize();
                 if (typeof UpdateFiles == 'function')
                     UpdateFiles();
@@ -86,7 +77,17 @@ class clsBaseTable {
             event.preventDefault();
             event.stopPropagation();
         });
+        this.initdatagrid1();
+        this.dg.datagrid('resize');
     }
+
+    ResizeGrid() {
+        this.dg.datagrid('resize');
+    }
+
+    
+       
+  
  createColumns() {
     var InitColumns =
         [
