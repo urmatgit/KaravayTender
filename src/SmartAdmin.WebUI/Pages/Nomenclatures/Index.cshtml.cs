@@ -32,6 +32,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using SmartAdmin.WebUI.Extensions;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Commands.Update;
+using CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.GetAll;
+using Newtonsoft.Json;
 
 namespace SmartAdmin.WebUI.Pages.Nomenclatures
 {
@@ -88,6 +90,16 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
             UnitOfs = await _mediator.LoadUnitOf();
             Vats = await _mediator.LoadVats();
             QualityDocs = await _mediator.LoadQualityDocs();
+        }
+        public async Task<IActionResult> OnGetById([FromQuery]int id)
+        {
+            // throw new Exception("Test log error 222 !!!!!!");
+
+            var result = await _mediator.Send(new GetByIdNomenclatureQuery { Id=id});
+            //var  jsonSerializerSettings = new System.Text.Json.JsonSerializerOptions();
+            //jsonSerializerSettings.MaxDepth = 3;
+            var resultJson= new JsonResult(result );
+            return resultJson;
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] NomenclaturesWithPaginationQuery command)
         {

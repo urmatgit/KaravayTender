@@ -28,15 +28,16 @@
     <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
     <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
     <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
     <style>
 
         .main_dg_datagrid-cell-c1-_action {
             overflow: visible !important
         }
+
         .composition_dg_datagrid-cell-c2-_action {
             overflow: visible !important
         }
-
     </style>
 }
 <div id="js-page-content-demopanels" class="card mb-g">
@@ -124,7 +125,7 @@ onImportedSucceeded = "reloadData()"
     <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
-
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
 
     <script src="~/js/TableBase.js"></script>
     <script src="~/js/TableBaseClass.js"></script>
@@ -198,6 +199,27 @@ onImportedSucceeded = "reloadData()"
 
             clscomposition.ResizeGrid();
         });
+        $('#InputPos_NomenclatureId').change(function(){
+            var nomenId = $(this).val();
+            console.log(id);
+            axios.get('/Nomenclatures/Index?handler=ById&id=' + nomenId)
+                .then(res => {
+                    console.log(res);
+                    $('#InputPos_Nomenclature_Category_Name').val(res.Category.Name);
+
+
+                })
+                .catch((error) => {
+                    if (error.response.data.Errors) {
+                        const errors = error.response.data.Errors;
+                        errors.forEach(item => {
+                            toastr["error"](item);
+                        });
+                    } else {
+                        toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
+                    }
+                });
+        })
 		$(() => {
 
             tblColumns = [
@@ -294,7 +316,7 @@ onImportedSucceeded = "reloadData()"
                 }
             ]
             initdatagrid();
-             clscomposition = new clsBaseTable("composition");
+             clscomposition = new clsBaseTable("composition",'@Url.Page("/ComPositions/Index")');
             clscomposition.tblColumns= [
                 { field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 130 },
                 { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
@@ -314,6 +336,12 @@ onImportedSucceeded = "reloadData()"
 
             ];
             clscomposition.Init();
+             $('.select2').select2({
+                placeholder: '@Html.Raw(@_localizer["Choose areas"])',
+
+                allowClear: true,
+                 dropdownParent: $('#compostion_edit_form')
+            });
             //$('.summernote').summernote({
             //    focus: true,
             //    height: (window.innerHeight / 2),

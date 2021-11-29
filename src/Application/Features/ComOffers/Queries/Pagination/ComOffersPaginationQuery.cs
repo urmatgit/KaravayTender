@@ -52,9 +52,12 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                 .Include(c=>c.Winner)
                 .Include(u=>u.Manager)
                 .OrderBy($"{request.Sort} {request.Order}")
-                .ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)
+                //.ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
-            return data;
+            //return data;
+            //.ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)
+            var dataDto = _mapper.Map<IEnumerable<ComOfferDto>>(data.rows);
+            return new PaginatedData<ComOfferDto>(dataDto, data.total); ;
         }
     }
 }

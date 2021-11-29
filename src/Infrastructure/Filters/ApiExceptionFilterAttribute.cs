@@ -7,6 +7,7 @@ using CleanArchitecture.Razor.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Razor.Infrastructure.Filters
 { 
@@ -14,9 +15,10 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {
 
     private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
-
-    public ApiExceptionFilterAttribute()
+        private readonly ILogger<ApiExceptionFilterAttribute> _logger;
+    public ApiExceptionFilterAttribute(ILogger<ApiExceptionFilterAttribute> logger)
     {
+            _logger = logger;
         // Register known exception types and handlers.
         _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
@@ -29,8 +31,9 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 
     public override void OnException(ExceptionContext context)
     {
-        HandleException(context);
-
+            _logger.LogError(context.Exception.Message, context.Exception);
+            HandleException(context);
+        
         base.OnException(context);
     }
 
@@ -100,7 +103,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         {
             Status = StatusCodes.Status401Unauthorized,
             Title = "Unauthorized",
-            Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
+            Detail = context.Exception.Message + "\n" + context.Exception.InnerException?.Message
         };
 
         context.Result = new ObjectResult(details)
@@ -117,7 +120,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         {
             Status = StatusCodes.Status403Forbidden,
             Title = "Forbidden",
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3"
+            Detail = context.Exception.Message + "\n" + context.Exception.InnerException?.Message
         };
 
         context.Result = new ObjectResult(details)

@@ -47,11 +47,27 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
         {
             //TODO:Implementing ComPositionsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<ComPosition>(request.FilterRules);
-           var data = await _context.ComPositions.Where(filters)
-                .OrderBy($"{request.Sort} {request.Order}")
-                .ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.Page, request.Rows);
-            return data;
+            try
+            {
+                var data = await _context.ComPositions.Where(filters)
+                     .Include(n => n.Nomenclature)
+                     .ThenInclude(n => n.Category)
+
+                    .Include(n => n.Nomenclature)
+                    .ThenInclude(n => n.UnitOf)
+                    .Include(n => n.Nomenclature)
+                    .ThenInclude(n => n.Vat)
+                    .OrderBy($"{request.Sort} {request.Order}")
+                  
+                    .PaginatedDataAsync(request.Page, request.Rows);
+                  //.ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
+                  var datDto = _mapper.Map<IEnumerable<ComPositionDto>>(data.rows);
+                return new PaginatedData<ComPositionDto>(datDto, data.total); ;
+            }catch(Exception er)
+            {
+
+                return null;
+            }
         }
     }
 }

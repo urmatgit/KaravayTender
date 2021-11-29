@@ -1,15 +1,26 @@
 
 // translations
-// pagelink
+// this._pageLink
 //_canEdit
 //_catDelete
 class clsBaseTable {
+
     _name;
+    _pageLink;
     dg = {};
-    constructor(name) {
+    tblFilters = [{}];
+
+    tblColumns = [];
+    
+
+    constructor(name,link) {
         this._name = name;
+        this._pageLink = link;
+        
+    
     }
     Init() {
+        var self = this;
       //  $(`#${this._name}_edit_form`).data("validator").settings.ignore = "";
         $(`#${this._name}_searchbutton`).click(function () {
             alert(`#${this._name}_searchbutton`);
@@ -17,39 +28,39 @@ class clsBaseTable {
             //this.reloadData();
             
         });
-        $(`#${this._name}_addbutton`).click(function () {
-            this.popupmodal(null);
+        $(`#${this._name}_addbutton`).click( function () {
+            self.popupmodal(null);
         });
         $(`#${this._name}_deletebutton`).click(function () {
-            this.onDeleteChecked();
+            self.onDeleteChecked();
         });
         $(`#${this._name}_exportbutton`).click(function () {
-            this.onExport();
+            self.onExport();
         });
         $(`#${this._name}_importbutton`).click(function () {
-            this.showImportModal();
+            self.showImportModal();
         });
         $(`#${this._name}_gettemplatebutton`).click(function () {
-            this.onGetTemplate();
+            self.onGetTemplate();
         });
         $(`#${this._name}_edit_form :submit`).click(function (e) {
-            const form = document.querySelector(`#${this._name}_edit_form`);
+            const form = document.querySelector(`#${self._name}_edit_form`);
             if ($(form).valid() === false) {
                 form.classList.add('was-validated');
             } else {
-                let request = $(`#${this._name}_edit_form`).serialize();
+                let request = $(`#${self._name}_edit_form`).serialize();
                 if (typeof UpdateFiles == 'function')
                     UpdateFiles();
-                var form_data = new FormData($(`#${this._name}_edit_form`)[0]);
+                var form_data = new FormData($(`#${self._name}_edit_form`)[0]);
                 //if (AppendFilesToFormData) {
                 //    AppendFilesToFormData(request);
                 //}
-                axios.post(`${pagelink}`, form_data).then(res => {
+                axios.post(`${self._pageLink}`, form_data).then(res => {
                     toastr["info"](`${translations.SaveSuccess} `);
-                    $(`#${this._name}_modal`).modal('toggle');
+                    $(`#${self._name}_modal`).modal('toggle');
                     if (typeof clienUploadfilename == 'function')
                         clienUploadfilename();
-                    this.reloadData();
+                    self.reloadData();
                 }).catch((error) => {
                     if (error.response.data.Errors) {
                         const errors = error.response.data.Errors;
@@ -72,9 +83,7 @@ class clsBaseTable {
         this.dg.datagrid('resize');
     }
 
-    tblFilters = [{}];
-
-    tblColumns = [];
+    
  createColumns() {
     var InitColumns =
         [
@@ -101,18 +110,12 @@ class clsBaseTable {
 
 
         ];
-    if (tblColumns.length > 0) {
-        return InitColumns.concat(tblColumns);
+    if (this.tblColumns.length > 0) {
+        return InitColumns.concat(this.tblColumns);
     }
     return InitColumns;
 };
-  checkRowEvent = new CustomEvent("rowCheck", {
-    detail: {
-        check: true
-    },
-    bubbles: true,
-    cancelable: false
-});
+  
   
   initdatagrid1()  {
     this.dg = $(`#${this._name}_dg`).datagrid({
@@ -131,42 +134,38 @@ class clsBaseTable {
         pageList: [10, 15, 30, 50, 100, 1000],
         onBeforeLoad: function () {
             $(`#${this._name}_deletebutton`).prop('disabled', true);
-            checkRowEvent.detail.check = true;
-            this.dispatchEvent(checkRowEvent);
+            
+            
         },
         onCheckAll: function (rows) {
             const checked = $(this).datagrid('getChecked').length > 0;
             $(`#${this._name}_deletebutton`).prop('disabled', !checked);
-            checkRowEvent.detail.check = !checked;
-            this.dispatchEvent(checkRowEvent);
+            
 
         },
         onUncheckAll: function () {
             $(`#${this._name}_deletebutton`).prop('disabled', true);
-            checkRowEvent.detail.check = true;
-            this.dispatchEvent(checkRowEvent);
+            
         },
         onCheck: function () {
             $(`#${this._name}_deletebutton`).prop('disabled', false);
-            checkRowEvent.detail.check = false;
-            this.dispatchEvent(checkRowEvent);
+            
 
         },
         onUncheck: function () {
             const checked = $(this).datagrid('getChecked').length > 0;
             $(`#${this._name}_deletebutton`).prop('disabled', !checked);
-            checkRowEvent.detail.check = !checked;
-            this.dispatchEvent(checkRowEvent);
+            
         },
         columns: [this.createColumns()]
     })
-        .datagrid('enableFilter', tblFilters)
-        .datagrid('load', `${pagelink}?handler=Data`);
+        .datagrid('enableFilter', this.tblFilters)
+        .datagrid('load', `${this._pageLink}?handler=Data`);
 
 }
 
   reloadData () {
-    this.dg.datagrid('load', `${pagelink}?handler=Data`);
+    this.dg.datagrid('load', `${this._pageLink}?handler=Data`);
 }
 
 //$(() => {
@@ -181,12 +180,12 @@ class clsBaseTable {
 
 //})
   currentEditRow = null;
-  popupmodal (nomenclature) {
+  popupmodal(nomenclature) {
     $(`#${this._name}_modal`).modal('toggle');
     $(`#${this._name}_modal .modal-title`).html(`${translations.AddCaption}`);
     $(`#${this._name}_edit_form`).clearForm();
     $(`#${this._name}_edit_form`)[0].reset();
-    currentEditRow = nomenclature;
+    this.currentEditRow = nomenclature;
     if (nomenclature) {
         $(`#${this._name}_modal .modal-title`).html(`${translations.EditCaption}`);
         if (typeof jsonToFormCallBack !== 'undefined')
@@ -206,7 +205,7 @@ class clsBaseTable {
 
     var nomenclature = this.dg.datagrid('getRows')[index];
     if (typeof getFiles == 'function')
-        getFiles(pagelink + '?handler=FilesList&id=' + nomenclature.Id);
+        getFiles(this._pageLink + '?handler=FilesList&id=' + nomenclature.Id);
     this.popupmodal(nomenclature);
 }
   onDelete  (id)  {
@@ -224,7 +223,7 @@ class clsBaseTable {
         },
         callback: function (result) {
             if (result) {
-                axios.get(`${pagelink}?handler=Delete&id=` + id).then(res => {
+                axios.get(`${this._pageLink}?handler=Delete&id=` + id).then(res => {
                     toastr["info"](`${translations.DeleteSuccess}`);// '@_localizer["Delete Success"]');
                     this.reloadData();
                 })
@@ -261,7 +260,7 @@ class clsBaseTable {
                 if (result) {
                     var paras = new URLSearchParams(checkedId.map(s => ['id', s]));
                     console.log(paras.toString())
-                    axios.get(`${pagelink}?handler=DeleteChecked&` + paras.toString()).then(res => {
+                    axios.get(`${this._pageLink}?handler=DeleteChecked&` + paras.toString()).then(res => {
                         toastr["info"](`${translations.Delete} ${checkedId.length} ${translations.Success}"]`);
                         this.reloadData();
                     })
@@ -292,7 +291,7 @@ class clsBaseTable {
     var headers = {
         "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
     }
-    axios.post(`${pagelink}?handler=Export`,
+    axios.post(`${this._pageLink}?handler=Export`,
         data,
         {
             headers: headers,

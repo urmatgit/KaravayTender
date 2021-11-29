@@ -123,6 +123,9 @@
   <data name="Add commercial offer" xml:space="preserve">
     <value>Добавить коммерческое предложение</value>
   </data>
+  <data name="Additional requirement" xml:space="preserve">
+    <value>Доп. требования</value>
+  </data>
   <data name="Are you sure delete a row?" xml:space="preserve">
     <value>Вы уверены, удалить эту строку?</value>
   </data>
@@ -132,11 +135,20 @@
   <data name="Bank days" xml:space="preserve">
     <value>Отсрочка в банк. днях</value>
   </data>
+  <data name="Category" xml:space="preserve">
+    <value>Категория</value>
+  </data>
   <data name="Choose a direction" xml:space="preserve">
     <value>Выберите направление</value>
   </data>
+  <data name="Choose a nomenclature" xml:space="preserve">
+    <value>Выберите номенклатуру</value>
+  </data>
   <data name="Choose a status" xml:space="preserve">
     <value>Выберите статус</value>
+  </data>
+  <data name="Choose areas" xml:space="preserve">
+    <value>Выберите ПП</value>
   </data>
   <data name="Choose manager" xml:space="preserve">
     <value>Выберите менеджера</value>
@@ -149,6 +161,9 @@
   </data>
   <data name="Commercial offer" xml:space="preserve">
     <value>Коммерческое предложения</value>
+  </data>
+  <data name="Count" xml:space="preserve">
+    <value>Количество</value>
   </data>
   <data name="Date close" xml:space="preserve">
     <value>Дата закрытия</value>
@@ -173,6 +188,9 @@
   </data>
   <data name="Delete Success" xml:space="preserve">
     <value>Строка удалена</value>
+  </data>
+  <data name="Delivery Count in month" xml:space="preserve">
+    <value>Кол. поставок в месяц</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Описание</value>
@@ -204,6 +222,9 @@
   <data name="No" xml:space="preserve">
     <value>Нет</value>
   </data>
+  <data name="Nomenclature" xml:space="preserve">
+    <value>Номерклатура</value>
+  </data>
   <data name="Number" xml:space="preserve">
     <value>№ ком. предложения</value>
   </data>
@@ -212,6 +233,9 @@
   </data>
   <data name="References" xml:space="preserve">
     <value>Справочники</value>
+  </data>
+  <data name="Requirement" xml:space="preserve">
+    <value>требования</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Сохранить</value>
@@ -237,10 +261,22 @@
   <data name="Term to" xml:space="preserve">
     <value>Срок контракта по</value>
   </data>
+  <data name="UnitOf" xml:space="preserve">
+    <value>Ед. измерения</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Объем</value>
+  </data>
+  <data name="Volume delivery  in term" xml:space="preserve">
+    <value>Объем поставки на контракт</value>
+  </data>
   <data name="Winner" xml:space="preserve">
     <value>Победитель</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Да</value>
+  </data>
+  <data name="Аreas" xml:space="preserve">
+    <value>ПП</value>
   </data>
 </root>

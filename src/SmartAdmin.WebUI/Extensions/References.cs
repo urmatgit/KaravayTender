@@ -9,6 +9,7 @@ using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 using CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.Queries.GetAll;
+using CleanArchitecture.Razor.Application.Features.References.Areas.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.References.QualityDocs.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.References.UnitOfs.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.References.Vats.Queries.GetAll;
@@ -48,6 +49,12 @@ namespace SmartAdmin.WebUI.Extensions
         public static async Task<SelectList> LoadQualityDocs(this ISender _mediator)
         {
             var command = new GetAllQualityDocsQuery();
+            var result = await _mediator.Send(command);
+            return new SelectList(result, "Id", "Name");
+        }
+        public static async Task<SelectList> LoadAreas(this ISender _mediator)
+        {
+            var command = new GetAllAreasQuery();
             var result = await _mediator.Send(command);
             return new SelectList(result, "Id", "Name");
         }

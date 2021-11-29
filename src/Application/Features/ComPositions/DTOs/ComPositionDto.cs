@@ -5,9 +5,12 @@ using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Features.AreaComPositions.DTOs;
 using CleanArchitecture.Razor.Application.Features.ComOffers.DTOs;
+using CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
+using System.Linq;
+using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 
 namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
 {
@@ -15,7 +18,10 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
     {
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<ComPosition, ComPositionDto>().ReverseMap();
+            profile.CreateMap<ComPosition, ComPositionDto>()
+                    .ForMember(d => d.AreaIds, s => s.MapFrom(y => (y.AreaComPositions != null ? y.AreaComPositions.Select(n => n.AreaId).ToArray() : Array.Empty<int>())));
+            profile.CreateMap<ComPositionDto, ComPosition>(MemberList.None);
+                       // .ForMember(d => d.QualityDocsIds, s => s.MapFrom(y => (y.NomenclatureQualityDocs != null ? y.NomenclatureQualityDocs.Select(n => n.QualityDocId).ToArray() : Array.Empty<int>())))
 
         }
         public int Id { get; set; }
@@ -49,11 +55,13 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
 
         [Required]
         public int NomenclatureId { get; set; }
-        public virtual Nomenclature Nomenclature { get; set; }
+        public virtual NomenclatureDto Nomenclature { get; set; }
 
         [Required]
         public int CategoryId { get; set; }
-        public virtual Category Category { get; set; }
+        public virtual CategoryDto Category { get; set; }
+        [Required(ErrorMessage = "'Производственные площадки' не выбрано ")]
+        public virtual int[] AreaIds { get; set; }
         public virtual ICollection<AreaComPositionDto> AreaComPositions { get; set; }
         [Required]
         public int ComOfferId { get; set; }

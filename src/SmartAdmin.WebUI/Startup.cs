@@ -21,6 +21,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Serilog;
 
 
@@ -60,6 +61,8 @@ namespace SmartAdmin.WebUI
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddControllers();
+                //.AddNewtonsoftJson(options =>
+                //options.SerializerSettings.MaxDepth = 4); ;
 
             services
                  .AddRazorPages(options =>

@@ -16,22 +16,22 @@ using CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs;
 
 namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.GetAll
 {
-    public class GetAllNomenclaturesQuery : IRequest<IEnumerable<NomenclatureDto>>
+    public class GetByIdNomenclatureQuery : IRequest<NomenclatureDto>
     {
-       
+       public int Id { get; set; }
     }
     
-    public class GetAllNomenclaturesQueryHandler :
-         IRequestHandler<GetAllNomenclaturesQuery, IEnumerable<NomenclatureDto>>
+    public class GetByIdNomenclatureQueryHandler :
+         IRequestHandler<GetByIdNomenclatureQuery, NomenclatureDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetAllNomenclaturesQueryHandler> _localizer;
+        private readonly IStringLocalizer<GetByIdNomenclatureQueryHandler> _localizer;
 
-        public GetAllNomenclaturesQueryHandler(
+        public GetByIdNomenclatureQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetAllNomenclaturesQueryHandler> localizer
+            IStringLocalizer<GetByIdNomenclatureQueryHandler> localizer
             )
         {
             _context = context;
@@ -39,16 +39,17 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.Get
             _localizer = localizer;
         }
 
-        public async Task<IEnumerable<NomenclatureDto>> Handle(GetAllNomenclaturesQuery request, CancellationToken cancellationToken)
+        public async Task<NomenclatureDto> Handle(GetByIdNomenclatureQuery request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing GetAllNomenclaturesQueryHandler method 
+            //TODO:Implementing GetByIdNomenclatureQueryHandler method 
             var data = await _context.Nomenclatures
                          .Include(c=>c.Category)
                          .Include(u=>u.UnitOf)
                          .Include(s=>s.NomenclatureQualityDocs)
                          .ThenInclude(q=>q.QualityDoc)
+                         .Where(n=>n.Id==request.Id)
                          .ProjectTo<NomenclatureDto>(_mapper.ConfigurationProvider)
-                         .ToListAsync(cancellationToken);
+                         .FirstOrDefaultAsync(cancellationToken);
             return data;
         }
     }

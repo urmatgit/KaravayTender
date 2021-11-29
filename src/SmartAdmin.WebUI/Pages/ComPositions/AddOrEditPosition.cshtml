@@ -23,7 +23,7 @@
                     <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
                     <div class="form-row">
                         <div class="col-md-6">
-                            <label class="form-label" for="VatId">@_localizer["Nomenclature"] <span class="text-danger">*</span></label>
+                            <label class="form-label" for="VatId">@_localizer["Comerial position"] <span class="text-danger">*</span></label>
                             <select type="text" asp-for="InputPos.NomenclatureId" asp-items="@(new SelectList(Model.Nomenclatures,"Id","Name"))" class="custom-select" placeholder="@_localizer["Nomenclature"]" data-val-required="Не выбрано 'Номенклатура'">
                                 <option value="">@_localizer["Choose a nomenclature"]</option>
                             </select>
@@ -63,13 +63,13 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label" for="name">@_localizer["Delivery Count in month"] <span class="text-danger">*</span></label>
-                            <input type="number" asp-for="InputPos.DeliveryCount" class="form-control" placeholder="@_localizer["Count"]"  />
+                            <input type="number" asp-for="InputPos.DeliveryCount" class="form-control" placeholder="@_localizer["Count"]"   />
 
                             <span class="invalid-feedback" asp-validation-for="InputPos.DeliveryCount"></span>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label" for="name">@_localizer["Volume delivery  in term"] <span class="text-danger">*</span></label>
-                            <input type="number" asp-for="InputPos.Volume" class="form-control" placeholder="@_localizer["Volume"]"  />
+                            <input type="number" asp-for="InputPos.Volume" class="form-control" placeholder="@_localizer["Volume"]"   />
 
                             <span class="invalid-feedback" asp-validation-for="InputPos.Volume"></span>
                         </div>

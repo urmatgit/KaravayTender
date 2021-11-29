@@ -19,7 +19,8 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Nomenclature, NomenclatureDto>()
-                .ForMember(d => d.QualityDocsIds, s => s.MapFrom(y =>  (y.NomenclatureQualityDocs !=null ? y.NomenclatureQualityDocs.Select(n => n.QualityDocId).ToArray(): Array.Empty<int>())));
+                .ForMember(d => d.QualityDocsIds, s => s.MapFrom(y => (y.NomenclatureQualityDocs != null ? y.NomenclatureQualityDocs.Select(n => n.QualityDocId).ToArray() : Array.Empty<int>())))
+                .ForMember(d => d.QualityDocsNames, s => s.MapFrom(y => (y.NomenclatureQualityDocs != null ? string.Join(',',y.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)) :string.Empty)));
             profile.CreateMap<NomenclatureDto, Nomenclature>(MemberList.None);
                 
 
@@ -61,6 +62,7 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         public virtual VatDto Vat { get; set; }
         [Required(ErrorMessage = "'Требования к документам по качеству' не выбрано ")]
         public virtual int[] QualityDocsIds { get; set; }
+        public  string QualityDocsNames { get; set; }
         public virtual ICollection<NomenclatureQualityDocDto> NomenclatureQualityDocs { get; set; }
     }
 }

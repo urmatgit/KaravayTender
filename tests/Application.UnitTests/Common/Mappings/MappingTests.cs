@@ -7,6 +7,7 @@ using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Customers.DTOs;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
+using CleanArchitecture.Razor.Application.Features.ComPositions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs;
@@ -45,6 +46,8 @@ namespace CleanArchitecture.Application.UnitTests.Common.Mappings
         //}
 
         [Test]
+        
+            [TestCase(typeof(ComPosition), typeof(ComPositionDto))]
         [TestCase(typeof(StatusLog), typeof(StatusLogDto))]
         [TestCase(typeof(QualityDoc), typeof(QualityDocDto))]
         [TestCase(typeof(Nomenclature), typeof(NomenclatureDto))]
