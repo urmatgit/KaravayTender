@@ -31,6 +31,7 @@ using CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll;
 using System.Collections.Generic;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.GetAll;
+using CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagination;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
@@ -95,6 +96,12 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] ComOffersWithPaginationQuery command)
         {
+            var result = await _mediator.Send(command);
+            return new JsonResult(result);
+        }
+        public async Task<IActionResult> OnGetDataPosAsync([FromQuery] ComPositionsWithPaginationQuery command)
+        {
+            // throw new Exception("Test log error 222 !!!!!!");
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }

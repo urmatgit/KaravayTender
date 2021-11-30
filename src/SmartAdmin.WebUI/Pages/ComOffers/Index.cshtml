@@ -183,6 +183,10 @@ onImportedSucceeded = "reloadData()"
             alert("Start");
         });
         $("#edit_panel").on("ShowEdit", function (event) {
+            let comofferid = 0;
+            if (currentEditRow)
+                comofferid = currentEditRow?.Id;
+            clscomposition.reloadData('@Url.Page("/ComOffers/Index")?handler=DataPos' + `&ComOfferId=${comofferid}`);;
             clscomposition.ResizeGrid();
         })
         $('#InputPos_NomenclatureId').change(function () {

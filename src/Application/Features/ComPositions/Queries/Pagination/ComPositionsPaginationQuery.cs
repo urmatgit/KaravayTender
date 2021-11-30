@@ -17,12 +17,13 @@ using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
+using CleanArchitecture.Razor.Application.Common.Specification;
 
 namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagination
 {
     public class ComPositionsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<ComPositionDto>>
     {
-       
+        public int ComOfferId { get; set; }  
     }
     
     public class ComPositionsWithPaginationQueryHandler :
@@ -47,9 +48,11 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
         {
             //TODO:Implementing ComPositionsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<ComPosition>(request.FilterRules);
+            
             try
             {
-                var data = await _context.ComPositions.Where(filters)
+                var data = await _context.ComPositions.Specify(new FilterByComOfferQuerySpec(request.ComOfferId))
+                     .Where(filters)
                      .Include(n => n.Nomenclature)
                      .ThenInclude(n => n.Category)
                      .Include(a=>a.AreaComPositions)
@@ -59,7 +62,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                     .Include(n => n.Nomenclature)
                     .ThenInclude(n => n.Vat)
                     .OrderBy($"{request.Sort} {request.Order}")
-                  
+                    
                     .PaginatedDataAsync(request.Page, request.Rows);
                   //.ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
                   var datDto = _mapper.Map<IEnumerable<ComPositionDto>>(data.rows);
@@ -69,6 +72,15 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
 
                 return null;
             }
+        }
+        public class FilterByComOfferQuerySpec : Specification<ComPosition>
+        {
+            public FilterByComOfferQuerySpec(int comOfferId)
+            {
+                Criteria = p => p.ComOfferId == comOfferId;
+            }
+
+
         }
     }
 }

@@ -61,11 +61,14 @@ namespace SmartAdmin.WebUI
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddControllers().AddJsonOptions(option =>
-            {
-                option.JsonSerializerOptions.WriteIndented = true;
+            services.AddControllers();
+            //    .AddJsonOptions(option =>
+            //{
                 
-            });
+            //    option.JsonSerializerOptions.ReferenceHandler= ReferenceHandling.Preserve;
+
+
+            //});
                // .AddNewtonsoftJson(options => {
                //     options.SerializerSettings.ReferenceLoopHandling =
                //Newtonsoft.Json.ReferenceLoopHandling.Ignore;

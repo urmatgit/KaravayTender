@@ -11,6 +11,7 @@ using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using System.Linq;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
+using System.Text.Json.Serialization;
 
 namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
 {
@@ -65,11 +66,13 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         [Required(ErrorMessage = "'Производственные площадки' не выбрано ")]
         public virtual int[] AreaIds { get; set; }
         public virtual string AreaNames { get; set; }
+        [JsonIgnore]
         public virtual ICollection<AreaComPositionDto> AreaComPositions { get; set; }
         [Required]
         public int ComOfferId { get; set; }
         public virtual ComOfferDto ComOffer { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<StageCompositionDto> StageCompositions { get; set; }
     }
 }

@@ -55,7 +55,8 @@ $('#save').click(function (e) {
     event.stopPropagation();
 });
 function openEditpanel(row) {
-    
+
+    currentEditRow = row;
     $('#table-page-content').hide();
     $('#edit_panel').show();
     $("#edit_panel").trigger("ShowEdit");
@@ -63,7 +64,7 @@ function openEditpanel(row) {
     
     $('#edit_form_panel').clearForm();
     $('#edit_form_panel')[0].reset();
-    currentEditRow = row;
+    
     if (row) {
         $('#edit_panel .panel-title').html(`${window.translations.EditCaption}`);
         
