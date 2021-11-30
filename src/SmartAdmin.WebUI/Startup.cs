@@ -22,6 +22,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 
 
@@ -60,9 +61,18 @@ namespace SmartAdmin.WebUI
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddControllers();
-                //.AddNewtonsoftJson(options =>
-                //options.SerializerSettings.MaxDepth = 4); ;
+            services.AddControllers().AddJsonOptions(option =>
+            {
+                option.JsonSerializerOptions.WriteIndented = true;
+                
+            });
+               // .AddNewtonsoftJson(options => {
+               //     options.SerializerSettings.ReferenceLoopHandling =
+               //Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+               //     options.SerializerSettings.ContractResolver = new PascalCase CamelCasePropertyNamesContractResolver();
+               //     options.SerializerSettings.
+               //     }
+               // ); ;
 
             services
                  .AddRazorPages(options =>

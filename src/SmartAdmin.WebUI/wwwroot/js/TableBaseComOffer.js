@@ -8,7 +8,7 @@ $('#searchbutton').click(function () {
     reloadData();
 });
 $('#addbutton').click(function () {
-    popupmodal(null);
+    openEditpanel(null);
 });
 $('#deletebutton').click(function () {
     onDeleteChecked();
@@ -22,23 +22,23 @@ $('#importbutton').click(function () {
 $('#gettemplatebutton').click(function () {
     onGetTemplate();
 });
-$('#edit_form :submit').click(function (e) {
-    const form = document.querySelector('#edit_form');
+$('#save').click(function (e) {
+    const form = document.querySelector('#edit_form_panel');
     if ($(form).valid() === false) {
         form.classList.add('was-validated');
     } else {
-        let request = $('#edit_form').serialize();
+        let request = $('#edit_form_panel').serialize();
         if (typeof UpdateFiles == 'function')
             UpdateFiles();
-        var form_data = new FormData($('#edit_form')[0]);
+        var form_data = new FormData($('#edit_form_panel')[0]);
         //if (AppendFilesToFormData) {
         //    AppendFilesToFormData(request);
         //}
-        axios.post(`${pagelink}`, form_data).then(res => {
+        axios.post(`${pagelink}`, request).then(res => {
             toastr["info"](`${translations.SaveSuccess} `);
-            $('#edit_modal').modal('toggle');
-            if (typeof clienUploadfilename == 'function')
-                clienUploadfilename();
+
+            $('#table-page-content').show();
+            $('#edit_panel').hide();
             reloadData();
         }).catch((error) => {
             if (error.response.data.Errors) {
@@ -53,7 +53,60 @@ $('#edit_form :submit').click(function (e) {
     }
     event.preventDefault();
     event.stopPropagation();
-})
+});
+function openEditpanel(row) {
+    
+    $('#table-page-content').hide();
+    $('#edit_panel').show();
+    $("#edit_panel").trigger("ShowEdit");
+    $('#edit_panel .panel-title').html(`${window.translations.AddCaption}`);
+    
+    $('#edit_form_panel').clearForm();
+    $('#edit_form_panel')[0].reset();
+    currentEditRow = row;
+    if (row) {
+        $('#edit_panel .panel-title').html(`${window.translations.EditCaption}`);
+        
+            $('#edit_form_panel').jsonToForm(row, {
+
+                IsDeliveryInPrice: function (value) {
+                    if (value == true) {
+                        $('#edit_form_panel [name*="IsDeliveryInPrice"]').prop('checked', true);
+                    } else {
+                        $('#edit_form_panel [name*="IsDeliveryInPrice"]').prop('checked', false);
+                    }
+                },
+                IsBankDays: function (value) {
+                    if (value == true) {
+                        $('#edit_form_panel [name*="IsBankDays"]').prop('checked', true);
+                    } else {
+                        $('#edit_form_panel [name*="IsBankDays"]').prop('checked', false);
+                    }
+                },
+                TermBegin: function (value) {
+                    var dateFormat = "YYYY-MM-DD";
+                    
+                    var date = moment(value).format(dateFormat);
+                    $('#edit_form_panel [name*="TermBegin"]').val(date);
+                },
+                TermEnd: function (value) {
+                    var dateFormat = "YYYY-MM-DD";
+
+                    var date = moment(value).format(dateFormat);
+                    $('#Input_TermEnd').val(date);
+                }
+
+            });
+        
+
+    }
+    else {
+        $('#edit_form_panel #Input_Id').val(0)
+        
+        if (typeof OnNewRow == 'function')
+            OnNewRow();
+    }
+}
 tblFilters = [{}];
 
 tblColumns = [];
@@ -95,7 +148,10 @@ var checkRowEvent = new CustomEvent("rowCheck", {
     bubbles: true,
     cancelable: false
 });
+
+
 var $dg = {};
+
 var initdatagrid = () => {
     $dg = $('#main_dg').datagrid({
         height: (window.innerHeight - 320),
@@ -186,9 +242,10 @@ var popupmodal = (nomenclature) => {
 
 var onEdit = (index) => {
     var nomenclature = $dg.datagrid('getRows')[index];
-    if (typeof getFiles == 'function')
-        getFiles(pagelink + '?handler=FilesList&id=' + nomenclature.Id);
-    popupmodal(nomenclature);
+    openEditpanel(nomenclature);
+    //if (typeof getFiles == 'function')
+    //    getFiles(pagelink + '?handler=FilesList&id=' + nomenclature.Id);
+    //popupmodal(nomenclature);
 }
 var onDelete = (id) => {
     bootbox.confirm({

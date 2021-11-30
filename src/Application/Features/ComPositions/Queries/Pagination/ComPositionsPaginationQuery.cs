@@ -52,7 +52,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                 var data = await _context.ComPositions.Where(filters)
                      .Include(n => n.Nomenclature)
                      .ThenInclude(n => n.Category)
-
+                     .Include(a=>a.AreaComPositions)
+                     .ThenInclude(a=>a.Area)
                     .Include(n => n.Nomenclature)
                     .ThenInclude(n => n.UnitOf)
                     .Include(n => n.Nomenclature)

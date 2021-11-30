@@ -40,7 +40,7 @@
         }
     </style>
 }
-<div id="js-page-content-demopanels" class="card mb-g">
+<div id="table-page-content" class="card mb-g">
     <div class="card-header bg-white d-flex align-items-center">
         <h4 class="m-0">
             @_localizer["ComOffers"]
@@ -108,7 +108,9 @@
         </div>
     </div>
 </div>
-<partial name="AddOrEdit" />
+
+    <partial name="AddOrEditCard" />
+
 @await Component.InvokeAsync("ImportExcel", new
 {
     importUri = Url.Page("/ComOffers/Index") + "?handler=Import",
@@ -127,10 +129,11 @@ onImportedSucceeded = "reloadData()"
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/select2/select2.bundle.js"></script>
 
-    <script src="~/js/TableBase.js"></script>
+    <script src="~/js/TableBaseComOffer.js"></script>
     <script src="~/js/TableBaseClass.js"></script>
     <script type="text/javascript">
         var clscomposition = null;
+        var currentEditRow = "";
         var pagelink = '@Url.Page("/ComOffers/Index")';
         var translations = {
             SaveSuccess: '@_localizer["Save Success."]',
@@ -170,23 +173,7 @@ onImportedSucceeded = "reloadData()"
             }
 
         ]
-        var jsonToFormCallBack = {
 
-            IsDeliveryInPrice: function (value) {
-                if (value == true) {
-                    $('#edit_form [name*="IsDeliveryInPrice"]').prop('checked', true);
-                } else {
-                    $('#edit_form [name*="IsDeliveryInPrice"]').prop('checked', false);
-                }
-            },
-            IsBankDays: function (value) {
-                if (value == true) {
-                    $('#edit_form [name*="IsBankDays"]').prop('checked', true);
-                } else {
-                    $('#edit_form [name*="IsBankDays"]').prop('checked', false);
-                }
-            },
-        }
         document.addEventListener("rowCheck", function (event) { // (1)
             console.log(event.detail.check);
             $('#startbutton').prop('disabled', event.detail.check);
@@ -195,18 +182,19 @@ onImportedSucceeded = "reloadData()"
         $('#startbutton').click(function () {
             alert("Start");
         });
-        $('#edit_modal').on('shown.bs.modal', function () {
-
+        $("#edit_panel").on("ShowEdit", function (event) {
             clscomposition.ResizeGrid();
-        });
-        $('#InputPos_NomenclatureId').change(function(){
+        })
+        $('#InputPos_NomenclatureId').change(function () {
             var nomenId = $(this).val();
-            console.log(id);
+            console.log(nomenId);
             axios.get('/Nomenclatures/Index?handler=ById&id=' + nomenId)
                 .then(res => {
                     console.log(res);
-                    $('#InputPos_Nomenclature_Category_Name').val(res.Category.Name);
-
+                    $('#InputPos_Nomenclature_Category_Name').val(res.data.Category.Name);
+                    $('#InputPos_Nomenclature_UnitOf_Name').val(res.data.UnitOf.Name);
+                    $('#InputPos_Nomenclature_Volume').val(res.data.Volume);
+                    $('#InputPos_Nomenclature_QualityDocsNames').val(res.data.QualityDocsNames);
 
                 })
                 .catch((error) => {
@@ -220,6 +208,7 @@ onImportedSucceeded = "reloadData()"
                     }
                 });
         })
+
 		$(() => {
 
             tblColumns = [
@@ -240,6 +229,7 @@ onImportedSucceeded = "reloadData()"
                 { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter }
 
             ];
+
             tblFilters = [
 
                 {
@@ -316,31 +306,53 @@ onImportedSucceeded = "reloadData()"
                 }
             ]
             initdatagrid();
-             clscomposition = new clsBaseTable("composition",'@Url.Page("/ComPositions/Index")');
-            clscomposition.tblColumns= [
-                { field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 130 },
-                { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
+            clscomposition = new clsBaseTable("composition",'@Url.Page("/ComPositions/Index")');
+            clscomposition.tblColumns = [
+                {
+                    field: 'Category', title: '@_localizer["Category"]', sortable: true, width: 130, formatter: function (val, rec) {
+                        return rec.Category == null ? "" : rec.Category.Name;
+                    }
+                },
+                {
+                    field: 'Nomenclature.Name', title: '@_localizer["Nomenclature"]', sortable: true, width: 100 , formatter: function (val, rec) {
+                        return rec.Nomenclature?.Name;
+                    }
+                },
 
-                { field: 'DateBegin', title: '@_localizer["Date open"]', sortable: true, width: 130, formatter: dateformatter  },
-                { field: 'DateEnd', title: '@_localizer["Date close"]', sortable: true, width: 130, formatter: dateformatter  },
-                { field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 150 },
-                { field: 'TermBegin', title: '@_localizer["Term from"]', sortable: true, width: 130, formatter: dateformatter  },
-                { field: 'TermEnd', title: '@_localizer["Term to"]', sortable: true, width: 130, formatter: dateformatter  },
 
-                { field: 'ManagerName', title: '@_localizer["Manager"]', sortable: true, width: 150 },
-                { field: 'WinnerName', title: '@_localizer["Winner"]', sortable: true, width: 150 },
-                { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
-                { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 100 },
-                { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 80, formatter: checkboxformatter },
-                { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter }
+                { field: 'AriaNames', title: '@_localizer["Arias"]', sortable: true, width: 150 },
+                {
+                    field: 'Nomenclature.UnitOf.Name', title: '@_localizer["UnitOf"]', sortable: true, width: 80, formatter: function (val, rec) {
+                        return rec.Nomenclature?.UnitOf?.Name;
+                    }
+                },
+                { field: 'DeliveryCount', title: '@_localizer["Delivery count"]', sortable: true, width: 130},
+
+                { field: 'Price', title: '@_localizer["Price"]', sortable: true, width: 80 },
+
+                { field: 'Nomenclature.Vat.Stavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
+                { field: 'Volume', title: '@_localizer["Volume"]', sortable: true, width: 80 },
+                { field: 'Nomenclature.QualityDocsNames', title: '@_localizer["Quality documents"]', sortable: true, width: 100 },
+                { field: 'Nomenclature.Specification', title: '@_localizer["Specification"]', sortable: true, width: 80},
+                { field: 'Summa', title: '@_localizer["Summa"]', sortable: true, width: 80 }
 
             ];
+            clscomposition.jsonToFormCallBack = {
+                ComOfferId: function (value) {
+                    var parentID = $('#edit_form_panel #Input_Id').val();
+                    $('#InputPos_ComOfferId').val(parentID);
+                }
+            }
+            clscomposition.OnNewRow = () => {
+                var parentID = $('#edit_form_panel #Input_Id').val();
+                $('#InputPos_ComOfferId').val(parentID);
+            };
             clscomposition.Init();
-             $('.select2').select2({
+            $('.select2').select2({
                 placeholder: '@Html.Raw(@_localizer["Choose areas"])',
 
                 allowClear: true,
-                 dropdownParent: $('#compostion_edit_form')
+                dropdownParent: $('#composition_edit_form')
             });
             //$('.summernote').summernote({
             //    focus: true,
@@ -354,12 +366,53 @@ onImportedSucceeded = "reloadData()"
             //    ]
             //});
         })
-        function TogleFullScreen() {
+        function closePanel() {
+            $('#table-page-content').show();
+            $('#edit_panel').hide();
 
-            if ($('#edit_modal').hasClass("modal-fullscreen")) {
-                $('#edit_modal').removeClass("modal-fullscreen");
-            } else
-                $('#edit_modal').addClass("modal-fullscreen");
         }
+        $("#InputPos_CategoryId").change(function () {
+
+
+            var id = $(this).val();
+            console.log(id);
+            axios.get('/ComPositions/Index?handler=Nomenclatures&categoryid=' + id)
+                .then(res => {
+                    console.log(res);
+                    $('#InputPos_Nomenclature_Category_Name').val("");
+                    $('#InputPos_Nomenclature_UnitOf_Name').val("");
+                    $('#InputPos_Nomenclature_Volume').val("");
+                    $('#InputPos_Nomenclature_QualityDocsNames').val("");
+                    var modelDropDown = $('#InputPos_NomenclatureId');
+                    modelDropDown.empty();
+                    modelDropDown.append(
+                        $('<option>', {
+                            value: ''
+                        }).text( '@Html.Raw(@_localizer["Choose a nomenclature"])')
+                    );
+                    $.each(res.data, function (index, model) {
+                        modelDropDown.append(
+                            $('<option>', {
+                                value: model.Id
+                            }).text(model.Name)
+                        );
+                        if (clscomposition.currentEditRow && clscomposition.currentEditRow.NomenclatureId == model.Id) {
+                            modelDropDown.val(clscomposition.currentEditRow.CategoryId);
+                        }
+
+                    });
+                })
+                .catch((error) => {
+                    if (error.response.data.Errors) {
+                        const errors = error.response.data.Errors;
+                        errors.forEach(item => {
+                            toastr["error"](item);
+                        });
+                    } else {
+                        toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
+                    }
+                });
+        });
+
     </script>
 }

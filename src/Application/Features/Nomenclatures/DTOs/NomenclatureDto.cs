@@ -20,7 +20,7 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         {
             profile.CreateMap<Nomenclature, NomenclatureDto>()
                 .ForMember(d => d.QualityDocsIds, s => s.MapFrom(y => (y.NomenclatureQualityDocs != null ? y.NomenclatureQualityDocs.Select(n => n.QualityDocId).ToArray() : Array.Empty<int>())))
-                .ForMember(d => d.QualityDocsNames, s => s.MapFrom(y => (y.NomenclatureQualityDocs != null ? string.Join(',',y.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)) :string.Empty)));
+                .ForMember(d => d.QualityDocsNames, s => s.MapFrom(y => (y.NomenclatureQualityDocs != null ? string.Join(", ",y.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)) :string.Empty)));
             profile.CreateMap<NomenclatureDto, Nomenclature>(MemberList.None);
                 
 

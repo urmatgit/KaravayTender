@@ -20,6 +20,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         {
             profile.CreateMap<ComPosition, ComPositionDto>()
                     .ForMember(d => d.AreaIds, s => s.MapFrom(y => (y.AreaComPositions != null ? y.AreaComPositions.Select(n => n.AreaId).ToArray() : Array.Empty<int>())));
+            profile.CreateMap<ComPosition, ComPositionDto>()
+                    .ForMember(d => d.AreaNames, s => s.MapFrom(y => (y.AreaComPositions != null ? string.Join(", ", y.AreaComPositions.Select(n => n.Area.Name).ToArray()) : string.Empty)));
             profile.CreateMap<ComPositionDto, ComPosition>(MemberList.None);
                        // .ForMember(d => d.QualityDocsIds, s => s.MapFrom(y => (y.NomenclatureQualityDocs != null ? y.NomenclatureQualityDocs.Select(n => n.QualityDocId).ToArray() : Array.Empty<int>())))
 
@@ -40,17 +42,17 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         /// <summary>
         /// Цена без ндс
         /// </summary>
-        [Required]
+        
         public decimal Price { get; set; }
         /// <summary>
         /// Сумма без НДС
         /// </summary>
-        [Required]
+        
         public decimal Summa { get; set; }
         /// <summary>
         /// Сумма с НДС
         /// </summary>
-        [Required]
+        
         public decimal SummaVAT { get; set; }
 
         [Required]
@@ -62,6 +64,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         public virtual CategoryDto Category { get; set; }
         [Required(ErrorMessage = "'Производственные площадки' не выбрано ")]
         public virtual int[] AreaIds { get; set; }
+        public virtual string AreaNames { get; set; }
         public virtual ICollection<AreaComPositionDto> AreaComPositions { get; set; }
         [Required]
         public int ComOfferId { get; set; }

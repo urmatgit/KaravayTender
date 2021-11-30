@@ -12,7 +12,8 @@ class clsBaseTable {
 
     tblColumns = [];
     
-
+    jsonToFormCallBack;
+    OnNewRow;
     constructor(name,link) {
         this._name = name;
         this._pageLink = link;
@@ -192,16 +193,16 @@ class clsBaseTable {
     this.currentEditRow = nomenclature;
     if (nomenclature) {
         $(`#${this._name}_modal .modal-title`).html(`${translations.EditCaption}`);
-        if (typeof jsonToFormCallBack !== 'undefined')
-            $(`#${this._name}_edit_form`).jsonToForm(nomenclature, jsonToFormCallBack);
+        if (typeof this.jsonToFormCallBack !== 'undefined')
+            $(`#${this._name}_edit_form`).jsonToForm(nomenclature, this.jsonToFormCallBack);
         else
             $(`#${this._name}_edit_form`).jsonToForm(nomenclature);
     } else {
-        $(`#${this._name}_edit_form #Input_Id`).val(0)
+        $(`#${this._name}_edit_form #InputPos_Id`).val(0)
         if (typeof clienUploadfilename == 'function')
             clienUploadfilename();
-        if (typeof OnNewRow == 'function')
-            OnNewRow();
+        if (typeof this.OnNewRow == 'function')
+            this.OnNewRow();
     }
 }
 

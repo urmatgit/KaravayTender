@@ -128,7 +128,12 @@ namespace SmartAdmin.WebUI.Pages.ComPositions
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
-
+        public async Task<IActionResult> OnGetNomenclaturesAsync([FromQuery] int categoryid)
+        {
+            var command = new GetByCategoryIdNomenclatureQuery() { CatetoryId = categoryid };
+            var result = await _mediator.Send(command);
+            return new JsonResult(result);
+        }
         public async Task<IActionResult> OnGetDeleteCheckedAsync([FromQuery] int[] id)
         {
             var command = new DeleteCheckedComPositionsCommand() { Id = id };

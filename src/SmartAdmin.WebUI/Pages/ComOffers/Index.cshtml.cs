@@ -79,10 +79,9 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             var result = await _identityService.FetchUsers("Admin");
             Directions = await _mediator.LoadDirection();
             var fistelement = Directions.FirstOrDefault();
-            if (fistelement != null)
-            {
-                Categories = await _mediator.LoadCategory(Convert.ToInt32(fistelement.Value));
-            }
+            
+                Categories = await _mediator.LoadCategory(0);
+            
             var nomenclaturies = new  GetAllNomenclaturesQuery();
             Nomenclatures = (List<NomenclatureDto>)await  _mediator.Send(nomenclaturies);
             Areas = await _mediator.LoadAreas();

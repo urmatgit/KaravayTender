@@ -127,6 +127,13 @@
     <None Update="Files\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Pages\ComOffers\AddOrEditPosition.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
  
   <Target Name="CreateFilesFolder" AfterTargets="AfterPublish">
     <MakeDir Directories="$(PublishUrl)Files" Condition="!Exists('$(PublishUrl)Files')" />

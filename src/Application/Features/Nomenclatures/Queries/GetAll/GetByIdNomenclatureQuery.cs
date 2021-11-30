@@ -20,9 +20,13 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.Get
     {
        public int Id { get; set; }
     }
-    
+    public class GetByCategoryIdNomenclatureQuery : IRequest<List<NomenclatureDto>>
+    {
+        public int CatetoryId { get; set; }
+    }
     public class GetByIdNomenclatureQueryHandler :
-         IRequestHandler<GetByIdNomenclatureQuery, NomenclatureDto>
+         IRequestHandler<GetByIdNomenclatureQuery, NomenclatureDto>,
+         IRequestHandler<GetByCategoryIdNomenclatureQuery, List<NomenclatureDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -50,6 +54,19 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.Get
                          .Where(n=>n.Id==request.Id)
                          .ProjectTo<NomenclatureDto>(_mapper.ConfigurationProvider)
                          .FirstOrDefaultAsync(cancellationToken);
+            return data;
+        }
+
+        public async Task<List<NomenclatureDto>> Handle(GetByCategoryIdNomenclatureQuery request, CancellationToken cancellationToken)
+        {
+            var data = await _context.Nomenclatures
+                         .Include(c => c.Category)
+                         .Include(u => u.UnitOf)
+                         .Include(s => s.NomenclatureQualityDocs)
+                         .ThenInclude(q => q.QualityDoc)
+                         .Where(n => n.CategoryId == request.CatetoryId)
+                         .ProjectTo<NomenclatureDto>(_mapper.ConfigurationProvider)
+                         .ToListAsync(cancellationToken);
             return data;
         }
     }
