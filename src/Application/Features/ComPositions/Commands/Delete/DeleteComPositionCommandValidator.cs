@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.ComPositions.Commands.Delete
 {
@@ -7,8 +7,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Commands.Del
         public DeleteComPositionCommandValidator()
         {
            //TODO:Implementing DeleteComPositionCommandValidator method 
-           //ex. RuleFor(v => v.Id).NotNull().GreaterThan(0);
-           throw new System.NotImplementedException();
+            RuleFor(v => v.Id).NotNull().GreaterThan(0);
+           //throw new System.NotImplementedException();
         }
     }
     public class DeleteCheckedComPositionsCommandValidator : AbstractValidator<DeleteCheckedComPositionsCommand>
@@ -16,8 +16,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Commands.Del
         public DeleteCheckedComPositionsCommandValidator()
         {
             //TODO:Implementing DeleteProductCommandValidator method 
-            //ex. RuleFor(v => v.Id).NotNull().NotEmpty();
-            throw new System.NotImplementedException();
+             RuleFor(v => v.Id).NotNull().NotEmpty();
+            //throw new System.NotImplementedException();
         }
     }
 }

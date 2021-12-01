@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,9 +16,11 @@ namespace CleanArchitecture.Razor.Domain.Enums
     /// </summary>
     public enum ParticipantStatus:short
     {
-        [Description(@"не участвует")]
-        Participates = 1,
+        [Description(@"Не участвует")]
+        [Display(Name = "Не участвует")]
+        Participates = 0,
         [Description(@"Участвует")]
+        [Display(Name = "Участвует")]
         NotParticipate = 1
     }
 }

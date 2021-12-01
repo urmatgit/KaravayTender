@@ -61,6 +61,9 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                     .ThenInclude(n => n.UnitOf)
                     .Include(n => n.Nomenclature)
                     .ThenInclude(n => n.Vat)
+                    .Include(n => n.Nomenclature)
+                    .ThenInclude(n => n.NomenclatureQualityDocs)
+                    .ThenInclude(d=>d.QualityDoc)
                     .OrderBy($"{request.Sort} {request.Order}")
                     
                     .PaginatedDataAsync(request.Page, request.Rows);

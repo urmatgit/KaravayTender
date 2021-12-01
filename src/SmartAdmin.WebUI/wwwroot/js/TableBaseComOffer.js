@@ -54,6 +54,14 @@ $('#save').click(function (e) {
     event.preventDefault();
     event.stopPropagation();
 });
+function SetEnableToRoleButton(enable) {
+    $("a[role='button']").each(function (val) {
+        if (!enable)
+            $(this).hide();// prop('disabled', true).addClass('ui-disabled');
+        else
+            $(this).show();// prop('disabled', false).removeClass('ui-disabled');
+    })
+}
 function openEditpanel(row) {
 
     currentEditRow = row;
@@ -99,13 +107,14 @@ function openEditpanel(row) {
 
             });
         
-
+        SetEnableToRoleButton(true);
     }
     else {
         $('#edit_form_panel #Input_Id').val(0)
         
         if (typeof OnNewRow == 'function')
             OnNewRow();
+        SetEnableToRoleButton(false);
     }
 }
 tblFilters = [{}];

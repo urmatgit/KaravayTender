@@ -120,11 +120,8 @@
   <data name="Add" xml:space="preserve">
     <value>Добавить</value>
   </data>
-  <data name="Add commercial offer" xml:space="preserve">
-    <value>Добавить коммерческое предложение</value>
-  </data>
-  <data name="Additional requirement" xml:space="preserve">
-    <value>Доп. требования</value>
+  <data name="Add participant" xml:space="preserve">
+    <value>Добавить участников</value>
   </data>
   <data name="Are you sure delete a row?" xml:space="preserve">
     <value>Вы уверены, удалить эту строку?</value>
@@ -132,56 +129,14 @@
   <data name="Are you sure delete checked rows?" xml:space="preserve">
     <value>Вы уверены, удалять эти отмеченные строки?</value>
   </data>
-  <data name="Bank days" xml:space="preserve">
-    <value>Отсрочка в банк. днях</value>
-  </data>
-  <data name="Category" xml:space="preserve">
-    <value>Категория</value>
-  </data>
-  <data name="Choose a category&quot;" xml:space="preserve">
-    <value>Выберите категорию</value>
-  </data>
-  <data name="Choose a direction" xml:space="preserve">
-    <value>Выберите направление</value>
-  </data>
-  <data name="Choose a nomenclature" xml:space="preserve">
-    <value>Выберите номенклатуру</value>
-  </data>
-  <data name="Choose a status" xml:space="preserve">
-    <value>Выберите статус</value>
-  </data>
-  <data name="Choose areas" xml:space="preserve">
-    <value>Выберите ПП</value>
-  </data>
-  <data name="Choose manager" xml:space="preserve">
-    <value>Выберите менеджера</value>
-  </data>
   <data name="Close" xml:space="preserve">
     <value>Закрыть</value>
-  </data>
-  <data name="Comerial position" xml:space="preserve">
-    <value>Позиция</value>
   </data>
   <data name="Command" xml:space="preserve">
     <value>Команда</value>
   </data>
-  <data name="Commercial offer" xml:space="preserve">
-    <value>Коммерческое предложения</value>
-  </data>
-  <data name="Count" xml:space="preserve">
-    <value>Количество</value>
-  </data>
-  <data name="Date close" xml:space="preserve">
-    <value>Дата закрытия</value>
-  </data>
-  <data name="Date open" xml:space="preserve">
-    <value>Дата открытия</value>
-  </data>
-  <data name="Days" xml:space="preserve">
-    <value>дни</value>
-  </data>
-  <data name="Delay day" xml:space="preserve">
-    <value>Отсрочка платежа</value>
+  <data name="ComParticipants" xml:space="preserve">
+    <value>Участники</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Удалить</value>
@@ -195,23 +150,14 @@
   <data name="Delete Success" xml:space="preserve">
     <value>Строка удалена</value>
   </data>
-  <data name="Delivery count" xml:space="preserve">
-    <value>Кол. поставок в мес.</value>
-  </data>
-  <data name="Delivery Count in month" xml:space="preserve">
-    <value>Кол. поставок в месяц</value>
-  </data>
   <data name="Description" xml:space="preserve">
     <value>Описание</value>
-  </data>
-  <data name="Direction" xml:space="preserve">
-    <value>Направление</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Редактировать</value>
   </data>
-  <data name="Edit commercial offer" xml:space="preserve">
-    <value>Редактировать коммерческое предложение</value>
+  <data name="Edit vat" xml:space="preserve">
+    <value>Редактировать участников</value>
   </data>
   <data name="Export Excel" xml:space="preserve">
     <value>Экспорт в Excel</value>
@@ -219,11 +165,8 @@
   <data name="Export fail" xml:space="preserve">
     <value>Ошибка при экспорте</value>
   </data>
-  <data name="Manager" xml:space="preserve">
-    <value>Манеджер</value>
-  </data>
   <data name="Managing supplier referral parameters" xml:space="preserve">
-    <value>Управление параметрами направления поставщиков</value>
+    <value>Управление параметрами</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Название</value>
@@ -231,32 +174,8 @@
   <data name="No" xml:space="preserve">
     <value>Нет</value>
   </data>
-  <data name="Nomenclature" xml:space="preserve">
-    <value>Номерклатура</value>
-  </data>
-  <data name="Number" xml:space="preserve">
-    <value>№ ком. предложения</value>
-  </data>
-  <data name="Participants" xml:space="preserve">
-    <value>Участники</value>
-  </data>
-  <data name="Position" xml:space="preserve">
-    <value>Позиция КП</value>
-  </data>
-  <data name="Price" xml:space="preserve">
-    <value>Цена без НДС</value>
-  </data>
-  <data name="Price include delivery" xml:space="preserve">
-    <value>Цена доставки включенав стоимость</value>
-  </data>
-  <data name="Quality documents" xml:space="preserve">
-    <value>Требования к документам по качеству</value>
-  </data>
   <data name="References" xml:space="preserve">
     <value>Справочники</value>
-  </data>
-  <data name="Requirement" xml:space="preserve">
-    <value>требования</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Сохранить</value>
@@ -273,43 +192,7 @@
   <data name="See all available options" xml:space="preserve">
     <value>Смотрите все доступные варианты</value>
   </data>
-  <data name="Specification" xml:space="preserve">
-    <value>Спецификация</value>
-  </data>
-  <data name="Stages" xml:space="preserve">
-    <value>Этапы КП</value>
-  </data>
-  <data name="Status" xml:space="preserve">
-    <value>Статус</value>
-  </data>
-  <data name="Summa" xml:space="preserve">
-    <value>Сумма без НДС</value>
-  </data>
-  <data name="Term from" xml:space="preserve">
-    <value>Срок контракта с</value>
-  </data>
-  <data name="Term to" xml:space="preserve">
-    <value>Срок контракта по</value>
-  </data>
-  <data name="UnitOf" xml:space="preserve">
-    <value>Ед. измерения</value>
-  </data>
-  <data name="VAT,%" xml:space="preserve">
-    <value>НДС,%</value>
-  </data>
-  <data name="Volume" xml:space="preserve">
-    <value>Объем</value>
-  </data>
-  <data name="Volume delivery  in term" xml:space="preserve">
-    <value>Объем поставки на контракт</value>
-  </data>
-  <data name="Winner" xml:space="preserve">
-    <value>Победитель</value>
-  </data>
   <data name="Yes" xml:space="preserve">
     <value>Да</value>
-  </data>
-  <data name="Аreas" xml:space="preserve">
-    <value>ПП</value>
   </data>
 </root>

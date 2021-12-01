@@ -14,6 +14,8 @@ class clsBaseTable {
 
     jsonToFormCallBack;
     OnNewRow;
+    //Update grid param;
+    reloadParam;
     constructor(name, link) {
         this._name = name;
         this._pageLink = link;
@@ -45,43 +47,48 @@ class clsBaseTable {
         $(`#${this._name}_gettemplatebutton`).click(function () {
             self.onGetTemplate();
         });
+
         $(`#${this._name}_edit_form :submit`).click(function (e) {
-            const form = document.querySelector(`#${self._name}_edit_form`);
-            if ($(form).valid() === false) {
-                form.classList.add('was-validated');
-            } else {
-                $(form).removeClass("was-validated");
-                let request = $(`#${self._name}_edit_form`).serialize();
-                if (typeof UpdateFiles == 'function')
-                    UpdateFiles();
-                var form_data = new FormData($(`#${self._name}_edit_form`)[0]);
-                //if (AppendFilesToFormData) {
-                //    AppendFilesToFormData(request);
-                //}
-                axios.post(`${self._pageLink}`, form_data).then(res => {
-                    toastr["info"](`${translations.SaveSuccess} `);
-                    $(`#${self._name}_modal`).modal('toggle');
-                    if (typeof clienUploadfilename == 'function')
-                        clienUploadfilename();
-                    self.reloadData();
-                }).catch((error) => {
-                    if (error.response.data.Errors) {
-                        const errors = error.response.data.Errors;
-                        errors.forEach(item => {
-                            toastr["error"](item);
-                        });
-                    } else {
-                        toastr["error"](`${translations.SaveFail},${error.response.data}`);
-                    }
-                });
-            }
+
+            self.OnSubmitClick(self);
+
             event.preventDefault();
             event.stopPropagation();
         });
         this.initdatagrid1();
         this.dg.datagrid('resize');
     }
-
+    OnSubmitClick(cls) {
+        const form = document.querySelector(`#${cls._name}_edit_form`);
+        if ($(form).valid() === false) {
+            form.classList.add('was-validated');
+        } else {
+            $(form).removeClass("was-validated");
+            let request = $(`#${cls._name}_edit_form`).serialize();
+            if (typeof UpdateFiles == 'function')
+                UpdateFiles();
+            let form_data = new FormData($(`#${cls._name}_edit_form`)[0]);
+            //if (AppendFilesToFormData) {
+            //    AppendFilesToFormData(request);
+            //}
+            axios.post(`${cls._pageLink}`, form_data).then(res => {
+                toastr["info"](`${translations.SaveSuccess} `);
+                $(`#${cls._name}_modal`).modal('toggle');
+                if (typeof clienUploadfilename == 'function')
+                    clienUploadfilename();
+                cls.reloadData();
+            }).catch((error) => {
+                if (error.response.data.Errors) {
+                    const errors = error.response.data.Errors;
+                    errors.forEach(item => {
+                        toastr["error"](item);
+                    });
+                } else {
+                    toastr["error"](`${translations.SaveFail},${error.response.data}`);
+                }
+            });
+        }
+    }
     ResizeGrid() {
         this.dg.datagrid('resize');
     }
@@ -170,10 +177,19 @@ class clsBaseTable {
     }
 
     reloadData(addParam) {
-        if (addParam)
+
+
+        if (addParam) {
             this.dg.datagrid('load', addParam);
-        else 
+            this.reloadParam = addParam;
+        }
+        else {
+            if (this.reloadParam)
+                this.dg.datagrid('load', this.reloadParam);
+            else 
             this.dg.datagrid('load', `${this._pageLink}?handler=Data`);
+        }
+            
     }
 
     //$(() => {
@@ -217,6 +233,7 @@ class clsBaseTable {
         this.popupmodal(nomenclature);
     }
     onDelete(id) {
+        var self = this;
         bootbox.confirm({
             message: `${translations.DeleteRowDialog}`,  //"@_localizer["Are you sure delete a row?"]",
             buttons: {
@@ -231,9 +248,9 @@ class clsBaseTable {
             },
             callback: function (result) {
                 if (result) {
-                    axios.get(`${this._pageLink}?handler=Delete&id=` + id).then(res => {
+                    axios.get(`${self._pageLink}?handler=Delete&id=` + id).then(res => {
                         toastr["info"](`${translations.DeleteSuccess}`);// '@_localizer["Delete Success"]');
-                        this.reloadData();
+                        self.reloadData();
                     })
                         .catch((error) => {
                             if (error.response.data.Errors) {
@@ -250,6 +267,7 @@ class clsBaseTable {
         })
     }
     onDeleteChecked = () => {
+        var self = this;
         var checkedId = this.dg.datagrid('getChecked').map(x => x.Id);
         if (checkedId.length > 0) {
             bootbox.confirm({
@@ -268,9 +286,9 @@ class clsBaseTable {
                     if (result) {
                         var paras = new URLSearchParams(checkedId.map(s => ['id', s]));
                         console.log(paras.toString())
-                        axios.get(`${this._pageLink}?handler=DeleteChecked&` + paras.toString()).then(res => {
+                        axios.get(`${self._pageLink}?handler=DeleteChecked&` + paras.toString()).then(res => {
                             toastr["info"](`${translations.Delete} ${checkedId.length} ${translations.Success}"]`);
-                            this.reloadData();
+                            self.reloadData();
                         })
                             .catch((error) => {
                                 if (error.response.data.Errors) {

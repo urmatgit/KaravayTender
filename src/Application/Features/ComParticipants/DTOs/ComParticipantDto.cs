@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Features.ComOffers.DTOs;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
@@ -22,9 +23,11 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs
         /// </summary>
         public int StepFailure { get; set; }
         public ParticipantStatus Status { get; set; } = ParticipantStatus.NotParticipate;
+        public string StatusStr=> Status.ToDescriptionString();
         [Required]
         public int ContragentId { get; set; }
         public virtual ContragentDto Contragent { get; set; }
+        public string ContragentName => Contragent?.Name;
         [Required]
         public int ComOfferId { get; set; }
         public virtual ComOfferDto ComOffer { get; set; }

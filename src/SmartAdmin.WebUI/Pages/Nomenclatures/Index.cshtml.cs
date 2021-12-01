@@ -115,7 +115,16 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
                 var result = await _mediator.Send(Input);
                 if (result.Succeeded && Files.Count > 0)
                 {
-                     await _uploadService.UploadFileAsync(result.Data, PathConstants.SpecificationsPath, Files);
+                    var resultUpload= await _uploadService.UploadFileAsync(result.Data, PathConstants.SpecificationsPath, Files);
+                    if (resultUpload.Succeeded)
+                    {
+                        var files = await _uploadService.LoadFilesAsync(result.Data, PathConstants.SpecificationsPath);
+                        if (files.Succeeded)
+                        {
+                            Input.Specifications = string.Join(PathConstants.FilesStringSeperator, files.Data.Select(f => Path.GetFileName(f)));
+                            result = await _mediator.Send(Input);
+                        }
+                    }
                 }
                 return new JsonResult(result);
             }

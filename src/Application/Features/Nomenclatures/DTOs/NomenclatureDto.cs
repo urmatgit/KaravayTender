@@ -32,7 +32,7 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         /// <summary>
         /// название файла Спецификации
         /// </summary>
-        public string Specification { get; set; }
+        public string Specifications { get; set; }
         public bool Archive { get; set; }
 
         public bool ArchiveStr

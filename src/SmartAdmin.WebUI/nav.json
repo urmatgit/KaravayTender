@@ -23,9 +23,9 @@
           "roles": []
         },
         {
-          "title": "Коммерческие предложения позиция",
+          "title": "Коммерческие предложения участники",
           "icon": "fal fa-comments-alt-dollar",
-          "href": "compositions_index.html",
+          "href": "comparticipants_index.html",
           "roles": []
         }
       ]

@@ -1,0 +1,344 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using CleanArchitecture.Razor.Application.Constants.Permission
+@using  CleanArchitecture.Razor.Application.Common.Extensions
+@model SmartAdmin.WebUI.Pages.ComParticipants.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.Contragents.IndexModel> _localizerContr
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    ViewData["Title"] = _localizer["ComParticipants"].Value;
+    ViewData["PageName"] = "comparticipants_index";
+    ViewData["Category1"] = _localizer["References"].Value;
+    ViewData["Heading"] = _localizer["ComParticipants"].Value;
+    ViewData["PageDescription"] = _localizer["Managing supplier referral parameters"].Value;
+    ViewData["PreemptiveClass"] = "Default";
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Create);
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Search);
+
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Export);
+    var _canDeleteFile = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.DeleteFile);
+
+}
+@section HeadBlock {
+
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+
+    <style>
+
+        .participant_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+    </style>
+}
+<div id="js-page-content-participant" class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <h4 class="m-0">
+            @_localizer["ComParticipants"]
+            <small>@_localizer["See all available options"]</small>
+        </h4>
+        <div class="ml-auto">
+            @if (_canCreate.Succeeded)
+            {
+                <a role="button" class="btn btn-sm btn-outline-primary" id="participant_addbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
+                    @_localizer["Add"]
+                </a>
+
+            }
+            @if (_canDelete.Succeeded)
+            {
+                <a role="button" class="btn btn-sm btn-outline-danger" disabled id="participant_deletebutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
+                    @_localizer["Delete"]
+                </a>
+            }
+            @if (_canSearch.Succeeded)
+            {
+                <a role="button" class="btn btn-sm btn-outline-primary " id="participant_searchbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                    @_localizer["Search"]
+                </a>
+            }
+            @*@if (_canImport.Succeeded)
+                {
+                <div class="btn-group" role="group">
+                    <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
+                        <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="importbutton">
+                        <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
+                    </div>
+                </div>
+                }*@
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="participant_dg">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<partial name="AddOrEditParticipants" />
+@await Component.InvokeAsync("ImportExcel", new
+{
+    importUri = Url.Page("/ComParticipants/Index") + "?handler=Import",
+getTemplateUri = @Url.Page("/ComParticipants/Index") + "?handler=CreateTemplate",
+onImportedSucceeded = "reloadData()"
+})
+@section ScriptsBlock {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
+
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/TableBaseClass.js"></script>
+
+    <script type="text/javascript">
+        let clsparticipant = null;
+        var pagelink = '@Url.Page("/ComParticipants/Index")';
+        var translations = {
+            SaveSuccess: '@_localizer["Save Success."]',
+            SaveFail: '@_localizer["Save fail"]',
+            IconPrefix: '@(Settings.Theme.IconPrefix)',
+            Command: '@_localizer["Command"]',
+            Edit: '@_localizer["Edit"]',
+            Delete: '@_localizer["Delete"]',
+            AddCaption: '@_localizer["Add participant"]',
+            EditCaption: '@_localizer["Edit participant"]',
+            DeleteRowDialog: '@_localizer["Are you sure delete a row?"]',
+			Yes: '@_localizer["Yes"]',
+			No: '@_localizer["No"]',
+            DeleteSuccess: '@_localizer["Delete Success"]',
+            DeleteFail: '@_localizer["Delete fail"]',
+			DeleteRowsDialog: '@_localizer["Are you sure delete checked rows?"]',
+            Success: '@_localizer["Success"]',
+            ExportFail: '@_localizer["Export fail"]',
+            Name: '@_localizer["Name"]',
+            VAT: '@_localizer["VAT,%"]',
+            Category: '@_localizer["Category"]',
+            Direction: '@_localizer["Direction"]',
+            UnitOf: '@_localizer["UnitOf"]',
+            Volume: '@_localizer["Volume"]',
+            ChooseQualityDoc: '@_localizer["Choose quality documents"]',
+            ChooseCategory: '@_localizer["Choose a category"]',
+            Download_Success: '@_localizer["Download Success"]',
+            Archiv: '@_localizer["Archive"]',
+            DeleteFileDialog: '@_localizer["Are you sure delete this file?"]',
+        }
+        var YesNotList = [
+            {
+                id: '',
+                text: 'Все'
+
+            },
+            {
+                id: 'true',
+                text: 'Да'
+            },
+            {
+                id: 'false',
+                text: 'Нет'
+            }
+
+        ]
+		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
+        var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
+        var _canDeleteFile =  @(_canDeleteFile.Succeeded ? "true" : "false" );
+        var $dgContr = {};
+
+         var initdatagridContr = () => {
+             $dgContr = $('#contragent_dg').datagrid({
+                 height: (window.innerHeight / 3),
+                 method: 'GET',
+                 rownumbers: false,
+                 singleSelect: true,
+                 selectOnCheck: false,
+                 checkOnSelect: false,
+                 pagination: true,
+                 clientPaging: false,
+                 remoteFilter: true,
+                 sortName: 'Id',
+                 sortOrder: 'desc',
+                 pageSize: 15,
+                 pageList: [10, 15, 30, 50, 100, 1000],
+                 onLoadError: function (XMLHttpRequest, textStatus, errorThrown) {
+                     toastr["error"](`@_localizer["load fail"],${errorThrown}`);
+                 },
+                 onBeforeLoad: function () {
+
+                 },
+                 onCheckAll: function (rows) {
+                     const checked = $(this).datagrid('getChecked').length > 0;
+
+                 },
+                 onUncheckAll: function () {
+
+                 },
+                 onCheck: function () {
+
+                 },
+                 onUncheck: function () {
+                     const checked = $(this).datagrid('getChecked').length > 0;
+
+                 },
+                 columns: [[
+
+                     { field: 'ck', checkbox: true },
+
+
+                     { field: 'StatusStr', title: '@_localizerContr["Status"]', sortable: true, width: 140 },
+                     { field: 'Name', title: '@_localizerContr["Name"]', sortable: true, width: 100 },
+                     { field: 'FullName', title: '@_localizerContr["Full name"]', sortable: true, width: 180 },
+                     { field: 'DirectionName', title: '@_localizerContr["Direction"]', sortable: true, width: 180 },
+                     {
+                         field: 'IsServiceStr', title: '@_localizerContr["Service"]', align: 'center', sortable: true, width: 80, formatter: checkboxformatter
+
+
+                     },
+                     { field: 'INN', title: '@_localizerContr["INN"]', sortable: true, width: 120 },
+                     { field: 'KPP', title: '@_localizerContr["KPP"]', sortable: true, width: 120 },
+                     { field: 'ManagerName', title: '@_localizerContr["Manager"]', sortable: true, width: 140 },
+                     { field: 'Phone', title: '@_localizerContr["Phone"]', sortable: true, width: 180 },
+                     { field: 'ContactPerson', title: '@_localizerContr["Contact person"]', sortable: true, width: 180 },
+                     { field: 'ContactPhone', title: '@_localizerContr["Contact person phone"]', sortable: true, width: 180 },
+                     { field: 'Email', title: 'Email', sortable: true, width: 130 }
+
+                 ]]
+
+             })
+                 .datagrid('enableFilter', [
+
+                     {
+                         field: 'StatusStr',
+                         type: 'combobox',
+                         options: {
+                             panelHeight: 'auto',
+                             data: [
+
+                                 {
+                                     value: null,
+                                     text: 'Все'
+
+                                 },
+								@foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
+
+                                {
+
+                                    <text>
+
+                                 {
+                                     value: '@val',
+                                     text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'
+
+                                 },
+
+                                    </text>
+
+                                }
+                             ]
+                             ,
+
+                             onChange: function (newValue, oldValue) {
+
+                                 $dgContr.datagrid('addFilterRule', {
+                                     field: 'Status',
+                                     op: 'equal',
+                                     value: newValue
+
+                                 });
+
+                                 console.log(newValue);
+
+                             }
+                         }
+                     },
+
+                     {
+                         field: 'IsServiceStr',
+                         type: 'combobox',
+                         options: {
+                             panelHeight: 'auto',
+                             valueField: 'id',
+                             textField: 'text',
+                             data: YesNotList,
+                             onChange: function (newValue, oldValue) {
+                                 console.log(newValue);
+                                 $dgContr.datagrid('addFilterRule', {
+                                     field: 'IsService',
+                                     op: 'equal',
+                                     value: newValue
+                                 });
+
+                             }
+
+                         }
+
+                     }
+                 ]);
+                 //.datagrid('load', '@Url.Page("/Contragents/Index")?handler=DataActive');
+
+	}
+        var reloadDataContragent = () => {
+            $dgContr.datagrid('load', '@Url.Page("/Contragents/Index")?handler=DataActive');
+
+        }
+        $('#participant_modal').on('shown.bs.modal', function () {
+            $dgContr.datagrid('resize');
+        });
+        $(() => {
+
+            clsparticipant = new clsBaseTable("participant",'@Url.Page("/ComParticipants/Index")');
+            clsparticipant.tblColumns= [
+                { field: 'ContragentName', title: '@_localizer["Participant"]', sortable: true, width: 130 },
+                { field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 100 },
+
+
+                { field: 'StepFailure', title: '@_localizer["Step failure"]', sortable: true, width: 150 }
+
+
+            ];
+            clsparticipant.OnNewRow = ()=>{
+                reloadDataContragent();
+            }
+            clsparticipant.Init();
+            clsparticipant.OnSubmitClick = (par) => {
+                
+                var checkedId = $dgContr.datagrid('getChecked').map(x => x.Id);
+                //
+                $('#InputContrPar_ComOfferId').val(checkedId);
+                $('#InputContrPar_ComOfferId').trigger('change');
+                //
+                $('#InputContrPar_ContragentIds').val(checkedId);
+                $('#InputContrPar_ContragentIds').trigger('change');
+                alert($('#InputContrPar_ContragentIds').val());
+                $(`#${par._name}_modal`).modal('toggle');
+
+                reloadDataContragent();
+            };
+            //Контрагент таблица
+            initdatagridContr();
+
+        })
+
+
+    </script>
+}

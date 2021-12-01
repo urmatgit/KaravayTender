@@ -132,7 +132,7 @@ onImportedSucceeded = "reloadData()"
     <script src="~/js/TableBaseComOffer.js"></script>
     <script src="~/js/TableBaseClass.js"></script>
     <script type="text/javascript">
-        var clscomposition = null;
+        let clscomposition = null;
         var currentEditRow = "";
         var pagelink = '@Url.Page("/ComOffers/Index")';
         var translations = {
@@ -196,9 +196,9 @@ onImportedSucceeded = "reloadData()"
                 .then(res => {
                     console.log(res);
                     $('#InputPos_Nomenclature_Category_Name').val(res.data.Category.Name);
-                    $('#InputPos_Nomenclature_UnitOf_Name').val(res.data.UnitOf.Name);
-                    $('#InputPos_Nomenclature_Volume').val(res.data.Volume);
-                    $('#InputPos_Nomenclature_QualityDocsNames').val(res.data.QualityDocsNames);
+                    $('#InputPos_UnitOfName').val(res.data.UnitOf.Name);
+                    $('#InputPos_NomVolume').val(res.data.Volume);
+                    $('#InputPos_QualityDocsNames').val(res.data.QualityDocsNames);
 
                 })
                 .catch((error) => {
@@ -318,13 +318,17 @@ onImportedSucceeded = "reloadData()"
                     }
                 },
                 {
-                    field: 'Nomenclature.Name', title: '@_localizer["Nomenclature"]', sortable: true, width: 100 , formatter: function (val, rec) {
+                    field: 'Nomenclature.Name', title: '@_localizer["Nomenclature"]', sortable: true, width: 150 , formatter: function (val, rec) {
                         return rec.Nomenclature?.Name;
                     }
                 },
 
 
-                { field: 'AriaNames', title: '@_localizer["Arias"]', sortable: true, width: 150 },
+                {
+                    field: 'AriaNames', title: '@_localizer["Arias"]', sortable: true, width: 150, formatter: function (val, rec) {
+                        return rec.AreaNames;
+                    }
+                },
                 {
                     field: 'Nomenclature.UnitOf.Name', title: '@_localizer["UnitOf"]', sortable: true, width: 80, formatter: function (val, rec) {
                         return rec.Nomenclature?.UnitOf?.Name;
@@ -336,8 +340,8 @@ onImportedSucceeded = "reloadData()"
 
                 { field: 'Nomenclature.Vat.Stavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
                 { field: 'Volume', title: '@_localizer["Volume"]', sortable: true, width: 80 },
-                { field: 'Nomenclature.QualityDocsNames', title: '@_localizer["Quality documents"]', sortable: true, width: 100 },
-                { field: 'Nomenclature.Specification', title: '@_localizer["Specification"]', sortable: true, width: 80},
+                { field: 'QualityDocsNames', title: '@_localizer["Quality documents"]', sortable: true, width: 150 },
+                { field: 'NomSpecification', title: '@_localizer["Specification"]', sortable: true, width: 150},
                 { field: 'Summa', title: '@_localizer["Summa"]', sortable: true, width: 80 }
 
             ];
@@ -345,11 +349,17 @@ onImportedSucceeded = "reloadData()"
                 ComOfferId: function (value) {
                     var parentID = $('#edit_form_panel #Input_Id').val();
                     $('#InputPos_ComOfferId').val(parentID);
+                },
+                AreaIds: function (value) {
+                    $('#AreaIds').val(value);
+                    $('#AreaIds').trigger('change');
                 }
             }
             clscomposition.OnNewRow = () => {
                 var parentID = $('#edit_form_panel #Input_Id').val();
                 $('#InputPos_ComOfferId').val(parentID);
+                $('#AreaIds').val(0);
+                $('#AreaIds').trigger('change');
             };
             clscomposition.Init();
             $('.select2').select2({
@@ -383,10 +393,11 @@ onImportedSucceeded = "reloadData()"
             axios.get('/ComPositions/Index?handler=Nomenclatures&categoryid=' + id)
                 .then(res => {
                     console.log(res);
+                    
                     $('#InputPos_Nomenclature_Category_Name').val("");
-                    $('#InputPos_Nomenclature_UnitOf_Name').val("");
-                    $('#InputPos_Nomenclature_Volume').val("");
-                    $('#InputPos_Nomenclature_QualityDocsNames').val("");
+                    $('#InputPos_UnitOfName').val("");
+                    $('#InputPos_NomVolume').val("");
+                    $('#InputPos_QualityDocsNames').val("");
                     var modelDropDown = $('#InputPos_NomenclatureId');
                     modelDropDown.empty();
                     modelDropDown.append(

@@ -184,7 +184,25 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
+        public async Task<IActionResult> OnGetDataActiveAsync([FromQuery] ContragentsActivePaginationQuery command)
+        {
+            try
+            {
 
+
+                var result = await _mediator.Send(command);
+                return new JsonResult(result);
+            }
+            catch (CleanArchitecture.Razor.Application.Common.Exceptions.ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
         public async Task<IActionResult> OnPostAsync()
         {
 

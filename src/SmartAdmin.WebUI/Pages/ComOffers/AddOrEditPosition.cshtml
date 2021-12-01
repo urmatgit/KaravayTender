@@ -21,7 +21,7 @@
                     @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="InputPos.Id" />
                     <input type="hidden" asp-for="InputPos.ComOfferId" />
-                    
+
                     <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
                     <div class="form-row">
                         <div class="col-md-6">
@@ -56,16 +56,16 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-3">
-                            <label class="form-label" for="name">@_localizer["UnitOf"] <span class="text-danger">*</span></label>
-                            <input type="text" asp-for="InputPos.Nomenclature.UnitOf.Name" class="form-control" placeholder="@_localizer["Unitof"]" readonly />
+                            <label class="form-label" for="UnitOfName">@_localizer["UnitOf"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="InputPos.UnitOfName" class="form-control" placeholder="@_localizer["UnitOf"]" readonly />
 
-                            <span class="invalid-feedback" asp-validation-for="InputPos.Nomenclature.UnitOf.Name"></span>
+                            <span class="invalid-feedback" asp-validation-for="InputPos.UnitOfName"></span>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label" for="Volume">@_localizer["Volume"] <span class="text-danger">*</span></label>
-                            <input type="text" asp-for="InputPos.Nomenclature.Volume" class="form-control" placeholder="@_localizer["Volume"]" readonly />
+                            <input type="text" asp-for="InputPos.NomVolume" class="form-control" placeholder="@_localizer["Volume"]" readonly />
 
-                            <span class="invalid-feedback" asp-validation-for="InputPos.Nomenclature.Volume"></span>
+                            <span class="invalid-feedback" asp-validation-for="InputPos.NomVolume"></span>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label" for="name">@_localizer["Delivery Count in month"] <span class="text-danger">*</span></label>
@@ -84,9 +84,17 @@
                     <div class="form-row">
                         <div class="col-md-12">
                             <label class="form-label" for="QualityDocsNames">@_localizer["Quality documents"] <span class="text-danger">*</span></label>
-                            <input type="text" asp-for="InputPos.Nomenclature.QualityDocsNames" class="form-control" placeholder="@_localizer["QualityDocs"]" readonly />
+                            <input type="text" asp-for="InputPos.QualityDocsNames" class="form-control" placeholder="@_localizer["QualityDocs"]" readonly />
 
-                            <span class="invalid-feedback" asp-validation-for="InputPos.Nomenclature.QualityDocsNames"></span>
+                            <span class="invalid-feedback" asp-validation-for="InputPos.QualityDocsNames"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <label class="form-label" for="NomSpecification">@_localizer["Specification"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="InputPos.NomSpecification" class="form-control" placeholder="@_localizer["Specification"]" readonly />
+
+                            <span class="invalid-feedback" asp-validation-for="InputPos.NomSpecification"></span>
                         </div>
                     </div>
                     <div class="form-row">

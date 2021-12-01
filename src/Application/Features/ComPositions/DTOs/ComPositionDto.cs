@@ -20,8 +20,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         public void Mapping(Profile profile)
         {
             profile.CreateMap<ComPosition, ComPositionDto>()
-                    .ForMember(d => d.AreaIds, s => s.MapFrom(y => (y.AreaComPositions != null ? y.AreaComPositions.Select(n => n.AreaId).ToArray() : Array.Empty<int>())));
-            profile.CreateMap<ComPosition, ComPositionDto>()
+                    .ForMember(d => d.AreaIds, s => s.MapFrom(y => (y.AreaComPositions != null ? y.AreaComPositions.Select(n => n.AreaId).ToArray() : Array.Empty<int>())))
+            //profile.CreateMap<ComPosition, ComPositionDto>()
                     .ForMember(d => d.AreaNames, s => s.MapFrom(y => (y.AreaComPositions != null ? string.Join(", ", y.AreaComPositions.Select(n => n.Area.Name).ToArray()) : string.Empty)));
             profile.CreateMap<ComPositionDto, ComPosition>(MemberList.None);
                        // .ForMember(d => d.QualityDocsIds, s => s.MapFrom(y => (y.NomenclatureQualityDocs != null ? y.NomenclatureQualityDocs.Select(n => n.QualityDocId).ToArray() : Array.Empty<int>())))
@@ -31,12 +31,12 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         /// <summary>
         /// Количество Поставок в месяц 
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "'Количество поставок в месяц' не указано")]
         public int DeliveryCount { get; set; }
         /// <summary>
         /// Объем  поставок по контракту
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "'Объем' не указано")]
         public decimal Volume { get; set; }
         public string AddRequirement { get; set; }
 
@@ -59,7 +59,10 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         [Required]
         public int NomenclatureId { get; set; }
         public virtual NomenclatureDto Nomenclature { get; set; }
-
+        public string UnitOfName => Nomenclature?.UnitOfName;
+        public decimal? NomVolume => Nomenclature?.Volume;
+        public string NomSpecification => Nomenclature?.Specifications;
+        public string QualityDocsNames => Nomenclature?.QualityDocsNames;
         [Required]
         public int CategoryId { get; set; }
         public virtual CategoryDto Category { get; set; }

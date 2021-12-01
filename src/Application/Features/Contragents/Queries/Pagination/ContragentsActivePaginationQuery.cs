@@ -13,6 +13,7 @@ using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.Common.Specification;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
 using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Domain.Entities;
@@ -22,22 +23,22 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagination
 {
-    public class ContragentsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<ContragentDto>>
+    public class ContragentsActivePaginationQuery : PaginationRequest, IRequest<PaginatedData<ContragentDto>>
     {
 
     }
 
-    public class ContragentsWithPaginationQueryHandler :
-         IRequestHandler<ContragentsWithPaginationQuery, PaginatedData<ContragentDto>>
+    public class ContragentsActivePaginationQueryHandler :
+         IRequestHandler<ContragentsActivePaginationQuery, PaginatedData<ContragentDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IStringLocalizer<ContragentsWithPaginationQueryHandler> _localizer;
+        private readonly IStringLocalizer<ContragentsActivePaginationQueryHandler> _localizer;
         private readonly IIdentityService _identityService;
-        public ContragentsWithPaginationQueryHandler(
+        public ContragentsActivePaginationQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<ContragentsWithPaginationQueryHandler> localizer,
+            IStringLocalizer<ContragentsActivePaginationQueryHandler> localizer,
             IIdentityService identityService
             )
         {
@@ -47,30 +48,30 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
             _identityService = identityService;
         }
 
-        public async Task<PaginatedData<ContragentDto>> Handle(ContragentsWithPaginationQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedData<ContragentDto>> Handle(ContragentsActivePaginationQuery request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing ContragentsWithPaginationQueryHandler method 
+
             var filters = PredicateBuilder.FromFilter<Contragent>(request.FilterRules);
-           // var managers = await _identityService.FetchUsersEx("Manager");
-            //Debug.WriteLine(managers.Count);
+
             var data = await _context.Contragents.Where(filters)
+                .Specify(new ContragentActiveQuerySpec())
                 .Include(i => i.Direction)
                 .Include(u=>u.Manager)
                 .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<ContragentDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
 
-            //foreach (var d in data.rows)
-            //{
-            //    if (!string.IsNullOrEmpty(d.ManagerId))
-            //    {
-            //        var manager = managers.FirstOrDefault(m => m.Id == d.ManagerId);
-            //        d.ManagerPhone = manager?.PhoneNumber;
-            //        d.Manager = manager?.DisplayName ?? manager?.UserName;
-            //        Debug.WriteLine(d.ManagerPhone);
-            //    }
-            //}
+            
             return data;
+        }
+        public class ContragentActiveQuerySpec : Specification<Contragent>
+        {
+            public ContragentActiveQuerySpec()
+            {
+                Criteria = p => p.Status == Domain.Enums.ContragentStatus.Registered;
+            }
+
+
         }
     }
 }
