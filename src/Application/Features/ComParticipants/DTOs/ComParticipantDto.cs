@@ -21,7 +21,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs
         /// <summary>
         /// Этап отказа
         /// </summary>
-        public int StepFailure { get; set; }
+        public int? StepFailure { get; set; }
         public ParticipantStatus Status { get; set; } = ParticipantStatus.NotParticipate;
         public string StatusStr=> Status.ToDescriptionString();
         [Required]

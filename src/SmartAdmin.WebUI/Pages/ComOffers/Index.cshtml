@@ -214,7 +214,7 @@ onImportedSucceeded = "reloadData()"
         })
 
 		$(() => {
-
+            clscomposition = new clsBaseTable("composition","clscomposition",'@Url.Page("/ComPositions/Index")');
             tblColumns = [
                 { field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 130 },
                 { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
@@ -310,7 +310,7 @@ onImportedSucceeded = "reloadData()"
                 }
             ]
             initdatagrid();
-            clscomposition = new clsBaseTable("composition",'@Url.Page("/ComPositions/Index")');
+
             clscomposition.tblColumns = [
                 {
                     field: 'Category', title: '@_localizer["Category"]', sortable: true, width: 130, formatter: function (val, rec) {
@@ -393,7 +393,7 @@ onImportedSucceeded = "reloadData()"
             axios.get('/ComPositions/Index?handler=Nomenclatures&categoryid=' + id)
                 .then(res => {
                     console.log(res);
-                    
+
                     $('#InputPos_Nomenclature_Category_Name').val("");
                     $('#InputPos_UnitOfName').val("");
                     $('#InputPos_NomVolume').val("");

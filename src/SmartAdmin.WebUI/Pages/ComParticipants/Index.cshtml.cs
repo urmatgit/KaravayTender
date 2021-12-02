@@ -97,9 +97,9 @@ namespace SmartAdmin.WebUI.Pages.ComParticipants
         {
             try
             {
-                
+
                 var result = await _mediator.Send(InputPar);
-                
+
                 return new JsonResult(result);
             }
             catch (CleanArchitecture.Razor.Application.Common.Exceptions.ValidationException ex)
@@ -116,7 +116,8 @@ namespace SmartAdmin.WebUI.Pages.ComParticipants
         {
             try
             {
-                var result = await _mediator.Send(command);
+
+                var result = await _mediator.Send(InputContrPar);
                 return new JsonResult(result);
             }
             catch (CleanArchitecture.Razor.Application.Common.Exceptions.ValidationException ex)

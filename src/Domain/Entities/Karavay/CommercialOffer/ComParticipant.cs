@@ -13,13 +13,13 @@ using CleanArchitecture.Razor.Domain.Enums;
 
 namespace CleanArchitecture.Razor.Domain.Entities.Karavay
 {
-    public class ComParticipant : AuditableSoftDeleteEntity, IAuditTrial, IHasDomainEvent
+    public class ComParticipant : AuditableEntity, IAuditTrial, IHasDomainEvent
     {
 
         /// <summary>
         /// Этап отказа
         /// </summary>
-        public int StepFailure { get; set; }
+        public int? StepFailure { get; set; }
         public ParticipantStatus Status { get; set; } = ParticipantStatus.NotParticipate;
         [Required]
         public int ContragentId { get; set; }

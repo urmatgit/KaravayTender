@@ -6,19 +6,21 @@
 class clsBaseTable {
 
     _name;
+    _varName;
     _pageLink;
     dg = {};
     tblFilters = [{}];
-
+    _defaultSortName = "Id";
     tblColumns = [];
 
     jsonToFormCallBack;
     OnNewRow;
     //Update grid param;
     reloadParam;
-    constructor(name, link) {
+    constructor(name,varName, link) {
         this._name = name;
         this._pageLink = link;
+        this._varName = varName;
 
 
     }
@@ -93,10 +95,20 @@ class clsBaseTable {
         this.dg.datagrid('resize');
     }
 
-
-
+    CreateActionColumn(value, row, index) {
+        return `<div class="btn-group" role="group">
+								  <button id="commandbtngroup1" type="button" ${(_canEdit ? "" : "disabled")}  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="${window.translations.IconPrefix} fa-edit"></i>
+								 </button>
+								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup1">
+								   <a role="button" class="dropdown-item" onclick="${self._varName}.onEdit(${index})" ${(_canEdit ? "" : "disabled")}><i class="fal fa-edit mr-1"></i> ${translations.Edit}</a>
+								   <a role="button" class="dropdown-item" onclick="${self._varName}.onDelete('${row.Id}')" ${(_canDelete ? "" : "disabled")} ><i class="fal fa-trash-alt mr-1"></i> ${translations.Delete}</a>
+								 </div>
+							  </div>`
+    }
 
     createColumns() {
+        var self = this;
         var InitColumns =
             [
                 { field: 'ck', checkbox: true },
@@ -106,15 +118,7 @@ class clsBaseTable {
                     width: 100,
                     align: 'center',
                     formatter: function (value, row, index) {
-                        return `<div class="btn-group" role="group">
-								  <button id="commandbtngroup1" type="button" ${(_canEdit ? "" : "disabled")}  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="${window.translations.IconPrefix} fa-edit"></i>
-								 </button>
-								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup1">
-								   <a role="button" class="dropdown-item" onclick="clscomposition.onEdit(${index})" ${(_canEdit ? "" : "disabled")}><i class="fal fa-edit mr-1"></i> ${translations.Edit}</a>
-								   <a role="button" class="dropdown-item" onclick="clscomposition.onDelete('${row.Id}')" ${(_canDelete ? "" : "disabled")} ><i class="fal fa-trash-alt mr-1"></i> ${translations.Delete}</a>
-								 </div>
-							  </div>`;
+                        return self.CreateActionColumn(value, row, index);
                     }
                 }
 
@@ -140,7 +144,7 @@ class clsBaseTable {
             pagination: true,
             clientPaging: false,
             remoteFilter: true,
-            sortName: 'Id',
+            sortName: this._defaultSortName,
             sortOrder: 'desc',
             pageSize: 15,
             pageList: [10, 15, 30, 50, 100, 1000],

@@ -23,7 +23,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.
     {
 
         public int ComOfferId { get; set; }
-        public int [] ContragentIds { get; set; }
+        public string ContragentIds { get; set; }
     }
     
     public class AddContragentsComParticipantCommandHandler : 
@@ -49,18 +49,30 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.
         public async Task<Result> Handle(AddContragentsComParticipantCommand request, CancellationToken cancellationToken)
         {
             List<ComParticipant> newComPart = new List<ComParticipant>();
-            foreach (int contragentId in request.ContragentIds)
+
+            foreach (string contragentId in  request.ContragentIds.Split(','))
             {
-                ComParticipant participant = new ComParticipant
-                {
-                    ComOfferId = request.ComOfferId,
-                    ContragentId = contragentId
-                };
-                newComPart.Add(participant);
+                int id = 0;
+                if (int.TryParse(contragentId,out id) && id > 0) {
+                    ComParticipant participant = new ComParticipant
+                    {
+                        ComOfferId = request.ComOfferId,
+                        ContragentId = id
+                    };
+                    var item = await _context.ComParticipants.FindAsync(new object[] { request.ComOfferId, participant.ContragentId }, cancellationToken);
+                               //.Where(c => c.ComOfferId == participant.ComOfferId && c.ContragentId == participant.ContragentId)
+                               //.FirstOrDefaultAsync(cancellationToken);
+                        
+                    if (item is null)
+                        newComPart.Add(participant);
+                    
+                }
             }
-            _context.ComParticipants.AddRange(newComPart);
-            await _context.SaveChangesAsync(cancellationToken);
-            
+            if (newComPart.Count > 0)
+            {
+                _context.ComParticipants.AddRange(newComPart);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
 
             return  Result.Success();
         }

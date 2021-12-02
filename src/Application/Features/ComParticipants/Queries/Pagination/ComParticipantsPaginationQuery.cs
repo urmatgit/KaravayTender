@@ -48,10 +48,12 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
             //TODO:Implementing ComParticipantsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<ComParticipant>(request.FilterRules);
            var data = await _context.ComParticipants.Where(filters)
+                .Include(c=>c.Contragent)
                 .OrderBy($"{request.Sort} {request.Order}")
-                .ProjectTo<ComParticipantDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
-            return data;
+            var dataDto = _mapper.Map<IEnumerable<ComParticipantDto>>(data.rows);
+            //.ProjectTo<ComParticipantDto>(_mapper.ConfigurationProvider)
+            return new PaginatedData<ComParticipantDto>(dataDto,data.total);
         }
     }
 }

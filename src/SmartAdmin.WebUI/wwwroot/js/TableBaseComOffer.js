@@ -208,7 +208,7 @@ var initdatagrid = () => {
         },
         columns: [createColumns()]
     })
-        .datagrid('enableFilter', tblFilters)
+        .datagrid('enableFilter', this.tblFilters)
         .datagrid('load', `${pagelink}?handler=Data`);
 
 	}

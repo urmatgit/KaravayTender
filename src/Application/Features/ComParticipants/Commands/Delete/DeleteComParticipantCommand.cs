@@ -45,7 +45,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.
         public async Task<Result> Handle(DeleteComParticipantCommand request, CancellationToken cancellationToken)
         {
            //TODO:Implementing DeleteComParticipantCommandHandler method 
-           var item = await _context.ComParticipants.FindAsync(new object[] { request.ContragentId,request.ComOfferId }, cancellationToken);
+           var item = await _context.ComParticipants.FindAsync(new object[] {request.ComOfferId, request.ContragentId }, cancellationToken);
             _context.ComParticipants.Remove(item);
             await _context.SaveChangesAsync(cancellationToken);
             return Result.Success();

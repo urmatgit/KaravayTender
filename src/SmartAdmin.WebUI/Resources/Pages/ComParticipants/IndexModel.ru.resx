@@ -174,6 +174,12 @@
   <data name="No" xml:space="preserve">
     <value>Нет</value>
   </data>
+  <data name="No participants selected" xml:space="preserve">
+    <value>Участники не выбраны</value>
+  </data>
+  <data name="Participant" xml:space="preserve">
+    <value>Участник</value>
+  </data>
   <data name="References" xml:space="preserve">
     <value>Справочники</value>
   </data>
@@ -191,6 +197,12 @@
   </data>
   <data name="See all available options" xml:space="preserve">
     <value>Смотрите все доступные варианты</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Статус участника</value>
+  </data>
+  <data name="Step failure" xml:space="preserve">
+    <value>Этап отказа</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Да</value>

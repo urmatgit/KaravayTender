@@ -1,6 +1,6 @@
 ﻿@using CleanArchitecture.Razor.Domain.Enums
 @model SmartAdmin.WebUI.Pages.ComParticipants.IndexModel
-@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComParticipants.IndexModel> _localizerPart
 <div class="modal fade " id="participant_modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog  modal-xl " role="document">
         <div class="modal-content  ">
@@ -23,28 +23,21 @@
                     <input type="hidden" asp-for="InputContrPar.ComOfferId" />
                     <input type="hidden" asp-for="InputContrPar.ContragentIds" />
                     <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
-                    <div class="form-row">
-
-                        <div class="col-md-12">
-                            <table id="contragent_dg">
-                            </table>
-                        </div>
-                    </div>
-
-
-
-
-
 
 
                 </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
-                        <button type="submit" id="participant_save" class="btn btn-primary">@_localizer["Save"]</button>
-                    </div>
+                <div class="col-md-12">
+                    <table id="contragent_dg">
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizerPart["Close"]</button>
+                    <button type="submit" id="participant_save" class="btn btn-primary">@_localizerPart["Save"]</button>
+                </div>
+            </form>
 
-</form>
+
 
 
         </div>
