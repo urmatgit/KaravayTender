@@ -135,6 +135,9 @@
   <data name="Are you sure delete checked rows?" xml:space="preserve">
     <value>Вы уверены, удалять эти отмеченные строки?</value>
   </data>
+  <data name="Arias" xml:space="preserve">
+    <value>ПП</value>
+  </data>
   <data name="Bank days" xml:space="preserve">
     <value>Отсрочка в банк. днях</value>
   </data>
