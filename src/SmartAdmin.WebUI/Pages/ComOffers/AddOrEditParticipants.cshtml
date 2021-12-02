@@ -1,0 +1,46 @@
+﻿@using CleanArchitecture.Razor.Domain.Enums
+@model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComParticipants.IndexModel> _localizerPart
+<div class="modal fade " id="participant_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog  modal-xl " role="document">
+        <div class="modal-content  ">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <div class="panel-toolbar">
+                    @*<button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" onclick="TogleFullScreen()"><i class="@(Settings.Theme.IconPrefix) fa-expand"></i></button>*@
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
+                    </button>
+                </div>
+            </div>
+
+
+            <form id="participant_edit_form" class="needs-validation" novalidate="novalidate">
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" asp-for="InputContrPar.ComOfferId" />
+                    <input type="hidden" asp-for="InputContrPar.ContragentIds" />
+                    <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
+
+
+                </div>
+
+                <div class="col-md-12">
+                    <table id="contragent_dg">
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizerPart["Close"]</button>
+                    <button type="submit" id="participant_save" class="btn btn-primary">@_localizerPart["Save"]</button>
+                </div>
+            </form>
+
+
+
+
+        </div>
+
+    </div>
+</div>

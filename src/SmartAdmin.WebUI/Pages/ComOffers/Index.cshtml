@@ -4,6 +4,8 @@
 @using CleanArchitecture.Razor.Application.Constants.Permission
 @model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
 @inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.Contragents.IndexModel> _localizerContr
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComParticipants.IndexModel> _localizerPart
 @inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
 @{
     ViewData["Title"] = _localizer["Сommercial offer"].Value;
@@ -38,12 +40,15 @@
         .composition_dg_datagrid-cell-c2-_action {
             overflow: visible !important
         }
+        .participant_dg_datagrid-cell-c3-_action {
+            overflow: visible !important
+        }
     </style>
 }
 <div id="table-page-content" class="card mb-g">
     <div class="card-header bg-white d-flex align-items-center">
         <h4 class="m-0">
-            @_localizer["ComOffers"]
+            @_localizer["Commercial offer"]
             <small>@_localizer["See all available options"]</small>
         </h4>
         <div class="ml-auto">
@@ -109,7 +114,7 @@
     </div>
 </div>
 
-    <partial name="AddOrEditCard" />
+<partial name="AddOrEditCard" />
 
 @await Component.InvokeAsync("ImportExcel", new
 {
@@ -131,6 +136,7 @@ onImportedSucceeded = "reloadData()"
 
     <script src="~/js/TableBaseComOffer.js"></script>
     <script src="~/js/TableBaseClass.js"></script>
+    <script src="~/js/TableComParticipant.js"></script>
     <script type="text/javascript">
         let clscomposition = null;
         var currentEditRow = "";
@@ -153,6 +159,26 @@ onImportedSucceeded = "reloadData()"
             Success: '@_localizer["Success"]',
             ExportFail: '@_localizer["Export fail"]',
             Name: '@_localizer["Name"]',
+
+             Status: '@_localizerContr["Status"]',
+            FullName: '@_localizerContr["Full name"]',
+            INN: '@_localizerContr["INN"]',
+            Direction: '@_localizerContr["Direction"]',
+            Service: '@_localizerContr["Service"]',
+            KPP: '@_localizerContr["KPP"]',
+            Manager: '@_localizerContr["Manager"]',
+            Phone: '@_localizerContr["Phone"]',
+            ContactPerson: '@_localizerContr["Contact person"]',
+            ContactPhone: '@_localizerContr["Contact person phone"]',
+            LoadFail: '@_localizerPart["load fail"]',
+
+            Participant: '@_localizerPart["Participant"]',
+            StepFailure: '@_localizerPart["Step failure"]',
+            NoParticipantsSel: '@_localizerPart["No participants selected"]',
+            AddSuccess: '@_localizerPart["Participants  is added"]',
+            AddFail: '@_localizerPart["Adding fail"]',
+            AddParticipants: '@_localizerPart["Add participant"]'
+            
 		}
 		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
         var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
@@ -173,6 +199,36 @@ onImportedSucceeded = "reloadData()"
             }
 
         ]
+         var ContragentStatuses=[
+                                 {
+                                     value: null,
+                                     text: 'Все'
+                                 },
+								@foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
+                                {
+                                    <text>
+                                 {
+                                     value: '@val',
+                                     text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'
+                                 },
+
+                                    </text>
+
+                                }
+        ]
+        var ParticipantStatus = [{
+                    value: null,
+                    text: 'Все'
+                },
+                            @foreach(var val in Enum.GetValues(typeof (CleanArchitecture.Razor.Domain.Enums.ParticipantStatus)))
+    {
+        <text>
+            {
+                value: '@val',
+            text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ParticipantStatus)val).ToDescriptionString()))'
+                            },
+        </text>
+    }]
 
         document.addEventListener("rowCheck", function (event) { // (1)
             console.log(event.detail.check);
@@ -186,8 +242,10 @@ onImportedSucceeded = "reloadData()"
             let comofferid = 0;
             if (currentEditRow)
                 comofferid = currentEditRow?.Id;
-            clscomposition.reloadData('@Url.Page("/ComOffers/Index")?handler=DataPos' + `&ComOfferId=${comofferid}`);;
+            clscomposition.reloadData('@Url.Page("/ComOffers/Index")?handler=DataPos' + `&ComOfferId=${comofferid}`);
             clscomposition.ResizeGrid();
+            clsparticipant.reloadData('@Url.Page("/ComParticipants/Index")?handler=Data' + `&ComOfferId=${comofferid}`);
+            clsparticipant.ResizeGrid();
         })
         $('#InputPos_NomenclatureId').change(function () {
             var nomenId = $(this).val();
@@ -212,7 +270,15 @@ onImportedSucceeded = "reloadData()"
                     }
                 });
         })
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr("href");
+            if ((target == '#ComParticipant')) {
+                clsparticipant.ResizeGrid();
 
+            } else {
+                clscomposition.ResizeGrid();
+            }
+        });
 		$(() => {
             clscomposition = new clsBaseTable("composition","clscomposition",'@Url.Page("/ComPositions/Index")');
             tblColumns = [
@@ -361,6 +427,9 @@ onImportedSucceeded = "reloadData()"
                 $('#AreaIds').val(0);
                 $('#AreaIds').trigger('change');
             };
+
+            clscomposition._editCaption = '@_localizer["Add position"]';
+            clscomposition._addCaption = '@_localizer["Edit position"]';
             clscomposition.Init();
             $('.select2').select2({
                 placeholder: '@Html.Raw(@_localizer["Choose areas"])',
@@ -379,6 +448,8 @@ onImportedSucceeded = "reloadData()"
             //        ["view", ["fullscreen", "codeview"]]
             //    ]
             //});
+
+            InitParticipantTable();
         })
         function closePanel() {
             $('#table-page-content').show();

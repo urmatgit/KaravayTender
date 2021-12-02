@@ -123,6 +123,9 @@
   <data name="Add participant" xml:space="preserve">
     <value>Добавить участников</value>
   </data>
+  <data name="Adding fail" xml:space="preserve">
+    <value>Ошибка добавления</value>
+  </data>
   <data name="Are you sure delete a row?" xml:space="preserve">
     <value>Вы уверены, удалить эту строку?</value>
   </data>
@@ -179,6 +182,9 @@
   </data>
   <data name="Participant" xml:space="preserve">
     <value>Участник</value>
+  </data>
+  <data name="Participants  is added" xml:space="preserve">
+    <value>Участники добавлены</value>
   </data>
   <data name="References" xml:space="preserve">
     <value>Справочники</value>

@@ -17,12 +17,13 @@ using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
+using CleanArchitecture.Razor.Application.Common.Specification;
 
 namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.Pagination
 {
     public class ComParticipantsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<ComParticipantDto>>
     {
-       
+        public int ComOfferId { get; set; }
     }
     
     public class ComParticipantsWithPaginationQueryHandler :
@@ -47,13 +48,24 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
         {
             //TODO:Implementing ComParticipantsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<ComParticipant>(request.FilterRules);
-           var data = await _context.ComParticipants.Where(filters)
+           var data = await _context.ComParticipants
+                .Specify(new FilterByComOfferQuerySpec(request.ComOfferId))
+                .Where(filters)
                 .Include(c=>c.Contragent)
                 .OrderBy($"{request.Sort} {request.Order}")
                 .PaginatedDataAsync(request.Page, request.Rows);
             var dataDto = _mapper.Map<IEnumerable<ComParticipantDto>>(data.rows);
             //.ProjectTo<ComParticipantDto>(_mapper.ConfigurationProvider)
             return new PaginatedData<ComParticipantDto>(dataDto,data.total);
+        }
+        public class FilterByComOfferQuerySpec : Specification<ComParticipant>
+        {
+            public FilterByComOfferQuerySpec(int comOfferId)
+            {
+                Criteria = p => p.ComOfferId == comOfferId;
+            }
+
+
         }
     }
 }

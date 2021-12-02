@@ -21,12 +21,6 @@
           "icon": "fal fa-comments-alt-dollar",
           "href": "comoffers_index.html",
           "roles": []
-        },
-        {
-          "title": "Коммерческие предложения участники",
-          "icon": "fal fa-comments-alt-dollar",
-          "href": "comparticipants_index.html",
-          "roles": []
         }
       ]
     },

@@ -130,12 +130,12 @@ namespace SmartAdmin.WebUI.Pages.ComParticipants
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
-        //public async Task<IActionResult> OnGetDeleteCheckedAsync([FromQuery] int[] id)
-        //{
-        //    var command = new DeleteCheckedComParticipantCommand() { Id = id };
-        //    var result = await _mediator.Send(command);
-        //    return new JsonResult("");
-        //}
+        public async Task<IActionResult> OnGetDeleteCheckedAsync([FromQuery] int[] id,int comofferid)
+        {
+            var command = new DeleteCheckedComParticipantsCommand() { Id = id,ComOfferId=comofferid };
+            var result = await _mediator.Send(command);
+            return new JsonResult("");
+        }
         public async Task<IActionResult> OnGetDeleteAsync([FromQuery] int  contragentId, int comofferid)
         {
             var command = new DeleteComParticipantCommand() { ContragentId= contragentId, ComOfferId= comofferid };

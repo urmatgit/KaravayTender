@@ -32,6 +32,8 @@ using System.Collections.Generic;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagination;
+using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.AddEdit;
+using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.Import;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
@@ -42,6 +44,12 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
         public AddEditComOfferCommand Input { get; set; }
         [BindProperty]
         public AddEditComPositionCommand InputPos { get; set; }
+
+        [BindProperty]
+        public AddEditComParticipantCommand InputPar { get; set; }
+        [BindProperty]
+        public AddContragentsComParticipantCommand InputContrPar { get; set; }
+
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
         public SelectList Directions { get; set; }

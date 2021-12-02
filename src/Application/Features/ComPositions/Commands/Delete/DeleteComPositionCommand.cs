@@ -25,7 +25,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Commands.Del
     public class DeleteCheckedComPositionsCommand : IRequest<Result>
     {
       public int[] Id {  get; set; }
-       public string CacheKey => ComPositionCacheKey.GetAllCacheKey;
+        
+        public string CacheKey => ComPositionCacheKey.GetAllCacheKey;
 
        public CancellationTokenSource ResetCacheToken => ComPositionCacheTokenSource.ResetCacheToken;
     }

@@ -123,6 +123,9 @@
   <data name="Add commercial offer" xml:space="preserve">
     <value>Добавить коммерческое предложение</value>
   </data>
+  <data name="Add position" xml:space="preserve">
+    <value>Добавление позиции</value>
+  </data>
   <data name="Additional requirement" xml:space="preserve">
     <value>Доп. требования</value>
   </data>
@@ -212,6 +215,9 @@
   </data>
   <data name="Edit commercial offer" xml:space="preserve">
     <value>Редактировать коммерческое предложение</value>
+  </data>
+  <data name="Edit position" xml:space="preserve">
+    <value>Редактировать позицию</value>
   </data>
   <data name="Export Excel" xml:space="preserve">
     <value>Экспорт в Excel</value>

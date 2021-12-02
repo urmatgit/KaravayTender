@@ -23,11 +23,19 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.
 
        public CancellationTokenSource ResetCacheToken => ComParticipantCacheTokenSource.ResetCacheToken;
     }
-    
+    public class DeleteCheckedComParticipantsCommand : IRequest<Result>
+    {
+        public int[] Id { get; set; }
+        public int ComOfferId { get; set; }
+        public string CacheKey => ComParticipantCacheKey.GetAllCacheKey;
+
+        public CancellationTokenSource ResetCacheToken => ComParticipantCacheTokenSource.ResetCacheToken;
+    }
 
     public class DeleteComParticipantCommandHandler : 
-                 IRequestHandler<DeleteComParticipantCommand, Result>
-        
+                 IRequestHandler<DeleteComParticipantCommand, Result>,
+        IRequestHandler<DeleteCheckedComParticipantsCommand, Result>
+
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -51,6 +59,16 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.
             return Result.Success();
         }
 
-         
+        public async Task<Result> Handle(DeleteCheckedComParticipantsCommand request, CancellationToken cancellationToken)
+        {
+            //TODO:Implementing DeleteCheckedComPositionsCommandHandler method 
+            var items = await _context.ComParticipants.Where(x => request.Id.Contains(x.ContragentId) && x.ComOfferId==request.ComOfferId).ToListAsync(cancellationToken);
+            foreach (var item in items)
+            {
+                _context.ComParticipants.Remove(item);
+            }
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result.Success();
+        }
     }
 }

@@ -57,7 +57,7 @@ class TableComParticipant extends clsBaseTable {
     }
     onDeleteChecked = () => {
         var self = this;
-        var checkedId = this.dg.datagrid('getChecked').map(x => x.Id);
+        var checkedId = this.dg.datagrid('getChecked').map(x => x.ContragentId);
         if (checkedId.length > 0) {
             bootbox.confirm({
                 message: `${translations.DeleteRowsDialog}`,// "@_localizer["Are you sure delete checked rows?"]",
@@ -75,7 +75,7 @@ class TableComParticipant extends clsBaseTable {
                     if (result) {
                         var paras = new URLSearchParams(checkedId.map(s => ['id', s]));
                         console.log(paras.toString())
-                        axios.get(`${self._pageLink}?handler=DeleteChecked&` + paras.toString()).then(res => {
+                        axios.get(`${self._pageLink}?handler=DeleteChecked&` + paras.toString() + '&comofferid=' + currentEditRow?.Id).then(res => {
                             toastr["info"](`${translations.Delete} ${checkedId.length} ${translations.Success}"]`);
                             self.reloadData();
                         })
@@ -105,7 +105,7 @@ class TableComParticipant extends clsBaseTable {
 
 
 }
-
+let clsparticipant = null;
 var $dgContr = {};
 
 var initdatagridContr = () => {
@@ -227,6 +227,7 @@ $('#participant_modal').on('shown.bs.modal', function () {
 });
 function InitParticipantTable() {
     clsparticipant = new TableComParticipant("participant", "clsparticipant", '/ComParticipants/Index');
+
     clsparticipant.tblColumns = [
         { field: 'ContragentName', title: translations.Participant, sortable: true, width: 130 },
         { field: 'StatusStr', title: translations.Status, sortable: true, width: 100 },
@@ -259,8 +260,8 @@ function InitParticipantTable() {
 clsparticipant.OnNewRow = () => {
     reloadDataContragent();
 }
-clsparticipant._defaultSortName = "ContragentId";
-
+    clsparticipant._defaultSortName = "ContragentId";
+    clsparticipant._addCaption = translations.AddParticipants;
 
 clsparticipant.Init();
 clsparticipant.OnSubmitClick = (par) => {
@@ -274,7 +275,7 @@ clsparticipant.OnSubmitClick = (par) => {
         return;
     }
     //
-    $('#InputContrPar_ComOfferId').val(4);
+    $('#InputContrPar_ComOfferId').val(currentEditRow?.Id);
     $('#InputContrPar_ComOfferId').trigger('change');
     //
     // checkedId = [1, 2, 4];
@@ -306,6 +307,6 @@ clsparticipant.OnSubmitClick = (par) => {
 };
 //Контрагент таблица
 initdatagridContr();
-clsparticipant.reloadData('/ComParticipants/Index?handler=Data');
+//clsparticipant.reloadData('/ComParticipants/Index?handler=Data');
 }
 

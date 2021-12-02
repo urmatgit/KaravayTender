@@ -17,6 +17,8 @@ class clsBaseTable {
     OnNewRow;
     //Update grid param;
     reloadParam;
+    _editCaption;
+    _addCaption;
     constructor(name,varName, link) {
         this._name = name;
         this._pageLink = link;
@@ -28,8 +30,8 @@ class clsBaseTable {
         var self = this;
         //  $(`#${this._name}_edit_form`).data("validator").settings.ignore = "";
         $(`#${this._name}_searchbutton`).click(function () {
-            alert(`#${self._name}_searchbutton`);
-
+            //alert(`#${self._name}_searchbutton`);
+            self.reloadData();
             //this.reloadData();
 
         });
@@ -210,12 +212,12 @@ class clsBaseTable {
     currentEditRow = null;
     popupmodal(nomenclature) {
         $(`#${this._name}_modal`).modal('toggle');
-        $(`#${this._name}_modal .modal-title`).html(`${translations.AddCaption}`);
+        $(`#${this._name}_modal .modal-title`).html(`${this._addCaption ? this._addCaption : translations.AddCaption}`);
         $(`#${this._name}_edit_form`).clearForm();
         $(`#${this._name}_edit_form`)[0].reset();
         this.currentEditRow = nomenclature;
         if (nomenclature) {
-            $(`#${this._name}_modal .modal-title`).html(`${translations.EditCaption}`);
+            $(`#${this._name}_modal .modal-title`).html(`${this._editCaption ? this._editCaption : translations.EditCaption}`);
             if (typeof this.jsonToFormCallBack !== 'undefined')
                 $(`#${this._name}_edit_form`).jsonToForm(nomenclature, this.jsonToFormCallBack);
             else
