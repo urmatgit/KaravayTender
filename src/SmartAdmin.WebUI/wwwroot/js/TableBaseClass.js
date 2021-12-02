@@ -97,7 +97,7 @@ class clsBaseTable {
         this.dg.datagrid('resize');
     }
 
-    CreateActionColumn(value, row, index) {
+    CreateActionColumn(self, row, index) {
         return `<div class="btn-group" role="group">
 								  <button id="commandbtngroup1" type="button" ${(_canEdit ? "" : "disabled")}  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<i class="${window.translations.IconPrefix} fa-edit"></i>
@@ -120,7 +120,7 @@ class clsBaseTable {
                     width: 100,
                     align: 'center',
                     formatter: function (value, row, index) {
-                        return self.CreateActionColumn(value, row, index);
+                        return self.CreateActionColumn(self, row, index);
                     }
                 }
 
