@@ -441,6 +441,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 _logger.LogError($"Сontragent reject error.({model.Id} {ContragentStatus.Reject})", result.Errors);
                 return BadRequest(result.Errors);
             }
+           
             return new JsonResult("");
         }
         public async Task<FileResult> OnPostExportAsync([FromBody] ExportContragentsQuery command)

@@ -178,7 +178,7 @@ onImportedSucceeded = "reloadData()"
             AddSuccess: '@_localizerPart["Participants  is added"]',
             AddFail: '@_localizerPart["Adding fail"]',
             AddParticipants: '@_localizerPart["Add participant"]'
-            
+
 		}
 		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
         var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
@@ -240,8 +240,9 @@ onImportedSucceeded = "reloadData()"
         });
         $("#edit_panel").on("ShowEdit", function (event) {
             let comofferid = 0;
-            if (currentEditRow)
-                comofferid = currentEditRow?.Id;
+            if (currentEditRow) {
+                    comofferid = currentEditRow.Id;
+            }
             clscomposition.reloadData('@Url.Page("/ComOffers/Index")?handler=DataPos' + `&ComOfferId=${comofferid}`);
             clscomposition.ResizeGrid();
             clsparticipant.reloadData('@Url.Page("/ComParticipants/Index")?handler=Data' + `&ComOfferId=${comofferid}`);
@@ -257,7 +258,7 @@ onImportedSucceeded = "reloadData()"
                     $('#InputPos_UnitOfName').val(res.data.UnitOf.Name);
                     $('#InputPos_NomVolume').val(res.data.Volume);
                     $('#InputPos_QualityDocsNames').val(res.data.QualityDocsNames);
-
+                    $('#InputPos_NomSpecification').val(res.data.Specifications);
                 })
                 .catch((error) => {
                     if (error.response.data.Errors) {
@@ -385,7 +386,7 @@ onImportedSucceeded = "reloadData()"
                 },
                 {
                     field: 'Nomenclature.Name', title: '@_localizer["Nomenclature"]', sortable: true, width: 150 , formatter: function (val, rec) {
-                        return rec.Nomenclature?.Name;
+                        return rec.Nomenclature.Name;
                     }
                 },
 
@@ -397,7 +398,7 @@ onImportedSucceeded = "reloadData()"
                 },
                 {
                     field: 'Nomenclature.UnitOf.Name', title: '@_localizer["UnitOf"]', sortable: true, width: 80, formatter: function (val, rec) {
-                        return rec.Nomenclature?.UnitOf?.Name;
+                        return rec.Nomenclature.UnitOf.Name;
                     }
                 },
                 { field: 'DeliveryCount', title: '@_localizer["Delivery count"]', sortable: true, width: 130},
@@ -431,9 +432,15 @@ onImportedSucceeded = "reloadData()"
             clscomposition._editCaption = '@_localizer["Add position"]';
             clscomposition._addCaption = '@_localizer["Edit position"]';
             clscomposition.Init();
-            $('.select2').select2({
+            $('#AreaIds').select2({
                 placeholder: '@Html.Raw(@_localizer["Choose areas"])',
 
+                allowClear: true,
+                dropdownParent: $('#composition_edit_form')
+            });
+            $('#InputPos_CategoryId').select2({
+                
+                placeholder: '@Html.Raw(@_localizer["Choose a category"])',
                 allowClear: true,
                 dropdownParent: $('#composition_edit_form')
             });
@@ -469,6 +476,7 @@ onImportedSucceeded = "reloadData()"
                     $('#InputPos_UnitOfName').val("");
                     $('#InputPos_NomVolume').val("");
                     $('#InputPos_QualityDocsNames').val("");
+                    $('#InputPos_NomSpecification').val("");
                     var modelDropDown = $('#InputPos_NomenclatureId');
                     modelDropDown.empty();
                     modelDropDown.append(

@@ -26,5 +26,11 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.DTOs
         [Required]
         public int ComPositionId { get; set; }
         public virtual ComPositionDto ComPosition { get; set; }
+
+        public decimal Price { get; set; }
+        /// <summary>
+        /// Участвует или нет
+        /// </summary>
+        public bool Status { get; set; }
     }
 }

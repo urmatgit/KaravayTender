@@ -18,6 +18,11 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public virtual Contragent Contragent { get; set; }
         public int ComPositionId { get; set; }
         public virtual ComPosition ComPosition { get; set; }
+        public decimal Price { get; set; }
+        /// <summary>
+        /// Участвует или нет
+        /// </summary>
+        public bool Status { get; set; }
 
     }
 }

@@ -22,6 +22,19 @@ $('#importbutton').click(function () {
 $('#gettemplatebutton').click(function () {
     onGetTemplate();
 });
+$('#startStage').click(function (e) {
+    SetReadOnlyForm();
+
+});
+function SetReadOnlyForm() {
+    const form = document.querySelector('#edit_form_panel');
+    for (var i = 0, fLen = form.length; i < fLen; i++) {
+        form.elements[i].readOnly = true;
+    }
+    $('.custom-select').prop('disabled', true);
+    $('.custom-control-input').prop('disabled', true);
+    SetEnableToRoleButton(false);
+}
 $('#save').click(function (e) {
     const form = document.querySelector('#edit_form_panel');
     if ($(form).valid() === false) {
@@ -37,8 +50,8 @@ $('#save').click(function (e) {
         axios.post(`${pagelink}`, request).then(res => {
             toastr["info"](`${translations.SaveSuccess} `);
 
-            $('#table-page-content').show();
-            $('#edit_panel').hide();
+            //$('#table-page-content').show();
+            //$('#edit_panel').hide();
             reloadData();
         }).catch((error) => {
             if (error.response.data.Errors) {
@@ -103,11 +116,19 @@ function openEditpanel(row) {
 
                     var date = moment(value).format(dateFormat);
                     $('#Input_TermEnd').val(date);
+                },
+                Status: function (value) {
+                    if (value != 0) {
+                        SetReadOnlyForm();
+                    } else {
+                        SetEnableToRoleButton(true);
+                    }
                 }
 
             });
+            
         
-        SetEnableToRoleButton(true);
+     
     }
     else {
         $('#edit_form_panel #Input_Id').val(0)

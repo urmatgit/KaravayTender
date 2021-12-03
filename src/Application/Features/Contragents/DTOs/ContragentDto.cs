@@ -23,7 +23,8 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.DTOs
             //profile.CreateMap<Contragent, ContragentDto>()
             //    .ForMember(x => x.DirectionName, s => s.MapFrom(y => y.Direction.Name));
             profile.CreateMap<Contragent, ContragentDto>()
-                .ForMember(x => x.StatusStr, s => s.MapFrom(y => y.Status.ToDescriptionString()));
+                .ForMember(x => x.StatusStr, s => s.MapFrom(y => y.Status.ToDescriptionString()))
+                .ForMember(x => x.ManagerPhone, s => s.MapFrom(y => y.Manager!=null ? y.Manager.PhoneNumber:""));
             profile.CreateMap<ContragentDto, Contragent>(MemberList.None);
 
         }

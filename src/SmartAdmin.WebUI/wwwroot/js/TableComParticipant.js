@@ -75,7 +75,7 @@ class TableComParticipant extends clsBaseTable {
                     if (result) {
                         var paras = new URLSearchParams(checkedId.map(s => ['id', s]));
                         console.log(paras.toString())
-                        axios.get(`${self._pageLink}?handler=DeleteChecked&` + paras.toString() + '&comofferid=' + currentEditRow?.Id).then(res => {
+                        axios.get(`${self._pageLink}?handler=DeleteChecked&` + paras.toString() + '&comofferid=' + currentEditRow.Id).then(res => {
                             toastr["info"](`${translations.Delete} ${checkedId.length} ${translations.Success}"]`);
                             self.reloadData();
                         })
@@ -275,7 +275,7 @@ clsparticipant.OnSubmitClick = (par) => {
         return;
     }
     //
-    $('#InputContrPar_ComOfferId').val(currentEditRow?.Id);
+    $('#InputContrPar_ComOfferId').val(currentEditRow.Id);
     $('#InputContrPar_ComOfferId').trigger('change');
     //
     // checkedId = [1, 2, 4];

@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Acceditation reject" xml:space="preserve">
-    <value>Аккедитация отклонена</value>
+    <value>Аккредитация отклонена</value>
   </data>
   <data name="Accept" xml:space="preserve">
     <value>Принять</value>
   </data>
   <data name="Accreditation" xml:space="preserve">
-    <value>Аккедитация</value>
+    <value>Аккредитация</value>
   </data>
   <data name="Active" xml:space="preserve">
     <value>Активность </value>

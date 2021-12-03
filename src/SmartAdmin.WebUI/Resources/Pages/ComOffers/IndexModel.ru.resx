@@ -259,7 +259,7 @@
     <value>Цена без НДС</value>
   </data>
   <data name="Price include delivery" xml:space="preserve">
-    <value>Цена доставки включенав стоимость</value>
+    <value>Цена доставки включена в стоимость</value>
   </data>
   <data name="Quality documents" xml:space="preserve">
     <value>Требования к документам по качеству</value>

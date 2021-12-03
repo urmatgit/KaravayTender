@@ -117,7 +117,8 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
         {
             try
             {
-                
+                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
+                    return BadRequest("Коммерческое предложения уже запущена!!! ");
                 var result = await _mediator.Send(Input);
                 return new JsonResult(result);
             }

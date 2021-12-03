@@ -32,7 +32,7 @@ namespace SmartAdmin.WebUI.Extensions
         {
             var command = new GetAllCategoriesQuery() { DirectionId = directionid };
             var result = await _mediator.Send(command);
-            return new SelectList(result, "Id", "Name");   
+            return new SelectList(result, "Id", "Name", null, "DirectionName") ;   
         }
         public static async Task<SelectList> LoadUnitOf(this ISender _mediator)
         {

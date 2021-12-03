@@ -56,7 +56,7 @@ namespace CleanArchitecture.Razor.Application.Features.Categories.Queries.GetAll
             }
             var data = await _context.Categories.Where(filters)
                          .Include(c => c.Direction)
-
+                         .OrderBy(c=>c.Direction.Name)
                          .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
