@@ -32,7 +32,7 @@
 
             @if (_canCreate.Succeeded)
             {
-            <a   role="button" class="btn btn-sm btn-outline-primary" id="composition_addbutton">
+            <a   role="button" class="btn btn-sm btn-outline-primary editable" id="composition_addbutton">
                 <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
                 @_localizer["Add"]
             </a>
@@ -40,7 +40,7 @@
             }
             @if (_canDelete.Succeeded)
             {
-                <a role="button" class="btn btn-sm btn-outline-danger" disabled id="composition_deletebutton">
+                <a role="button" class="btn btn-sm btn-outline-danger editable" disabled id="composition_deletebutton">
                     <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
                     @_localizer["Delete"]
                 </a>

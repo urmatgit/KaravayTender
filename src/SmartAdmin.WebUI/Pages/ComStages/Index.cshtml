@@ -1,0 +1,179 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using CleanArchitecture.Razor.Application.Constants.Permission
+@model SmartAdmin.WebUI.Pages.ComStages.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComOffers.IndexModel> _localizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComStages.IndexModel> _localizerStage
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    ViewData["Title"] = _localizer["ComStages"].Value;
+    ViewData["PageName"] = "compositions_index";
+    ViewData["Category1"] = _localizer["References"].Value;
+    ViewData["Heading"] = _localizer["ComStages"].Value;
+    ViewData["PageDescription"] = _localizer["Managing supplier referral parameters"].Value;
+    ViewData["PreemptiveClass"] = "Default";
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Create);
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Search);
+
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Export);
+    var _canDeleteFile = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.DeleteFile);
+
+}
+@section HeadBlock {
+
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+
+    <style>
+
+        .comstage_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+    </style>
+}
+<div id="js-page-content-demopanels" class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <div class="col-md-3">
+            <h5>@_localizerStage["Stage"] 1</h5>
+        </div>
+        <div class="col-md-6">
+            <div class="custom-control custom-radio-rounded custom-control-inline">
+                <input type="radio" class="custom-control-input" asp-for="TypeOffer" checked="" value="0">
+                <label class="custom-control-label" for="defaultInline1Radio">@_localizerStage["Last offer"]</label>
+            </div>
+            <div class="custom-control custom-radio-rounded custom-control-inline">
+                <input type="radio" class="custom-control-input" asp-for="TypeOffer" value="1">
+                <label class="custom-control-label" for="defaultInline2Radio">@_localizerStage["Step-by-Step offer"]</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="ml-auto">
+
+                @if (_canSearch.Succeeded)
+                {
+                    <a role="button" class="btn btn-sm btn-outline-primary" id="participant_searchbutton">
+                        <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                        @_localizer["Search"]
+                    </a>
+                }
+
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="comstage_dg">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@*<partial name="AddOrEditPosition" />*@
+@await Component.InvokeAsync("ImportExcel", new
+{
+    importUri = Url.Page("/ComStages/Index") + "?handler=Import",
+getTemplateUri = @Url.Page("/ComStages/Index") + "?handler=CreateTemplate",
+onImportedSucceeded = "reloadData()"
+})
+@section ScriptsBlock {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
+
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/TableBaseClass.js"></script>
+
+    <script type="text/javascript">
+        var pagelink = '@Url.Page("/ComStages/Index")';
+        var translations = {
+            SaveSuccess: '@_localizer["Save Success."]',
+            SaveFail: '@_localizer["Save fail"]',
+            IconPrefix: '@(Settings.Theme.IconPrefix)',
+            Command: '@_localizer["Command"]',
+            Edit: '@_localizer["Edit"]',
+            Delete: '@_localizer["Delete"]',
+            AddCaption: '@_localizer["Add nomenclature"]',
+            EditCaption: '@_localizer["Edit nomenclature"]',
+            DeleteRowDialog: '@_localizer["Are you sure delete a row?"]',
+			Yes: '@_localizer["Yes"]',
+			No: '@_localizer["No"]',
+            DeleteSuccess: '@_localizer["Delete Success"]',
+            DeleteFail: '@_localizer["Delete fail"]',
+			DeleteRowsDialog: '@_localizer["Are you sure delete checked rows?"]',
+            Success: '@_localizer["Success"]',
+            ExportFail: '@_localizer["Export fail"]',
+            Name: '@_localizer["Name"]',
+            VAT: '@_localizer["VAT,%"]',
+            Category: '@_localizer["Category"]',
+            Direction: '@_localizer["Direction"]',
+            UnitOf: '@_localizer["UnitOf"]',
+            Volume: '@_localizer["Volume"]',
+            ChooseQualityDoc: '@_localizer["Choose quality documents"]',
+            ChooseCategory: '@_localizer["Choose a category"]',
+            Download_Success: '@_localizer["Download Success"]',
+            Archiv: '@_localizer["Archive"]',
+            DeleteFileDialog: '@_localizer["Are you sure delete this file?"]',
+        }
+        var YesNotList = [
+            {
+                id: '',
+                text: 'Все'
+
+            },
+            {
+                id: 'true',
+                text: 'Да'
+            },
+            {
+                id: 'false',
+                text: 'Нет'
+            }
+
+        ]
+		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
+        var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
+        var _canDeleteFile =  @(_canDeleteFile.Succeeded ? "true" : "false" );
+
+
+
+        $(() => {
+
+			  clsComStage = new clsBaseTable("composition",'@Url.Page("/ComStages/Index")');
+            clsComStage.tblColumns= [
+                { field: 'Nomenclature.Category.Name', title: '@_localizer["Category"]', sortable: true, width: 130 },
+                { field: 'Nomenclature.Name', title: '@_localizer["Nomenclature"]', sortable: true, width: 100 },
+
+
+                { field: 'Arias', title: '@_localizer["Arias"]', sortable: true, width: 150 },
+                { field: 'Nomenclature.UnitOf.Name', title: '@_localizer["UnitOf"]', sortable: true, width: 80 },
+                { field: 'DeliveryCount', title: '@_localizer["Delivery count"]', sortable: true, width: 130},
+
+                { field: 'Price', title: '@_localizer["Price"]', sortable: true, width: 80 },
+
+                { field: 'Nomenclature.Vat.Stavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
+                { field: 'Volume', title: '@_localizer["Volume"]', sortable: true, width: 80 },
+                { field: 'Nomenclature.QualityDocsNames', title: '@_localizer["Quality documents"]', sortable: true, width: 100 },
+                { field: 'Nomenclature.Specification', title: '@_localizer["Specification"]', sortable: true, width: 80},
+                { field: 'Summa', title: '@_localizer["Summa"]', sortable: true, width: 80 }
+
+            ];
+            clsComStage.Init();
+
+
+        })
+
+
+    </script>
+}

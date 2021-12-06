@@ -1,0 +1,68 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using CleanArchitecture.Razor.Application.Constants.Permission
+@using  CleanArchitecture.Razor.Application.Common.Extensions
+@model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.Contragents.IndexModel> _localizerContr
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComParticipants.IndexModel> _localizerPart
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComStages.IndexModel> _localizerStage
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Create);
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Search);
+
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Export);
+
+
+}
+
+<div class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <div class="col-md-3">
+            <h5>Stage 1</h5>
+        </div>
+        <div class="col-md-6">
+            <div class="custom-control custom-radio-rounded custom-control-inline">
+                <input type="radio" class="custom-control-input" id="defaultInline1Radio" name="inlineDefaultRadiosExample" checked="">
+                <label class="custom-control-label" for="defaultInline1Radio">@_localizerStage["Last offer"]</label>
+            </div>
+            <div class="custom-control custom-radio-rounded custom-control-inline">
+                <input type="radio" class="custom-control-input" id="defaultInline2Radio" name="inlineDefaultRadiosExample">
+                <label class="custom-control-label" for="defaultInline2Radio">@_localizerStage["Last offer"]</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="ml-auto">
+
+                @if (_canSearch.Succeeded)
+                {
+                    <a role="button" class="btn btn-sm btn-outline-primary" id="participant_searchbutton">
+                        <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                        @_localizerPart["Search"]
+                    </a>
+                }
+
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="stage_dg">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

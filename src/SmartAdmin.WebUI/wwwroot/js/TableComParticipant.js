@@ -13,7 +13,7 @@ class TableComParticipant extends clsBaseTable {
 								               </button>
 								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup1">
 								   
-								   <a role="button" class="dropdown-item" onclick="clsparticipant.onDelete('${row.ContragentId}','${row.ComOfferId}')" ${(_canDelete ? "" : "disabled")} ><i class="fal fa-trash-alt mr-1"></i> ${translations.Delete}</a>
+								   <a role="button" class="dropdown-item editable" onclick="clsparticipant.onDelete('${row.ContragentId}','${row.ComOfferId}')" ${(_canDelete ? "" : "disabled")} ><i class="fal fa-trash-alt mr-1"></i> ${translations.Delete}</a>
 								 </div>
 							  </div>`}
 

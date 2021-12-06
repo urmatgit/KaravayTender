@@ -141,6 +141,9 @@
   <data name="Bank days" xml:space="preserve">
     <value>Отсрочка в банк. днях</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Категория</value>
   </data>
@@ -248,6 +251,9 @@
   </data>
   <data name="Number" xml:space="preserve">
     <value>№ ком. предложения</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ок</value>
   </data>
   <data name="Participants" xml:space="preserve">
     <value>Участники</value>

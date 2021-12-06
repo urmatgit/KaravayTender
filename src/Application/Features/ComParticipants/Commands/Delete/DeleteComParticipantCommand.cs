@@ -52,23 +52,44 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.
         }
         public async Task<Result> Handle(DeleteComParticipantCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing DeleteComParticipantCommandHandler method 
-           var item = await _context.ComParticipants.FindAsync(new object[] {request.ComOfferId, request.ContragentId }, cancellationToken);
+            //TODO:Implementing DeleteComParticipantCommandHandler method
+            var comOffer = await _context.ComOffers.FindAsync(new object[] { request.ComOfferId },cancellationToken);
+            if (comOffer is not null && comOffer.Status == Domain.Enums.ComOfferStatus.Preparation)
+            {
+                var item = await _context.ComParticipants.FindAsync(new object[] {request.ComOfferId, request.ContragentId }, cancellationToken);
             _context.ComParticipants.Remove(item);
             await _context.SaveChangesAsync(cancellationToken);
             return Result.Success();
+
+                }
+            else
+            {
+                return
+                     await Result.FailureAsync(new string[] { "Удаление не возможно!!!" });
+            }
         }
 
         public async Task<Result> Handle(DeleteCheckedComParticipantsCommand request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing DeleteCheckedComPositionsCommandHandler method 
-            var items = await _context.ComParticipants.Where(x => request.Id.Contains(x.ContragentId) && x.ComOfferId==request.ComOfferId).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            //TODO:Implementing DeleteCheckedComPositionsCommandHandler method
+            var comOffer = await _context.ComOffers.FindAsync(new object[] { request.ComOfferId },cancellationToken);
+            if (comOffer is not null && comOffer.Status == Domain.Enums.ComOfferStatus.Preparation)
             {
-                _context.ComParticipants.Remove(item);
+                var items = await _context.ComParticipants.Where(x => request.Id.Contains(x.ContragentId) && x.ComOfferId == request.ComOfferId).ToListAsync(cancellationToken);
+
+                foreach (var item in items)
+                {
+
+                    _context.ComParticipants.Remove(item);
+                }
+                await _context.SaveChangesAsync(cancellationToken);
+                return Result.Success();
             }
-            await _context.SaveChangesAsync(cancellationToken);
-            return Result.Success();
+            else
+            {
+                return
+                     await Result.FailureAsync(new string[] {"Удаление не возможно!!!"});
+            }
         }
     }
 }

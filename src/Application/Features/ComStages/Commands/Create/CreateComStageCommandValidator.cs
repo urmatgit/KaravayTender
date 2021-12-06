@@ -7,10 +7,11 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
         public CreateComStageCommandValidator()
         {
            //TODO:Implementing CreateComStageCommandValidator method 
-            //RuleFor(v => v.Name)
-            //     .MaximumLength(50)
-            //     .NotEmpty();
-           //throw new System.NotImplementedException();
+            RuleFor(v => v.Number)
+                 .NotEmpty().NotEqual(0);
+            RuleFor(v=>v.Deadline)
+                 .NotEmpty().NotEqual(0);
+            //throw new System.NotImplementedException();
         }
     }
 }

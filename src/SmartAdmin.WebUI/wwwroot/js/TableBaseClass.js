@@ -5,6 +5,7 @@
 //_catDelete
 class clsBaseTable {
 
+    
     _name;
     _varName;
     _pageLink;
@@ -96,15 +97,17 @@ class clsBaseTable {
     ResizeGrid() {
         this.dg.datagrid('resize');
     }
-
+    HideAction() {
+        this.dg.datagrid('hideColumn', '_action');
+    }
     CreateActionColumn(self, row, index) {
         return `<div class="btn-group" role="group">
 								  <button id="commandbtngroup1" type="button" ${(_canEdit ? "" : "disabled")}  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<i class="${window.translations.IconPrefix} fa-edit"></i>
 								 </button>
 								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup1">
-								   <a role="button" class="dropdown-item" onclick="${self._varName}.onEdit(${index})" ${(_canEdit ? "" : "disabled")}><i class="fal fa-edit mr-1"></i> ${translations.Edit}</a>
-								   <a role="button" class="dropdown-item" onclick="${self._varName}.onDelete('${row.Id}')" ${(_canDelete ? "" : "disabled")} ><i class="fal fa-trash-alt mr-1"></i> ${translations.Delete}</a>
+								   <a role="button" class="dropdown-item editable" onclick="${self._varName}.onEdit(${index})" ${(_canEdit ? "" : "disabled")}><i class="fal fa-edit mr-1"></i> ${translations.Edit}</a>
+								   <a role="button" class="dropdown-item editable" onclick="${self._varName}.onDelete('${row.Id}')" ${(_canDelete ? "" : "disabled")} ><i class="fal fa-trash-alt mr-1"></i> ${translations.Delete}</a>
 								 </div>
 							  </div>`
     }
@@ -125,9 +128,8 @@ class clsBaseTable {
                 }
 
 
-
-
             ];
+        
         if (this.tblColumns.length > 0) {
             return InitColumns.concat(this.tblColumns);
         }

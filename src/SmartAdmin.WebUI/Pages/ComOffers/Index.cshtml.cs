@@ -34,6 +34,7 @@ using CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagination;
 using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.AddEdit;
 using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.Import;
+using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
@@ -121,6 +122,33 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                     return BadRequest("Коммерческое предложения уже запущена!!! ");
                 var result = await _mediator.Send(Input);
                 return new JsonResult(result);
+            }
+            catch (ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
+        public async Task<IActionResult> OnPostRunAsync([FromQuery] int deadline)
+        {
+            try
+            {
+                //if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
+                //    return BadRequest("Коммерческое предложения уже запущена!!! ");
+
+                var CreateState1 = new CreateComStageCommand()
+                {
+                    ComOfferId = Input.Id,
+                    Number = 1,
+                    Deadline = deadline
+                };
+                 var result = await _mediator.Send(CreateState1);
+                return new JsonResult(result);
+                return new JsonResult("OK");
             }
             catch (ValidationException ex)
             {

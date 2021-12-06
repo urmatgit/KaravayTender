@@ -177,7 +177,9 @@ onImportedSucceeded = "reloadData()"
             NoParticipantsSel: '@_localizerPart["No participants selected"]',
             AddSuccess: '@_localizerPart["Participants  is added"]',
             AddFail: '@_localizerPart["Adding fail"]',
-            AddParticipants: '@_localizerPart["Add participant"]'
+            AddParticipants: '@_localizerPart["Add participant"]',
+            Cancel: '@_localizerPart["Cancel"]',
+            Ok: '@_localizerPart["Ok"]'
 
 		}
 		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
@@ -243,10 +245,16 @@ onImportedSucceeded = "reloadData()"
             if (currentEditRow) {
                     comofferid = currentEditRow.Id;
             }
+
+
             clscomposition.reloadData('@Url.Page("/ComOffers/Index")?handler=DataPos' + `&ComOfferId=${comofferid}`);
             clscomposition.ResizeGrid();
             clsparticipant.reloadData('@Url.Page("/ComParticipants/Index")?handler=Data' + `&ComOfferId=${comofferid}`);
             clsparticipant.ResizeGrid();
+            if (currentEditRow.Status != 0) {
+                clscomposition.HideAction();
+                clsparticipant.HideAction();
+            }
         })
         $('#InputPos_NomenclatureId').change(function () {
             var nomenId = $(this).val();
@@ -279,6 +287,7 @@ onImportedSucceeded = "reloadData()"
             } else {
                 clscomposition.ResizeGrid();
             }
+
         });
 		$(() => {
             clscomposition = new clsBaseTable("composition","clscomposition",'@Url.Page("/ComPositions/Index")');
@@ -439,7 +448,7 @@ onImportedSucceeded = "reloadData()"
                 dropdownParent: $('#composition_edit_form')
             });
             $('#InputPos_CategoryId').select2({
-                
+
                 placeholder: '@Html.Raw(@_localizer["Choose a category"])',
                 allowClear: true,
                 dropdownParent: $('#composition_edit_form')

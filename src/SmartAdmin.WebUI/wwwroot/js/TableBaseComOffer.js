@@ -23,7 +23,35 @@ $('#gettemplatebutton').click(function () {
     onGetTemplate();
 });
 $('#startStage').click(function (e) {
-    SetReadOnlyForm();
+    //
+    bootbox.prompt({
+        //title: `На портале ОАО "КАРАВАЙ" по работе с поставщиками появилась возможность \n предоставить ценовое предложение по лоту № ${currentEditRow.Number}.
+        //          Просим предоставить Ваши предложения пройдя по ссылке ___` ,
+        title: 'Срок предоставления до',
+        inputType: 'number',
+        buttons: {
+            confirm: {
+                label: `${translations.Ok}`, //'@_localizer["Yes"]',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: `${translations.Cancel}`, //'@_localizer["No"]',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+
+            console.log(result);
+
+            SubmitForm("?handler=Run&deadline=" + result, function () {
+                SetReadOnlyForm();
+            });
+            
+        }
+    
+    });
+
+    
 
 });
 function SetReadOnlyForm() {
@@ -32,10 +60,13 @@ function SetReadOnlyForm() {
         form.elements[i].readOnly = true;
     }
     $('.custom-select').prop('disabled', true);
-    $('.custom-control-input').prop('disabled', true);
+    $('.custom-control-input[type=checkbox]').prop('disabled', true);
     SetEnableToRoleButton(false);
+    
+    
+    $('#save').prop('disabled', true);
 }
-$('#save').click(function (e) {
+function SubmitForm(addParam,callback) {
     const form = document.querySelector('#edit_form_panel');
     if ($(form).valid() === false) {
         form.classList.add('was-validated');
@@ -47,12 +78,15 @@ $('#save').click(function (e) {
         //if (AppendFilesToFormData) {
         //    AppendFilesToFormData(request);
         //}
-        axios.post(`${pagelink}`, request).then(res => {
+        axios.post(`${pagelink}${addParam}`, request).then(res => {
             toastr["info"](`${translations.SaveSuccess} `);
 
             //$('#table-page-content').show();
             //$('#edit_panel').hide();
             reloadData();
+            if (callback) {
+                callback();
+            }
         }).catch((error) => {
             if (error.response.data.Errors) {
                 const errors = error.response.data.Errors;
@@ -66,9 +100,12 @@ $('#save').click(function (e) {
     }
     event.preventDefault();
     event.stopPropagation();
+}
+$('#save').click(function (e) {
+    SubmitForm();
 });
 function SetEnableToRoleButton(enable) {
-    $("a[role='button']").each(function (val) {
+    $(".editable[role='button']").each(function (val) {
         if (!enable)
             $(this).hide();// prop('disabled', true).addClass('ui-disabled');
         else
@@ -116,18 +153,20 @@ function openEditpanel(row) {
 
                     var date = moment(value).format(dateFormat);
                     $('#Input_TermEnd').val(date);
-                },
-                Status: function (value) {
-                    if (value != 0) {
-                        SetReadOnlyForm();
-                    } else {
-                        SetEnableToRoleButton(true);
-                    }
                 }
+                //Status: function (value) {
+                //    if (value != 0) {
+                        
+                //    } else {
+                //        SetEnableToRoleButton(true);
+                //    }
+                //}
 
             });
-            
-        
+
+        if (row.Status != 0) {
+            //SetReadOnlyForm();
+        }
      
     }
     else {

@@ -50,11 +50,14 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Commands.Del
         }
         public async Task<Result> Handle(DeleteComPositionCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing DeleteComPositionCommandHandler method 
-           var item = await _context.ComPositions.FindAsync(new object[] { request.Id }, cancellationToken);
+           //TODO:Implementing DeleteComPositionCommandHandler method
+           
+            var item = await _context.ComPositions.FindAsync(new object[] { request.Id }, cancellationToken);
+
             _context.ComPositions.Remove(item);
             await _context.SaveChangesAsync(cancellationToken);
             return Result.Success();
+
         }
 
         public async Task<Result> Handle(DeleteCheckedComPositionsCommand request, CancellationToken cancellationToken)
