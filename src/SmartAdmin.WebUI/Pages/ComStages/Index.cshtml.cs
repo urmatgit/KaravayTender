@@ -36,6 +36,12 @@ using CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.Queries.GetAll;
 
+using CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System.Text;
+using CleanArchitecture.Razor.Application.Common.Extensions;
+
 namespace SmartAdmin.WebUI.Pages.ComStages
 {
     [Authorize(policy: Permissions.ComOffers.View)]
@@ -80,18 +86,131 @@ namespace SmartAdmin.WebUI.Pages.ComStages
             //var result = await _identityService.FetchUsers("Admin");
             
         }
-        //public async Task<IActionResult> OnGetById([FromQuery]int id)
-        //{
-        //    // throw new Exception("Test log error 222 !!!!!!");
-
-        //    var result = await _mediator.Send(new GetByIdComStageQuery { Id=id});
-        //    return new JsonResult(result);
-        //}
-        public async Task<IActionResult> OnGetDataAsync([FromQuery] ComStagesWithPaginationQuery command)
+        public async Task<IActionResult> OnGetById([FromQuery] int stage, [FromQuery] int comid)
         {
-           // throw new Exception("Test log error 222 !!!!!!");
-            var result = await _mediator.Send(command);
-            return new JsonResult(result);
+            // throw new Exception("Test log error 222 !!!!!!");
+
+            var result = await _mediator.Send(new GetByStageQuery { Stage = 1, ComOfferId = 1 });
+            var Nomenclatures = result.StageCompositions.GroupBy(c => c.ComPosition).Select(c => new
+            {
+                ComPosition = c.Key,
+                participients = c.ToList(),
+
+            });
+            //var NomenclaturesDic = result.StageCompositions.GroupBy(c => c.ComPosition).Select(c => new
+            //{
+            //    ComPosition = c.Key,
+
+            //    participients = c.ToDictionary(c => c.Contragent, c => c)
+
+            //});
+
+            //var setting = new JsonSerializerSettings()
+            //{
+            //    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            //};
+            //var json = JsonConvert.SerializeObject(NomenclaturesDic, setting);
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (var nomenclature in Nomenclatures)
+            {
+                stringBuilder.Append('{');
+                stringBuilder.Append($"StageNumber:{stage},");
+                stringBuilder.Append($"ComPositionId:{nomenclature.ComPosition.Id},");
+                stringBuilder.Append($"NomName:'{nomenclature.ComPosition.Nomenclature.Name}',");
+                 StringBuilder stringBuilderPart = new StringBuilder();
+                foreach (var part in nomenclature.participients)
+                {
+                    stringBuilderPart.Append($"'{part.Contragent.Name} ({part.ComPosition.ComOffer.ComParticipants.FirstOrDefault(p=>p.ContragentId==part.ContragentId)?.Status.ToDescriptionString()})':{part.Contragent.Id},");
+                    stringBuilderPart.Append($"'ContName_{part.Contragent.Id}_Status':'{part.Status}',");
+                    stringBuilderPart.Append($"'ContName_{part.Contragent.Id}_Price':'{part.Price}',");
+                    
+                }
+                stringBuilder.Append(stringBuilderPart.ToString().TrimEnd(','));
+                stringBuilderPart.Clear();
+                stringBuilder.Append("},");
+            }
+            // (setting.ContractResolver as DefaultContractResolver).NamingStrategy = null;
+
+
+
+
+            return new JsonResult($"[{stringBuilder.ToString().TrimEnd(',')}]");
+        }
+        public async Task<IActionResult> OnGetDataAsync([FromQuery] int stage,int comofferid=1)
+        {
+            // throw new Exception("Test log error 222 !!!!!!");
+
+            var result = await _mediator.Send(new GetByStageQuery { Stage = 1, ComOfferId = comofferid });
+            var Nomenclatures = result.StageCompositions.GroupBy(c => c.ComPosition).Select(c => new
+            {
+                ComPosition = c.Key,
+                stageNumber=result.Number,
+                participients = c.ToList(),
+
+            });
+
+            StringBuilder stringBuilderHeader = new StringBuilder();
+            
+                stringBuilderHeader.Append('{');
+                stringBuilderHeader.Append($"field:'StageNumber',");
+                stringBuilderHeader.Append("title:'Этап'},");
+                stringBuilderHeader.Append("{field:'NomName',");
+                stringBuilderHeader.Append("title:'Номерклатура'},");
+
+            StringBuilder stringBuilderPart = new StringBuilder();
+            var nomenclature = Nomenclatures.FirstOrDefault();
+                foreach (var part in nomenclature.participients)
+                {
+                var status = nomenclature.ComPosition.ComOffer.ComParticipants.FirstOrDefault(p => p.ContragentId == part.ContragentId && p.ComOfferId==comofferid)?.Status.ToDescriptionString();
+                    stringBuilderPart.AppendFormat("{0}field:'ContName_{1}',","{", part.Contragent.Id);
+                    stringBuilderPart.AppendFormat("title:'{0} ({1})',", part.Contragent.Name, status);
+                var priceColname = string.Format("ContName_{0}_price", part.Contragent.Id);
+                var priceColstatus = string.Format("ContName_{0}_status", part.Contragent.Id);
+                stringBuilderPart.AppendFormat("formatter: function(val,rec){3} return `${3}rec.{4}{2} ${3}rec.{5}{2}`; {2}'{0} ({1})'{2},", part.Contragent.Name, status, "}","{",priceColname,priceColstatus);
+
+                //stringBuilderPart.AppendFormat("{0}field:'ContName_{1}_price',","{", part.Contragent.Id);
+                //stringBuilderPart.Append("title:'Цена'},");
+                //stringBuilderPart.AppendFormat("{0}field:'ContName_{1}_status',","{", part.Contragent.Id);
+                //stringBuilderPart.Append("title:'Статус'},");
+
+            }
+                stringBuilderHeader.Append(stringBuilderPart.ToString().TrimEnd(','));
+                stringBuilderPart.Clear();
+                
+
+            string resultSjong = "{" +
+                "header: {" + stringBuilderHeader.ToString()+"}" ;
+            stringBuilderHeader.Clear();
+            //var result = await _mediator.Send(command);
+            foreach (var nomenclatured in Nomenclatures)
+            {
+                stringBuilderHeader.Append('{');
+                stringBuilderHeader.Append($"StageNumber:{nomenclatured.stageNumber},");
+                
+                stringBuilderHeader.Append($"NomName:'{nomenclatured.ComPosition.Nomenclature.Name}',");
+               // StringBuilder stringBuilderPart = new StringBuilder();
+                foreach (var part in nomenclatured.participients)
+                {
+                    var status = nomenclatured.ComPosition.ComOffer.ComParticipants.FirstOrDefault(p => p.ContragentId == part.ContragentId)?.Status;
+                    stringBuilderPart.AppendFormat("ContName_{0}:{1},", part.Contragent.Id,part.ContragentId);
+                    stringBuilderPart.AppendFormat("ContName_{0}_price:{1},", part.Contragent.Id,part.Price);
+                    stringBuilderPart.AppendFormat("ContName_{0}_status:{1},", part.Contragent.Id,part.Status);
+                }
+                stringBuilderHeader.Append(stringBuilderPart.ToString().TrimEnd(','));
+                stringBuilderPart.Clear();
+                stringBuilderHeader.Append("},");
+            }
+
+            resultSjong+=", data: [" + stringBuilderHeader.ToString().TrimEnd(',') + "]}";
+
+            var res = new JsonResult("");
+            res.Value = resultSjong;
+            res.ContentType = "json/text";
+            return res;
+
+        
+
+        
         }
         public async Task<IActionResult> OnPostAsync()
         {

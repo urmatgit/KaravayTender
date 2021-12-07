@@ -17,12 +17,13 @@ using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
+using CleanArchitecture.Razor.Application.Common.Specification;
 
 namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Queries.Pagination
 {
     public class StageCompositionsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<StageCompositionDto>>
     {
-       
+        public int ComStageId { get; set; }
     }
     
     public class StageCompositionsWithPaginationQueryHandler :
@@ -47,11 +48,24 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Queries
         {
             //TODO:Implementing StageCompositionsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<StageComposition>(request.FilterRules);
-           var data = await _context.StageCompositions.Where(filters)
+           var data = await _context.StageCompositions
+                .Specify(new FilterByComStageQuerySpec(request.ComStageId))
+                .Where(filters)
+                .Include(s=>s.Contragent)
+                .Include(s=>s.ComPosition)
                 .OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<StageCompositionDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
             return data;
+        }
+        public class FilterByComStageQuerySpec : Specification<StageComposition>
+        {
+            public FilterByComStageQuerySpec(int comStageId)
+            {
+                Criteria = p => p.ComStageId == comStageId;
+            }
+
+
         }
     }
 }

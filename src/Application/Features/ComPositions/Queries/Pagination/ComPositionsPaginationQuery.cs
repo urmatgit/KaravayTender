@@ -51,7 +51,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             
             try
             {
-                var data = await _context.ComPositions.Specify(new FilterByComOfferQuerySpec(request.ComOfferId))
+                var data = await _context.ComPositions
+                    .Specify(new FilterByComOfferQuerySpec(request.ComOfferId))
                      .Where(filters)
                      .Include(n => n.Nomenclature)
                      .ThenInclude(n => n.Category)

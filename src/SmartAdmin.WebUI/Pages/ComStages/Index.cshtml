@@ -142,35 +142,80 @@ onImportedSucceeded = "reloadData()"
             }
 
         ]
-		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
-        var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
-        var _canDeleteFile =  @(_canDeleteFile.Succeeded ? "true" : "false" );
+		 
+        var cdata =[ [
+            { field: "StageNumber", title: "Этап" },
+            { field: "NomName", title: "Номерклатура"},
+            {
+                field: "ContName_2", title: "name2 (Участвует)", formatter: function (val, rec) {
+                    return `${rec.ContName_2_price} ${rec.ContName_2_status}`;
+                }    },
+            
+            { field: "ContName_3", title: "name1 (Участвует)"},
 
+            
+        
+            { field: "ContName_4", title: "name13 (Участвует)"},
+            
+        
+        ]];
+        var data = [
+            {
+                StageNumber: 1,
+                NomName: "Product1",
+                ContName_2: 2,
+                ContName_2_price: 0,
+                ContName_2_status: true,
+                ContName_3: 3,
+                ContName_3_price: 0,
+                ContName_3_status: true,
+                ContName_4: 4,
+                ContName_4_price: 0,
+                ContName_4_status: true,
+            },
+            {
+                StageNumber: 1,
+                NomName: "NUm2",
+                ContName_2: 2,
+                ContName_2_price: 0,
+                ContName_2_status: true,
+                ContName_3: 3,
+                ContName_3_price: 0,
+                ContName_3_status: true,
+                ContName_4: 4,
+                ContName_4_price: 0,
+                ContName_4_status: true,
+            },
+        ]
+        var dgcomstage = {};
+        initdatagrid1=() =>{
+            dgcomstage = $(`#comstage_dg`).datagrid({
+                height: (window.innerHeight / 3),
+                method: 'GET',
+                rownumbers: false,
+                singleSelect: true,
+                selectOnCheck: false,
+                checkOnSelect: false,
+                pagination: true,
+                clientPaging: false,
+                remoteFilter: true,
+                sortName: this._defaultSortName,
+                sortOrder: 'desc',
+                pageSize: 15,
+                pageList: [10, 15, 30, 50, 100, 1000],
+                columns: cdata,
+                data: data
+
+            });
+                
+            //.datagrid('load', `${this._pageLink}?handler=Data`);
+
+        }
 
 
         $(() => {
 
-			  clsComStage = new clsBaseTable("composition",'@Url.Page("/ComStages/Index")');
-            clsComStage.tblColumns= [
-                { field: 'Nomenclature.Category.Name', title: '@_localizer["Category"]', sortable: true, width: 130 },
-                { field: 'Nomenclature.Name', title: '@_localizer["Nomenclature"]', sortable: true, width: 100 },
-
-
-                { field: 'Arias', title: '@_localizer["Arias"]', sortable: true, width: 150 },
-                { field: 'Nomenclature.UnitOf.Name', title: '@_localizer["UnitOf"]', sortable: true, width: 80 },
-                { field: 'DeliveryCount', title: '@_localizer["Delivery count"]', sortable: true, width: 130},
-
-                { field: 'Price', title: '@_localizer["Price"]', sortable: true, width: 80 },
-
-                { field: 'Nomenclature.Vat.Stavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
-                { field: 'Volume', title: '@_localizer["Volume"]', sortable: true, width: 80 },
-                { field: 'Nomenclature.QualityDocsNames', title: '@_localizer["Quality documents"]', sortable: true, width: 100 },
-                { field: 'Nomenclature.Specification', title: '@_localizer["Specification"]', sortable: true, width: 80},
-                { field: 'Summa', title: '@_localizer["Summa"]', sortable: true, width: 80 }
-
-            ];
-            clsComStage.Init();
-
+            initdatagrid1();
 
         })
 

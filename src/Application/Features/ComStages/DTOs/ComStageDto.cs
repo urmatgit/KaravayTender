@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Features.ComOffers.DTOs;
@@ -29,7 +30,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.DTOs
         [Required]
         public int Deadline { get; set; }
         public int ComOfferId { get; set; }
-        public ComOfferDto ComOffer { get; set; }
+        public virtual ComOfferDto ComOffer { get; set; }
+        //[JsonIgnore]
         public virtual ICollection<StageCompositionDto> StageCompositions { get; set; }
     }
 }

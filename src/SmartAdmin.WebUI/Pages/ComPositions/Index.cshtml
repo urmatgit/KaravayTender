@@ -187,7 +187,7 @@ onImportedSucceeded = "reloadData()"
         
         $(() => {
 
-			  clscomposition = new clsBaseTable("composition",'@Url.Page("/ComPositions/Index")');
+            clscomposition = new clsBaseTable("composition","clscomposition",'@Url.Page("/ComPositions/Index")');
             clscomposition.tblColumns= [
                 { field: 'Nomenclature.Category.Name', title: '@_localizer["Category"]', sortable: true, width: 130 },
                 { field: 'Nomenclature.Name', title: '@_localizer["Nomenclature"]', sortable: true, width: 100 },

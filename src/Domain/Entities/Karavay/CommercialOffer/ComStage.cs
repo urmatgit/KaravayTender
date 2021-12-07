@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Domain.Common;
 
@@ -29,7 +30,8 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         [Required]
         public int Deadline { get; set; }
         public int  ComOfferId { get; set; }
-        public ComOffer ComOffer { get; set; }
+        public  virtual ComOffer ComOffer { get; set; }
+        
         public virtual ICollection<StageComposition> StageCompositions { get; set; }
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new();

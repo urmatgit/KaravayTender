@@ -95,12 +95,19 @@ namespace SmartAdmin.WebUI
                     fv.ImplicitlyValidateRootCollectionElements = true;
                 })
                 .AddViewLocalization()
-                .AddJsonOptions(options =>
-                  {
-                      options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    var resolver = options.SerializerSettings.ContractResolver as DefaultContractResolver;
+                    resolver.NamingStrategy = null;
+                })
+                //.AddJsonOptions(options =>
+                //  {
+                //      options.JsonSerializerOptions.PropertyNamingPolicy = null;
 
 
-                  })
+
+                //  })
                 .AddRazorRuntimeCompilation();
 
 

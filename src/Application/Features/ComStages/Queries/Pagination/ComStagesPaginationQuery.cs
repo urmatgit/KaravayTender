@@ -17,12 +17,13 @@ using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
+using CleanArchitecture.Razor.Application.Common.Specification;
 
 namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.Pagination
 {
     public class ComStagesWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<ComStageDto>>
     {
-       
+        public int ComOfferId { get; set; } = 1;
     }
     
     public class ComStagesWithPaginationQueryHandler :
@@ -48,10 +49,25 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.Paginat
             //TODO:Implementing ComStagesWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<ComStage>(request.FilterRules);
            var data = await _context.ComStages.Where(filters)
+                .Specify(new FilterByComOfferQuerySpec(request.ComOfferId))
+                .Include(s=>s.StageCompositions)
+                .ThenInclude(c=>c.Contragent)
+                .Include(s => s.StageCompositions)
+                .ThenInclude(c => c.ComPosition)
                 .OrderBy($"{request.Sort} {request.Order}")
-                .ProjectTo<ComStageDto>(_mapper.ConfigurationProvider)
+                
                 .PaginatedDataAsync(request.Page, request.Rows);
-            return data;
+            var DataDto = _mapper.Map<IEnumerable<ComStageDto>>(data.rows);
+            return new PaginatedData<ComStageDto>( DataDto,data.total);
+        }
+        public class FilterByComOfferQuerySpec : Specification<ComStage>
+        {
+            public FilterByComOfferQuerySpec(int comOfferId)
+            {
+                Criteria = p => p.ComOfferId == comOfferId;
+            }
+
+
         }
     }
 }
