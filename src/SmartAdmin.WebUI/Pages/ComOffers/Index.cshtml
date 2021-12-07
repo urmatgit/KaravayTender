@@ -140,6 +140,7 @@ onImportedSucceeded = "reloadData()"
     <script type="text/javascript">
         let clscomposition = null;
         var currentEditRow = "";
+        var dgcomstage = {};
         var pagelink = '@Url.Page("/ComOffers/Index")';
         var translations = {
             SaveSuccess: '@_localizer["Save Success."]',
@@ -281,14 +282,48 @@ onImportedSucceeded = "reloadData()"
         })
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href");
-            if ((target == '#ComParticipant')) {
-                clsparticipant.ResizeGrid();
-
-            } else {
-                clscomposition.ResizeGrid();
+            switch (target) {
+                case '#ComParticipant':
+                    clsparticipant.ResizeGrid(); break;
+                case '#ComPosition':
+                    clscomposition.ResizeGrid(); break;
+                case '#ComState':
+                    
+                    $(`#comstage_dg`).datagrid('resize');
+                    break;
             }
+            //if ((target == '#ComParticipant')) {
+            //    clsparticipant.ResizeGrid();
+
+            //} else {
+            //    clscomposition.ResizeGrid();
+            //} 
+
 
         });
+        initdatagridComStage = (cdata, dataComStages) => {
+            dgcomstage = $(`#comstage_dg`).datagrid({
+                height: (window.innerHeight / 3),
+                method: 'GET',
+                rownumbers: false,
+                singleSelect: true,
+                selectOnCheck: false,
+                checkOnSelect: false,
+                pagination: true,
+                clientPaging: true,
+                remoteFilter: true,
+                sortName: "NomName",
+                sortOrder: 'desc',
+                pageSize: 15,
+                pageList: [10, 15, 30, 50, 100, 1000],
+                columns: [cdata],
+                data: dataComStages
+
+            });
+            
+            //.datagrid('load', `${this._pageLink}?handler=Data`);
+
+        }
 		$(() => {
             clscomposition = new clsBaseTable("composition","clscomposition",'@Url.Page("/ComPositions/Index")');
             tblColumns = [
@@ -466,7 +501,9 @@ onImportedSucceeded = "reloadData()"
             //});
 
             InitParticipantTable();
-        })
+            LoadComState();
+            
+            })
         function closePanel() {
             $('#table-page-content').show();
             $('#edit_panel').hide();
@@ -516,6 +553,46 @@ onImportedSucceeded = "reloadData()"
                     }
                 });
         });
+        //Comstage
+        function CuncatateField(val, rec) {
+
+        }
+        function LoadComState() {
+            axios.get('@Url.Page("/ComStages/Index")?handler=Data' )
+                .then(res => {
+                    console.log(JSON.parse(res.data));
+                    const jsonObj = JSON.parse(res.data, function (key, value) {
+                        if (typeof value === "string" &&
+                            value.startsWith("/Function(") &&
+                            value.endsWith(")/")) {
+                            value = value.substring(10, value.length - 2);
+                            var string = value.slice(value.indexOf("(") + 1, value.indexOf(")"));
+                            if (/\S+/g.test(string)) {
+                                return (new Function(string, value.slice(value.indexOf("{") + 1, value.lastIndexOf("}"))))
+
+                            } else {
+                                return (new Function(value.slice(value.indexOf("{") + 1, value.lastIndexOf("}"))));
+                            }
+
+                        }
+                        return value;
+                    });
+                    
+                    initdatagridComStage(jsonObj.header, jsonObj.dataRows);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    if (error.response.data.Errors) {
+                        const errors = error.response.data.Errors;
+                        errors.forEach(item => {
+                            toastr["error"](item);
+                        });
+                    } else {
+                        toastr["error"](`${translations.LoadFail},${error.response.data}`);
+                    }
+                });
+        }
+
 
     </script>
 }
