@@ -311,9 +311,10 @@ onImportedSucceeded = "reloadData()"
                 checkOnSelect: false,
                 pagination: true,
                 clientPaging: true,
-                remoteFilter: true,
+                remoteFilter: false,
+                remoteSort: false,
                 sortName: "NomName",
-                sortOrder: 'desc',
+                sortOrder: 'asc',
                 pageSize: 15,
                 pageList: [10, 15, 30, 50, 100, 1000],
                 columns: [cdata],
@@ -577,7 +578,7 @@ onImportedSucceeded = "reloadData()"
                         }
                         return value;
                     });
-                    
+                    $('#StageNumber').text(jsonObj.stage);
                     initdatagridComStage(jsonObj.header, jsonObj.dataRows);
                 })
                 .catch((error) => {

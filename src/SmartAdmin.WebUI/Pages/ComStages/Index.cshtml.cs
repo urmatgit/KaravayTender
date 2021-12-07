@@ -159,7 +159,9 @@ namespace SmartAdmin.WebUI.Pages.ComStages
             stringBuilderHeader.Append("\"width\":100,");
             stringBuilderHeader.Append("\"title\":\"Этап\"},");
                 stringBuilderHeader.Append("{\"field\":\"NomName\",");
-            stringBuilderHeader.Append("\"width\":100,");
+            stringBuilderHeader.Append("\"width\":180,");
+            stringBuilderHeader.Append("\"sortable\":true,");
+        
             stringBuilderHeader.Append("\"title\":\"Номерклатура\"},");
             
             StringBuilder stringBuilderPart = new StringBuilder();
@@ -172,7 +174,7 @@ namespace SmartAdmin.WebUI.Pages.ComStages
                 stringBuilderPart.AppendFormat("\"title\":\"{0} ({1})\",", part.Contragent.Name, status);
                 var priceColname = string.Format("ContName_{0}_price", part.Contragent.Id);
                 var priceColstatus = string.Format("ContName_{0}_status", part.Contragent.Id);
-                stringBuilderPart.AppendFormat("\"formatter\": \"/Function((one,two)=>{3} return two.{0} +' '+ two.{1} ;{2})/\"{2},", priceColname, priceColstatus, "}","{");
+                stringBuilderPart.AppendFormat("\"formatter\": \"/Function((one,two)=>{3} return (two.{0}==0 ? ' ': two.{0}) +' '+ (two.{1} ? 'да': 'нет') ;{2})/\"{2},", priceColname, priceColstatus, "}","{");
 
                 //stringBuilderPart.AppendFormat("{0}field:'ContName_{1}_price',","{", part.Contragent.Id);
                 //stringBuilderPart.Append("title:'Цена'},");
