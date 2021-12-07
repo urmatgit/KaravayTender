@@ -165,7 +165,7 @@ function openEditpanel(row) {
             });
 
         if (row.Status != 0) {
-            //SetReadOnlyForm();
+            SetReadOnlyForm();
         }
      
     }

@@ -256,6 +256,7 @@ onImportedSucceeded = "reloadData()"
                 clscomposition.HideAction();
                 clsparticipant.HideAction();
             }
+            LoadComState();
         })
         $('#InputPos_NomenclatureId').change(function () {
             var nomenId = $(this).val();
@@ -502,7 +503,7 @@ onImportedSucceeded = "reloadData()"
             //});
 
             InitParticipantTable();
-            LoadComState();
+            
             
             })
         function closePanel() {
@@ -559,7 +560,7 @@ onImportedSucceeded = "reloadData()"
 
         }
         function LoadComState() {
-            axios.get('@Url.Page("/ComStages/Index")?handler=Data' )
+            axios.get('@Url.Page("/ComStages/Index")?handler=Data&state=' + 1 + "&comofferid=" +currentEditRow.Id )
                 .then(res => {
                     console.log(JSON.parse(res.data));
                     const jsonObj = JSON.parse(res.data, function (key, value) {
