@@ -136,7 +136,24 @@ namespace SmartAdmin.WebUI.Pages.ComStages
 
             return new JsonResult($"[{stringBuilder.ToString().TrimEnd(',')}]");
         }
-        public async Task<IActionResult> OnGetDataAsync([FromQuery] int stage=1,int comofferid=1)
+        public async Task<IActionResult> OnGetDataAsync([FromQuery] int stage = 1, int comofferid = 1)
+        {
+            var result = await _mediator.Send(new GetByComOfferIdQuery { Stage = stage, ComOfferId = comofferid });
+            if (result is null)
+            {
+                return new JsonResult("");
+            }
+            var Nomenclatures = result.GroupBy(c =>c.Number).GroupBy(c=>c.  new { c.ComPosition, c.ComStage }).Select(c => new
+            {
+                ComPosition = c.Key.ComPosition,
+                comStage = c.Key.ComStage,
+                stageNumber = result.Number,
+                participients = c.ToList(),
+
+            });
+            return new JsonResult("");
+        }
+        public async Task<IActionResult> OnGetDataAsyncOld([FromQuery] int stage=1,int comofferid=1)
         {
             // throw new Exception("Test log error 222 !!!!!!");
 

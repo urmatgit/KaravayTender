@@ -24,14 +24,14 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
         public int Stage { get; set; }
         public int ComOfferId { get; set; }
     }
-    public class GetByIdComOfferIdQuery : IRequest<IEnumerable<ComStageDto>>
+    public class GetByComOfferIdQuery : IRequest<IEnumerable<ComStageDto>>
     {
         public int Stage { get; set; }
         public int ComOfferId { get; set; }   
     }
     public class GetByIdComStageQueryHandler :
         IRequestHandler<GetByStageQuery, ComStageDto>,
-        IRequestHandler<GetByIdComOfferIdQuery, IEnumerable<ComStageDto>>
+        IRequestHandler<GetByComOfferIdQuery, IEnumerable<ComStageDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -63,7 +63,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
             return dataDto;
         }
 
-        public async Task<IEnumerable<ComStageDto>> Handle(GetByIdComOfferIdQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ComStageDto>> Handle(GetByComOfferIdQuery request, CancellationToken cancellationToken)
         {
             var data =await _context.ComStages
                  .Specify( new FilterByComOfferQuerySpec(request.Stage, request.ComOfferId))

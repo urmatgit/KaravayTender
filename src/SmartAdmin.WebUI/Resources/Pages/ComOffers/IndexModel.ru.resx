@@ -276,6 +276,9 @@
   <data name="Requirement" xml:space="preserve">
     <value>требования</value>
   </data>
+  <data name="Run" xml:space="preserve">
+    <value>Запуск</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Сохранить</value>
   </data>
