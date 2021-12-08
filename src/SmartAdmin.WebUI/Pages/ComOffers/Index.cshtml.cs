@@ -35,6 +35,7 @@ using CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Paginati
 using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.AddEdit;
 using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.Import;
 using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create;
+using CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
@@ -147,8 +148,12 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                     Deadline = deadline
                 };
                  var result = await _mediator.Send(CreateState1);
+                if (result.Succeeded)
+                {
+                    result = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting });
+                }
                 return new JsonResult(result);
-                return new JsonResult("OK");
+                //return new JsonResult("OK");
             }
             catch (ValidationException ex)
             {

@@ -45,9 +45,21 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
         }
         public async Task<Result<int>> Handle(CreateComStageCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing CreateComStageCommandHandler method 
-           var item = _mapper.Map<ComStage>(request);
-           _context.ComStages.Add(item);
+            //TODO:Implementing CreateComStageCommandHandler method
+            
+            var item = await _context.ComStages.FirstOrDefaultAsync(c => c.ComOfferId == request.ComOfferId && c.Number == request.Number,cancellationToken);
+            if (item != null)
+            {
+                if (item.Deadline != request.Deadline)
+                {
+                    item.Deadline = request.Deadline;
+                }
+            }
+            else
+            {
+                  item = _mapper.Map<ComStage>(request);
+                _context.ComStages.Add(item);
+            }
            await _context.SaveChangesAsync(cancellationToken);
             var stageComResult = await _mediator.Send(new CreateStageCompositionsCommand() { ComOfferId = request.ComOfferId, ComStageId = item.Id });
             if (!stageComResult.Succeeded)

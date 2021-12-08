@@ -26,7 +26,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
     }
     public class GetByIdComOfferIdQuery : IRequest<IEnumerable<ComStageDto>>
     {
-     public int ComOfferId { get; set; }   
+        public int Stage { get; set; }
+        public int ComOfferId { get; set; }   
     }
     public class GetByIdComStageQueryHandler :
         IRequestHandler<GetByStageQuery, ComStageDto>,
@@ -65,7 +66,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
         public async Task<IEnumerable<ComStageDto>> Handle(GetByIdComOfferIdQuery request, CancellationToken cancellationToken)
         {
             var data =await _context.ComStages
-                 .Specify(new FilterByComOfferQuerySpec(request.ComOfferId))
+                 .Specify( new FilterByComOfferQuerySpec(request.Stage, request.ComOfferId))
                  .Include(s => s.StageCompositions)
                 .ThenInclude(c => c.Contragent)
                 .Include(s => s.StageCompositions)
@@ -86,14 +87,24 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
             {
                 Criteria = p => p.ComOfferId == comOfferId;
             }
-
+            public FilterByComOfferQuerySpec(int stage, int comOfferId)
+            {
+                if (stage==0)
+                    Criteria = p => p.ComOfferId == comOfferId;
+                else
+                    Criteria = p => p.Number == stage && p.ComOfferId == comOfferId;
+            }
 
         }
         public class FilterByStageQuerySpec : Specification<ComStage>
         {
             public FilterByStageQuerySpec(int stage, int comOfferId)
             {
-                Criteria = p =>  p.Number == stage && p.ComOfferId==comOfferId;
+                
+                if (stage == 0)
+                    Criteria = p => p.ComOfferId == comOfferId;
+                else
+                    Criteria = p => p.Number == stage && p.ComOfferId == comOfferId;
             }
             public FilterByStageQuerySpec( int comOfferId)
             {

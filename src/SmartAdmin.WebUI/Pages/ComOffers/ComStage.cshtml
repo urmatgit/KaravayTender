@@ -22,23 +22,30 @@
 
 <div class="card mb-g">
     <div class="card-header bg-white d-flex align-items-center">
-        <div class="col-md-3 row" >
+        <div class="col-md-3 row">
             <h5>@_localizerStage["Stage"] </h5> <h5 class="ml-2" id="StageNumber">0</h5>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
             <div class="custom-control custom-radio-rounded custom-control-inline">
-                <input type="radio" class="custom-control-input" id="lastOffer" name="GetStageType" checked="" value="1" >
+                <input type="radio" class="custom-control-input" id="lastOffer" name="GetStageType" checked="" value="1">
                 <label class="custom-control-label" for="lastOffer">@_localizerStage["Last offer"]</label>
             </div>
             <div class="custom-control custom-radio-rounded custom-control-inline">
-                <input type="radio" class="custom-control-input" id="StepbyStepOffer" name="GetStageType"  value="0">
+                <input type="radio" class="custom-control-input" id="StepbyStepOffer" name="GetStageType" value="0">
                 <label class="custom-control-label" for="StepbyStepOffer">@_localizerStage["Step-by-Step offer"]</label>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="ml-auto">
+        <div class="col-md-2 "  style="text-align:right">
+            <label class="form-label " for="deadLine">@_localizerStage["Срок ответа"] </label>
+        </div>
+            <div class="col-md-2 ">
+            
+                <input type="number" id="deadLine" class="form-control" placeholder="@_localizerStage["Срок"]" step="1" readonly />
+            </div>
+            @*<div class="col-md-2">
+                <div class="ml-auto">
 
-                @if (_canSearch.Succeeded)
+                    @if (_canSearch.Succeeded)
                 {
                     <a role="button" class="btn btn-sm btn-outline-primary" id="participant_searchbutton">
                         <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
@@ -47,21 +54,21 @@
                 }
 
 
-            </div>
+                </div>
+            </div>*@
         </div>
-    </div>
-    <div class="card-body">
-        <div class="row">
+        <div class="card-body">
+            <div class="row">
 
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <table id="comstage_dg">
-                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="comstage_dg">
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 

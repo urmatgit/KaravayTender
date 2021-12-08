@@ -61,7 +61,10 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
                             Status = true,
                             Price = 0
                         };
-                        stageComs.Add(StageCom);
+                        //dc.ComStageId, dc.ContragentId,dc.ComPositionId
+                        var exist = await _context.StageCompositions.FindAsync(new object[] { request.ComStageId,participant.ContragentId,position.Id },cancellationToken);
+                        if (exist==null)
+                            stageComs.Add(StageCom);
                     }
                 }
                 if (stageComs.Count > 0)

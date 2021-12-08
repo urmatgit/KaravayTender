@@ -21,13 +21,8 @@
           "icon": "fal fa-comments-alt-dollar",
           "href": "comoffers_index.html",
           "roles": []
-        },
-        {
-          "title": "Коммерческие предложения Этапы КП",
-          "icon": "fal fa-comments-alt-dollar",
-          "href": "comstages_index.html",
-          "roles": []
         }
+        
       ]
     },
     {

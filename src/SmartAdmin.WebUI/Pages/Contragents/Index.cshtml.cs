@@ -69,6 +69,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public RejectFormModel RejectModel { get; set; }
 
         [BindProperty]
+        [Required(ErrorMessage ="file empty")]
         public List<IFormFile> Files { get; set; }
         [BindProperty]
         public string CategoryIds { get; set; }

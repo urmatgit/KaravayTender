@@ -275,7 +275,9 @@
 
 		})
         $('#contragent_form  :submit').click(function (e) {
-                    const form = document.querySelector('#contragent_form');
+            const form = document.querySelector('#contragent_form');
+            $(form).validate().settings.ignore = ".ignore";
+                
                     if ($(form).valid() === false) {
                         form.classList.add('was-validated');
                     } else {

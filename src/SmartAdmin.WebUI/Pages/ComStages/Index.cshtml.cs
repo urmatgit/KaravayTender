@@ -141,9 +141,14 @@ namespace SmartAdmin.WebUI.Pages.ComStages
             // throw new Exception("Test log error 222 !!!!!!");
 
             var result = await _mediator.Send(new GetByStageQuery { Stage = stage, ComOfferId = comofferid });
-            var Nomenclatures = result.StageCompositions.GroupBy(c => c.ComPosition).Select(c => new
+            if (result is null)
             {
-                ComPosition = c.Key,
+                return new JsonResult("");
+            }
+            var Nomenclatures = result.StageCompositions.GroupBy(c => new { c.ComPosition, c.ComStage } ).Select(c => new
+            {
+                ComPosition = c.Key.ComPosition,
+                comStage=c.Key.ComStage,
                 stageNumber=result.Number,
                 participients = c.ToList(),
 
@@ -189,6 +194,7 @@ namespace SmartAdmin.WebUI.Pages.ComStages
 
             string resultSjong = "{" +
                 $"\"stage\" : {(stage==1 ? "1": "")},"+
+                $"\"deadline\" : {result.Deadline}," +
                 "\"header\": [" + stringBuilderHeader.ToString()+"]," ;
             stringBuilderHeader.Clear();
             //var result = await _mediator.Send(command);
