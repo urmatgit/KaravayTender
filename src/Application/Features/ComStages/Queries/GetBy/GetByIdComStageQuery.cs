@@ -93,9 +93,12 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
         {
             public FilterByStageQuerySpec(int stage, int comOfferId)
             {
-                Criteria = p => p.Number == stage && p.ComOfferId==comOfferId;
+                Criteria = p =>  p.Number == stage && p.ComOfferId==comOfferId;
             }
-
+            public FilterByStageQuerySpec( int comOfferId)
+            {
+                Criteria = p => p.ComOfferId == comOfferId;
+            }
 
         }
     }

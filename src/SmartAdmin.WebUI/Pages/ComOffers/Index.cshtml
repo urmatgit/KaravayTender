@@ -241,6 +241,9 @@ onImportedSucceeded = "reloadData()"
         $('#startbutton').click(function () {
             alert("Start");
         });
+        $("input[name=GetStageType]:radio").change(function () {
+            LoadComState();
+        });
         $("#edit_panel").on("ShowEdit", function (event) {
             let comofferid = 0;
             if (currentEditRow) {
@@ -560,7 +563,8 @@ onImportedSucceeded = "reloadData()"
 
         }
         function LoadComState() {
-            axios.get('@Url.Page("/ComStages/Index")?handler=Data&state=' + 1 + "&comofferid=" +currentEditRow.Id )
+            let StageType= $('input[name="GetStageType"]:checked').val();
+            axios.get('@Url.Page("/ComStages/Index")?handler=Data&stage=' + StageType + "&comofferid=" +currentEditRow.Id )
                 .then(res => {
                     console.log(JSON.parse(res.data));
                     const jsonObj = JSON.parse(res.data, function (key, value) {
