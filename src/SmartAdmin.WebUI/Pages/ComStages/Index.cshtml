@@ -143,22 +143,31 @@ onImportedSucceeded = "reloadData()"
 
         ]
 		 
-        var cdata =[ [
-            { field: "StageNumber", title: "Этап" },
-            { field: "NomName", title: "Номерклатура"},
-            {
-                field: "ContName_2", title: "name2 (Участвует)", formatter: function (val, rec) {
-                    return `${rec.ContName_2_price} ${rec.ContName_2_status}`;
-                }    },
+        var cdata = [[
+            { field: "StageNumber", title: "Этап", rowspan: 2 ,width:100},
+            { field: "NomName", title: "Номерклатура", rowspan: 2, width: 100},
+            { field: "ContName_2", title: "name2 (Участвует)", colspan: 2,border:true},
             
-            { field: "ContName_3", title: "name1 (Участвует)"},
+            { field: "ContName_3", title: "name3 (Участвует)", colspan: 2},
+                
+
+
+            {
+                field: "ContName_4", title: "name13 (Участвует)", colspan: 2},
+                
 
             
-        
-            { field: "ContName_4", title: "name13 (Участвует)"},
+            ],
+            [
+                { field: "ContName_2_price", title: "Прайс2", width: 100 },
+                { field: "ContName_2_status", title: "Статус2", checkbox: true, width: 100 },
+                { field: "ContName_3_price", title: "Прайс3", width: 100},
+                { field: "ContName_3_status", title: "Статус3", formatter: checkboxformatter, width: 100 },
+                { field: "ContName_4_price", title: "Прайс4", width: 100 },
+                { field: "ContName_4_status", title: "Статус4", formatter: checkboxformatter, width: 100},
+            ],
             
-        
-        ]];
+            ];
         var data = [
             {
                 StageNumber: 1,
@@ -192,17 +201,24 @@ onImportedSucceeded = "reloadData()"
             dgcomstage = $(`#comstage_dg`).datagrid({
                 height: (window.innerHeight / 3),
                 method: 'GET',
-                rownumbers: false,
+                rownumbers: true,
                 singleSelect: true,
                 selectOnCheck: false,
                 checkOnSelect: false,
                 pagination: true,
+                border: true,
                 clientPaging: false,
                 remoteFilter: true,
                 sortName: this._defaultSortName,
                 sortOrder: 'desc',
                 pageSize: 15,
                 pageList: [10, 15, 30, 50, 100, 1000],
+                onLoadSuccess: function (data) {
+                    var panel = $(this).datagrid("getPanel");
+                    var myheaderCol = panel.find("div.datagrid-header td");
+                    // here is to add the css style
+                    //myheaderCol.css("border-", "1px solid #000");
+                },
                 columns: cdata,
                 data: data
 

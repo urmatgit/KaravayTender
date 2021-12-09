@@ -40,6 +40,7 @@
         .composition_dg_datagrid-cell-c2-_action {
             overflow: visible !important
         }
+
         .participant_dg_datagrid-cell-c3-_action {
             overflow: visible !important
         }
@@ -54,32 +55,32 @@
         <div class="ml-auto">
             @if (_canStart.Succeeded)
             {
-                <button class="btn btn-sm btn-outline-primary " id="startbutton">
-                    <span class="@(Settings.Theme.IconPrefix) fa-bolt mr-1"></span>
-                    @_localizer["Start"]
-                </button>
+            <button class="btn btn-sm btn-outline-primary " id="startbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-bolt mr-1"></span>
+                @_localizer["Start"]
+            </button>
             }
 
             @if (_canCreate.Succeeded)
             {
-                <button class="btn btn-sm btn-outline-primary " id="addbutton">
-                    <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
-                    @_localizer["Add"]
-                </button>
+            <button class="btn btn-sm btn-outline-primary " id="addbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
+                @_localizer["Add"]
+            </button>
             }
             @if (_canDelete.Succeeded)
             {
-                <button class="btn btn-sm btn-outline-danger" disabled id="deletebutton">
-                    <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
-                    @_localizer["Delete"]
-                </button>
+            <button class="btn btn-sm btn-outline-danger" disabled id="deletebutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
+                @_localizer["Delete"]
+            </button>
             }
             @if (_canSearch.Succeeded)
             {
-                <button class="btn btn-sm btn-outline-primary " id="searchbutton">
-                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
-                    @_localizer["Search"]
-                </button>
+            <button class="btn btn-sm btn-outline-primary " id="searchbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                @_localizer["Search"]
+            </button>
             }
             @*@if (_canImport.Succeeded)
                 {
@@ -97,10 +98,10 @@
                 }*@
             @if (_canExport.Succeeded)
             {
-                <button class="btn btn-sm btn-outline-primary " id="exportbutton">
-                    <span class="@(Settings.Theme.IconPrefix) fa-download mr-1"></span>
-                    @_localizer["Export Excel"]
-                </button>
+            <button class="btn btn-sm btn-outline-primary " id="exportbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-download mr-1"></span>
+                @_localizer["Export Excel"]
+            </button>
             }
         </div>
     </div>
@@ -133,7 +134,7 @@ onImportedSucceeded = "reloadData()"
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/select2/select2.bundle.js"></script>
-
+    <script src="~/js/ComStageTable.js"></script>
     <script src="~/js/TableBaseComOffer.js"></script>
     <script src="~/js/TableBaseClass.js"></script>
     <script src="~/js/TableComParticipant.js"></script>
@@ -292,7 +293,7 @@ onImportedSucceeded = "reloadData()"
                 case '#ComPosition':
                     clscomposition.ResizeGrid(); break;
                 case '#ComState':
-                    
+
                     $(`#comstage_dg`).datagrid('resize');
                     break;
             }
@@ -301,7 +302,7 @@ onImportedSucceeded = "reloadData()"
 
             //} else {
             //    clscomposition.ResizeGrid();
-            //} 
+            //}
 
 
         });
@@ -325,7 +326,7 @@ onImportedSucceeded = "reloadData()"
                 data: dataComStages
 
             });
-            
+
             //.datagrid('load', `${this._pageLink}?handler=Data`);
 
         }
@@ -506,8 +507,8 @@ onImportedSucceeded = "reloadData()"
             //});
 
             InitParticipantTable();
-            
-            
+
+
             })
         function closePanel() {
             $('#table-page-content').show();
@@ -562,7 +563,7 @@ onImportedSucceeded = "reloadData()"
         function CuncatateField(val, rec) {
 
         }
-    
+
 
 
     </script>

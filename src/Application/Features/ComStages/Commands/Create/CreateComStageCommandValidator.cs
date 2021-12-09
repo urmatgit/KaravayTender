@@ -1,3 +1,4 @@
+using System;
 using FluentValidation;
 
 namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
@@ -11,6 +12,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
                  .NotEmpty().NotEqual(0);
             RuleFor(v=>v.Deadline)
                  .NotEmpty().NotEqual(0);
+            RuleFor(v => v.DeadlineDate)
+                 .NotEmpty().NotEqual(default(DateTime));
             //throw new System.NotImplementedException();
         }
     }

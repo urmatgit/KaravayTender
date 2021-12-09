@@ -41,6 +41,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Text;
 using CleanArchitecture.Razor.Application.Common.Extensions;
+using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
+using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
+using CleanArchitecture.Razor.Application.Features.ComPositions.DTOs;
+using CleanArchitecture.Razor.Application.Features.ComOffers.DTOs;
+using CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs;
+using CleanArchitecture.Razor.Domain.Enums;
+using CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCross;
 
 namespace SmartAdmin.WebUI.Pages.ComStages
 {
@@ -138,20 +145,100 @@ namespace SmartAdmin.WebUI.Pages.ComStages
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] int stage = 1, int comofferid = 1)
         {
-            var result = await _mediator.Send(new GetByComOfferIdQuery { Stage = stage, ComOfferId = comofferid });
-            if (result is null)
+            var result = await _mediator.Send(new GetComOfferCrossStages { Stage = stage, ComOfferId = comofferid });
+            if (!result.Succeeded)
             {
                 return new JsonResult("");
             }
-            var Nomenclatures = result.GroupBy(c =>c.Number).GroupBy(c=>c.  new { c.ComPosition, c.ComStage }).Select(c => new
-            {
-                ComPosition = c.Key.ComPosition,
-                comStage = c.Key.ComStage,
-                stageNumber = result.Number,
-                participients = c.ToList(),
+            return new JsonResult(result.Data);
+            //var contragents = from s in result
+            //                  from c in s.StageCompositions
+            //                  group s by c.Contragent into contrs
+            //                  select contrs.Key;
 
-            });
-            return new JsonResult("");
+            //var ParticipantsDic = result.GroupBy(r => r.ComOffer).Select(g => g.Key)
+            //                    .FirstOrDefault().ComParticipants.ToDictionary(k =>k.ContragentId,v=>v.Status);
+
+            //var Participants = from c in result.GroupBy(r => r.ComOffer).Select(g => g.Key).FirstOrDefault().ComParticipants
+            //                   select new
+            //                   {
+            //                       id = c.ContragentId,
+            //                       status = c.Status
+            //                   };
+            //var status = from s in contragents
+            //             join p in Participants on s.Id equals p.id into ps
+            //             from p in ps.DefaultIfEmpty()
+            //             select new ForTableHeader
+            //             {
+            //                 Contragent = s,
+            //                 ParticipantStatus = p == null ? "" : p.status.ToDescriptionString() 
+            //             };
+            //if (status?.Count()>0)
+            //{
+            //    //Create header json
+                
+               
+
+
+
+
+            //    var header = CreateHeaderEasy(status);
+            //    string resultSjong = "{" +
+            //   $"\"stage\" : 0," +
+            //   $"\"deadline\" : 0," +
+            //   "\"header\":["+ header+"], \"dataRows\":[]}";
+            //    return new JsonResult(new
+            //    {
+            //        headertbl = header,
+
+            //    });
+            //}
+            
+           // return new JsonResult("");
+        }
+        private string[] CreateHeaderEasy(IEnumerable<ForTableHeader> contragents)
+        {
+        
+            return contragents.Select(c => $"{c.Contragent.Name}({c.ParticipantStatus}) ").ToArray();
+        }
+        private string CreateHeader(IEnumerable<ForTableHeader> contragents)
+        {
+            StringBuilder stringBuilderHeader = new StringBuilder();
+
+            stringBuilderHeader.Append('{');
+            stringBuilderHeader.Append($"\"field\":\"StageNumber\",");
+            stringBuilderHeader.Append("\"width\":100,");
+            stringBuilderHeader.Append("\"title\":\"Этап\"},");
+            stringBuilderHeader.Append("{\"field\":\"NomName\",");
+            stringBuilderHeader.Append("\"width\":180,");
+            stringBuilderHeader.Append("\"sortable\":true,");
+
+            stringBuilderHeader.Append("\"title\":\"Номерклатура\"},");
+
+            StringBuilder stringBuilderPart = new StringBuilder();
+            
+            foreach (var contr in contragents)
+            {
+                var status = contr.ParticipantStatus;
+                stringBuilderPart.AppendFormat("{0}\"field\":\"ContName_{1}\",", "{", contr.Contragent.Id);
+                stringBuilderPart.Append("\"width\":120,");
+                stringBuilderPart.AppendFormat("\"title\":\"{0} ({1})\"{2},", contr.Contragent.Name, status,"}");
+                var priceColname = string.Format("ContName_{0}_price", contr.Contragent.Id);
+                var priceColstatus = string.Format("ContName_{0}_status", contr.Contragent.Id);
+                //stringBuilderPart.AppendFormat("\"formatter\": \"/Function((one,two)=>{3} return (two.{0}==0 ? ' ': two.{0}) +' '+ (two.{1} ? 'да': 'нет') ;{2})/\"{2},", priceColname, priceColstatus, "}", "{");
+
+                stringBuilderPart.AppendFormat("{0}\"field\":\"ContName_{1}_price\",", "{", contr.Contragent.Id);
+                stringBuilderPart.Append("\"width\":120,");
+                stringBuilderPart.Append("\"title\":\"Цена\"},");
+                stringBuilderPart.AppendFormat("{0}\"field\":\"ContName_{1}_status\",", "{", contr.Contragent.Id);
+                stringBuilderPart.Append("\"width\":120,");
+                stringBuilderPart.Append("\"title\":\"Статус\"},");
+
+            }
+            stringBuilderHeader.Append(stringBuilderPart.ToString().TrimEnd(','));
+
+            stringBuilderPart.Clear();
+            return  "\"header\": [" + stringBuilderHeader.ToString() + "]";
         }
         public async Task<IActionResult> OnGetDataAsyncOld([FromQuery] int stage=1,int comofferid=1)
         {
@@ -170,10 +257,7 @@ namespace SmartAdmin.WebUI.Pages.ComStages
                 participients = c.ToList(),
 
             });
-            string checkboxStr = "<div class='custom-control custom-checkbox'>" +
-                       "<input type='checkbox' class='custom-control-input' name='defaultCheckedDisabled' checked='checked' disabled=''>" +
-                       "<label class='custom-control-label' for='defaultCheckedDisabled'></label>" +
-                      "</div>";
+            
             StringBuilder stringBuilderHeader = new StringBuilder();
             
                 stringBuilderHeader.Append('{');
@@ -308,6 +392,7 @@ namespace SmartAdmin.WebUI.Pages.ComStages
             }
         }
 
+        
         #region other
         
 

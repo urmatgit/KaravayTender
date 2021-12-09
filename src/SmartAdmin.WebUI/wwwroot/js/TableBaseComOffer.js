@@ -28,7 +28,7 @@ $('#startStage').click(function (e) {
         //title: `На портале ОАО "КАРАВАЙ" по работе с поставщиками появилась возможность \n предоставить ценовое предложение по лоту № ${currentEditRow.Number}.
         //          Просим предоставить Ваши предложения пройдя по ссылке ___` ,
         title: 'Срок предоставления до',
-        inputType: 'number',
+        inputType: 'date',
         buttons: {
             confirm: {
                 label: `${translations.Ok}`, //'@_localizer["Yes"]',
@@ -59,27 +59,28 @@ function LoadComState() {
     let StageType = $('input[name="GetStageType"]:checked').val();
     axios.get(`/ComStages/Index?handler=Data&stage=` + StageType + "&comofferid=" + currentEditRow.Id)
         .then(res => {
-            console.log(JSON.parse(res.data));
-            const jsonObj = JSON.parse(res.data, function (key, value) {
-                if (typeof value === "string" &&
-                    value.startsWith("/Function(") &&
-                    value.endsWith(")/")) {
-                    value = value.substring(10, value.length - 2);
-                    var string = value.slice(value.indexOf("(") + 1, value.indexOf(")"));
-                    if (/\S+/g.test(string)) {
-                        return (new Function(string, value.slice(value.indexOf("{") + 1, value.lastIndexOf("}"))))
-
-                    } else {
-                        return (new Function(value.slice(value.indexOf("{") + 1, value.lastIndexOf("}"))));
-                    }
-
-                }
-                return value;
-            });
-            $('#StageNumber').text(jsonObj.stage);
-            $('#deadLine').val(jsonObj.deadline);
             
-            initdatagridComStage(jsonObj.header, jsonObj.dataRows);
+            
+            //    , function (key, value) {
+            //    if (typeof value === "string" &&
+            //        value.startsWith("/Function(") &&
+            //        value.endsWith(")/")) {
+            //        value = value.substring(10, value.length - 2);
+            //        var string = value.slice(value.indexOf("(") + 1, value.indexOf(")"));
+            //        if (/\S+/g.test(string)) {
+            //            return (new Function(string, value.slice(value.indexOf("{") + 1, value.lastIndexOf("}"))))
+
+            //        } else {
+            //            return (new Function(value.slice(value.indexOf("{") + 1, value.lastIndexOf("}"))));
+            //        }
+
+            //    }
+            //    return value;
+            //});
+            //$('#StageNumber').text(jsonObj.stage);
+            //$('#deadLine').val(jsonObj.deadline);
+            
+            initdatagridComStage(tblStageColumns, jsonObj.dataRows);
         })
         .catch((error) => {
             console.log(error);

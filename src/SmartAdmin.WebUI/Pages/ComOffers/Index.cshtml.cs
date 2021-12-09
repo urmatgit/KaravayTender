@@ -145,7 +145,7 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 {
                     ComOfferId = Input.Id,
                     Number = 1,
-                    Deadline = deadline
+                    Deadline =  deadline
                 };
                  var result = await _mediator.Send(CreateState1);
                 if (result.Succeeded)

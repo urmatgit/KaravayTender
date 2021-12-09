@@ -29,6 +29,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         /// </summary>
         [Required]
         public int Deadline { get; set; }
+        public DateTime DeadlineDate { get; set; }
         public int  ComOfferId { get; set; }
         public  virtual ComOffer ComOffer { get; set; }
         
