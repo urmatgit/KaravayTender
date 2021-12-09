@@ -80,7 +80,7 @@ function LoadComState() {
             //$('#StageNumber').text(jsonObj.stage);
             //$('#deadLine').val(jsonObj.deadline);
             
-            initdatagridComStage(tblStageColumns, jsonObj.dataRows);
+            initdatagridComStage(tblStageColumns, [[]]);
         })
         .catch((error) => {
             console.log(error);
