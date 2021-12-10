@@ -45,7 +45,7 @@ $('#startStage').click(function (e) {
 
             SubmitForm("?handler=Run&deadline=" + result, function () {
                 SetReadOnlyForm();
-                LoadComState();
+                LoadComState(currentEditRow.Id);
             });
             
         }
@@ -55,45 +55,7 @@ $('#startStage').click(function (e) {
     
 
 });
-function LoadComState() {
-    let StageType = $('input[name="GetStageType"]:checked').val();
-    axios.get(`/ComStages/Index?handler=Data&stage=` + StageType + "&comofferid=" + currentEditRow.Id)
-        .then(res => {
-            
-            
-            //    , function (key, value) {
-            //    if (typeof value === "string" &&
-            //        value.startsWith("/Function(") &&
-            //        value.endsWith(")/")) {
-            //        value = value.substring(10, value.length - 2);
-            //        var string = value.slice(value.indexOf("(") + 1, value.indexOf(")"));
-            //        if (/\S+/g.test(string)) {
-            //            return (new Function(string, value.slice(value.indexOf("{") + 1, value.lastIndexOf("}"))))
 
-            //        } else {
-            //            return (new Function(value.slice(value.indexOf("{") + 1, value.lastIndexOf("}"))));
-            //        }
-
-            //    }
-            //    return value;
-            //});
-            //$('#StageNumber').text(jsonObj.stage);
-            //$('#deadLine').val(jsonObj.deadline);
-            
-            initdatagridComStage(tblStageColumns, [[]]);
-        })
-        .catch((error) => {
-            console.log(error);
-            if (error.response.data.Errors) {
-                const errors = error.response.data.Errors;
-                errors.forEach(item => {
-                    toastr["error"](item);
-                });
-            } else {
-                toastr["error"](`${translations.LoadFail},${error.response.data}`);
-            }
-        });
-}
 function SetReadOnlyForm() {
     const form = document.querySelector('#edit_form_panel');
     for (var i = 0, fLen = form.length; i < fLen; i++) {

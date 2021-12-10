@@ -141,7 +141,7 @@ onImportedSucceeded = "reloadData()"
     <script type="text/javascript">
         let clscomposition = null;
         var currentEditRow = "";
-        var dgcomstage = {};
+        
         var pagelink = '@Url.Page("/ComOffers/Index")';
         var translations = {
             SaveSuccess: '@_localizer["Save Success."]',
@@ -243,7 +243,7 @@ onImportedSucceeded = "reloadData()"
             alert("Start");
         });
         $("input[name=GetStageType]:radio").change(function () {
-            LoadComState();
+            LoadComState(currentEditRow.Id);
         });
         $("#edit_panel").on("ShowEdit", function (event) {
             let comofferid = 0;
@@ -260,7 +260,7 @@ onImportedSucceeded = "reloadData()"
                 clscomposition.HideAction();
                 clsparticipant.HideAction();
             }
-            LoadComState();
+            LoadComState(comofferid);
         })
         $('#InputPos_NomenclatureId').change(function () {
             var nomenId = $(this).val();
@@ -306,30 +306,11 @@ onImportedSucceeded = "reloadData()"
 
 
         });
-        initdatagridComStage = (cdata, dataComStages) => {
-            dgcomstage = $(`#comstage_dg`).datagrid({
-                height: (window.innerHeight / 3),
-                method: 'GET',
-                rownumbers: false,
-                singleSelect: true,
-                selectOnCheck: false,
-                checkOnSelect: false,
-                pagination: true,
-                clientPaging: true,
-                remoteFilter: false,
-                remoteSort: false,
-                sortName: "NomName",
-                sortOrder: 'asc',
-                pageSize: 15,
-                pageList: [10, 15, 30, 50, 100, 1000],
-                columns: [cdata],
-                data: dataComStages
-
-            });
+        
 
             //.datagrid('load', `${this._pageLink}?handler=Data`);
 
-        }
+        
 		$(() => {
             clscomposition = new clsBaseTable("composition","clscomposition",'@Url.Page("/ComPositions/Index")');
             tblColumns = [

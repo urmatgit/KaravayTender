@@ -13,5 +13,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.DTOs
     {
         public string[] Header { get; set; }
         public object Body { get; set; }
+
+        public int CurrentStage { get; set; }
     }
 }

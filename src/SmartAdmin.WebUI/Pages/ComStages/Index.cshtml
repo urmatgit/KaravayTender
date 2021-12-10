@@ -43,12 +43,12 @@
         </div>
         <div class="col-md-6">
             <div class="custom-control custom-radio-rounded custom-control-inline">
-                <input type="radio" class="custom-control-input" asp-for="TypeOffer" checked="" value="0">
-                <label class="custom-control-label" for="defaultInline1Radio">@_localizerStage["Last offer"]</label>
+                <input type="radio" class="custom-control-input" id="lastOffer" name="GetStageType" checked="" value="1">
+                <label class="custom-control-label" for="lastOffer">@_localizerStage["Last offer"]</label>
             </div>
             <div class="custom-control custom-radio-rounded custom-control-inline">
-                <input type="radio" class="custom-control-input" asp-for="TypeOffer" value="1">
-                <label class="custom-control-label" for="defaultInline2Radio">@_localizerStage["Step-by-Step offer"]</label>
+                <input type="radio" class="custom-control-input" id="StepbyStepOffer" name="GetStageType" value="0">
+                <label class="custom-control-label" for="StepbyStepOffer">@_localizerStage["Step-by-Step offer"]</label>
             </div>
         </div>
         <div class="col-md-3">
@@ -56,10 +56,10 @@
 
                 @if (_canSearch.Succeeded)
                 {
-                    <a role="button" class="btn btn-sm btn-outline-primary" id="participant_searchbutton">
-                        <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
-                        @_localizer["Search"]
-                    </a>
+                <a role="button" class="btn btn-sm btn-outline-primary" id="participant_searchbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                    @_localizer["Search"]
+                </a>
                 }
 
 
@@ -93,6 +93,7 @@ onImportedSucceeded = "reloadData()"
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/ComStageTable.js"></script>
     <script src="~/js/TableBaseClass.js"></script>
 
     <script type="text/javascript">
@@ -142,109 +143,23 @@ onImportedSucceeded = "reloadData()"
             }
 
         ]
-        var tblStageColumns = [[
-            { field: 'Nomenclature', title: 'Позиция', sortable: true, width: 130, rowspan: 2 },
-            { field: 'Stage', title: 'Этап', sortable: true, width: 100, rowspan: 2 },
-            { field: "ContName1", title: "name1", colspan: 2 },
-            { field: "ContName2", title: "name2", colspan: 2 },
-            { field: "ContName3", title: "name3", colspan: 2 },
-            { field: "ContName4", title: "name4", colspan: 2 },
-            { field: "ContName5", title: "name5", colspan: 2 },
-            { field: "ContName6", title: "name6", colspan: 2 },
-            { field: "ContName7", title: "name7", colspan: 2 },
-            { field: "ContName8", title: "name8", colspan: 2 },
-            { field: "ContName9", title: "name9", colspan: 2 },
-            { field: "ContName10", title: "name10", colspan: 2 },
-            { field: "ContName11", title: "name11", colspan: 2 },
-            { field: "ContName12", title: "name12", colspan: 2 },
-            { field: "ContName13", title: "name13", colspan: 2 },
-            { field: "ContName14", title: "name14", colspan: 2 },
-            { field: "ContName15", title: "name15", colspan: 2 },
-            { field: "ContName16", title: "name16", colspan: 2 },
-            { field: "ContName17", title: "name17", colspan: 2 },
-            { field: "ContName18", title: "name18", colspan: 2 },
-            { field: "ContName19", title: "name19", colspan: 2 },
-            { field: "ContName20", title: "name20", colspan: 2 },
-        ], [
-            { field: 'ContrPrice1', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus1', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice2', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus2', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice3', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus3', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice4', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus4', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice5', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus5', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice6', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus6', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice7', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus7', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice8', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus8', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice9', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus9', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice10', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus10', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice11', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus11', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice12', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus12', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice13', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus13', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice14', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus14', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice15', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus15', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice16', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus16', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice17', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus17', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice18', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus18', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice19', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus19', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-
-            { field: 'ContrPrice20', title: 'Прайс1', sortable: true, width: 100 },
-            { field: 'ContrStatus20', title: 'Статус1', sortable: true, width: 100, formatter: checkboxformatter },
-        ]
+     
 
 
-        ];
-
-		 
         var cdata = [[
             { field: "StageNumber", title: "Этап", rowspan: 2 ,width:100},
             { field: "NomName", title: "Номерклатура", rowspan: 2, width: 100},
             { field: "ContName_2", title: "name2 (Участвует)", colspan: 2},
-            
+
             { field: "ContName_3", title: "name3 (Участвует)", colspan: 2},
-                
+
 
 
             {
                 field: "ContName_4", title: "name13 (Участвует)", colspan: 2},
-                
 
-            
+
+
             ],
             [
                 { field: "ContName_2_price", title: "Прайс2", width: 100 },
@@ -254,7 +169,7 @@ onImportedSucceeded = "reloadData()"
                 { field: "ContName_4_price", title: "Прайс4", width: 100 },
                 { field: "ContName_4_status", title: "Статус4", formatter: checkboxformatter, width: 100},
             ],
-            
+
             ];
         var data = [
             {
@@ -284,42 +199,46 @@ onImportedSucceeded = "reloadData()"
                 ContName_4_status: true,
             },
         ]
-        var dgcomstage = {};
-        initdatagrid1=() =>{
-            dgcomstage = $(`#comstage_dg`).datagrid({
-                height: (window.innerHeight / 3),
-                method: 'GET',
-                rownumbers: true,
-                singleSelect: true,
-                selectOnCheck: false,
-                checkOnSelect: false,
-                pagination: true,
-                border: true,
-                clientPaging: false,
-                remoteFilter: true,
-                sortName: this._defaultSortName,
-                sortOrder: 'desc',
-                pageSize: 15,
-                pageList: [10, 15, 30, 50, 100, 1000],
-                onLoadSuccess: function (data) {
-                    var panel = $(this).datagrid("getPanel");
-                    var myheaderCol = panel.find("div.datagrid-header td");
-                    // here is to add the css style
-                    //myheaderCol.css("border-", "1px solid #000");
-                },
-                columns: tblStageColumns
-                //data: data
+        //var dgcomstage = {};
+        //initdatagrid1=() =>{
+        //    dgcomstage = $(`#comstage_dg`).datagrid({
+        //        height: (window.innerHeight / 3),
+        //        method: 'GET',
+        //        rownumbers: true,
+        //        singleSelect: true,
+        //        selectOnCheck: false,
+        //        checkOnSelect: false,
+        //        pagination: true,
+        //        border: true,
+        //        clientPaging: false,
+        //        remoteFilter: true,
+        //        sortName: this._defaultSortName,
+        //        sortOrder: 'desc',
+        //        pageSize: 15,
+        //        pageList: [10, 15, 30, 50, 100, 1000],
+        //        onLoadSuccess: function (data) {
+        //            var panel = $(this).datagrid("getPanel");
+        //            var myheaderCol = panel.find("div.datagrid-header td");
+        //            // here is to add the css style
+        //            //myheaderCol.css("border-", "1px solid #000");
+        //        },
+        //        columns: tblStageColumns
+        //        //data: data
 
-            });
-                
-            //.datagrid('load', `${this._pageLink}?handler=Data`);
+        //    });
 
-        }
+        //    //.datagrid('load', `${this._pageLink}?handler=Data`);
 
+        //}
+        $("input[name=GetStageType]:radio").change(function () {
+            LoadComState(1);
+        });
 
         $(() => {
 
-            initdatagrid1();
+            //initdatagridComStage(tblStageColumns);
+            //$(`#comstage_dg`).datagrid('resize');
+            LoadComState(1);
 
         })
 
