@@ -117,25 +117,24 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
             List<ExpandoObject> resultData = new List<ExpandoObject>();
 
             var postions = dataDto.SelectMany(
-                                        c => c.StageCompositions.Select(p => new { position =  p.ComPosition, child = c, stages = p.ComStage })
-                                    ).GroupBy(cs =>   cs.position  )
+                                        c => c.StageCompositions.Select(p => new { position =  p.ComPosition, child = c, stage = p.ComStage })
+                                    ).GroupBy(cs =>  new { cs.position, cs.stage }  )
                                     .Select(g => new
                                     {
                                         keys = g.Key,
                                         stagecoms = g.Select(cp => cp.child).OrderBy(o=>o.Number).ToList()
-                                    }).OrderBy(o =>  o.keys.Nomenclature.Name);
+                                    }).OrderBy(o =>o.keys.stage.Number).ThenBy(o=> o.keys.position.Nomenclature.Name);
 
             int Indexcontrgent = 0;                                          
             foreach(var pos in postions)
             {
                 
                 
-                foreach (var stage in pos.stagecoms)
-                {
+                
                     var row = new ExpandoObject() as IDictionary<string, object>;
-                    row.Add($"NomName", pos.keys.Nomenclature.Name);
-                    row.Add($"Stage", stage.Number);
-                    foreach (var stagecom in stage.StageCompositions)
+                    row.Add($"NomName", pos.keys.position.Nomenclature.Name);
+                    row.Add($"Stage",pos.keys.stage.Number);
+                    foreach (var stagecom in pos.keys.stage.StageCompositions)
                     {
                         Indexcontrgent++;
                         row.Add($"ContrId{Indexcontrgent}", stagecom.Contragent.Id);
@@ -144,7 +143,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                         
                     }
                     resultData.Add((ExpandoObject)row);
-                }
+                 
 
                 
                  

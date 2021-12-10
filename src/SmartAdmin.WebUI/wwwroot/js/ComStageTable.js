@@ -24,64 +24,66 @@ const tblStageColumns = [[
 ], [
     
     { field: 'ContrPrice1', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus1', title: 'Статус', width: 100,  formatter: checkboxformatter  },
+    {
+        field: 'ContrStatus1', title: 'Статус', width: 100, formatter: checkboxformatterEdit
+    },
     
     { field: 'ContrPrice2', title: 'Прайс',   width: 100 },
-    { field: 'ContrStatus2', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus2', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice3', title: 'Прайс',   width: 100 },
-    { field: 'ContrStatus3', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus3', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice4', title: 'Прайс',   width: 100 },
-    { field: 'ContrStatus4', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus4', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice5', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus5', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus5', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice6', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus6', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus6', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice7', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus7', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus7', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice8', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus8', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus8', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice9', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus9', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus9', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice10', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus10', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus10', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice11', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus11', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus11', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice12', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus12', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus12', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice13', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus13', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus13', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice14', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus14', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus14', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice15', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus15', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus15', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice16', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus16', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus16', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice17', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus17', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus17', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice18', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus18', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus18', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
 
     { field: 'ContrPrice19', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus19', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus19', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     
     { field: 'ContrPrice20', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus20', title: 'Статус',   width: 100, formatter: checkboxformatter },
+    { field: 'ContrStatus20', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
     ]
     
 
@@ -99,7 +101,7 @@ initdatagridComStage = (cdata, dataComStages) => {
         clientPaging: true,
         remoteFilter: false,
         remoteSort: false,
-        sortName: "NomName",
+        sortName: "Stage",
         sortOrder: 'asc',
         pageSize: 15,
         pageList: [10, 15, 30, 50, 100, 1000],
@@ -111,24 +113,35 @@ initdatagridComStage = (cdata, dataComStages) => {
             // here is to add the css style
             //myheaderCol.css("border-", "1px solid #000");
             $('table.datagrid-htable').find('.datagrid-cell').css("text-align", 'center');
-            $(".editable[type='checkbox']").bind('click', function () {
-                alert("click");
-            });
+            //$(".editable[type='checkbox']").bind('click', function (e) {
+            //    $(this).prop('checked', false);
+            //});
         },
+        onCellEdit: function (index, field, value) {
+            //if (field == 'ContrStatus1') {
+            //    var ck = $(this).datagrid('getEditor', { index: index, field: field });
+            //    $(ck.target).bind('change', function (e) {
+            //        this.value = false;
+            //    })
+            //}
+        }
 
-    });
+    }).datagrid('enableCellEditing').datagrid('gotoCell', {
+        index: 0,
+        field: 'ContrStatus1'
+    });;
 }
-function checkboxformatter(value, row, index) {
+function checkboxformatterEdit(value, row, index) {
     if (istrue(value)) {
 
         const checked = `<div class="custom-control custom-checkbox">
-                       <input type="checkbox" class="custom-control-input editable" id="defaultCheckedDisabledEditable${index}" checked="checked" >
+                       <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}" checked="checked" >
                        <label class="custom-control-label" for="defaultCheckedDisabledEditable${index}"></label>
                    </div>`;
         return checked;
     } else {
         var unchecked = `<div class="custom-control custom-checkbox">
-                       <input type="checkbox" class="custom-control-input editable" id="defaultCheckedDisabledEditable${index}"  >
+                       <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}"  >
                        <label class="custom-control-label" for="defaultCheckedDisabledEditable${index}"></label>
                    </div>`;
 
