@@ -15,14 +15,14 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdit
 {
-    public class AddEditComOfferCommand: ComOfferDto,IRequest<Result<int>>, IMapFrom<ComOffer>
+    public class AddEditComOfferCommand: ComOfferDto,IRequest<Result<ComOfferDto>>, IMapFrom<ComOffer>
     {
         public string CacheKey => ComOfferCacheKey.GetAllCacheKey;
 
         public CancellationTokenSource ResetCacheToken => ComOfferCacheTokenSource.ResetCacheToken;
     }
 
-    public class AddEditComOfferCommandHandler : IRequestHandler<AddEditComOfferCommand, Result<int>>
+    public class AddEditComOfferCommandHandler : IRequestHandler<AddEditComOfferCommand, Result<ComOfferDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -40,7 +40,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
             _mapper = mapper;
             _dateTime = dateTime;
         }
-        public async Task<Result<int>> Handle(AddEditComOfferCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ComOfferDto>> Handle(AddEditComOfferCommand request, CancellationToken cancellationToken)
         {
             //TODO:Implementing AddEditComOfferCommandHandler method 
             if (request.Id > 0)
@@ -52,7 +52,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
                 }
                 item = _mapper.Map(request, item);
                 await _context.SaveChangesAsync(cancellationToken);
-                return Result<int>.Success(item.Id);
+                var itemDto = _mapper.Map<ComOfferDto>(item);
+                return Result<ComOfferDto>.Success(itemDto);
             }
             else
             {
@@ -60,7 +61,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
                 var item = _mapper.Map<ComOffer>(request);
                 _context.ComOffers.Add(item);
                 await _context.SaveChangesAsync(cancellationToken);
-                return Result<int>.Success(item.Id);
+                var itemDto = _mapper.Map<ComOfferDto>(item);
+                return Result<ComOfferDto>.Success(itemDto);
             }
            
         }
