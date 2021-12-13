@@ -138,8 +138,8 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
         {
             try
             {
-                //if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
-                //    return BadRequest("Коммерческое предложения уже запущена!!! ");
+                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
+                    return BadRequest("Коммерческое предложения уже запущена!!! ");
 
                 var CreateState1 = new CreateComStageCommand()
                 {

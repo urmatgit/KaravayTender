@@ -283,7 +283,7 @@ var initdatagrid = () => {
             ddv.datagrid({
 
                 method: 'GET',
-                rownumbers: false,
+                rownumbers: true,
                 singleSelect: true,
                 selectOnCheck: false,
                 checkOnSelect: false,

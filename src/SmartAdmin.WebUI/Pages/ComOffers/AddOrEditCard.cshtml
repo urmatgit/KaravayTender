@@ -1,7 +1,13 @@
 ﻿@using CleanArchitecture.Razor.Domain.Enums
+@using CleanArchitecture.Razor.Application.Constants.Permission
 @model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
 @inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
-<div class="panel" id="edit_panel" style="display:none"  >
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    var _canStart = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Start);
+var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+}
+<div class="panel" id="edit_panel" style="display:none">
 
 
     <div class="panel-hdr text-primary">
@@ -61,8 +67,8 @@
                         <label class="form-label" for="VatId">@_localizer["Status"] <span class="text-danger">*</span></label>
                         <input type="text" asp-for="Input.StatusStr" class="form-control" placeholder="@_localizer["Status"]" readonly />
                         @*<select type="text" asp-for="Input.Status" asp-items="Html.GetEnumSelectList<ComOfferStatus>()" class="custom-select" placeholder="@_localizer["Status"]" data-val-required="Не выбрано 'Статус'">
-                    <option value="">@_localizer["Choose a status"]</option>
-                </select>*@
+                                <option value="">@_localizer["Choose a status"]</option>
+                            </select>*@
 
                         <span class="invalid-feedback" asp-validation-for="Input.StatusStr"></span>
                     </div>
@@ -127,19 +133,23 @@
                     <partial name="ComParticipant" />
                 </div>
                 <div class="tab-pane fade show p-2" id="ComState" role="tabpanel">
-                   <partial name="ComStage"/>
+                    <partial name="ComStage" />
                 </div>
             </div>
             <div class="panel-footer p-2  " style="text-align:right">
+                @if (_canStart.Succeeded){
                 <button type="button" class="btn btn-danger mr-5" id="startStage">@_localizer["Run"]</button>
+                }
                 <button type="button" class="btn btn-secondary mr-3" onclick="closePanel()">@_localizer["Close"]</button>
+                @if (_canEdit.Succeeded){
                 <button type="submit" id="save" class="btn btn-primary  ">@_localizer["Save"]</button>
+                }
             </div>
 
-            
 
-            </div>
+
         </div>
-
-
     </div>
+
+
+</div>
