@@ -256,11 +256,15 @@ onImportedSucceeded = "reloadData()"
             clscomposition.ResizeGrid();
             clsparticipant.reloadData('@Url.Page("/ComParticipants/Index")?handler=Data' + `&ComOfferId=${comofferid}`);
             clsparticipant.ResizeGrid();
-            if (currentEditRow.Status != 0) {
+            if (!currentEditRow || currentEditRow.Status != 0) {
                 clscomposition.HideAction();
                 clsparticipant.HideAction();
+                
             }
-            LoadComState(comofferid);
+            if (currentEditRow) {
+                LoadComState(comofferid);
+            }
+            
         })
         $('#InputPos_NomenclatureId').change(function () {
             var nomenId = $(this).val();

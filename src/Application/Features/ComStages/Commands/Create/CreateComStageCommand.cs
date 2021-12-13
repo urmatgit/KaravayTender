@@ -50,9 +50,9 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
             var item = await _context.ComStages.FirstOrDefaultAsync(c => c.ComOfferId == request.ComOfferId && c.Number == request.Number,cancellationToken);
             if (item != null)
             {
-                if (item.Deadline != request.Deadline)
+                if (item.DeadlineDate != request.DeadlineDate)
                 {
-                    item.Deadline = request.Deadline;
+                    item.DeadlineDate = request.DeadlineDate;
                 }
             }
             else

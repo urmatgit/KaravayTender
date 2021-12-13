@@ -27,8 +27,9 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.DTOs
         /// <summary>
         /// Срок предоставления ответа,дни
         /// </summary>
-        [Required]
+        
         public int Deadline { get; set; }
+        [Required]
         public DateTime DeadlineDate { get; set; }
         public int ComOfferId { get; set; }
         public virtual ComOfferDto ComOffer { get; set; }

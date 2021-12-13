@@ -61,6 +61,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                 if (dataLast != null)
                 {
                     queryResult.Add(dataLast);
+                    result.CurrentStage = dataLast.Number;
                 }
             }
             else
@@ -118,23 +119,25 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
 
             var postions = dataDto.SelectMany(
                                         c => c.StageCompositions.Select(p => new { position =  p.ComPosition, child = c, stage = p.ComStage })
-                                    ).GroupBy(cs =>  new { cs.position, cs.stage }  )
+                                    ).GroupBy(cs =>  new { cs.position.Nomenclature, cs.stage.Number }  )
                                     .Select(g => new
                                     {
                                         keys = g.Key,
-                                        stagecoms = g.Select(cp => cp.child).OrderBy(o=>o.Number).ToList()
-                                    }).OrderBy(o =>o.keys.stage.Number).ThenBy(o=> o.keys.position.Nomenclature.Name);
+                                        stagecoms = g.Select(cp => cp.child).OrderBy(o=>o.Number).ToList(),
+                                        stage1=g.FirstOrDefault(s=>s.stage.Number==g.Key.Number)
+                                    }).OrderBy(o =>o.keys.Number).ThenBy(o=> o.keys.Nomenclature.Name);
 
-            int Indexcontrgent = 0;                                          
+            
             foreach(var pos in postions)
             {
                 
                 
                 
                     var row = new ExpandoObject() as IDictionary<string, object>;
-                    row.Add($"NomName", pos.keys.position.Nomenclature.Name);
-                    row.Add($"Stage",pos.keys.stage.Number);
-                    foreach (var stagecom in pos.keys.stage.StageCompositions)
+                    row.Add($"NomName", pos.keys.Nomenclature.Name);
+                    row.Add($"Stage",pos.keys. Number);
+                    int Indexcontrgent = 0;
+                foreach (var stagecom in pos.stage1.stage.StageCompositions.Where(s=>s.ComPosition.NomenclatureId==pos.keys.Nomenclature.Id))
                     {
                         Indexcontrgent++;
                         row.Add($"ContrId{Indexcontrgent}", stagecom.Contragent.Id);

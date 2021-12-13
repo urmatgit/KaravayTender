@@ -43,7 +43,7 @@ $('#startStage').click(function (e) {
 
             console.log(result);
 
-            SubmitForm("?handler=Run&deadline=" + result, function () {
+            SubmitForm("?handler=Run&deadline=" + result, function (res) {
                 SetReadOnlyForm();
                 LoadComState(currentEditRow.Id);
             });
@@ -62,7 +62,7 @@ function SetReadOnlyForm() {
         form.elements[i].readOnly = true;
     }
     $('.custom-select').prop('disabled', true);
-    //$('.custom-control-input[type=checkbox]').prop('disabled', true);
+    $('.custom-control-input[type=checkbox]').prop('disabled', true);
     SetEnableToRoleButton(false);
     
     
@@ -81,14 +81,14 @@ function SubmitForm(addParam,callback) {
         //if (AppendFilesToFormData) {
         //    AppendFilesToFormData(request);
         //}
-        axios.post(`${pagelink}${addParam}`, request).then(res => {
+        axios.post(`${pagelink}${addParam ? addParam: ''}`, request).then(res => {
             toastr["info"](`${translations.SaveSuccess} `);
 
             //$('#table-page-content').show();
             //$('#edit_panel').hide();
             reloadData();
             if (callback) {
-                callback();
+                callback(res.data);
             }
         }).catch((error) => {
             if (error.response.data.Errors) {
@@ -105,7 +105,10 @@ function SubmitForm(addParam,callback) {
     event.stopPropagation();
 }
 $('#save').click(function (e) {
-    SubmitForm();
+    SubmitForm("", function (res) {
+        SetEnableToRoleButton(true);
+        openEditpanel(res.Data);
+    });
 });
 function SetEnableToRoleButton(enable) {
     $(".editable[role='button']").each(function (val) {

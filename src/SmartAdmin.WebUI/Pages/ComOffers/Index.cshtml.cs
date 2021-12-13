@@ -134,7 +134,7 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
-        public async Task<IActionResult> OnPostRunAsync([FromQuery] int deadline)
+        public async Task<IActionResult> OnPostRunAsync([FromQuery] DateTime deadline)
         {
             try
             {
@@ -145,7 +145,7 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 {
                     ComOfferId = Input.Id,
                     Number = 1,
-                    Deadline =  deadline
+                    DeadlineDate =  deadline
                 };
                  var result = await _mediator.Send(CreateState1);
                 if (result.Succeeded)

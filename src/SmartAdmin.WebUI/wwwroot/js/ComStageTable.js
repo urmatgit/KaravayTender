@@ -126,27 +126,39 @@ initdatagridComStage = (cdata, dataComStages) => {
             //}
         }
 
-    }).datagrid('enableCellEditing').datagrid('gotoCell', {
-        index: 0,
-        field: 'ContrStatus1'
-    });;
+    });
 }
 function checkboxformatterEdit(value, row, index) {
-    if (istrue(value)) {
 
-        const checked = `<div class="custom-control custom-checkbox">
-                       <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}" checked="checked" >
-                       <label class="custom-control-label" for="defaultCheckedDisabledEditable${index}"></label>
+     if (istrue(value)) {
+
+        const checked = `<div >
+                       <input type="checkbox" class="editable"  checked="checked" >
+                       
                    </div>`;
         return checked;
     } else {
-        var unchecked = `<div class="custom-control custom-checkbox">
-                       <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}"  >
-                       <label class="custom-control-label" for="defaultCheckedDisabledEditable${index}"></label>
+        var unchecked = `<div >
+                       <input type="checkbox" class="editable"  >
                    </div>`;
 
         return unchecked;
     }
+    //if (istrue(value)) {
+
+    //    const checked = `<div class="custom-control custom-checkbox">
+    //                   <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}" checked="checked" >
+    //                   <label class="custom-control-label" for="defaultCheckedDisabledEditable${index}"></label>
+    //               </div>`;
+    //    return checked;
+    //} else {
+    //    var unchecked = `<div class="custom-control custom-checkbox">
+    //                   <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}"  >
+    //                   <label class="custom-control-label" for="defaultCheckedDisabledEditable${index}"></label>
+    //               </div>`;
+
+    //    return unchecked;
+    //}
 
 
 }
@@ -158,6 +170,7 @@ function LoadComState(comofferid) {
             let tblHeader = [[]];
             tblHeader[0] = tblStageColumns[0].slice();
             tblHeader[1] = tblStageColumns[1].slice();
+            
             if (res && res.data.Header) {
                 
                 
@@ -174,8 +187,12 @@ function LoadComState(comofferid) {
                 tblHeader[1].splice(0)
                 initdatagridComStage(tblHeader,[[]]);
             }
-            
-            
+            $('#StageNumber').html(res.data.CurrentStage);
+            if (StageType === '1') {
+                $(`#comstage_dg`).datagrid('hideColumn', 'Stage');
+            } else {
+                $(`#comstage_dg`).datagrid('showColumn', 'Stage');
+            }
             
             
         })
