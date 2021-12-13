@@ -62,7 +62,7 @@ function SetReadOnlyForm() {
         form.elements[i].readOnly = true;
     }
     $('.custom-select').prop('disabled', true);
-    //$('.custom-control-input[type=checkbox]').prop('disabled', true);
+    $('.custom-control-input[type=checkbox]').prop('disabled', true);
     SetEnableToRoleButton(false);
     
     
