@@ -122,6 +122,8 @@ namespace SmartAdmin.WebUI.Pages.Nomenclatures
                         if (files.Succeeded)
                         {
                             Input.Specifications = string.Join(PathConstants.FilesStringSeperator, files.Data.Select(f => Path.GetFileName(f)));
+                            if (Input.Id==0)
+                                Input.Id = result.Data;
                             result = await _mediator.Send(Input);
                         }
                     }

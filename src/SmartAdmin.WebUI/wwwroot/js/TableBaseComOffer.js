@@ -253,7 +253,7 @@ var initdatagrid = () => {
             $('#deletebutton').prop('disabled', !checked);
             checkRowEvent.detail.check = !checked;
             this.dispatchEvent(checkRowEvent);
-           
+
         },
         onUncheckAll: function () {
             $('#deletebutton').prop('disabled', true);
@@ -264,7 +264,7 @@ var initdatagrid = () => {
             $('#deletebutton').prop('disabled', false);
             checkRowEvent.detail.check = false;
             this.dispatchEvent(checkRowEvent);
-            
+
         },
         onUncheck: function () {
             const checked = $(this).datagrid('getChecked').length > 0;
@@ -273,7 +273,48 @@ var initdatagrid = () => {
             this.dispatchEvent(checkRowEvent);
         },
         columns: [createColumns()]
+        ,
+        view: detailview,
+        detailFormatter: function (index, row) {
+            return '<div style="padding:2px"><table class="ddv"></table></div>';
+        },
+        onExpandRow: function (index, row) {
+            var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
+            ddv.datagrid({
+
+                method: 'GET',
+                rownumbers: false,
+                singleSelect: true,
+                selectOnCheck: false,
+                checkOnSelect: false,
+                pagination: true,
+                clientPaging: false,
+                remoteFilter: true,
+
+                sortName: 'Nomenclature.Name',
+                sortOrder: 'asc',
+                pageSize: 5,
+                pageList: [5, 10, 30, 50, 100, 1000],
+
+                columns: [clscomposition.tblColumns],
+
+
+                //,
+                //onResize: function () {
+                //    $('#product_dg').datagrid('fixDetailRowheight', index);
+                //    }
+
+                onLoadSuccess: function () {
+                    setTimeout(function () {
+                        $('#main_dg').datagrid('fixDetailRowHeight', index);
+                    }, 0);
+                }
+            }).datagrid('enableFilter', clscomposition.tblFilters)
+                .datagrid('load', "/ComOffers/Index?handler=DataPos&ComOfferId=" + row.Id);
+            $('#main_dg').datagrid('fixDetailRowHeight', index);
+        }
     })
+    
         .datagrid('enableFilter', this.tblFilters)
         .datagrid('load', `${pagelink}?handler=Data`);
 

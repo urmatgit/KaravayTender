@@ -1,6 +1,9 @@
 const tblStageColumns = [[
     { field: 'NomName', title: 'Позиция', sortable: true, width: 130, rowspan: 2, align: 'center'},
     { field: 'Stage', title: 'Этап', sortable: true, width: 100, rowspan: 2 },
+    {
+        field: 'StageDeadline', title: 'Срок ответа до', sortable: true, width: 100, rowspan: 2, formatter: dateformatter
+    },
     { field: "ContName1", title: "name1", colspan: 2,},
     { field: "ContName2", title: "name2", colspan: 2, },
     { field: "ContName3", title: "name3", colspan: 2 },
@@ -176,9 +179,9 @@ function LoadComState(comofferid) {
                 
 
                 res.data.Header.forEach(function (val, index) {
-                    tblHeader[0][2 + index].title = val;
+                    tblHeader[0][3 + index].title = val;
                 })
-                tblHeader[0].splice(2 + res.data.Header.length)
+                tblHeader[0].splice(3 + res.data.Header.length)
                 tblHeader[1].splice(res.data.Header.length * 2)
                 initdatagridComStage(tblHeader, res.data.Body);
                 $(`#comstage_dg`).datagrid('resize');

@@ -129,7 +129,7 @@ onImportedSucceeded = "reloadData()"
     @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
         <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
         <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
-
+    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-detailview.js" ></script>
     <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
@@ -141,7 +141,7 @@ onImportedSucceeded = "reloadData()"
     <script type="text/javascript">
         let clscomposition = null;
         var currentEditRow = "";
-        
+
         var pagelink = '@Url.Page("/ComOffers/Index")';
         var translations = {
             SaveSuccess: '@_localizer["Save Success."]',
@@ -259,12 +259,12 @@ onImportedSucceeded = "reloadData()"
             if (!currentEditRow || currentEditRow.Status != 0) {
                 clscomposition.HideAction();
                 clsparticipant.HideAction();
-                
+
             }
             if (currentEditRow) {
                 LoadComState(comofferid);
             }
-            
+
         })
         $('#InputPos_NomenclatureId').change(function () {
             var nomenId = $(this).val();
@@ -310,11 +310,11 @@ onImportedSucceeded = "reloadData()"
 
 
         });
-        
+
 
             //.datagrid('load', `${this._pageLink}?handler=Data`);
 
-        
+
 		$(() => {
             clscomposition = new clsBaseTable("composition","clscomposition",'@Url.Page("/ComPositions/Index")');
             tblColumns = [

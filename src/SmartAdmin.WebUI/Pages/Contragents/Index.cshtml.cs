@@ -69,7 +69,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public RejectFormModel RejectModel { get; set; }
 
         [BindProperty]
-        [Required(ErrorMessage ="file empty")]
+        //[Required(ErrorMessage ="file empty")]
         public List<IFormFile> Files { get; set; }
         [BindProperty]
         public string CategoryIds { get; set; }
@@ -297,6 +297,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                             {
                                 var files= await _uploadService.LoadFilesAsync(result.Data, PathConstants.DocumentsPath);
                                 if (files.Succeeded) {
+                                    if (Input.Id == 0)
+                                        Input.Id = result.Data;
                                     Input.Files = string.Join(PathConstants.FilesStringSeperator, files.Data.Select(f => Path.GetFileName(f)));
                                     result = await _mediator.Send(Input);
                                 }
