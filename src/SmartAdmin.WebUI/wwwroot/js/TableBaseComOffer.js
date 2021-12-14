@@ -186,37 +186,6 @@ function openEditpanel(row) {
 tblFilters = [{}];
 
 tblColumns = [];
-function createColumns() {
-    var InitColumns=
-     [
-        { field: 'ck', checkbox: true },
-        {
-            field: '_action',
-            title: `${window.translations.Command} `,
-            width: 100,
-            align: 'center',
-            formatter: function (value, row, index) {
-                return `<div class="btn-group" role="group">
-								  <button id="commandbtngroup" type="button" ${(_canEdit ? "" : "disabled")}  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="${window.translations.IconPrefix} fa-edit"></i>
-								 </button>
-								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
-								   <button class="dropdown-item" onclick="onEdit(${index})" ${(_canEdit ? "" : "disabled")}><i class="fal fa-edit mr-1"></i> ${translations.Edit}</button>
-								   <button class="dropdown-item" onclick="onDelete('${row.Id}')" ${(_canDelete ? "" : "disabled")} ><i class="fal fa-trash-alt mr-1"></i> ${translations.Delete}</button>
-								 </div>
-							  </div>`;
-            }
-        }
-         
-
-
-
-        ];
-    if (tblColumns.length > 0) {
-        return InitColumns.concat(tblColumns);
-    }
-    return InitColumns;
-};
 var checkRowEvent = new CustomEvent("rowCheck", {
     detail: {
         check: true
@@ -272,7 +241,7 @@ var initdatagrid = () => {
             checkRowEvent.detail.check = !checked;
             this.dispatchEvent(checkRowEvent);
         },
-        columns: [createColumns()]
+        columns: [createColumnsComOffer()]
         ,
         view: detailview,
         detailFormatter: function (index, row) {
