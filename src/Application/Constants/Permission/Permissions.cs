@@ -277,6 +277,7 @@ namespace CleanArchitecture.Razor.Application.Constants.Permission
         public static class ComOffers
         {
             public const string View = "Permissions.ComOffers.View";
+            public const string Manage = "Permissions.ComOffers.Manage";
             public const string Create = "Permissions.ComOffers.Create";
             public const string Edit = "Permissions.ComOffers.Edit";
             public const string Delete = "Permissions.ComOffers.Delete";

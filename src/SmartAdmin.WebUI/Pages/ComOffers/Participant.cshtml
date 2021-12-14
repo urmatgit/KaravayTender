@@ -2,14 +2,14 @@
 @using CleanArchitecture.Razor.Domain.Enums
 @using  CleanArchitecture.Razor.Application.Common.Extensions
 @using CleanArchitecture.Razor.Application.Constants.Permission
-@model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
-@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@model SmartAdmin.WebUI.Pages.ComOffers.ParticipantModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComOffers.IndexModel> _localizer
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.Contragents.IndexModel> _localizerContr
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComParticipants.IndexModel> _localizerPart
 @inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
 @{
     ViewData["Title"] = _localizer["Сommercial offer"].Value;
-    ViewData["PageName"] = "comoffers_index";
+    ViewData["PageName"] = "comoffers_participant";
     ViewData["Category1"] = _localizer["References"].Value;
     ViewData["Heading"] = _localizer["Сommercial offer"].Value;
     ViewData["PageDescription"] = _localizer["Managing supplier referral parameters"].Value;
@@ -40,10 +40,6 @@
         .composition_dg_datagrid-cell-c2-_action {
             overflow: visible !important
         }
-
-        .participant_dg_datagrid-cell-c3-_action {
-            overflow: visible !important
-        }
     </style>
 }
 <div id="table-page-content" class="card mb-g">
@@ -53,56 +49,14 @@
             <small>@_localizer["See all available options"]</small>
         </h4>
         <div class="ml-auto">
-            @if (_canStart.Succeeded)
-            {
-            <button class="btn btn-sm btn-outline-primary " id="startbutton">
-                <span class="@(Settings.Theme.IconPrefix) fa-bolt mr-1"></span>
-                @_localizer["Start"]
-            </button>
-            }
-
-            @if (_canCreate.Succeeded)
-            {
-            <button class="btn btn-sm btn-outline-primary " id="addbutton">
-                <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
-                @_localizer["Add"]
-            </button>
-            }
-            @if (_canDelete.Succeeded)
-            {
-            <button class="btn btn-sm btn-outline-danger" disabled id="deletebutton">
-                <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
-                @_localizer["Delete"]
-            </button>
-            }
             @if (_canSearch.Succeeded)
             {
-            <button class="btn btn-sm btn-outline-primary " id="searchbutton">
-                <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
-                @_localizer["Search"]
-            </button>
+                <button class="btn btn-sm btn-outline-primary " id="searchbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                    @_localizer["Search"]
+                </button>
             }
-            @*@if (_canImport.Succeeded)
-                {
-                <div class="btn-group" role="group">
-                    <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
-                        <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="importbutton">
-                        <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
-                    </div>
-                </div>
-                }*@
-            @if (_canExport.Succeeded)
-            {
-            <button class="btn btn-sm btn-outline-primary " id="exportbutton">
-                <span class="@(Settings.Theme.IconPrefix) fa-download mr-1"></span>
-                @_localizer["Export Excel"]
-            </button>
-            }
+
         </div>
     </div>
     <div class="card-body">
@@ -115,34 +69,27 @@
     </div>
 </div>
 
-<partial name="AddOrEditCard" />
+<partial name="AddOrEdit" />
 
-@await Component.InvokeAsync("ImportExcel", new
-{
-    importUri = Url.Page("/ComOffers/Index") + "?handler=Import",
-getTemplateUri = @Url.Page("/ComOffers/Index") + "?handler=CreateTemplate",
-onImportedSucceeded = "reloadData()"
-})
+
 @section ScriptsBlock {
     <partial name="_ValidationScriptsPartial" />
     <partial name="_EasyUIScriptsPartial" />
     @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
         <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
         <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
-    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-detailview.js" ></script>
+    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-detailview.js"></script>
     <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/select2/select2.bundle.js"></script>
-    <script src="~/js/ComStageTable.js"></script>
-    <script src="~/js/TableBaseComOffer.js"></script>
-    <script src="~/js/TableBaseClass.js"></script>
-    <script src="~/js/TableComParticipant.js"></script>
+
+
     <script type="text/javascript">
         let clscomposition = null;
         var currentEditRow = "";
 
-        var pagelink = '@Url.Page("/ComOffers/Index")';
+        var pagelink = '@Url.Page("/ComOffers/Participant")';
         var translations = {
             SaveSuccess: '@_localizer["Save Success."]',
             SaveFail: '@_localizer["Save fail"]',
@@ -234,89 +181,20 @@ onImportedSucceeded = "reloadData()"
         </text>
     }]
 
-        document.addEventListener("rowCheck", function (event) { // (1)
-            console.log(event.detail.check);
-            $('#startbutton').prop('disabled', event.detail.check);
-        });
 
-        $('#startbutton').click(function () {
-            alert("Start");
-        });
         $("input[name=GetStageType]:radio").change(function () {
             LoadComState(currentEditRow.Id);
         });
-        $("#edit_panel").on("ShowEdit", function (event) {
-            let comofferid = 0;
-            if (currentEditRow) {
-                    comofferid = currentEditRow.Id;
-            }
 
 
-            clscomposition.reloadData('@Url.Page("/ComOffers/Index")?handler=DataPos' + `&ComOfferId=${comofferid}`);
-            clscomposition.ResizeGrid();
-            clsparticipant.reloadData('@Url.Page("/ComParticipants/Index")?handler=Data' + `&ComOfferId=${comofferid}`);
-            clsparticipant.ResizeGrid();
-            if (!currentEditRow || currentEditRow.Status != 0) {
-                clscomposition.HideAction();
-                clsparticipant.HideAction();
-
-            }
-            if (currentEditRow) {
-                LoadComState(comofferid);
-            }
-
-        })
-        $('#InputPos_NomenclatureId').change(function () {
-            var nomenId = $(this).val();
-            console.log(nomenId);
-            axios.get('/Nomenclatures/Index?handler=ById&id=' + nomenId)
-                .then(res => {
-                    console.log(res);
-                    $('#InputPos_Nomenclature_Category_Name').val(res.data.Category.Name);
-                    $('#InputPos_UnitOfName').val(res.data.UnitOf.Name);
-                    $('#InputPos_NomVolume').val(res.data.Volume);
-                    $('#InputPos_QualityDocsNames').val(res.data.QualityDocsNames);
-                    $('#InputPos_NomSpecification').val(res.data.Specifications);
-                })
-                .catch((error) => {
-                    if (error.response.data.Errors) {
-                        const errors = error.response.data.Errors;
-                        errors.forEach(item => {
-                            toastr["error"](item);
-                        });
-                    } else {
-                        toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
-                    }
-                });
-        })
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            var target = $(e.target).attr("href");
-            switch (target) {
-                case '#ComParticipant':
-                    clsparticipant.ResizeGrid(); break;
-                case '#ComPosition':
-                    clscomposition.ResizeGrid(); break;
-                case '#ComState':
-
-                    $(`#comstage_dg`).datagrid('resize');
-                    break;
-            }
-            //if ((target == '#ComParticipant')) {
-            //    clsparticipant.ResizeGrid();
-
-            //} else {
-            //    clscomposition.ResizeGrid();
-            //}
 
 
-        });
 
-
-            //.datagrid('load', `${this._pageLink}?handler=Data`);
         function createColumnsComOffer() {
 
             var InitColumns =
                 [
+
                     { field: 'ck', checkbox: true },
                     {
                         field: '_action',
@@ -325,32 +203,13 @@ onImportedSucceeded = "reloadData()"
                         align: 'center',
                         formatter: function (value, row, index) {
                             return `<div class="btn-group" role="group">
-								  <button id="commandbtngroup" type="button" @(_canEdit.Succeeded ? "" : "disabled")  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								  <button id="commandbtngroup" type="button" onclick="onEdit(${index})"  @(_canEdit.Succeeded ? "" : "disabled")  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<i class="${window.translations.IconPrefix} fa-edit"></i>
 								 </button>
-								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
-								   <button class="dropdown-item" onclick="onEdit(${index})" @(_canEdit.Succeeded ? "" : "disabled")><i class="fal fa-edit mr-1"></i> ${translations.Edit}</button>
-                                    @Html.Raw(_canDelete.Succeeded ? "<button class='dropdown-item' onclick='onDelete(${row.Id})' ><i class='fal fa-trash-alt mr-1'></i> ${translations.Delete}</button>" : "")
-								   
-								 </div>
+
 							  </div>`;
                         }
-                    }
-
-
-
-
-                ];
-            if (tblColumns.length > 0) {
-                return InitColumns.concat(tblColumns);
-            }
-            return InitColumns;
-        };
-
-
-		$(() => {
-            clscomposition = new clsBaseTable("composition","clscomposition",'@Url.Page("/ComPositions/Index")');
-            tblColumns = [
+                    },
                 { field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 130 },
                 { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
 
@@ -367,9 +226,13 @@ onImportedSucceeded = "reloadData()"
                 { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 80, formatter: checkboxformatter },
                 { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter }
 
-            ];
 
-            tblFilters = [
+
+                ];
+
+            return InitColumns;
+        };
+        let   tblFilters = [
 
                 {
                     field: 'IsBankDaysStr',
@@ -443,10 +306,8 @@ onImportedSucceeded = "reloadData()"
                     }
 
                 }
-            ]
-            initdatagrid();
-
-            clscomposition.tblColumns = [
+        ]
+       let  tblColumnsComPosition = [
                 {
                     field: 'Category', title: '@_localizer["Category"]', sortable: true, width: 130, formatter: function (val, rec) {
                         return rec.Category == null ? "" : rec.Category.Name;
@@ -480,109 +341,218 @@ onImportedSucceeded = "reloadData()"
                 { field: 'Summa', title: '@_localizer["Summa"]', sortable: true, width: 80 }
 
             ];
-            clscomposition.jsonToFormCallBack = {
-                ComOfferId: function (value) {
-                    var parentID = $('#edit_form_panel #Input_Id').val();
-                    $('#InputPos_ComOfferId').val(parentID);
+
+        var $dgCP = {};
+        var initdatagridCP = () => {
+            $dgCP = $('#compostion_dg').datagrid({
+                height: (window.innerHeight /2),
+                method: 'GET',
+                rownumbers: true,
+                singleSelect: true,
+                selectOnCheck: false,
+                checkOnSelect: false,
+                pagination: true,
+                clientPaging: false,
+                remoteFilter: true,
+
+                sortName: 'Nomenclature.Name',
+                sortOrder: 'asc',
+                pageSize: 5,
+                pageList: [5, 10, 30, 50, 100, 1000],
+
+                columns: [tblColumnsComPosition],
+
+            }).datagrid('enableFilter', {});
+
+
+        }
+        function reloadDataCP() {
+            $('#compostion_dg').datagrid('load', "/ComOffers/Participant?handler=DataPos&ComOfferId=" + currentEditRow.Id);
+        }
+        $('#participant_modal').on('shown.bs.modal', function () {
+            reloadDataCP();
+
+            $dgCP.datagrid('resize');
+
+                })
+        var $dg = {};
+
+        var initdatagrid = () => {
+            $dg = $('#main_dg').datagrid({
+                height: (window.innerHeight - 320),
+                method: 'GET',
+                rownumbers: false,
+                singleSelect: true,
+                selectOnCheck: false,
+                checkOnSelect: false,
+                pagination: true,
+                clientPaging: false,
+                remoteFilter: true,
+                sortName: 'Id',
+                sortOrder: 'desc',
+                pageSize: 15,
+                pageList: [10, 15, 30, 50, 100, 1000],
+                onBeforeLoad: function () {
+
                 },
-                AreaIds: function (value) {
-                    $('#AreaIds').val(value);
-                    $('#AreaIds').trigger('change');
+                onCheckAll: function (rows) {
+                    const checked = $(this).datagrid('getChecked').length > 0;
+
+
+                },
+                onUncheckAll: function () {
+
+                },
+                onCheck: function () {
+
+
+                },
+                onUncheck: function () {
+                    const checked = $(this).datagrid('getChecked').length > 0;
+
+                },
+                columns: [createColumnsComOffer()]
+                ,
+                view: detailview,
+                detailFormatter: function (index, row) {
+                    return '<div style="padding:2px"><table class="ddv"></table></div>';
+                },
+                onExpandRow: function (index, row) {
+                    var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
+                    ddv.datagrid({
+
+                        method: 'GET',
+                        rownumbers: true,
+                        singleSelect: true,
+                        selectOnCheck: false,
+                        checkOnSelect: false,
+                        pagination: true,
+                        clientPaging: false,
+                        remoteFilter: true,
+
+                        sortName: 'Nomenclature.Name',
+                        sortOrder: 'asc',
+                        pageSize: 5,
+                        pageList: [5, 10, 30, 50, 100, 1000],
+
+                        columns: [tblColumnsComPosition],
+
+
+                        //,
+                        //onResize: function () {
+                        //    $('#product_dg').datagrid('fixDetailRowheight', index);
+                        //    }
+
+                        onLoadSuccess: function () {
+                            setTimeout(function () {
+                                $('#main_dg').datagrid('fixDetailRowHeight', index);
+                            }, 0);
+                        }
+                    }).datagrid('enableFilter', {})
+                        .datagrid('load', "/ComOffers/Participant?handler=DataPos&ComOfferId=" + row.Id);
+                    $('#main_dg').datagrid('fixDetailRowHeight', index);
                 }
-            }
-            clscomposition.OnNewRow = () => {
-                var parentID = $('#edit_form_panel #Input_Id').val();
-                $('#InputPos_ComOfferId').val(parentID);
-                $('#AreaIds').val(0);
-                $('#AreaIds').trigger('change');
-            };
+            })
 
-            clscomposition._editCaption = '@_localizer["Add position"]';
-            clscomposition._addCaption = '@_localizer["Edit position"]';
-            clscomposition.Init();
-            $('#AreaIds').select2({
-                placeholder: '@Html.Raw(@_localizer["Choose areas"])',
+                .datagrid('enableFilter', tblFilters)
+                .datagrid('load', `/ComOffers/Participant?handler=Data`);
 
-                allowClear: true,
-                dropdownParent: $('#composition_edit_form')
-            });
-            $('#InputPos_CategoryId').select2({
+        }
 
-                placeholder: '@Html.Raw(@_localizer["Choose a category"])',
-                allowClear: true,
-                dropdownParent: $('#composition_edit_form')
-            });
-            //$('.summernote').summernote({
-            //    focus: true,
-            //    height: (window.innerHeight / 2),
-            //    toolbar: [
-            //        ['style', ['bold', 'italic', 'underline', 'clear']],
-            //        ['fontsize', ['fontsize']],
-            //        ['color', ['color']],
-            //        ['para', ['ul', 'ol', 'paragraph']],
-            //        ["view", ["fullscreen", "codeview"]]
-            //    ]
-            //});
 
-            InitParticipantTable();
+		$(() => {
 
+
+            initdatagrid();
+            initdatagridCP();
+            })
+
+        var reloadData = () => {
+		$dg.datagrid('load', '@Url.Page("/ComOffers/Participant")?handler=Data');
+        }
+        $('#participant_form :submit').click(function (e) {
+		const form = document.querySelector('#participant_form');
+		if ($(form).valid() === false) {
+			form.classList.add('was-validated');
+		} else {
+			const request = $('#participant_form').serialize();
+			axios.post('@Url.Page("/ComOffers/Participant")', request).then(res => {
+				toastr["info"]('@_localizer["Save Success."]');
+				$('#participant_modal').modal('toggle');
+				reloadData();
+			}).catch((error) => {
+				if (error.response.data.Errors) {
+					const errors = error.response.data.Errors;
+					errors.forEach(item => {
+						toastr["error"](item);
+					});
+				} else {
+					toastr["error"](`@_localizer["Save fail"],${error.response.data}`);
+				}
+			});
+		}
+		event.preventDefault();
+		event.stopPropagation();
+	})
+        var popupmodal = (participant) => {
+		$('#participant_modal').modal('toggle');
+		$('#participant_modal .modal-title').html('@_localizer["Add Direction"]');
+		$('#participant_form').clearForm();
+		$('#participant_form')[0].reset();
+        if (participant) {
+                currentEditRow = participant;
+			$('#participant_modal .modal-title').html('@_localizer["Edit Direction"]');
+			$('#participant_form').jsonToForm(participant, {
+                IsDeliveryInPrice: function (value) {
+                    if (value == true) {
+                        $('#participant_form [name*="IsDeliveryInPrice"]').prop('checked', true);
+                    } else {
+                        $('#participant_form [name*="IsDeliveryInPrice"]').prop('checked', false);
+                    }
+                },
+                IsBankDays: function (value) {
+                    if (value == true) {
+                        $('#participant_form [name*="IsBankDays"]').prop('checked', true);
+                    } else {
+                        $('#participant_form [name*="IsBankDays"]').prop('checked', false);
+                    }
+                },
+                TermBegin: function (value) {
+                    var dateFormat = "YYYY-MM-DD";
+
+                    var date = moment(value).format(dateFormat);
+                    $('#participant_form [name*="TermBegin"]').val(date);
+                },
+                TermEnd: function (value) {
+                    var dateFormat = "YYYY-MM-DD";
+
+                    var date = moment(value).format(dateFormat);
+                    $('#Input_TermEnd').val(date);
+                },
+                Name: function (value) {
+                    $('#Input_Name').val(value);
+                }
 
             })
-        function closePanel() {
-            $('#table-page-content').show();
-            $('#edit_panel').hide();
+            //reloadDataCP();
+            //$('#compostion_dg').datagrid('resize');
+		} else {
+			$('#participant_form #Input_Id').val(0)
 
+		}
+	}
+        var onEdit = (index) => {
+            var participant = $dg.datagrid('getRows')[index];
+            popupmodal(participant);
         }
-        $("#InputPos_CategoryId").change(function () {
-
-
-            var id = $(this).val();
-            console.log(id);
-            axios.get('/ComPositions/Index?handler=Nomenclatures&categoryid=' + id)
-                .then(res => {
-                    console.log(res);
-
-                    $('#InputPos_Nomenclature_Category_Name').val("");
-                    $('#InputPos_UnitOfName').val("");
-                    $('#InputPos_NomVolume').val("");
-                    $('#InputPos_QualityDocsNames').val("");
-                    $('#InputPos_NomSpecification').val("");
-                    var modelDropDown = $('#InputPos_NomenclatureId');
-                    modelDropDown.empty();
-                    modelDropDown.append(
-                        $('<option>', {
-                            value: ''
-                        }).text( '@Html.Raw(@_localizer["Choose a nomenclature"])')
-                    );
-                    $.each(res.data, function (index, model) {
-                        modelDropDown.append(
-                            $('<option>', {
-                                value: model.Id
-                            }).text(model.Name)
-                        );
-                        if (clscomposition.currentEditRow && clscomposition.currentEditRow.NomenclatureId == model.Id) {
-                            modelDropDown.val(clscomposition.currentEditRow.CategoryId);
-                        }
-
-                    });
-                })
-                .catch((error) => {
-                    if (error.response.data.Errors) {
-                        const errors = error.response.data.Errors;
-                        errors.forEach(item => {
-                            toastr["error"](item);
-                        });
-                    } else {
-                        toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
-                    }
-                });
+        $(document).ready(function () {
+            $(window).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
         });
-        //Comstage
-        function CuncatateField(val, rec) {
-
-        }
-
-
 
     </script>
 }

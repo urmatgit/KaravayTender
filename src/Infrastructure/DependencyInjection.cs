@@ -23,6 +23,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
+using FluentValidation.AspNetCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace CleanArchitecture.Razor.Infrastructure
 {
@@ -34,7 +38,7 @@ namespace CleanArchitecture.Razor.Infrastructure
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseInMemoryDatabase("CleanArchitecture.RazorDb")
-                    ); ;
+                    ); 
             }
             else if (configuration.GetValue<bool>("UseSqliteDatabase"))
             {
@@ -53,7 +57,15 @@ namespace CleanArchitecture.Razor.Infrastructure
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
 
                     );
+                    services.AddDatabaseDeveloperPageExceptionFilter();
             }
+            services.Configure<CookiePolicyOptions>(options =>
+        {
+            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+            options.CheckConsentNeeded = context => true;
+            options.MinimumSameSitePolicy = SameSiteMode.None;
+        });
+            
             services.Configure<SmartSettings>(configuration.GetSection(SmartSettings.SectionName));
             services.AddSingleton(s => s.GetRequiredService<IOptions<SmartSettings>>().Value);
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
@@ -108,12 +120,38 @@ namespace CleanArchitecture.Razor.Infrastructure
             // Localization
             services.AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
             services.AddScoped<LocalizationCookiesMiddleware>();
+             services.AddScoped<ExceptionMiddleware>();
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
                 options.FallBackToParentUICultures = true;
             });
+             services.AddControllers();
+        services.AddSignalR();
+        services.AddRazorPages(options =>
+                 {
+                     options.Conventions.AddPageRoute("/Karavay/Welcome", "");
+                 })
+                .AddFluentValidation(fv =>
+                 {
+                     fv.DisableDataAnnotationsValidation = true;
+                     fv.ImplicitlyValidateChildProperties = true;
+                     fv.ImplicitlyValidateRootCollectionElements = true;
+                 })
+                 .AddViewLocalization()
+                 .AddNewtonsoftJson(options =>
+                 {
+                     
+                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                     var resolver = options.SerializerSettings.ContractResolver as DefaultContractResolver;
+                     resolver.NamingStrategy = null;
 
+                 }).AddRazorRuntimeCompilation();
+           services.ConfigureApplicationCookie(options => {
+            options.LoginPath = "/Identity/Account/Login";
+            options.LogoutPath = "/Identity/Account/Logout";
+            options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+        });
             return services;
         }
 

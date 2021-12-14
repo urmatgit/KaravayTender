@@ -303,7 +303,11 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
             }
 
             var fieldNameProperty = fieldName.Split('.');
-            return props.Find(fieldNameProperty[0], ignoreCase).GetChildProperties().Find(fieldNameProperty[1], ignoreCase);
+            if (fieldNameProperty.Length < 3)
+            {
+                return props.Find(fieldNameProperty[0], ignoreCase).GetChildProperties().Find(fieldNameProperty[1], ignoreCase);
+            }else
+                return props.Find(fieldNameProperty[0], ignoreCase).GetChildProperties().Find(fieldNameProperty[1], ignoreCase).GetChildProperties().Find(fieldNameProperty[2], ignoreCase);
 
         }
         #endregion

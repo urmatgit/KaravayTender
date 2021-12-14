@@ -1,7 +1,8 @@
 ﻿@using CleanArchitecture.Razor.Domain.Enums
-@model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
-@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
-<div class="modal fade " id="edit_modal" tabindex="-1" role="dialog" aria-hidden="true">
+@model SmartAdmin.WebUI.Pages.ComOffers.ParticipantModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ComOffers.IndexModel> _localizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComStages.IndexModel> _localizerStage
+<div class="modal fade " id="participant_modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog  modal-xl " role="document">
         <div class="modal-content  ">
             <div class="modal-header">
@@ -16,34 +17,34 @@
             </div>
 
 
-            <form id="edit_form" class="needs-validation" novalidate="novalidate">
+            <form id="participant_form" class="needs-validation" novalidate="novalidate">
                 <div class="modal-body">
                     @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="Input.Id" />
+                    <input type="hidden" asp-for="Input.Status" />
                     <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
                     <div class="form-row">
                         <div class="col-md-4">
                             <label class="form-label" for="Number">@_localizer["Number"] <span class="text-danger">*</span></label>
-                            <input type="text" asp-for="Input.Number" class="form-control" placeholder="@_localizer["Number"]" />
+                            <input type="text" asp-for="Input.Number" class="form-control" placeholder="@_localizer["Number"]" readonly />
                             <span class="invalid-feedback" asp-validation-for="Input.Number"></span>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="name">@_localizer["Direction"] <span class="text-danger">*</span></label>
-                            <select type="text" asp-for="Input.DirectionId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Direction"]" data-val-required="Не выбрано 'Направление'">
-                                <option value="">@_localizer["Choose a direction"]</option>
-                            </select>
+                            <input type="text" asp-for="Input.DirectionName" class="form-control" placeholder="@_localizer["Direction"]" readonly />
 
-                            <span class="invalid-feedback" asp-validation-for="Input.DirectionId"></span>
+
+                            <span class="invalid-feedback" asp-validation-for="Input.DirectionName"></span>
                         </div>
                         <div class="col-md-2">
                             <label class="form-label" for="Volume">@_localizer["Delay day"] <span class="text-danger">*</span></label>
-                            <input type="number" asp-for="Input.DelayDay" class="form-control" placeholder="@_localizer["Days"]" step="1" />
+                            <input type="number" asp-for="Input.DelayDay" class="form-control" placeholder="@_localizer["Days"]" readonly />
                             <span class="invalid-feedback" asp-validation-for="Input.DelayDay"></span>
                         </div>
                         <div class="col-md-2">
                             <label class="form-label" for="IsBankDays">@_localizer["Bank days"] </label>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" asp-for="Input.IsBankDays" class="custom-control-input" />
+                                <input type="checkbox" asp-for="Input.IsBankDays" class="custom-control-input" disabled />
                                 <label class="custom-control-label" for="Input_IsBankDays"></label>
 
                             </div>
@@ -54,21 +55,22 @@
                     <div class="form-row">
                         <div class="col-md-6">
                             <label class="form-label" for="name">@_localizer["Name"] <span class="text-danger">*</span></label>
-                            <input type="text" asp-for="Input.Name" class="form-control" placeholder="@_localizer["Name"]" />
+                            <input type="text" asp-for="Input.Name" class="form-control" placeholder="@_localizer["Name"]" readonly />
                             <span class="invalid-feedback" asp-validation-for="Input.Name"></span>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="VatId">@_localizer["Status"] <span class="text-danger">*</span></label>
-                            <select type="text" asp-for="Input.Status" asp-items="Html.GetEnumSelectList<ComOfferStatus>()" class="custom-select" placeholder="@_localizer["Status"]" data-val-required="Не выбрано 'Статус'">
-                                <option value="">@_localizer["Choose a status"]</option>
-                            </select>
+                            <input type="text" asp-for="Input.StatusStr" class="form-control readonly" placeholder="@_localizer["Status"]" readonly />
+                            @*<select type="text" asp-for="Input.Status" asp-items="Html.GetEnumSelectList<ComOfferStatus>()" class="custom-select" placeholder="@_localizer["Status"]" data-val-required="Не выбрано 'Статус'">
+                                    <option value="">@_localizer["Choose a status"]</option>
+                                </select>*@
 
-                            <span class="invalid-feedback" asp-validation-for="Input.Status"></span>
+                            <span class="invalid-feedback" asp-validation-for="Input.StatusStr"></span>
                         </div>
                         <div class="col-md-2">
                             <label class="form-label" for="IsBankDays">@_localizer["Price include delivery"] </label>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" asp-for="Input.IsDeliveryInPrice" class="custom-control-input" />
+                                <input type="checkbox" asp-for="Input.IsDeliveryInPrice" class="custom-control-input" disabled />
                                 <label class="custom-control-label" for="Input_IsDeliveryInPrice"></label>
 
                             </div>
@@ -78,60 +80,71 @@
                     <div class="form-row">
                         <div class="col-md-3">
                             <label class="form-label">@_localizer["Term from"] <span class="text-danger">*</span></label>
-                            <input class="form-control" asp-for="Input.TermBegin" type="date">
+                            <input class="form-control" asp-for="Input.TermBegin" type="date" readonly>
                             <span class="invalid-feedback" asp-validation-for="Input.TermBegin"></span>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">@_localizer["Term to"] <span class="text-danger">*</span></label>
-                            <input class="form-control" asp-for="Input.TermEnd" type="date">
+                            <input class="form-control" asp-for="Input.TermEnd" type="date" readonly>
                             <span class="invalid-feedback" asp-validation-for="Input.TermEnd"></span>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">@_localizer["Manager"] <span class="text-danger">*</span></label>
-                            <select type="text" asp-for="Input.ManagerId" asp-items="Model.Managers" class="custom-select" placeholder="@_localizer["Manager"]">
-                                <option value="">@_localizer["Choose manager"]</option>
-                            </select>
+                            <input type="text" asp-for="Input.ManagerName" class="form-control" placeholder="@_localizer["Direction"]" readonly />
 
-                            <span class="invalid-feedback" asp-validation-for="Input.ManagerId">Не выбрано 'Менеджер'</span>
+                            <span class="invalid-feedback" asp-validation-for="Input.ManagerName">Не выбрано 'Менеджер'</span>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label" for="WinnerName">@_localizer["Winner"] <span class="text-danger">*</span></label>
-                            <input type="text" asp-for="Input.WinnerName" class="form-control" placeholder="@_localizer["Winner"]" readonly />
+                            <input type="text" asp-for="Input.WinnerName" class="form-control readonly" placeholder="@_localizer["Winner"]" readonly />
                             <span class="invalid-feedback" asp-validation-for="Input.WinnerName"></span>
                         </div>
                     </div>
 
-                    <ul class="nav nav-tabs nav-justified mt-4" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tab_1" role="tab"><i class="@(Settings.Theme.IconPrefix) fa-info-square mr-1"></i> @_localizer["Position"]</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab_2" role="tab"><i class="@(Settings.Theme.IconPrefix) fa-file mr-1"></i> @_localizer["Participants"]</a>
-                        </li>
+                    <div class="form-row mt-2">
+                       <div class="card col-md-12">
+                        <div class="card-header bg-white d-flex align-items-center">
+                            <div class="col-md-3 row">
+                                <h5>@_localizerStage["Stage"] </h5> <h5 class="ml-2" id="StageNumber"></h5>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="custom-control custom-radio-rounded custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="lastOffer" name="GetStageType" checked="" value="1">
+                                    <label class="custom-control-label" for="lastOffer">@_localizerStage["Last offer"]</label>
+                                </div>
+                                <div class="custom-control custom-radio-rounded custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="StepbyStepOffer" name="GetStageType" value="0">
+                                    <label class="custom-control-label" for="StepbyStepOffer">@_localizerStage["Step-by-Step offer"]</label>
+                                </div>
+                            </div>
 
-                    </ul>
-                    <div class="tab-content border border-top-0 p-3">
-                        <div class="tab-pane fade show p-3 active" id="tab_1" role="tabpanel">
-                            <partial name="ComPosition" />
                         </div>
-                        <div class="tab-pane fade show p-3" id="tab_2" role="tabpanel">
-                            <p>tab2</p>
+                        <div class="card-body">
+                            <div class="row">
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="compostion_dg">
+                                    </table>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
 
-
-
                 </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
-                    <button type="button" id="save" class="btn btn-primary">@_localizer["Save"]</button>
-                </div>
-
-            </form>
-
 
         </div>
-        
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
+            <button type="submit" class="btn btn-danger">@_localizer["Отказаться от участие"]</button>
+            <button type="submit" class="btn btn-primary">@_localizer["Подтвердить"]</button>
+        </div>
+        </form>
+
+
     </div>
+
+</div>
 </div>

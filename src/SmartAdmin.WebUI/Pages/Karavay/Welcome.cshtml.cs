@@ -32,6 +32,7 @@ namespace SmartAdmin.WebUI.Pages.Karavay
             _logger.LogInformation("new163@163.com".ToMD5());
             _logger.LogInformation("Welcome. Karavay");
             _diagnosticContext.Set("IndexCallCount", Interlocked.Increment(ref _callCount));
+            
         }
         public async Task<JsonResult> OnGetFilter(string input)
         {

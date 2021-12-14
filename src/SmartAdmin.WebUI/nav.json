@@ -21,7 +21,17 @@
           "title": "Коммерческие предложения",
           "icon": "fal fa-comments-alt-dollar",
           "href": "comoffers_index.html",
-          "roles": []
+          "roles": [
+            "Admin",
+            "Manager",
+            "Super"
+          ]
+        },
+        {
+          "title": "Коммерческие предложения",
+          "icon": "fal fa-comments-alt-dollar",
+          "href": "comoffers_participant.html",
+          "roles": [ "Admin", "Supplier" ]
         }
         
       ]

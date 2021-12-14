@@ -47,12 +47,7 @@ namespace SmartAdmin.WebUI
             // While having to type '.Value' everywhere is driving me nuts (>_<), using this method means reloaded appSettings.json from disk will not work
             services.AddSingleton(s => s.GetRequiredService<IOptions<SmartSettings>>().Value);
 
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+            
 
             services.AddHangfire(Configuration);
             services.AddApplication()
@@ -61,7 +56,7 @@ namespace SmartAdmin.WebUI
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddControllers();
+            
             //    .AddJsonOptions(option =>
             //{
                 
@@ -77,38 +72,7 @@ namespace SmartAdmin.WebUI
                //     }
                // ); ;
 
-            services
-                 .AddRazorPages(options =>
-                 {
-                     options.Conventions.AddPageRoute("/Karavay/Welcome", "");
-                     // options.Conventions.AddAreaPageRoute("Identity","/Account/Login","");
-
-                 })
-                 .AddMvcOptions(options =>
-                 {
-                     options.Filters.Add<ApiExceptionFilterAttribute>();
-                 })
-                .AddFluentValidation(fv =>
-                {
-                    fv.DisableDataAnnotationsValidation = true;
-                    fv.ImplicitlyValidateChildProperties = true;
-                    fv.ImplicitlyValidateRootCollectionElements = true;
-                })
-                .AddViewLocalization()
-                .AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    var resolver = options.SerializerSettings.ContractResolver as DefaultContractResolver;
-                    resolver.NamingStrategy = null;
-                })
-                //.AddJsonOptions(options =>
-                //  {
-                //      options.JsonSerializerOptions.PropertyNamingPolicy = null;
-
-
-
-                //  })
-                .AddRazorRuntimeCompilation();
+             
 
 
             services.ConfigureApplicationCookie(options =>
@@ -119,7 +83,7 @@ namespace SmartAdmin.WebUI
             });
 
 
-            services.AddSignalR();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

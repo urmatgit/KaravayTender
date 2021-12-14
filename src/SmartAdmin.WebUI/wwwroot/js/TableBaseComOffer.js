@@ -177,7 +177,13 @@ function openEditpanel(row) {
     }
     else {
         $('#edit_form_panel #Input_Id').val(0)
-        
+        const form = document.querySelector('#edit_form_panel');
+        for (var i = 0, fLen = form.length; i < fLen; i++) {
+            if (!form.elements[i].classList.contains("readonly"))
+                form.elements[i].readOnly = false;
+        }
+        $('.custom-select').prop('disabled', false);
+        $('.custom-control-input[type=checkbox]').prop('disabled', false);
         if (typeof OnNewRow == 'function')
             OnNewRow();
         SetEnableToRoleButton(false);

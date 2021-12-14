@@ -63,8 +63,7 @@ var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permission
         <button type="button" class="btn btn-danger"  id="btnReject"   data-toggle="modal" data-target="#RejectModal">@_localizer["Reject"]</button>
         
        
-        }
-        @if (_canEdit.Succeedd){
+        
             <button type="submit" class="btn btn-primary" id="saveButton">@_localizer["Accept"]</button>
         }
 

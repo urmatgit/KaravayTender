@@ -65,7 +65,7 @@ var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permission
                     </div>
                     <div class="col-md-4">
                         <label class="form-label" for="VatId">@_localizer["Status"] <span class="text-danger">*</span></label>
-                        <input type="text" asp-for="Input.StatusStr" class="form-control" placeholder="@_localizer["Status"]" readonly />
+                        <input type="text" asp-for="Input.StatusStr" class="form-control readonly" placeholder="@_localizer["Status"]" readonly />
                         @*<select type="text" asp-for="Input.Status" asp-items="Html.GetEnumSelectList<ComOfferStatus>()" class="custom-select" placeholder="@_localizer["Status"]" data-val-required="Не выбрано 'Статус'">
                                 <option value="">@_localizer["Choose a status"]</option>
                             </select>*@
@@ -103,7 +103,7 @@ var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permission
                     </div>
                     <div class="col-md-3">
                         <label class="form-label" for="WinnerName">@_localizer["Winner"] <span class="text-danger">*</span></label>
-                        <input type="text" asp-for="Input.WinnerName" class="form-control" placeholder="@_localizer["Winner"]" readonly />
+                        <input type="text" asp-for="Input.WinnerName" class="form-control readonly" placeholder="@_localizer["Winner"]" readonly />
                         <span class="invalid-feedback" asp-validation-for="Input.WinnerName"></span>
                     </div>
                 </div>

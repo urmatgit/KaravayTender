@@ -39,8 +39,8 @@ using CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
-    [Authorize(policy: Permissions.ComOffers.Manage)]
-    public class IndexModel : PageModel
+    [Authorize(policy: Permissions.ComOffers.View)]
+    public class ParticipantModel : PageModel
     {
         [BindProperty]
         public AddEditComOfferCommand Input { get; set; }
@@ -64,16 +64,16 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
         private readonly IAuthorizationService _authorizationService;
         private readonly ICurrentUserService _currentUserService;
         private readonly ISender _mediator;
-        private readonly IStringLocalizer<IndexModel> _localizer;
+        private readonly IStringLocalizer<SmartAdmin.WebUI.Pages.ComOffers.IndexModel> _localizer;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public IndexModel(
+        public ParticipantModel(
            IIdentityService identityService,
             IAuthorizationService authorizationService,
             ICurrentUserService currentUserService,
             ISender mediator,
             UserManager<ApplicationUser> userManager,
-            IStringLocalizer<IndexModel> localizer
+            IStringLocalizer<SmartAdmin.WebUI.Pages.ComOffers.IndexModel> localizer
             )
         {
             _userManager = userManager;
@@ -87,16 +87,16 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
 
         public async Task OnGetAsync()
         {
-            var result = await _identityService.FetchUsers("Admin");
-            Directions = await _mediator.LoadDirection();
-            var fistelement = Directions.FirstOrDefault();
+            //var result = await _identityService.FetchUsers("Admin");
+            //Directions = await _mediator.LoadDirection();
+            //var fistelement = Directions.FirstOrDefault();
             
-                Categories = await _mediator.LoadCategory(0);
+            //    Categories = await _mediator.LoadCategory(0);
             
-            var nomenclaturies = new  GetAllNomenclaturesQuery();
-            Nomenclatures = (List<NomenclatureDto>)await  _mediator.Send(nomenclaturies);
-            Areas = await _mediator.LoadAreas();
-            await LoadManagers();
+            //var nomenclaturies = new  GetAllNomenclaturesQuery();
+            //Nomenclatures = (List<NomenclatureDto>)await  _mediator.Send(nomenclaturies);
+            //Areas = await _mediator.LoadAreas();
+            //await LoadManagers();
 
         }
         private async Task LoadManagers()
