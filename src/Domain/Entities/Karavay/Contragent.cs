@@ -70,7 +70,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
         public virtual ICollection<ComOffer> ComOffers { get; set; }
         public virtual ICollection<ComParticipant> ComParticipants { get; set; }
         public virtual ICollection<StageComposition> StageCompositions { get; set; }
-
+        public virtual ICollection<StageParticipant> StageParticipants { get; set; }
         public List<DomainEvent> DomainEvents { get; set; } = new();
     }
 }

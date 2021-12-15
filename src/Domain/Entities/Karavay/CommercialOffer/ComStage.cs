@@ -34,6 +34,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public  virtual ComOffer ComOffer { get; set; }
         
         public virtual ICollection<StageComposition> StageCompositions { get; set; }
+        public virtual ICollection<StageParticipant> StageParticipants { get; set; }
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new();
     }

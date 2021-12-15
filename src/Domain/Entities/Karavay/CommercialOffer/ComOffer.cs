@@ -67,7 +67,8 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public virtual ICollection<ComParticipant> ComParticipants { get; set; }
         public virtual ICollection<ComStage> ComStages { get; set; }
         public virtual ICollection<ComPosition> ComPositions { get; set; }
-        
+        public virtual ICollection<StageParticipant> StageParticipants { get; set; }
+
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new();
 
