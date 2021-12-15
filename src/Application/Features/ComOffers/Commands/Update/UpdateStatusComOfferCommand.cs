@@ -47,6 +47,9 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update
            if (item != null && item.Status!=request.Status)
            {
                 item.Status = request.Status;
+                var createevent = new ComOfferUpdatedEvent(item);
+                item.DomainEvents.Add(createevent);
+                _context.ComOffers.Add(item);
                 await _context.SaveChangesAsync(cancellationToken);
            }
             var itemDto = _mapper.Map<ComOfferDto>(item);
