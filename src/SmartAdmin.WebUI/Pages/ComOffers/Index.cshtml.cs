@@ -145,14 +145,17 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 {
                     ComOfferId = Input.Id,
                     Number = 1,
-                    DeadlineDate =  deadline
+                    DeadlineDate =  deadline,
+                    
                 };
                  var result = await _mediator.Send(CreateState1);
-                if (result.Succeeded)
+                if (!result.Succeeded)
                 {
-                    result = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting });
+                    return BadRequest(Result.Failure(result.Errors));
+                    
                 }
-                return new JsonResult(result);
+                var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting });
+                return new JsonResult(resultComOffer);
                 //return new JsonResult("OK");
             }
             catch (ValidationException ex)

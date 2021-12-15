@@ -58,8 +58,8 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
                             ComPositionId = position.Id,
                             ContragentId = participant.ContragentId,
                             ComStageId = request.ComStageId,
-                            Status = true,
-                            Price = 0
+                            RequestPrice = true,
+                            Price = null
                         };
                         //dc.ComStageId, dc.ContragentId,dc.ComPositionId
                         var exist = await _context.StageCompositions.FindAsync(new object[] { request.ComStageId,participant.ContragentId,position.Id },cancellationToken);

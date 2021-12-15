@@ -18,14 +18,14 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
 {
-    public class CreateComStageCommand: ComStageDto,IRequest<Result<int>>, IMapFrom<ComStage>
+    public class CreateComStageCommand: ComStageDto,IRequest<Result<ComStageDto>>, IMapFrom<ComStage>
     {
         public string CacheKey => ComStageCacheKey.GetAllCacheKey;
 
         public CancellationTokenSource ResetCacheToken => ComStageCacheTokenSource.ResetCacheToken;
     }
     
-    public class CreateComStageCommandHandler : IRequestHandler<CreateComStageCommand, Result<int>>
+    public class CreateComStageCommandHandler : IRequestHandler<CreateComStageCommand, Result<ComStageDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -43,7 +43,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
             _mapper = mapper;
             _mediator = mediator;
         }
-        public async Task<Result<int>> Handle(CreateComStageCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ComStageDto>> Handle(CreateComStageCommand request, CancellationToken cancellationToken)
         {
             //TODO:Implementing CreateComStageCommandHandler method
             
@@ -61,10 +61,10 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
                 _context.ComStages.Add(item);
             }
            await _context.SaveChangesAsync(cancellationToken);
-            var stageComResult = await _mediator.Send(new CreateStageCompositionsCommand() { ComOfferId = request.ComOfferId, ComStageId = item.Id });
+            var stageComResult = await _mediator.Send(new CreateStageCompositionsCommand() { ComOfferId = request.ComOfferId, ComStageId = item.Id },cancellationToken);
             if (!stageComResult.Succeeded)
             {
-                return Result<int>.Failure(stageComResult.Errors);
+                return Result<ComStageDto>.Failure(stageComResult.Errors);
             }
             //var comoffer = await _context.ComOffers
             //    .Include(c => c.ComPositions)
@@ -95,7 +95,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
             //        await _context.SaveChangesAsync(cancellationToken);
             //    }
             //}
-           return  Result<int>.Success(item.Id);
+            var itemDto = _mapper.Map<ComStageDto>(item);
+           return  Result<ComStageDto>.Success(itemDto);
         }
     }
 }

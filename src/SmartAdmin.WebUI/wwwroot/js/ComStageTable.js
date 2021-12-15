@@ -26,67 +26,68 @@ const tblStageColumns = [[
     { field: "ContName20", title: "name20", colspan: 2 },
 ], [
     
-    { field: 'ContrPrice1', title: 'Прайс1',   width: 100 },
     {
-        field: 'ContrStatus1', title: 'Статус', width: 100, formatter: checkboxformatterEdit
+        field: 'ContrPrice1', title: 'Цена', width: 100,formatter: function (value, row) {return formatPrice(value);} },
+    {
+        field: 'RequestPrice1', title: 'Запрос цены', width: 100, formatter: checkboxformatterEdit
     },
     
-    { field: 'ContrPrice2', title: 'Прайс',   width: 100 },
-    { field: 'ContrStatus2', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice2', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'RequestPrice2', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice3', title: 'Прайс',   width: 100 },
-    { field: 'ContrStatus3', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice3', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'RequestPrice3', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice4', title: 'Прайс',   width: 100 },
-    { field: 'ContrStatus4', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice4', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'RequestPrice4', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice5', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus5', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice5', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'RequestPrice5', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice6', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus6', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice6', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'RequestPrice6', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice7', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus7', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice7', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'RequestPrice7', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice8', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus8', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice8', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'RequestPrice8', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice9', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus9', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice9', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'RequestPrice9', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice10', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus10', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice10', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'RequestPrice10', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice11', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus11', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice11', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'RequestPrice11', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice12', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus12', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice12', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'RequestPrice12', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice13', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus13', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice13', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'RequestPrice13', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice14', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus14', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice14', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'RequestPrice14', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice15', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus15', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice15', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'RequestPrice15', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice16', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus16', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice16', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'RequestPrice16', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice17', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus17', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice17', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'RequestPrice17', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice18', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus18', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice18', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'RequestPrice18', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
 
-    { field: 'ContrPrice19', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus19', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice19', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'RequestPrice19', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     
-    { field: 'ContrPrice20', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus20', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    { field: 'ContrPrice20', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'RequestPrice20', title: 'Запрос цены',   width: 100, formatter: checkboxformatterEdit },
     ]
     
 
@@ -121,7 +122,7 @@ initdatagridComStage = (cdata, dataComStages) => {
             //});
         },
         onCellEdit: function (index, field, value) {
-            //if (field == 'ContrStatus1') {
+            //if (field == 'RequestPrice1') {
             //    var ck = $(this).datagrid('getEditor', { index: index, field: field });
             //    $(ck.target).bind('change', function (e) {
             //        this.value = false;

@@ -471,7 +471,12 @@ onImportedSucceeded = "reloadData()"
                 },
                 { field: 'DeliveryCount', title: '@_localizer["Delivery count"]', sortable: true, width: 130},
 
-                { field: 'Price', title: '@_localizer["Price"]', sortable: true, width: 80 },
+                {
+                    field: 'Price', title: '@_localizer["Price"]', sortable: true, width: 80, align: 'right', formatter: function (value, row) {
+                        
+                        return formatPrice(value);
+                    }
+                },
 
                 { field: 'Nomenclature.Vat.Stavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
                 { field: 'Volume', title: '@_localizer["Volume"]', sortable: true, width: 80 },

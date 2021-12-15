@@ -120,10 +120,12 @@ var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permission
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#ComParticipant" role="tab"><i class="@(Settings.Theme.IconPrefix) fa-users mr-1"></i> @_localizer["Participants"]</a>
                 </li>
-                <li class="nav-item">
+        
+        
+                <li class="nav-item" id="ComStageTab">
                     <a class="nav-link" data-toggle="tab" href="#ComState" role="tab"><i class="@(Settings.Theme.IconPrefix) fa-sort-numeric-up-alt mr-1"></i> @_localizer["Stages"]</a>
                 </li>
-
+        
             </ul>
             <div class="tab-content border border-top-0 p-1">
                 <div class="tab-pane fade show p-2 active" id="ComPosition" role="tabpanel">
@@ -132,10 +134,13 @@ var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permission
                 <div class="tab-pane fade show p-2" id="ComParticipant" role="tabpanel">
                     <partial name="ComParticipant" />
                 </div>
-                <div class="tab-pane fade show p-2" id="ComState" role="tabpanel">
-                    <partial name="ComStage" />
+        
+        
+                    <div class="tab-pane fade show p-2" id="ComState" role="tabpanel">
+                        <partial name="ComStage" />
+                    </div>
+        
                 </div>
-            </div>
             <div class="panel-footer p-2  " style="text-align:right">
                 @if (_canStart.Succeeded){
                 <button type="button" class="btn btn-danger mr-5" id="startStage">@_localizer["Run"]</button>

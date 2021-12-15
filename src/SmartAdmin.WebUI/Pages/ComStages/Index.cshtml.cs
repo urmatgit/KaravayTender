@@ -128,7 +128,7 @@ namespace SmartAdmin.WebUI.Pages.ComStages
                 foreach (var part in nomenclature.participients)
                 {
                     stringBuilderPart.Append($"'{part.Contragent.Name} ({part.ComPosition.ComOffer.ComParticipants.FirstOrDefault(p=>p.ContragentId==part.ContragentId)?.Status.ToDescriptionString()})':{part.Contragent.Id},");
-                    stringBuilderPart.Append($"'ContName_{part.Contragent.Id}_Status':'{part.Status}',");
+                    stringBuilderPart.Append($"'ContName_{part.Contragent.Id}_Status':'{part.RequestPrice}',");
                     stringBuilderPart.Append($"'ContName_{part.Contragent.Id}_Price':'{part.Price}',");
                     
                 }
@@ -318,7 +318,7 @@ namespace SmartAdmin.WebUI.Pages.ComStages
                     var status = nomenclatured.ComPosition.ComOffer.ComParticipants.FirstOrDefault(p => p.ContragentId == part.ContragentId)?.Status;
                     stringBuilderPart.AppendFormat("\"ContName_{0}\":{1},", part.Contragent.Id,part.ContragentId);
                     stringBuilderPart.AppendFormat("\"ContName_{0}_price\":{1},", part.Contragent.Id,part.Price);
-                    stringBuilderPart.AppendFormat("\"ContName_{0}_status\":{1},", part.Contragent.Id,part.Status?"true":"false");
+                    stringBuilderPart.AppendFormat("\"ContName_{0}_status\":{1},", part.Contragent.Id,part.RequestPrice ? "true":"false");
                 }
                 stringBuilderHeader.Append(stringBuilderPart.ToString().TrimEnd(','));
                 stringBuilderPart.Clear();

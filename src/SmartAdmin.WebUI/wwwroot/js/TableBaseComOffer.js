@@ -45,7 +45,8 @@ $('#startStage').click(function (e) {
 
             SubmitForm("?handler=Run&deadline=" + result, function (res) {
                 SetReadOnlyForm();
-                LoadComState(currentEditRow.Id);
+                openEditpanel(res.Data);
+                //LoadComState(currentEditRow.Id);
             });
             
         }
@@ -170,24 +171,43 @@ function openEditpanel(row) {
 
             });
 
-        if (row.Status != 0) {
+        if (row.Status > 0) {
             SetReadOnlyForm();
+            $('#ComState').show();
+            $('#ComStageTab').show();
+            $('#ComState').show();
+            $('#ComStageTab').show();
+            
+        } else {
+            SetEditable();
+            SetEnableToRoleButton(true);
+            $('#save').prop('disabled', false);
+            $('#startStage').prop('disabled', false);
+            $('#ComState').hide();
+            $('#ComStageTab').hide();
         }
      
     }
     else {
         $('#edit_form_panel #Input_Id').val(0)
-        const form = document.querySelector('#edit_form_panel');
-        for (var i = 0, fLen = form.length; i < fLen; i++) {
-            if (!form.elements[i].classList.contains("readonly"))
-                form.elements[i].readOnly = false;
-        }
-        $('.custom-select').prop('disabled', false);
-        $('.custom-control-input[type=checkbox]').prop('disabled', false);
+        SetEditable();
         if (typeof OnNewRow == 'function')
             OnNewRow();
         SetEnableToRoleButton(false);
+        $('#ComState').hide();
+        $('#ComStageTab').hide();
     }
+    $('a[href="#ComPosition"]').click();
+
+}
+function SetEditable() {
+    const form = document.querySelector('#edit_form_panel');
+    for (var i = 0, fLen = form.length; i < fLen; i++) {
+        if (!form.elements[i].classList.contains("readonly"))
+            form.elements[i].readOnly = false;
+    }
+    $('.custom-select').prop('disabled', false);
+    $('.custom-control-input[type=checkbox]').prop('disabled', false);
 }
 tblFilters = [{}];
 

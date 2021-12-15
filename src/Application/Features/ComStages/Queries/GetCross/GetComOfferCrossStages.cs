@@ -89,7 +89,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
             //row1.ContName1 = "Контрагет21";
             //row1.ContrId1 = "1";
             //row1.ContrPrice1 = "100";
-            //row1.ContrStatus1 = "true";
+            //row1.RequestPrice1 = "true";
             //sampleObjects.Add(row1);
 
             //dynamic row2 = new ExpandoObject();
@@ -98,7 +98,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
             //row2.ContName1 = "Контрагет22";
             //row2.ContrId1 = "2";
             //row2.ContrPrice1 = "110";
-            //row2.ContrStatus1 = "false";
+            //row2.RequestPrice1 = "false";
             
             //sampleObjects.Add(row2);
             
@@ -143,7 +143,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                         Indexcontrgent++;
                         row.Add($"ContrId{Indexcontrgent}", stagecom.Contragent.Id);
                         row.Add($"ContrPrice{Indexcontrgent}",stagecom.Price);
-                        row.Add($"ContrStatus{Indexcontrgent}", stagecom.Status);
+                        row.Add($"RequestPrice{Indexcontrgent}", stagecom.RequestPrice);
                         
                     }
                     resultData.Add((ExpandoObject)row);
