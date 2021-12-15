@@ -36,6 +36,7 @@ using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.AddE
 using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.Import;
 using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create;
 using CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update;
+using CleanArchitecture.Razor.Application.Features.StageCompositions.Queries.Pagination;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
@@ -109,9 +110,10 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
-        public async Task<IActionResult> OnGetDataPosAsync([FromQuery] ComPositionsWithPaginationQuery command)
+        public async Task<IActionResult> OnGetDataPosAsync([FromQuery] ComPositionsWithStagePaginationQuery command)
         {
             // throw new Exception("Test log error 222 !!!!!!");
+            
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }

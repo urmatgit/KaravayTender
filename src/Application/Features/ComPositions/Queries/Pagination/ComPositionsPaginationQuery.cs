@@ -49,8 +49,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             //TODO:Implementing ComPositionsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<ComPosition>(request.FilterRules);
             
-            try
-            {
+           
                 var data = await _context.ComPositions
                     .Specify(new FilterByComOfferQuerySpec(request.ComOfferId))
                      .Where(filters)
@@ -71,11 +70,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                   //.ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
                   var datDto = _mapper.Map<IEnumerable<ComPositionDto>>(data.rows);
                 return new PaginatedData<ComPositionDto>(datDto, data.total); ;
-            }catch(Exception er)
-            {
-
-                return null;
-            }
+             
         }
         public class FilterByComOfferQuerySpec : Specification<ComPosition>
         {

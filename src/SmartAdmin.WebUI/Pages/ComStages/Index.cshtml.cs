@@ -143,8 +143,15 @@ namespace SmartAdmin.WebUI.Pages.ComStages
 
             return new JsonResult($"[{stringBuilder.ToString().TrimEnd(',')}]");
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stage">1=last number,0-all</param>
+        /// <param name="comofferid"></param>
+        /// <returns></returns>
         public async Task<IActionResult> OnGetDataAsync([FromQuery] int stage = 1, int comofferid = 1)
         {
+            
             var result = await _mediator.Send(new GetComOfferCrossStages { Stage = stage, ComOfferId = comofferid });
             if (!result.Succeeded)
             {

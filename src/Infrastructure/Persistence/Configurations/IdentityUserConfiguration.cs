@@ -34,6 +34,10 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
                 .WithOne()
                 .HasForeignKey(ur => ur.UserId)
                 .IsRequired();
+            builder.HasOne(e => e.Contragent)
+                .WithOne(u => u.ApplicationUser)
+                .HasForeignKey<ApplicationUser>(u => u.ContragentId);
+                
         }
     }
     public class ApplicationRoleClaimConfiguration : IEntityTypeConfiguration<ApplicationRoleClaim>

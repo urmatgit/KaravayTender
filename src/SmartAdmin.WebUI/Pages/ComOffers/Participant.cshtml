@@ -6,6 +6,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComOffers.IndexModel> _localizer
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.Contragents.IndexModel> _localizerContr
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComParticipants.IndexModel> _localizerPart
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComStages.IndexModel> _localizerStage
 @inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
 @{
     ViewData["Title"] = _localizer["Сommercial offer"].Value;
@@ -183,7 +184,7 @@
 
 
         $("input[name=GetStageType]:radio").change(function () {
-            LoadComState(currentEditRow.Id);
+            reloadDataCP();
         });
 
 
@@ -318,7 +319,9 @@
                         return rec.Nomenclature.Name;
                     }
                 },
-
+                {
+                    field: 'Stage', title: '@_localizerStage["Stage"]', sortable: true, width: 80
+                },
 
                 {
                     field: 'AriaNames', title: '@_localizer["Arias"]', sortable: true, width: 150, formatter: function (val, rec) {
@@ -361,13 +364,23 @@
                 pageList: [5, 10, 30, 50, 100, 1000],
 
                 columns: [tblColumnsComPosition],
-
+                onLoadError: function (error) {
+                    if (error.responseJSON.Errors) {
+                        const errors = error.responseJSON.Errors;
+					errors.forEach(item => {
+						toastr["error"](item);
+					});
+				} else {
+                        toastr["error"](`@_localizer["Load fail"],${error.responseJSON}`);
+				}
+                }
             }).datagrid('enableFilter', {});
 
 
         }
         function reloadDataCP() {
-            $('#compostion_dg').datagrid('load', "/ComOffers/Participant?handler=DataPos&ComOfferId=" + currentEditRow.Id);
+            let StageType = $('input[name="GetStageType"]:checked').val();
+            $('#compostion_dg').datagrid('load', "/ComOffers/Participant?handler=DataPos&ComOfferId=" + currentEditRow.Id + "&IsLastStage=" + StageType);
         }
         $('#participant_modal').on('shown.bs.modal', function () {
             reloadDataCP();

@@ -17,7 +17,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
 
         //[ForeignKey("ApplicationUserId")]
         public string ApplicationUserId { get; set; }
-
+        public virtual ApplicationUser ApplicationUser { get; set; }
 
 
         [Required]
