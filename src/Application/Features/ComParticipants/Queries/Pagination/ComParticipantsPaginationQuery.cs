@@ -49,7 +49,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
         public async Task<PaginatedData<ComParticipantDto>> Handle(ComParticipantsWithPaginationQuery request, CancellationToken cancellationToken)
         {
             //TODO:Implementing ComParticipantsWithPaginationQueryHandler method 
-           var filters = PredicateBuilder.FromFilter<ComParticipant>(request.FilterRules);
+            var filters = PredicateBuilder.FromFilter<ComParticipant>(request.FilterRules).And(c => c.ComOfferId == request.ComOfferId);
+
 
             //var data0 = from c in _context.ComParticipants
             //            join sp in _context.StageParticipants.Where(s => s.ComOfferId == request.ComOfferId) on c.ContragentId equals sp.ContragentId into spart
@@ -60,10 +61,15 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
             //                c,
             //                part
             //            };
+            var lastComStaget = await _context.ComStages
+                                .Where(c => c.ComOfferId == request.ComOfferId)
+                                .OrderBy(n => n.Number)
+                                .LastOrDefaultAsync(cancellationToken);
 
             var data0 = _context.ComParticipants
                        .Where(filters)
-                       .GroupJoin(_context.StageParticipants.Where(c => c.ComOfferId == request.ComOfferId),
+                       .GroupJoin(_context.StageParticipants
+                                .Where(c => c.ComOfferId == request.ComOfferId && lastComStaget!=null? c.ComStageId==lastComStaget.Id : false),
                                  cp => cp.ContragentId,
                                  sp => sp.ContragentId,
                                  (c, s) => new { cp = c, sp = s })
@@ -74,7 +80,9 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
                                  ComOfferId = c.cp.ComOfferId,
                                  ContragentId = c.cp.ContragentId,
                                  ContragentName = c.cp.Contragent.Name,
-                                 Status = s == null ? Domain.Enums.ParticipantStatus.Waiting : s.Status
+                                 Status = s == null ?  Domain.Enums.ParticipantStatus.Participates : s.Status,
+                                 StepFailure= s == null || s.Status != Domain.Enums.ParticipantStatus.NotParticipate  ? null: s.ComStage.Number
+                                 
                              }
                         );
                        

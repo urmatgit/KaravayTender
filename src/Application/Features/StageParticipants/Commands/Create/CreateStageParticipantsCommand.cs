@@ -53,7 +53,7 @@ namespace CleanArchitecture.Razor.Application.Features.StageParticipants.Command
                         ComOfferId = request.comOfferDto.Id,
                         ComStageId = request.ComStageId,
                         ContragentId = participant.ContragentId,
-                        Status = Domain.Enums.ParticipantStatus.Participates
+                        Status = Domain.Enums.ParticipantStatus.Waiting
                     };
                     //builder.HasKey(dc => new { dc.ComStageId, dc.ContragentId, dc.ComOfferId });
                     var exist = await _context.StageParticipants.FindAsync(new object[] { request.ComStageId, participant.ContragentId, request.comOfferDto.Id },cancellationToken);

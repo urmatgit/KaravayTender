@@ -49,7 +49,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update
                 item.Status = request.Status;
                 var createevent = new ComOfferUpdatedEvent(item);
                 item.DomainEvents.Add(createevent);
-                _context.ComOffers.Add(item);
+                _context.ComOffers.Update(item);
                 await _context.SaveChangesAsync(cancellationToken);
            }
             var itemDto = _mapper.Map<ComOfferDto>(item);
