@@ -19,8 +19,8 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         /// <summary>
         /// Этап отказа
         /// </summary>
-        public int? StepFailure { get; set; }
-        public ParticipantStatus Status { get; set; } = ParticipantStatus.NotParticipate;
+        //public int? StepFailure { get; set; }
+        
         [Required]
         public int ContragentId { get; set; }
         public virtual Contragent Contragent { get; set; }

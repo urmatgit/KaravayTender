@@ -18,9 +18,13 @@ namespace CleanArchitecture.Razor.Domain.Enums
     {
         [Description(@"Не участвует")]
         [Display(Name = "Не участвует")]
-        Participates = 0,
+        NotParticipate = 0,
+        
         [Description(@"Участвует")]
         [Display(Name = "Участвует")]
-        NotParticipate = 1
+        Participates = 1,
+        [Description(@"В ожидании")]
+        [Display(Name = "В ожидании")]
+        Waiting = 2
     }
 }

@@ -6,6 +6,7 @@ using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.Features.ComOffers.DTOs;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.Caching;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
@@ -17,13 +18,13 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Commands.Create
 {
-    public class CreateStageCompositionsCommand: IRequest<Result>
+    public class CreateStageCompositionsCommand: IRequest<Result<ComOfferDto>>
     {
         public int ComOfferId { get; set; }
         public int ComStageId { get; set; }
     }
     
-    public class CreateStageCompositionsCommandHandler : IRequestHandler<CreateStageCompositionsCommand, Result>
+    public class CreateStageCompositionsCommandHandler : IRequestHandler<CreateStageCompositionsCommand, Result<ComOfferDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -38,7 +39,7 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
             _localizer = localizer;
             _mapper = mapper;
         }
-        public async Task<Result> Handle(CreateStageCompositionsCommand request, CancellationToken cancellationToken)
+        public async Task<Result<ComOfferDto>> Handle(CreateStageCompositionsCommand request, CancellationToken cancellationToken)
         {
             //TODO:Implementing CreateStageCompositionsCommandHandler method 
             var comoffer = await _context.ComOffers
@@ -73,7 +74,8 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
                     await _context.SaveChangesAsync(cancellationToken);
                 }
             }
-            return Result.Success();
+            var Dto = _mapper.Map<ComOfferDto>(comoffer);
+            return Result<ComOfferDto>.Success(Dto);
         }
     }
 }

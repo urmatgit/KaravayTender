@@ -15,21 +15,24 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs
     {
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<ComParticipant, ComParticipantDto>().ReverseMap();
+            profile.CreateMap<ComParticipant, ComParticipantDto>()
+                .ForMember(c => c.ContragentName, s => s.MapFrom(y => y.Contragent != null ? y.Contragent.Name : ""));
+                
+            profile.CreateMap<ComParticipantDto, ComParticipant>(MemberList.None);
 
         }
         /// <summary>
         /// Этап отказа
         /// </summary>
         public int? StepFailure { get; set; }
-        public ParticipantStatus Status { get; set; } = ParticipantStatus.NotParticipate;
-        public string StatusStr=> Status.ToDescriptionString();
+        public ParticipantStatus Status { get; set; } = ParticipantStatus.Waiting;
+        public string StatusStr => Status.ToDescriptionString();
         [Required]
         public int ContragentId { get; set; }
-        public virtual ContragentDto Contragent { get; set; }
-        public string ContragentName => Contragent?.Name;
+       // public virtual ContragentDto Contragent { get; set; }
+        public string ContragentName { get; set; }
         [Required]
         public int ComOfferId { get; set; }
-        public virtual ComOfferDto ComOffer { get; set; }
+      //  public virtual ComOfferDto ComOffer { get; set; }
     }
 }

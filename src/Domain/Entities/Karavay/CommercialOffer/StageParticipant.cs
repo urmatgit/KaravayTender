@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Domain.Common;
+using CleanArchitecture.Razor.Domain.Enums;
 
 namespace CleanArchitecture.Razor.Domain.Entities.Karavay
 {
@@ -23,8 +24,11 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         [Required]
         public int ComOfferId { get; set; }
         public virtual ComOffer ComOffer { get; set; }
+
+        public ParticipantStatus Status { get; set; } = ParticipantStatus.NotParticipate;
+
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new();
-
+        
     }
 }

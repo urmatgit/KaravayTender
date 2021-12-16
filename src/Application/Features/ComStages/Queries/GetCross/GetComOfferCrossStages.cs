@@ -17,6 +17,7 @@ using CleanArchitecture.Razor.Application.Common.Specification;
 using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
 using CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
+using CleanArchitecture.Razor.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -154,19 +155,25 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
             }
             return resultData;
         }
-        private IEnumerable<ForTableHeader> GetHeaders(IEnumerable<ComStageDto> dataDto)
+        private IEnumerable<ForTableHeader> GetHeaders(IEnumerable<ComStageDto> comStageDtos)
         {
             
-            var contragents = from s in dataDto
+            var contragents = from s in comStageDtos
                               from c in s.StageCompositions
                               group s by c.Contragent into contrs
                               orderby contrs.Key.Name
                               select contrs.Key;
-            var Participants = from c in dataDto.GroupBy(r => r.ComOffer).Select(g => g.Key).FirstOrDefault().ComParticipants
+            var Participants = from c in comStageDtos.GroupBy(r => r.ComOffer).Select(g => g.Key).FirstOrDefault().ComParticipants
                                select new
                                {
                                    id = c.ContragentId,
-                                   status = c.Status
+                                   status = (comStageDtos
+                                          .Where(s => s.StageParticipants.Any(sp => sp.ContragentId == c.ContragentId))
+                                          .OrderBy(o => o.Number)
+                                          .LastOrDefault())?
+                                          .StageParticipants
+                                          .FirstOrDefault(sp => sp.ContragentId == c.ContragentId)
+                                          .Status
                                };
             var status = from s in contragents
                          join p in Participants on s.Id equals p.id into ps
@@ -174,7 +181,11 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                          select new ForTableHeader
                          {
                              Contragent = s,
-                             ParticipantStatus = p == null ? "" : p.status.ToDescriptionString()
+                             ParticipantStatus = p == null
+                             ? ""
+                             : (p.status == ParticipantStatus.Waiting  || p.status==ParticipantStatus.Participates
+                                ? ParticipantStatus.Participates.ToDescriptionString()
+                                : ParticipantStatus.NotParticipate.ToDescriptionString())
                          };
             return status;
         }

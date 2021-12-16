@@ -1,12 +1,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Features.ComOffers.DTOs;
 using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
+using CleanArchitecture.Razor.Domain.Enums;
 
 namespace CleanArchitecture.Razor.Application.Features.StageParticipants.DTOs
 {
@@ -26,5 +28,8 @@ namespace CleanArchitecture.Razor.Application.Features.StageParticipants.DTOs
         [Required]
         public int ComOfferId { get; set; }
         public virtual ComOfferDto ComOffer { get; set; }
+
+        public ParticipantStatus Status { get; set; } = ParticipantStatus.NotParticipate;
+        public string StatusStr => Status.ToDescriptionString();
     }
 }

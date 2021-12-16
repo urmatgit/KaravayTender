@@ -63,6 +63,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
                 .Include(s => s.ComOffer)
                 .ThenInclude(p=>p.ComParticipants)
                 .ThenInclude(p => p.Contragent)
+                .Include(sp=>sp.StageParticipants)
                 .FirstOrDefaultAsync(cancellationToken);
 
             var dataDto = _mapper.Map<ComStageDto>(data);
@@ -80,6 +81,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
               .Include(s => s.ComOffer)
               .ThenInclude(p => p.ComParticipants)
               .ThenInclude(p => p.Contragent)
+              .Include(sp=>sp.StageParticipants)
               .Where(p => p.ComOfferId == request.ComOfferId)
               .OrderBy(o => o.Number)
               .LastOrDefaultAsync(cancellationToken);

@@ -35,5 +35,6 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.DTOs
         public virtual ComOfferDto ComOffer { get; set; }
         //[JsonIgnore]
         public virtual ICollection<StageCompositionDto> StageCompositions { get; set; }
+        public virtual ICollection<StageParticipant> StageParticipants { get; set; }
     }
 }
