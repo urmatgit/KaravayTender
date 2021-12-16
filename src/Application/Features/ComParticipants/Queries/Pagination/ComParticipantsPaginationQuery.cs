@@ -51,30 +51,49 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
             //TODO:Implementing ComParticipantsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<ComParticipant>(request.FilterRules);
 
-            var data0 = from c in _context.ComParticipants
-                        join sp in _context.StageParticipants.Where(s => s.ComOfferId == request.ComOfferId) on c.ContragentId equals sp.ContragentId into spart
-                        from part in spart.DefaultIfEmpty()
-                        where c.ComOfferId == request.ComOfferId
-                        select new
-                        {
-                            c,
-                            part
-                        };
+            //var data0 = from c in _context.ComParticipants
+            //            join sp in _context.StageParticipants.Where(s => s.ComOfferId == request.ComOfferId) on c.ContragentId equals sp.ContragentId into spart
+            //            from part in spart.DefaultIfEmpty()
+            //            where c.ComOfferId == request.ComOfferId
+            //            select new
+            //            {
+            //                c,
+            //                part
+            //            };
 
-            var data1 = await _context.ComStages
-                        .Include(s => s.StageCompositions)
-                        .Where(c => c.ComOfferId == request.ComOfferId)
-                        .OrderBy(o => o.Number)
-                        .LastOrDefaultAsync(cancellationToken)
-                 ;
+            var data0 = _context.ComParticipants
+                       .Where(filters)
+                       .GroupJoin(_context.StageParticipants.Where(c => c.ComOfferId == request.ComOfferId),
+                                 cp => cp.ContragentId,
+                                 sp => sp.ContragentId,
+                                 (c, s) => new { cp = c, sp = s })
+                       .SelectMany(
+                             x => x.sp.DefaultIfEmpty(),
+                             (c, s) => new ComParticipantDto()
+                             {
+                                 ComOfferId = c.cp.ComOfferId,
+                                 ContragentId = c.cp.ContragentId,
+                                 ContragentName = c.cp.Contragent.Name,
+                                 Status = s == null ? Domain.Enums.ParticipantStatus.Waiting : s.Status
+                             }
+                        );
+                       
 
-            var data = await _context.ComParticipants
-                    .Where(filters)
-                    .Specify(new FilterByComOfferQuerySpec(request.ComOfferId))
-                    .Include(c => c.Contragent)
-                    .OrderBy($"{request.Sort} {request.Order}")
-                    .PaginatedDataAsync(request.Page, request.Rows)
-                    ;
+
+            //var data1 = await _context.ComStages
+            //            .Include(s => s.StageCompositions)
+            //            .Where(c => c.ComOfferId == request.ComOfferId)
+            //            .OrderBy(o => o.Number)
+            //            .LastOrDefaultAsync(cancellationToken)
+            //     ;
+
+            //var data = await _context.ComParticipants
+            //        .Where(filters)
+            //        .Specify(new FilterByComOfferQuerySpec(request.ComOfferId))
+            //        .Include(c => c.Contragent)
+            //        .OrderBy($"{request.Sort} {request.Order}")
+            //        .PaginatedDataAsync(request.Page, request.Rows)
+            //        ;
             //if (data1 != null)
             //{
             //    var dataRes = from d in data.rows
@@ -88,15 +107,15 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
             //                      Status = sp == null ? Domain.Enums.ParticipantStatus.Waiting : sp.Status,
             //                      StepFailure=sp==null? null: sp.
             //                  };
-                
+
             //    return new PaginatedData<ComParticipantDto>(dataRes, dataRes.Count());
 
             //}
             //else
             //{
-                var dataDto = _mapper.Map<IEnumerable<ComParticipantDto>>(data.rows);
-                //.ProjectTo<ComParticipantDto>(_mapper.ConfigurationProvider)
-                return new PaginatedData<ComParticipantDto>(dataDto, data.total);
+            //var dataDto = _mapper.Map<IEnumerable<ComParticipantDto>>(data0.rows);
+            //.ProjectTo<ComParticipantDto>(_mapper.ConfigurationProvider)
+            return new PaginatedData<ComParticipantDto>(data0, data0.Count());
             //}
         }
         public class FilterByComOfferQuerySpec : Specification<ComParticipant>
