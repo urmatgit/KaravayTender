@@ -79,7 +79,7 @@ namespace SmartAdmin.WebUI
         private static string[] filters = new string[] { "Microsoft.EntityFrameworkCore.Model.Validation", "WorkflowCore.Services.WorkflowHost", "WorkflowCore.Services.BackgroundTasks.RunnablePoller", "Microsoft.Hosting.Lifetime", "Serilog.AspNetCore.RequestLoggingMiddleware" };
         public static IHostBuilder CreateHostBuilder(string[] args) =>
 
-            
+
         Host.CreateDefaultBuilder(args)
                 .UseSerilog((context, services, configuration) => configuration
                     .ReadFrom.Configuration(context.Configuration)
@@ -88,7 +88,7 @@ namespace SmartAdmin.WebUI
                     .Enrich.FromLogContext()
                     .Enrich.WithClientIp()
                     .Enrich.WithClientAgent()
-                    
+
                     .Filter.ByExcluding(
                         //(logevent) =>
                         //{
