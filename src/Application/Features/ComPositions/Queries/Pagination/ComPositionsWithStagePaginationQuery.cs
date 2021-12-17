@@ -21,6 +21,7 @@ using CleanArchitecture.Razor.Application.Common.Specification;
 using Microsoft.AspNetCore.Identity;
 using CleanArchitecture.Razor.Domain.Identity;
 using CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy;
+using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagination
 {
@@ -43,12 +44,14 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
         private readonly ICurrentUserService _currentUserService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMediator _mediator;
+        private readonly ILogger<ComPositionsWithStagePaginationQueryHandler> _logger;
         public ComPositionsWithStagePaginationQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
             IMediator mediator,
                ICurrentUserService currentUserService,
             UserManager<ApplicationUser> userManager,
+             ILogger<ComPositionsWithStagePaginationQueryHandler> logger,
             IStringLocalizer<ComPositionsWithStagePaginationQueryHandler> localizer
             )
         {
@@ -58,6 +61,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             _localizer = localizer;
             _currentUserService = currentUserService;
             _userManager = userManager;
+            _logger = logger;
         }
 
         public async Task<PaginatedData<ComPositionDto>> Handle(ComPositionsWithStagePaginationQuery request, CancellationToken cancellationToken)

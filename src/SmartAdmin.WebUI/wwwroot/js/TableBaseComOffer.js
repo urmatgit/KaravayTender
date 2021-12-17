@@ -172,11 +172,11 @@ function openEditpanel(row) {
             });
 
         if (row.Status > 0) {
+            $('#ComState').show();
+            $('#ComStageTab').show();
             SetReadOnlyForm();
-            $('#ComState').show();
-            $('#ComStageTab').show();
-            $('#ComState').show();
-            $('#ComStageTab').show();
+            
+            
             
         } else {
             SetEditable();

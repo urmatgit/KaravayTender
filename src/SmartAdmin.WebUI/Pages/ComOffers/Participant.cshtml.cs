@@ -105,7 +105,7 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             var managers = await _userManager.GetUsersInRoleAsync("Manager");
             Managers = new SelectList(managers.Select(u => new { Id = u.Id, Name = string.IsNullOrEmpty(u.DisplayName) ? u.UserName : u.DisplayName }), "Id", "Name");
         }
-        public async Task<IActionResult> OnGetDataAsync([FromQuery] ComOffersWithPaginationQuery command)
+        public async Task<IActionResult> OnGetDataAsync([FromQuery] ComOffersMyWithPaginationQuery command)
         {
             var result = await _mediator.Send(command);
             return new JsonResult(result);
