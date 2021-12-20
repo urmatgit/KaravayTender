@@ -61,6 +61,18 @@
         </div>
     </div>
     <div class="card-body">
+        <div class="row mb-2">
+
+            <div class="col-md-2  mat my-auto" style="text-align:right">
+                <label class="form-label">@_localizer["Фильтр КП"]  </label>
+            </div>
+            <div class="col-md-3">
+                <select type="text" id="filterForComOffer" onchange="reloadData()" asp-items="Html.GetEnumSelectList<ComOfferFilterForParticipant>()" class="custom-select" placeholder="@_localizer["Фильтр"]" value="3">
+                </select>
+            </div>
+
+        </div>
+
         <div class="row">
             <div class="col-md-12">
                 <table id="main_dg">
@@ -226,8 +238,8 @@
 
                 { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 100 },
                 { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 80, formatter: checkboxformatter },
-                { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter }
-
+                { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter },
+                { field: 'DeadlineDate', title: '@_localizer["Срок ответа до"]', sortable: true, width: 130, formatter: dateformatter  },
 
 
                 ];
@@ -336,7 +348,7 @@
                 },
                 { field: 'DeliveryCount', title: '@_localizer["Delivery count"]', sortable: true, width: 130},
 
-                { field: 'Price', title: '@_localizer["Price"]', sortable: true, width: 80 },
+           { field: 'Price', title: '@_localizer["Price"]', sortable: true, width: 80, formatter: formatPrice },
 
                 { field: 'Nomenclature.Vat.Stavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
                 { field: 'Volume', title: '@_localizer["Volume"]', sortable: true, width: 80 },
@@ -468,21 +480,23 @@
                 }
             })
 
-                .datagrid('enableFilter', tblFilters)
-                .datagrid('load', `/ComOffers/Participant?handler=Data`);
+                .datagrid('enableFilter', tblFilters);
+            reloadData();
+            //$dg.datagrid('load', `/ComOffers/Participant?handler=Data`);
 
         }
 
 
 		$(() => {
 
-
+            $("#filterForComOffer").val(3);
             initdatagrid();
             initdatagridCP();
             })
 
-        var reloadData = () => {
-		$dg.datagrid('load', '@Url.Page("/ComOffers/Participant")?handler=Data');
+        function reloadData()   {
+            let comOfferFilterFor = $("#filterForComOffer").val();
+            $dg.datagrid('load', '@Url.Page("/ComOffers/Participant")?handler=Data&comOfferFilterFor=' + comOfferFilterFor);
         }
         $('#participant_form :submit').click(function (e) {
 		const form = document.querySelector('#participant_form');
@@ -515,7 +529,7 @@
 		$('#participant_form')[0].reset();
         if (participant) {
                 currentEditRow = participant;
-			$('#participant_modal .modal-title').html('@_localizer["Edit Direction"]');
+			$('#participant_modal .modal-title').html('@_localizer["Edit"]');
 			$('#participant_form').jsonToForm(participant, {
                 IsDeliveryInPrice: function (value) {
                     if (value == true) {

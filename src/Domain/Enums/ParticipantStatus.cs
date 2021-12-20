@@ -16,15 +16,23 @@ namespace CleanArchitecture.Razor.Domain.Enums
     /// </summary>
     public enum ParticipantStatus:short
     {
-        [Description(@"Не участвует")]
-        [Display(Name = "Не участвует")]
-        NotParticipate = 0,
+        //[Description(@"Не участвует")]
+        //[Display(Name = "Не участвует")]
+        //NotParticipate = 0,
         
-        [Description(@"Участвует")]
-        [Display(Name = "Участвует")]
-        Participates = 1,
-        [Description(@"В ожидании")]
-        [Display(Name = "В ожидании")]
-        Waiting = 2
+        [Description(@"Запрос цены")]
+        [Display(Name = "Запрос цены")]
+        PriceRequest = 1,
+
+        [Description(@"Подтвержден цена")]
+        [Display(Name = "Подтвержден цена")]
+        PriceConfirmed = 2,
+        [Description(@"Отказ от участие")]
+        [Display(Name = "Отказ от участие")]
+        FailureParitipate = 3,
+        [Description(@"Исключен")]
+        [Display(Name = "Исключен")]
+        Excluded = -1
+
     }
 }

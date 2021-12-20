@@ -93,6 +93,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
             }
         }
 
+        public DateTime? DeadlineDate { get; set; }
         public virtual ICollection<ComParticipantDto> ComParticipants { get; set; }
         public virtual ICollection<ComStageDto> ComStages { get; set; }
         public virtual ICollection<ComPositionDto> ComPositions { get; set; }

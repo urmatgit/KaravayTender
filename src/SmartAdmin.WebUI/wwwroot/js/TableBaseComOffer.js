@@ -319,8 +319,9 @@ var initdatagrid = () => {
 
 	}
 
-	var reloadData = () => {
-        $dg.datagrid('load', `${pagelink}?handler=Data`);
+var reloadData = () => {
+       let comOfferFilterFor = $("#filterForComOffer").val();
+    $dg.datagrid('load', `${pagelink}?handler=Data&comOfferFilterFor=` + comOfferFilterFor);
 }
 
 //$(() => {

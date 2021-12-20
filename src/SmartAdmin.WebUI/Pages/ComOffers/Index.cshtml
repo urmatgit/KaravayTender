@@ -106,6 +106,17 @@
         </div>
     </div>
     <div class="card-body">
+        <div class="row mb-2">
+
+            <div class="col-md-2  mat my-auto" style="text-align:right">
+                <label class="form-label">@_localizer["Фильтр КП"]  </label>
+            </div>
+            <div class="col-md-3">
+                <select type="text" id="filterForComOffer" onchange="reloadData()" asp-items="Html.GetEnumSelectList<ComOfferFilterForParticipant>()" class="custom-select" placeholder="@_localizer["Фильтр"]" value="3">
+                </select>
+            </div>
+
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <table id="main_dg">
@@ -350,7 +361,9 @@ onImportedSucceeded = "reloadData()"
         };
 
 
-		$(() => {
+        $(() => {
+            
+            $("#filterForComOffer").val(3); // фильтр  в работе 
             clscomposition = new clsBaseTable("composition","clscomposition",'@Url.Page("/ComPositions/Index")');
             tblColumns = [
                 { field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 130 },
@@ -367,7 +380,8 @@ onImportedSucceeded = "reloadData()"
                 { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
                 { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 100 },
                 { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 80, formatter: checkboxformatter },
-                { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter }
+                { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter },
+                { field: 'DeadlineDate', title: '@_localizer["Срок ответа до"]', sortable: true, width: 130, formatter: dateformatter  },
 
             ];
 

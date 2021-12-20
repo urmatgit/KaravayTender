@@ -80,8 +80,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
                                  ComOfferId = c.cp.ComOfferId,
                                  ContragentId = c.cp.ContragentId,
                                  ContragentName = c.cp.Contragent.Name,
-                                 Status = s == null ?  Domain.Enums.ParticipantStatus.Participates : s.Status,
-                                 StepFailure= s == null || s.Status != Domain.Enums.ParticipantStatus.NotParticipate  ? null: s.ComStage.Number
+                                 Status = s == null ?  Domain.Enums.ParticipantStatus.Excluded : s.Status,
+                                 StepFailure= s == null || s.Status != Domain.Enums.ParticipantStatus.FailureParitipate  ? null: s.ComStage.Number
                                  
                              }
                         );

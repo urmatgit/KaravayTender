@@ -183,9 +183,10 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                              Contragent = s,
                              ParticipantStatus = p == null
                              ? ""
-                             : (p.status == ParticipantStatus.Waiting  || p.status==ParticipantStatus.Participates
-                                ? ParticipantStatus.Participates.ToDescriptionString()
-                                : ParticipantStatus.NotParticipate.ToDescriptionString())
+                             : p.status.ToDescriptionString()
+                             //:  (p.status == ParticipantStatus.PriceRequest || p.status==ParticipantStatus.PriceConfirmed
+                             //   ? ParticipantStatus.Participates.ToDescriptionString()
+                             //   : ParticipantStatus.NotParticipate.ToDescriptionString())
                          };
             return status;
         }
