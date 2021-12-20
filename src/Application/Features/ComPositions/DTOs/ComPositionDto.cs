@@ -22,7 +22,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
             profile.CreateMap<ComPosition, ComPositionDto>()
                     .ForMember(d => d.AreaIds, s => s.MapFrom(y => (y.AreaComPositions != null ? y.AreaComPositions.Select(n => n.AreaId).ToArray() : Array.Empty<int>())))
             //profile.CreateMap<ComPosition, ComPositionDto>()
-                    .ForMember(d => d.AreaNames, s => s.MapFrom(y => (y.AreaComPositions != null ? string.Join(", ", y.AreaComPositions.Select(n => n.Area.Name).ToArray()) : string.Empty)));
+                    .ForMember(d => d.AreaNames, s => s.MapFrom(y => (y.AreaComPositions != null ? string.Join(", ", y.AreaComPositions.Select(n => n.Area!=null ? n.Area.Name: "").ToArray()) : string.Empty)));
             profile.CreateMap<ComPositionDto, ComPosition>(MemberList.None);
                        // .ForMember(d => d.QualityDocsIds, s => s.MapFrom(y => (y.NomenclatureQualityDocs != null ? y.NomenclatureQualityDocs.Select(n => n.QualityDocId).ToArray() : Array.Empty<int>())))
 

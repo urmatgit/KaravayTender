@@ -7,6 +7,7 @@ using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs;
 using CleanArchitecture.Razor.Application.Features.ComPositions.DTOs;
 using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
+using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
@@ -19,7 +20,12 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
     {
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<ComOffer, ComOfferDto>().ReverseMap();
+            profile.CreateMap<ComOfferDto, ComOffer>()
+                .ForMember(d => d.TermBegin, s => s.MapFrom(y => y.TermBegin == null ? default(DateTime) : y.TermBegin))
+                .ForMember(d => d.TermEnd, s => s.MapFrom(y => y.TermEnd == null ? default(DateTime) : y.TermEnd));
+            profile.CreateMap<ComOffer, ComOfferDto>()
+                .ForMember(d => d.TermBegin, s => s.MapFrom(x => x.TermBegin == default(DateTime) ? default(DateTime?) : x.TermBegin))
+                .ForMember(d => d.TermEnd, s => s.MapFrom(x => x.TermEnd == default(DateTime) ? default(DateTime?) : x.TermEnd));
 
         }
         public int Id { get; set; }
@@ -47,10 +53,10 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
         public string DirectionName => Direction?.Name;
 
         [Required(ErrorMessage = "'Срок контракта с' является обязательным ")]
-        public DateTime TermBegin { get; set; }
+        public DateTime? TermBegin { get; set; }
 
         [Required(ErrorMessage = "'Срок контракта по' является обязательным ")]
-        public DateTime TermEnd { get; set; }
+        public DateTime? TermEnd { get; set; }
         [Required(ErrorMessage = "Не выбрано 'Менеджер'")]
         public string ManagerId { get; set; }
         public virtual ApplicationUser Manager { get; set; }
@@ -68,7 +74,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
 
 
         public int? WinnerId { get; set; }
-        public virtual Contragent Winner { get; set; }
+        public virtual ContragentDto Winner { get; set; }
         public string WinnerName
         {
             get

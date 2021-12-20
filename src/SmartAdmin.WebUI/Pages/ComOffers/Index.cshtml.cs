@@ -115,6 +115,24 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
+        public async Task<IActionResult> OnPostCopyAsync([FromQuery]  int id)
+        {
+            try
+            {
+                
+                var result = await _mediator.Send(new CopyComOfferCommand {Id=id });
+                return new JsonResult(result);
+            }
+            catch (ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
         public async Task<IActionResult> OnPostAsync()
         {
             try

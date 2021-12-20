@@ -190,6 +190,10 @@ function openEditpanel(row) {
     }
     else {
         $('#edit_form_panel #Input_Id').val(0)
+        
+        let total = $dg.datagrid('getData').total;
+        $('#edit_form_panel #Input_Number').val(total+1)
+        
         SetEditable();
         if (typeof OnNewRow == 'function')
             OnNewRow();
@@ -351,7 +355,18 @@ var popupmodal = (nomenclature) => {
             OnNewRow();
     }
 }
+var onCopy = (index) => {
+    var nomenclature = $dg.datagrid('getRows')[index];
+    
+    axios.post(`${pagelink}?handler=Copy&id=` + nomenclature.Id).then(res => {
+        toastr["info"](`${translations.SaveSuccess} `);
 
+        //$('#table-page-content').show();
+        //$('#edit_panel').hide();
+        reloadData();
+        openEditpanel(res.data.Data);
+    })
+}
 var onEdit = (index) => {
     var nomenclature = $dg.datagrid('getRows')[index];
     openEditpanel(nomenclature);

@@ -50,6 +50,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
                 {
                     request.DateEnd = _dateTime.Now;
                 }
+                if (item.DateBegin==default(DateTime))
+                    item.DateBegin = _dateTime.Now;
                 item = _mapper.Map(request, item);
                 await _context.SaveChangesAsync(cancellationToken);
                 var itemDto = _mapper.Map<ComOfferDto>(item);
@@ -57,8 +59,9 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
             }
             else
             {
-                request.DateBegin = _dateTime.Now;
+                //request.DateBegin = _dateTime.Now;
                 var item = _mapper.Map<ComOffer>(request);
+                item.DateBegin = _dateTime.Now;
                 _context.ComOffers.Add(item);
                 await _context.SaveChangesAsync(cancellationToken);
                 var itemDto = _mapper.Map<ComOfferDto>(item);

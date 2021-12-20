@@ -30,7 +30,7 @@ var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permission
                 <div class="form-row">
                     <div class="col-md-4">
                         <label class="form-label" for="Number">@_localizer["Number"] <span class="text-danger">*</span></label>
-                        <input type="text" asp-for="Input.Number" class="form-control" placeholder="@_localizer["Number"]" />
+                        <input type="text" asp-for="Input.Number" class="form-control readonly" placeholder="@_localizer["Number"]" readonly />
                         <span class="invalid-feedback" asp-validation-for="Input.Number"></span>
                     </div>
                     <div class="col-md-4">
