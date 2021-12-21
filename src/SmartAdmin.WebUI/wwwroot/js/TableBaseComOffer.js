@@ -319,7 +319,7 @@ var initdatagrid = () => {
 
 	}
 
-var reloadData = () => {
+function reloadData()  {
        let comOfferFilterFor = $("#filterForComOffer").val();
     $dg.datagrid('load', `${pagelink}?handler=Data&comOfferFilterFor=` + comOfferFilterFor);
 }

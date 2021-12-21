@@ -22,10 +22,11 @@ using Microsoft.AspNetCore.Identity;
 using CleanArchitecture.Razor.Domain.Identity;
 using CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy;
 using Microsoft.Extensions.Logging;
+using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
 
 namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagination
 {
-    public class ComPositionsWithStagePaginationQuery : PaginationRequest, IRequest<PaginatedData<ComPositionDto>>
+    public class ComPositionsWithStagePaginationQuery : PaginationRequest, IRequest<PaginatedData<ComPositionDtoEx>>
     {
         public int ComOfferId { get; set; }
         /// <summary>
@@ -36,7 +37,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
     }
     
     public class ComPositionsWithStagePaginationQueryHandler :
-         IRequestHandler<ComPositionsWithStagePaginationQuery, PaginatedData<ComPositionDto>>
+         IRequestHandler<ComPositionsWithStagePaginationQuery, PaginatedData<ComPositionDtoEx>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -64,7 +65,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             _logger = logger;
         }
 
-        public async Task<PaginatedData<ComPositionDto>> Handle(ComPositionsWithStagePaginationQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedData<ComPositionDtoEx>> Handle(ComPositionsWithStagePaginationQuery request, CancellationToken cancellationToken)
         {
             int ContragentId = 0;
             var currentUser = await _userManager.FindByIdAsync(_currentUserService.UserId);
@@ -85,35 +86,61 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                     throw new Exception("Контрагент не найден!");
                 ContragentId = contragent.Id;
             }
+            ComStageDto LastStage = null;
+
             if (request.IsLastStage == 1)
             {
-                var dataLast = await _mediator.Send(new GetByStageLastQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
+                LastStage = await _mediator.Send(new GetByStageLastQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
             }
-            var filters = PredicateBuilder.FromFilter<ComPosition>(request.FilterRules);
-            
+                var filters = PredicateBuilder.FromFilter<ComPosition>(request.FilterRules);
+
                 var data = await _context.ComPositions
-                    .Specify(new FilterByComOfferQuerySpec(request.ComOfferId,ContragentId))
+                    .Specify(new FilterByComOfferQuerySpec(request.ComOfferId, ContragentId,(request.IsLastStage==1 ? LastStage.Number: 0)))
                      .Where(filters)
-                     .Include(n => n.Nomenclature)
-                     .ThenInclude(n => n.Category)
-                     .Include(a=>a.AreaComPositions)
-                     .ThenInclude(a=>a.Area)
-                    .Include(n => n.Nomenclature)
-                    .ThenInclude(n => n.UnitOf)
-                    .Include(n => n.Nomenclature)
-                    .ThenInclude(n => n.Vat)
-                    .Include(n => n.Nomenclature)
-                    .ThenInclude(n => n.NomenclatureQualityDocs)
-                    .ThenInclude(d=>d.QualityDoc)
-                    .Include(s=>s.StageCompositions)
-                    
+                    // .Include(n => n.Nomenclature)
+                    // .ThenInclude(n => n.Category)
+                    // .Include(a => a.AreaComPositions)
+                    // .ThenInclude(a => a.Area)
+                    //.Include(n => n.Nomenclature)
+                    //.ThenInclude(n => n.UnitOf)
+                    //.Include(n => n.Nomenclature)
+                    //.ThenInclude(n => n.Vat)
+                    //.Include(n => n.Nomenclature)
+                    //.ThenInclude(n => n.NomenclatureQualityDocs)
+                    //.ThenInclude(d => d.QualityDoc)
+                    //.Include(s => s.StageCompositions)
+                    //.ThenInclude(s=>s.ComStage)
+                    .SelectMany(c=>c.StageCompositions.DefaultIfEmpty(),(c,s)=> new ComPositionDtoEx
+                    {
+                        Id=c.Id,
+                        
+                        CategoryId=c.CategoryId,
+                        CategoryName=c.Category.Name,
+                        DeliveryCount=c.DeliveryCount,
+                        Volume=c.Volume,
+                        AddRequirement=c.AddRequirement,
+                        Stage = s.ComStage.Number,
+                        StageId=s.ComStageId,
+                        NomenclatureId =c.NomenclatureId,
+                        NomName=c.Nomenclature.Name,
+                        UnitOfName=c.Nomenclature.UnitOf.Name,
+                        NomVolume=c.Nomenclature.Volume,
+                        NomSpecification=c.Nomenclature.Specifications,
+                        AreaNames= string.Join(", ", c.AreaComPositions.Select(n => n.Area != null ? n.Area.Name : "").ToArray()),
+                        RequestPrice=s.RequestPrice,
+                        InputPrice=s.Price,
+                        NomStavka=c.Nomenclature.Vat.Stavka,
+                        
+                        QualityDocsNames= string.Join(", ", c.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name))  
+                    })
                     .OrderBy($"{request.Sort} {request.Order}")
-                    
+
                     .PaginatedDataAsync(request.Page, request.Rows);
-                  //.ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
-                  var datDto = _mapper.Map<IEnumerable<ComPositionDto>>(data.rows);
-                return new PaginatedData<ComPositionDto>(datDto, data.total); ;
-             
+            //.ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
+            //var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data.rows);
+            //return new PaginatedData<ComPositionDtoEx>(data, data.total); ;
+            return data;
+            
         }
         public class FilterByComOfferQuerySpec : Specification<ComPosition>
         {

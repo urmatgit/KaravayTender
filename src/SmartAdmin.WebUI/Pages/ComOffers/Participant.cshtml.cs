@@ -37,6 +37,8 @@ using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.Impo
 using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create;
 using CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.Queries.Pagination;
+using CleanArchitecture.Razor.Application.Features.ComPositions.DTOs;
+using CleanArchitecture.Razor.Application.Features.StageCompositions.Commands.Update;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
@@ -47,19 +49,9 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
         public AddEditComOfferCommand Input { get; set; }
         [BindProperty]
         public AddEditComPositionCommand InputPos { get; set; }
+        
 
-        [BindProperty]
-        public AddEditComParticipantCommand InputPar { get; set; }
-        [BindProperty]
-        public AddContragentsComParticipantCommand InputContrPar { get; set; }
 
-        [BindProperty]
-        public IFormFile UploadedFile { get; set; }
-        public SelectList Directions { get; set; }
-        public SelectList Categories { get; set; }
-        public SelectList Managers { get; set; }
-        public SelectList Areas { get; set; }
-        public List<NomenclatureDto> Nomenclatures {get;private set;}
 
         private readonly IIdentityService _identityService;
         private readonly IAuthorizationService _authorizationService;
@@ -100,11 +92,7 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             //await LoadManagers();
 
         }
-        private async Task LoadManagers()
-        {
-            var managers = await _userManager.GetUsersInRoleAsync("Manager");
-            Managers = new SelectList(managers.Select(u => new { Id = u.Id, Name = string.IsNullOrEmpty(u.DisplayName) ? u.UserName : u.DisplayName }), "Id", "Name");
-        }
+       
         public async Task<IActionResult> OnGetDataAsync([FromQuery] ComOffersMyWithPaginationQuery command)
         {
             var result = await _mediator.Send(command);
@@ -117,13 +105,12 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostPricesAsync([FromBody] UpdateStageCompositionPricesCommand command)
         {
             try
             {
-                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
-                    return BadRequest("Коммерческое предложения уже запущена!!! ");
-                var result = await _mediator.Send(Input);
+                
+                var result = await _mediator.Send(command);
                 return new JsonResult(result);
             }
             catch (ValidationException ex)
@@ -136,38 +123,7 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
-        public async Task<IActionResult> OnPostRunAsync([FromQuery] DateTime deadline)
-        {
-            try
-            {
-                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
-                    return BadRequest("Коммерческое предложения уже запущена!!! ");
-
-                var CreateState1 = new CreateComStageCommand()
-                {
-                    ComOfferId = Input.Id,
-                    Number = 1,
-                    DeadlineDate =  deadline
-                };
-                 var result = await _mediator.Send(CreateState1);
-                if (!result.Succeeded)
-                {
-                    return BadRequest(Result.Failure(result.Errors));
-                }
-                var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting });
-                return new JsonResult(resultComOffer);
-                //return new JsonResult("OK");
-            }
-            catch (ValidationException ex)
-            {
-                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
-                return BadRequest(Result.Failure(errors));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(Result.Failure(new string[] { ex.Message }));
-            }
-        }
+        
 
         public async Task<IActionResult> OnGetDeleteCheckedAsync([FromQuery] int[] id)
         {
@@ -192,25 +148,9 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             var result = await _mediator.Send(command);
             return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", _localizer["ComOffers"] + ".xlsx");
         }
-        public async Task<IActionResult> OnPostImportAsync()
-        {
-            var stream = new MemoryStream();
-            await UploadedFile.CopyToAsync(stream);
-            var command = new ImportComOffersCommand()
-            {
-                FileName = UploadedFile.FileName,
-                Data = stream.ToArray()
-            };
-            var result = await _mediator.Send(command);
-            return new JsonResult(result);
-        }
+        
 
-        public async Task<IActionResult> OnGetCategoriesAsync(int directionid)
-        {
-            var command = new GetAllCategoriesQuery() { DirectionId = directionid };
-            var result = await _mediator.Send(command);
-            return new JsonResult(result);
-        }
+         
 
     }
 }

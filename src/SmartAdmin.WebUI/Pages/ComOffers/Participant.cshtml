@@ -92,11 +92,12 @@
         <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
         <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
     <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-detailview.js"></script>
+    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-cellediting.js"></script>
     <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/select2/select2.bundle.js"></script>
-
+    <script src="~/js/EditGridCaching.js"></script>
 
     <script type="text/javascript">
         let clscomposition = null;
@@ -196,7 +197,43 @@
 
 
         $("input[name=GetStageType]:radio").change(function () {
+            if (GetStageType() != 1) {
+                let changet = getChanges();
+                if (changet.length > 0) {
+                    bootbox.confirm({
+                        message: "@_localizer["Сохранить измененные цены?"]",
+                        buttons: {
+                            confirm: {
+                                label: '@_localizer["Yes"]',
+                                className: 'btn-success'
+                            },
+                            cancel: {
+                                label: '@_localizer["No"]',
+                                className: 'btn-danger'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                //save
+                                accept();
+                            }
+                        }
+                    })
+                }
+            } else {
+                
+            }
             reloadDataCP();
+            //if (GetStageType() == 1) 
+            //    $dgCP.datagrid('enableCellEditing').datagrid('gotoCell', {
+            //        index: 0,
+            //        field: 'InputPrice'
+            //    });
+            //else
+            //    $dgCP.datagrid('disableCellEditing').datagrid('gotoCell', {
+            //        index: 0,
+            //        field: 'InputPrice'
+            //    });
         });
 
 
@@ -323,45 +360,36 @@
         ]
        let  tblColumnsComPosition = [
                 {
-                    field: 'Category', title: '@_localizer["Category"]', sortable: true, width: 130, formatter: function (val, rec) {
-                        return rec.Category == null ? "" : rec.Category.Name;
-                    }
-                },
+               field: 'CategoryName', title: '@_localizer["Category"]', sortable: true, width: 130 },
                 {
-                    field: 'Nomenclature.Name', title: '@_localizer["Nomenclature"]', sortable: true, width: 150 , formatter: function (val, rec) {
-                        return rec.Nomenclature.Name;
-                    }
+                    field: 'NomName', title: '@_localizer["Nomenclature"]', sortable: true, width: 150
                 },
-                {
-                    field: 'Stage', title: '@_localizerStage["Stage"]', sortable: true, width: 80
+           {
+               field: 'Stage', title: '@_localizerStage["Stage"]', sortable: true, width: 80
                 },
 
                 {
-                    field: 'AriaNames', title: '@_localizer["Arias"]', sortable: true, width: 150, formatter: function (val, rec) {
-                        return rec.AreaNames;
-                    }
+                    field: 'AriaNames', title: '@_localizer["Arias"]', sortable: true, width: 150
                 },
                 {
-                    field: 'Nomenclature.UnitOf.Name', title: '@_localizer["UnitOf"]', sortable: true, width: 80, formatter: function (val, rec) {
-                        return rec.Nomenclature.UnitOf.Name;
-                    }
+                    field: 'UnitOfName', title: '@_localizer["UnitOf"]', sortable: true, width: 80,
                 },
                 { field: 'DeliveryCount', title: '@_localizer["Delivery count"]', sortable: true, width: 130},
+           { field: 'RequestPrice', title: '@_localizer["Request price"]', sortable: true, align: 'center', width: 80, formatter: checkboxformatter },
+           { field: 'InputPrice', title: '@_localizer["Price"]', sortable: true, width: 80, align: 'right', editor: { type: 'numberbox', options: { precision: 2 } } },
 
-           { field: 'Price', title: '@_localizer["Price"]', sortable: true, width: 80, formatter: formatPrice },
-
-                { field: 'Nomenclature.Vat.Stavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
+           { field: 'NomStavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
                 { field: 'Volume', title: '@_localizer["Volume"]', sortable: true, width: 80 },
                 { field: 'QualityDocsNames', title: '@_localizer["Quality documents"]', sortable: true, width: 150 },
-                { field: 'NomSpecification', title: '@_localizer["Specification"]', sortable: true, width: 150},
-                { field: 'Summa', title: '@_localizer["Summa"]', sortable: true, width: 80 }
+                { field: 'NomSpecification', title: '@_localizer["Specification"]', sortable: true, width: 150}
+
 
             ];
-
+        var editIndex = undefined;
         var $dgCP = {};
         var initdatagridCP = () => {
             $dgCP = $('#compostion_dg').datagrid({
-                height: (window.innerHeight /2),
+                height: (window.innerHeight /3),
                 method: 'GET',
                 rownumbers: true,
                 singleSelect: true,
@@ -371,12 +399,44 @@
                 clientPaging: false,
                 remoteFilter: true,
 
-                sortName: 'Nomenclature.Name',
+                sortName: 'Id',
                 sortOrder: 'asc',
                 pageSize: 5,
                 pageList: [5, 10, 30, 50, 100, 1000],
 
                 columns: [tblColumnsComPosition],
+                onLoadSuccess: function (res) {
+                    $dgCP.datagrid("gotoCell", {
+                        index: 0,
+                        field: "InputPrice"
+                    })
+                },
+                onClickCell: onClickRow,
+                //onEndEdit: function (index, row) {
+                //    var ed = $(this).datagrid('getEditor', {
+                //        index: index,
+                //        field: 'Id'
+                //    });
+                //    row.InputPrict = $(ed.target).combobox('getText');
+                //},
+                onBeforeEdit: function (index, row) {
+                    var colInputPrice = $(this).datagrid('getColumnOption', 'InputPrice');
+                    if (row.RequestPrice) {
+                        colInputPrice.editor = { type: 'numberbox', options: { precision: 2 } };
+                    } else {
+                        
+                        colInputPrice.editor = null;
+                    }
+                   // $dgCP.datagrid('refreshrow', index);
+                },
+                //onAfterEdit: function (index, row) {
+                //    row.editing = false;
+                //    $(this).datagrid('refreshRow', index);
+                //},
+                //onCancelEdit: function (index, row) {
+                //    row.editing = false;
+                //    $(this).datagrid('refreshRow', index);
+                //},
                 onLoadError: function (error) {
                     if (error.responseJSON.Errors) {
                         const errors = error.responseJSON.Errors;
@@ -388,8 +448,57 @@
 				}
                 }
             }).datagrid('enableFilter', {});
+            //if (GetStageType() == 1)
+            //$dgCP.datagrid('enableCellEditing').datagrid('gotoCell', {
+            //    index: 0,
+            //    field: 'Id'
+            //});
 
+        }
+        function onClickRow(index) {
+            if (editIndex != index) {
+                if (endEditing()) {
+                    $dgCP.datagrid('selectRow', index)
+                        .datagrid('beginEdit', index);
+                    editIndex = index;
+                } else {
+                    $dgCP.datagrid('selectRow', editIndex);
+                }
+            }
+        }
+        function endEditing() {
+            return true;
+            //if (editIndex == undefined) { return true }
+            //if ($dgCP.datagrid('validateRow', editIndex)) {
+            //    var ed = $dgCP.datagrid('getEditor', { index: editIndex, field: 'InputPrice' });
+            //    //if (ed.target) {
+            //    //    var productname = $(ed.target).val();
+            //    //    $dgCP.datagrid('getRows')[editIndex]['InputPrice'] = productname;
+            //    //}
+            //    $dgCP.datagrid('endEdit', editIndex);
+            //    editIndex = undefined;
+            //    return true;
+            //} else {
+            //    return false;
+            //}
+        }
+        function accept() {
+            if (endEditing()) {
+                $dgCP.datagrid('acceptChanges');
+            }
+        }
+        function reject() {
+            $dgCP.datagrid('rejectChanges');
+            editIndex = undefined;
+        }
+        function getChanges() {
+            var rows = $dgCP.datagrid('getChanges');
+            return rows
 
+            //alert(rows.length + ' rows are changed!');
+        }
+        function GetStageType() {
+            return  $('input[name="GetStageType"]:checked').val();
         }
         function reloadDataCP() {
             let StageType = $('input[name="GetStageType"]:checked').val();
@@ -502,9 +611,16 @@
 		const form = document.querySelector('#participant_form');
 		if ($(form).valid() === false) {
 			form.classList.add('was-validated');
-		} else {
-			const request = $('#participant_form').serialize();
-			axios.post('@Url.Page("/ComOffers/Participant")', request).then(res => {
+        } else {
+            
+            //const request = $('#participant_form').serialize();
+            var UpdatedRows = getChanges().map(x=>x);
+            var headers = {
+                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+            }
+            axios.post('@Url.Page("/ComOffers/Participant")?handler=Prices', { inputPrices: UpdatedRows },{
+                headers: headers
+            }).then(res => {
 				toastr["info"]('@_localizer["Save Success."]');
 				$('#participant_modal').modal('toggle');
 				reloadData();

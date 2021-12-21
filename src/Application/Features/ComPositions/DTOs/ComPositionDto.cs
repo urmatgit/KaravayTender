@@ -79,4 +79,66 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         
         public virtual ICollection<StageCompositionDto> StageCompositions { get; set; }
     }
+    public class ComPositionDtoEx 
+    {
+        public int Id { get; set; }
+        
+        /// <summary>
+        /// Количество Поставок в месяц 
+        /// </summary>
+        
+        public int DeliveryCount { get; set; }
+        /// <summary>
+        /// Объем  поставок по контракту
+        /// </summary>
+        
+        public decimal Volume { get; set; }
+        public string AddRequirement { get; set; }
+
+        /// <summary>
+        /// Цена без ндс
+        /// </summary>
+
+        //public decimal Price { get; set; }
+        ///// <summary>
+        ///// Сумма без НДС
+        ///// </summary>
+
+        //public decimal Summa { get; set; }
+        ///// <summary>
+        ///// Сумма с НДС
+        ///// </summary>
+
+        //public decimal SummaVAT { get; set; }
+
+        
+
+        public int NomenclatureId { get; set; }
+        public string NomName { get; set; }
+        public string UnitOfName { get; set; }
+        public decimal? NomVolume { get; set; }
+        public decimal NomStavka { get; set; }
+        public string NomSpecification { get; set; }
+        public string QualityDocsNames { get; set; }
+
+
+        public int CategoryId { get; set; }
+        public string  CategoryName { get; set; }
+        
+        
+        public  string AreaNames { get; set; }
+
+        
+        
+        public int ComOfferId { get; set; }
+        
+
+
+
+        public bool RequestPrice { get; set; }
+        public decimal? InputPrice { get; set; }
+        public int Stage { get; set; }
+        public int StageId { get; set; }
+    }
+
 }
