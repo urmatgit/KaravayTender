@@ -467,8 +467,10 @@
             }
         }
         function endEditing() {
+            
+            if (editIndex == undefined) { return true }
+            $dgCP.datagrid('endEdit', editIndex);
             return true;
-            //if (editIndex == undefined) { return true }
             //if ($dgCP.datagrid('validateRow', editIndex)) {
             //    var ed = $dgCP.datagrid('getEditor', { index: editIndex, field: 'InputPrice' });
             //    //if (ed.target) {
@@ -612,7 +614,7 @@
 		if ($(form).valid() === false) {
 			form.classList.add('was-validated');
         } else {
-            
+            endEditing();
             //const request = $('#participant_form').serialize();
             var UpdatedRows = getChanges().map(x=>x);
             var headers = {
