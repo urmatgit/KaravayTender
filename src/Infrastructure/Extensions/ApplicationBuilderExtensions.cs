@@ -28,7 +28,7 @@ public static class ApplicationBuilderExtensions
                 LogContext.PushProperty("UserName", userName); //Push user in LogContext;
                 await next.Invoke();
             });
-            app.UseMiddlewares();
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
@@ -38,6 +38,7 @@ public static class ApplicationBuilderExtensions
             });
 
             app.UseRequestLocalization();
+            app.UseMiddlewares();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

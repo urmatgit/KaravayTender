@@ -45,7 +45,7 @@ $('#startStage').click(function (e) {
 
             SubmitForm("?handler=Run&deadline=" + result, function (res) {
                 SetReadOnlyForm();
-                openEditpanel(res.Data);
+                openEditpanel(res.Data,true);
                 //LoadComState(currentEditRow.Id);
             });
             
@@ -62,7 +62,7 @@ function SetReadOnlyForm() {
     for (var i = 0, fLen = form.length; i < fLen; i++) {
         form.elements[i].readOnly = true;
     }
-    $('.custom-select').prop('disabled', true);
+    $('#edit_form_panel .custom-select').prop('disabled', true);
     $('.custom-control-input[type=checkbox]').prop('disabled', true);
     SetEnableToRoleButton(false);
     
@@ -119,7 +119,7 @@ function SetEnableToRoleButton(enable) {
             $(this).show();// prop('disabled', false).removeClass('ui-disabled');
     })
 }
-function openEditpanel(row) {
+function openEditpanel(row,stage) {
 
     currentEditRow = row;
     $('#table-page-content').hide();
@@ -172,10 +172,12 @@ function openEditpanel(row) {
             });
 
         if (row.Status > 0) {
-            $('#ComState').show();
-            $('#ComStageTab').show();
-            SetReadOnlyForm();
             
+            $('#ComStageTab').show();
+            $('#ComState').show();
+            SetReadOnlyForm();
+            if (stage)
+                $('a[href="#ComState"]').click();
             
             
         } else {

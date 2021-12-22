@@ -158,22 +158,28 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             {
                 if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
                     return BadRequest("Коммерческое предложения уже запущена!!! ");
+                var resultInput = await _mediator.Send(Input);
+                if (resultInput.Succeeded)
+                {
 
-                var CreateState1 = new CreateComStageCommand()
-                {
-                    ComOfferId = Input.Id,
-                    Number = 1,
-                    DeadlineDate =  deadline,
-                    
-                };
-                 var result = await _mediator.Send(CreateState1);
-                if (!result.Succeeded)
-                {
-                    return BadRequest(Result.Failure(result.Errors));
-                    
+                    var CreateState1 = new CreateComStageCommand()
+                    {
+                        ComOfferId = Input.Id,
+                        Number = 1,
+                        DeadlineDate = deadline,
+
+                    };
+                    var result = await _mediator.Send(CreateState1);
+                    if (!result.Succeeded)
+                    {
+                        return BadRequest(Result.Failure(result.Errors));
+
+                    }
+                    var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting });
+                    return new JsonResult(resultComOffer);
                 }
-                var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting });
-                return new JsonResult(resultComOffer);
+                else
+                    return BadRequest(resultInput.Errors);
                 //return new JsonResult("OK");
             }
             catch (ValidationException ex)

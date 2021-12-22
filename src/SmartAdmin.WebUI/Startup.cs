@@ -105,7 +105,7 @@ namespace SmartAdmin.WebUI
             app.UseInfrastructure(config);
              
 
-            app.UseRequestLocalization();
+            //app.UseRequestLocalization();
             //app.UseRequestLocalizationCookies();
             
              
