@@ -120,6 +120,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                         Volume=c.Volume,
                         AddRequirement=c.AddRequirement,
                         Stage = s.ComStage.Number,
+                        ParticipantStatus=s.ComStage.StageParticipants.FirstOrDefault(f=>f.ContragentId== ContragentId && f.ComOfferId== request.ComOfferId).Status,
                         StageId=s.ComStageId,
                         NomenclatureId =c.NomenclatureId,
                         NomName=c.Nomenclature.Name,
@@ -146,10 +147,13 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
         {
             public FilterByComOfferQuerySpec(int comOfferId,int contrgentid,int stage=0)
             {
-                if (stage==0)
-                    Criteria = p => p.ComOfferId == comOfferId && p.StageCompositions.Any(s=>s.ContragentId==contrgentid);
+                if (stage == 0)
+                    Criteria = p => p.ComOfferId == comOfferId && p.StageCompositions.Any(s => s.ContragentId == contrgentid);
+                //&& s.ComStage.StageParticipants.Any(st => st.Status != Domain.Enums.ParticipantStatus.FailureParitipate && st.Status == Domain.Enums.ParticipantStatus.Excluded));
+
                 else
-                    Criteria = p => p.ComOfferId == comOfferId && p.StageCompositions.Any(s => s.ContragentId == contrgentid && s.ComStage.Number==stage);
+                    Criteria = p => p.ComOfferId == comOfferId && p.StageCompositions.Any(s => s.ContragentId == contrgentid && s.ComStage.Number == stage);
+                    //&& s.ComStage.StageParticipants.Any(st => st.Status != Domain.Enums.ParticipantStatus.FailureParitipate || st.Status == Domain.Enums.ParticipantStatus.Excluded));
             }
 
 

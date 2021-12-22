@@ -27,6 +27,8 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
 
         public ParticipantStatus Status { get; set; } = ParticipantStatus.PriceRequest;
 
+        public string Description { get; set; }
+
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new();
         

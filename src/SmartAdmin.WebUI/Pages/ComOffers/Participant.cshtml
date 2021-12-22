@@ -198,7 +198,9 @@
 
         $("input[name=GetStageType]:radio").change(function () {
             if (GetStageType() != 1) {
-                let changet = getChanges();
+                ActionButtonAccess(true);
+                
+                @*let changet = getChanges();
                 if (changet.length > 0) {
                     bootbox.confirm({
                         message: "@_localizer["Сохранить измененные цены?"]",
@@ -219,12 +221,13 @@
                             }
                         }
                     })
-                }
+                }*@
             } else {
+                ActionButtonAccess(false);
                 
             }
             reloadDataCP();
-            //if (GetStageType() == 1) 
+            //if (GetStageType() == 1)
             //    $dgCP.datagrid('enableCellEditing').datagrid('gotoCell', {
             //        index: 0,
             //        field: 'InputPrice'
@@ -376,7 +379,7 @@
                 },
                 { field: 'DeliveryCount', title: '@_localizer["Delivery count"]', sortable: true, width: 130},
            { field: 'RequestPrice', title: '@_localizer["Request price"]', sortable: true, align: 'center', width: 80, formatter: checkboxformatter },
-           { field: 'InputPrice', title: '@_localizer["Price"]', sortable: true, width: 80, align: 'right', editor: { type: 'numberbox', options: { precision: 2 } } },
+           { field: 'InputPrice', title: '@_localizer["Price"]', sortable: true, width: 80, align: 'right', formatter: formatPrice,   editor: { type: 'numberbox', options: { precision: 2 } } },
 
            { field: 'NomStavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
                 { field: 'Volume', title: '@_localizer["Volume"]', sortable: true, width: 80 },
@@ -410,6 +413,24 @@
                         index: 0,
                         field: "InputPrice"
                     })
+                    let StageType = $('input[name="GetStageType"]:checked').val();
+
+                    if (StageType === '1') {
+                        $dgCP.datagrid('hideColumn', 'Stage');
+                        if (res.rows && res.rows.length > 0) {
+                            $('#StageNumber').html(res.rows[0].Stage);
+                            $('#StageId').val(res.rows[0].StageId);
+                            $('#StageStatus').val(res.rows[0].ParticipantStatus);
+                        }
+                        ActionButtonAccess(false);
+                    } else {
+                        $dgCP.datagrid('showColumn', 'Stage');
+                        $('#StageNumber').html("");
+                        $('#StageId').val(0);
+                        $('#StageStatus').val(null);
+                        ActionButtonAccess(true);
+                    }
+                    
                 },
                 onClickCell: onClickRow,
                 //onEndEdit: function (index, row) {
@@ -424,7 +445,7 @@
                     if (row.RequestPrice) {
                         colInputPrice.editor = { type: 'numberbox', options: { precision: 2 } };
                     } else {
-                        
+
                         colInputPrice.editor = null;
                     }
                    // $dgCP.datagrid('refreshrow', index);
@@ -467,7 +488,7 @@
             }
         }
         function endEditing() {
-            
+
             if (editIndex == undefined) { return true }
             $dgCP.datagrid('endEdit', editIndex);
             return true;
@@ -505,6 +526,7 @@
         function reloadDataCP() {
             let StageType = $('input[name="GetStageType"]:checked').val();
             $('#compostion_dg').datagrid('load', "/ComOffers/Participant?handler=DataPos&ComOfferId=" + currentEditRow.Id + "&IsLastStage=" + StageType);
+
         }
         $('#participant_modal').on('shown.bs.modal', function () {
             reloadDataCP();
@@ -609,18 +631,34 @@
             let comOfferFilterFor = $("#filterForComOffer").val();
             $dg.datagrid('load', '@Url.Page("/ComOffers/Participant")?handler=Data&comOfferFilterFor=' + comOfferFilterFor);
         }
-        $('#participant_form :submit').click(function (e) {
-		const form = document.querySelector('#participant_form');
-		if ($(form).valid() === false) {
-			form.classList.add('was-validated');
-        } else {
-            endEditing();
+        function checkEmptyPrices() {
+            var rows = $dgCP.datagrid('getRows');
+            let hasEmpty = false;
+            rows.forEach(r => {
+                if (r.RequestPrice == true && (r.InputPrice == null || r.InputPrice==0)) {
+                    hasEmpty = true;
+
+                }
+            });
+            return hasEmpty;
+
+
+
+        }
+        function submit(message="") {
+
             //const request = $('#participant_form').serialize();
-            var UpdatedRows = getChanges().map(x=>x);
+            var UpdatedRows = getChanges().map(x => x);
+
+            SendPost('@Url.Page("/ComOffers/Participant")?handler=Prices', { inputPrices: UpdatedRows, Description: message, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id });
+
+        }
+        function SendPost(url, param) {
             var headers = {
                 "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
             }
-            axios.post('@Url.Page("/ComOffers/Participant")?handler=Prices', { inputPrices: UpdatedRows },{
+
+            axios.post(url, param, {
                 headers: headers
             }).then(res => {
 				toastr["info"]('@_localizer["Save Success."]');
@@ -636,15 +674,66 @@
 					toastr["error"](`@_localizer["Save fail"],${error.response.data}`);
 				}
 			});
+        }
+        $('#participant_form :submit').click(function (e) {
+		const form = document.querySelector('#participant_form');
+		if ($(form).valid() === false) {
+			form.classList.add('was-validated');
+        } else {
+            endEditing();
+            if (checkEmptyPrices())
+                bootbox.alert("Есть не введеные цены, прошу запольнить цены или откажитесь от участие!");
+            else
+                submit();
 		}
 		event.preventDefault();
 		event.stopPropagation();
-	})
+        })
+        $('#failure').click(function (e) {
+            bootbox.dialog({
+                title: "Вы уверены отказаться от участие?",
+                message: '<div class="row">  ' +
+                    '<div class="col-md-12"> ' +
+                    '<label class="form-label" for="name">Комментарий</label> ' +
+                    '<input id="description"  type="textarea" placeholder="ваше комменарий" class="form-control"> ' +
+                    '</div>  </div>',
+                buttons: {
+                    success: {
+                        label: "Ok",
+                        className: "btn-success",
+                        callback: function () {
+                            var name = $('#description').val();
+                            
+                            SendPost('@Url.Page("/ComOffers/Participant")?handler=Failure', { StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id, Description: name });
+                        }
+                        },
+                    cancel: {
+                        label: "Отмена",
+                        className: "btn-danger",
+                        callback: function () {
+
+                        }
+                    }
+                    }
+                }
+
+            );
+
+
+        })
+        function ActionButtonAccess(access) {
+            
+            let status = $('#StageStatus').val();
+            $("#failure").prop("disabled", access || status!=1);
+            $("#confirm").prop("disabled", access || status != 1);
+        }
         var popupmodal = (participant) => {
 		$('#participant_modal').modal('toggle');
 		$('#participant_modal .modal-title').html('@_localizer["Add Direction"]');
 		$('#participant_form').clearForm();
-		$('#participant_form')[0].reset();
+            $('#participant_form')[0].reset();
+            ActionButtonAccess(false);
+            
         if (participant) {
                 currentEditRow = participant;
 			$('#participant_modal .modal-title').html('@_localizer["Edit"]');

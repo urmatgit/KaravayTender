@@ -21,10 +21,22 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
     public class UpdateStageCompositionPricesCommand :  IRequest<Result>
     { 
         public ComPositionDtoEx[] inputPrices { get; set; }
-          
+        
+        public string Description { get; set; }
+        public int StageId { get; set; }
+        public int ComOfferId { get; set; }
     }
+    public class FailureParitipateStageCompositionCommand : IRequest<Result>
+    {
+        public int StageId { get; set; }
+        public int ComOfferId { get; set; }
+        public string Description { get; set; }
 
-    public class UpdateStageCompositionPricesCommandHandler : IRequestHandler<UpdateStageCompositionPricesCommand, Result>
+    }
+    public class UpdateStageCompositionPricesCommandHandler :
+        IRequestHandler<UpdateStageCompositionPricesCommand, Result>,
+        IRequestHandler<FailureParitipateStageCompositionCommand, Result>
+        
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -52,10 +64,13 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
         {
             //TODO:Implementing UpdateStageCompositionPricesCommandHandler method
             var contragentId = await _mediator.Send(new GetContragentIdByUserIdQuery(),cancellationToken);
+            
             if (contragentId.Succeeded && contragentId.Data > 0)
             {
                 foreach (var req in request.inputPrices)
                 {
+                    //StageId = req.StageId;
+                    //ComOfferId = req.ComOfferId;
                     var item = await _context.StageCompositions.FindAsync(new object[] { req.StageId, contragentId.Data, req.Id }, cancellationToken);
                     if (item is not null && req.InputPrice!=item.Price)
                     {
@@ -64,12 +79,34 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
                     }
                 }
             }
-           //if (item != null)
-           //{
-           //     item = _mapper.Map(request, item);
-           //     await _context.SaveChangesAsync(cancellationToken);
-           //}
-           return Result.Success();
+            //dc.ComStageId, dc.ContragentId,dc.ComOfferId
+            var stageParticipant = await _context.StageParticipants.FindAsync(new object[] { request.StageId, contragentId.Data, request.ComOfferId },cancellationToken);
+            if (stageParticipant is not null && stageParticipant.Status == Domain.Enums.ParticipantStatus.PriceRequest)
+            {
+                stageParticipant.Status = Domain.Enums.ParticipantStatus.PriceConfirmed;
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            else Result.Failure(new string[] { "Цены уже установлены или не найдена запись!" });
+            //if (item != null)
+            //{
+            //     item = _mapper.Map(request, item);
+            //     await _context.SaveChangesAsync(cancellationToken);
+            //}
+            return Result.Success();
+        }
+
+        public async Task<Result> Handle(FailureParitipateStageCompositionCommand request, CancellationToken cancellationToken)
+        {
+            var contragentId = await _mediator.Send(new GetContragentIdByUserIdQuery(), cancellationToken);
+            //dc.ComStageId, dc.ContragentId,dc.ComOfferId
+            var stageParticipant = await _context.StageParticipants.FindAsync(new object[] { request.StageId, contragentId.Data, request.ComOfferId }, cancellationToken);
+            if (stageParticipant is not null)
+            {
+                stageParticipant.Status = Domain.Enums.ParticipantStatus.FailureParitipate;
+                stageParticipant.Description = request.Description;
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            return Result.Success();
         }
     }
 }

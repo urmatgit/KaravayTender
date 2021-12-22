@@ -12,6 +12,7 @@ using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using System.Linq;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 using System.Text.Json.Serialization;
+using CleanArchitecture.Razor.Domain.Enums;
 
 namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
 {
@@ -139,6 +140,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         public decimal? InputPrice { get; set; }
         public int Stage { get; set; }
         public int StageId { get; set; }
+        public ParticipantStatus ParticipantStatus { get; set; }
     }
 
 }

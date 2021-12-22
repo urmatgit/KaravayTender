@@ -31,5 +31,6 @@ namespace CleanArchitecture.Razor.Application.Features.StageParticipants.DTOs
 
         public ParticipantStatus Status { get; set; } = ParticipantStatus.PriceRequest;
         public string StatusStr => Status.ToDescriptionString();
+        public string Description { get; set; }
     }
 }
