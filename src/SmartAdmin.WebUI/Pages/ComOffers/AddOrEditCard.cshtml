@@ -144,8 +144,8 @@ var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permission
             <div class="panel-footer p-2  " style="text-align:right">
                 @if (_canStart.Succeeded)
                 {
-                    <button type="button" class="btn btn-danger mr-5" id="startStage">@_localizer["Отравить запрос"]</button>
-
+                    <button type="button" class="btn btn-danger mr-5" id="startStage">@_localizer["Запуск"]</button>
+                    <button type="button" class="btn btn-danger mr-5" id="sendStage">@_localizer["Отправить запрос"]</button>
                     <button type="button" class="btn btn-danger mr-5" id="endStage">@_localizer["Завершит этап"]</button>
                     <button type="button" class="btn btn-danger mr-5" id="changeDeadline">@_localizer["Изменить срок ответа до"]</button>
                 }

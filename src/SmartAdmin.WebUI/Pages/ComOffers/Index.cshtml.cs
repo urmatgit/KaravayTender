@@ -37,6 +37,7 @@ using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.Impo
 using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create;
 using CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update;
 using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Update;
+using CleanArchitecture.Razor.Application.Features.StageCompositions.Commands.Update;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
@@ -141,6 +142,25 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
                     return BadRequest("Коммерческое предложения уже запущена!!! ");
                 var result = await _mediator.Send(Input);
+                return new JsonResult(result);
+            }
+            catch (ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
+        public async Task<IActionResult> OnPostSendPriceAsync([FromBody] UpdateStageCompositionPricesManagerCommand command)
+        {
+            try
+            {
+                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
+                    return BadRequest("Коммерческое предложения уже запущена!!! ");
+                var result = await _mediator.Send(command);
                 return new JsonResult(result);
             }
             catch (ValidationException ex)

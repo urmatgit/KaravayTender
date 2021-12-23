@@ -22,6 +22,48 @@ $('#importbutton').click(function () {
 $('#gettemplatebutton').click(function () {
     onGetTemplate();
 });
+$('#sendStage').click(function (e) {
+    var rows = dgcomstage.datagrid('getRows');
+    console.log(rows);
+    
+    let ContrPrice = new Array();
+    $('input.editable:checkbox').each(function () {
+        let id = $(this).attr('id').split("_");
+        const value = $(this).prop("checked");
+        tmpCP = {
+            "ContrId": parseInt(id[1]),
+              "ComPositionId": parseInt(id[0]),
+              "RequestPrice": value
+            }
+        console.log($(this).attr('id'));
+        ContrPrice.push(tmpCP);
+        //var sThisVal = $(this).val();
+    });
+    
+    let tmpOjb = {
+        "ComOfferId": currentEditRow.Id,
+        "StageId": parseInt($('#StageId').val()),
+        "ContrPrices": ContrPrice
+    }
+    console.log(tmpOjb);
+
+
+    var headers = {
+        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+    }
+
+    axios.post(`${pagelink}?handler=SendPrice`, { stageComRequest: tmpOjb }, {
+        headers: headers
+    }).then(res => {
+        toastr["info"](`${translations.SaveSuccess} `);
+        
+        reloadData();
+    })
+    //    SetReadOnlyForm();
+    //    openEditpanel(currentEditRow, true);
+    //    //LoadComState(currentEditRow.Id);
+    
+});
 $('#changeDeadline').click(function (e) {
     //
     bootbox.prompt({
@@ -241,13 +283,15 @@ function showHideButtons(row) {
         case 0:
             $('#save').show();
             $('#startStage').show();
-
+            
+            $('#sendStage').hide();
             $('#endStage').hide();
             $('#changeDeadline').hide();
             break;
         case 1:
             $('#save').hide();
             $('#startStage').hide();
+            $('#sendStage').show();
             $('#endStage').show();
             $('#changeDeadline').show();
             break;

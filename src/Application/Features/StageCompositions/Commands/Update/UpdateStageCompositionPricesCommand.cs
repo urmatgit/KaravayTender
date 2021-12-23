@@ -5,6 +5,7 @@ using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.ComPositions.DTOs;
+using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
 using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.Caching;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.DTOs;
@@ -26,6 +27,10 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
         public int StageId { get; set; }
         public int ComOfferId { get; set; }
     }
+    public class UpdateStageCompositionPricesManagerCommand : IRequest<Result>
+    {
+        public  StageComRequestDto stageComRequest { get; set; }
+    }
     public class FailureParitipateStageCompositionCommand : IRequest<Result>
     {
         public int StageId { get; set; }
@@ -35,7 +40,8 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
     }
     public class UpdateStageCompositionPricesCommandHandler :
         IRequestHandler<UpdateStageCompositionPricesCommand, Result>,
-        IRequestHandler<FailureParitipateStageCompositionCommand, Result>
+        IRequestHandler<FailureParitipateStageCompositionCommand, Result>,
+        IRequestHandler<UpdateStageCompositionPricesManagerCommand,Result>
         
     {
         private readonly IApplicationDbContext _context;
@@ -106,6 +112,18 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
                 stageParticipant.Description = request.Description;
                 await _context.SaveChangesAsync(cancellationToken);
             }
+            return Result.Success();
+        }
+
+        public async Task<Result> Handle(UpdateStageCompositionPricesManagerCommand request, CancellationToken cancellationToken)
+        {
+            foreach(var contrPrice in request.stageComRequest.ContrPrices)
+            {
+                var stageCom = await _context.StageCompositions.FindAsync(new object[] { request.stageComRequest.StageId, contrPrice.ContrId, contrPrice.ComPositionId },cancellationToken);
+                if (stageCom is not null && stageCom.RequestPrice != contrPrice.RequestPrice)
+                    stageCom.RequestPrice = contrPrice.RequestPrice;
+            }
+            await _context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
     }

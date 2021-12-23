@@ -121,12 +121,13 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
 
             var postions = dataDto.SelectMany(
                                         c => c.StageCompositions.Select(p => new { position =  p.ComPosition, child = c, stage = p.ComStage })
-                                    ).GroupBy(cs =>  new { cs.position.Nomenclature, cs.stage.Number }  )
+                                    ).GroupBy(cs =>  new { cs.position.Nomenclature, cs.stage.Number,cs.stage.Id }  )
                                     .Select(g => new
                                     {
                                         keys = g.Key,
                                         stagecoms = g.Select(cp => cp.child).OrderBy(o=>o.Number).ToList(),
                                         stage1=g.FirstOrDefault(s=>s.stage.Number==g.Key.Number)
+                                        
                                     }).OrderBy(o =>o.keys.Number).ThenBy(o=> o.keys.Nomenclature.Name);
 
             
@@ -137,14 +138,17 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                 
                     var row = new ExpandoObject() as IDictionary<string, object>;
                     row.Add($"NomName", pos.keys.Nomenclature.Name);
+                
                     row.Add($"Stage",pos.keys. Number);
-                    row.Add($"StageDeadline", pos.stage1.stage.DeadlineDate);
+                row.Add($"StageId", pos.keys.Id);
+                row.Add($"StageDeadline", pos.stage1.stage.DeadlineDate);
                     int Indexcontrgent = 0;
                 foreach (var stagecom in pos.stage1.stage.StageCompositions.Where(s=>s.ComPosition.NomenclatureId==pos.keys.Nomenclature.Id))
                     {
                         Indexcontrgent++;
                         row.Add($"ContrId{Indexcontrgent}", stagecom.Contragent.Id);
-                        row.Add($"ContrPrice{Indexcontrgent}",stagecom.Price);
+                    row.Add($"ComPositionId{Indexcontrgent}", stagecom.ComPositionId);
+                    row.Add($"ContrPrice{Indexcontrgent}",stagecom.Price);
                         row.Add($"RequestPrice{Indexcontrgent}", stagecom.RequestPrice);
                         
                     }
