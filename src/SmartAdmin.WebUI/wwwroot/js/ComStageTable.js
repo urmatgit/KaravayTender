@@ -192,10 +192,12 @@ function LoadComState(comofferid) {
                 initdatagridComStage(tblHeader,[[]]);
             }
             $('#StageNumber').html(res.data.CurrentStage);
+            $('#StageId').val(res.data.CurrentStageId);
             if (StageType === '1') {
                 $(`#comstage_dg`).datagrid('hideColumn', 'Stage');
             } else {
                 $(`#comstage_dg`).datagrid('showColumn', 'Stage');
+                $('#StageId').val(0);
             }
             
             

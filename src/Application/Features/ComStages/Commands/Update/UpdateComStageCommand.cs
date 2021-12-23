@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -20,8 +21,13 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Update
 
          public CancellationTokenSource ResetCacheToken => ComStageCacheTokenSource.ResetCacheToken;
     }
+    public class UpdateDeadlineComStageCommand :  IRequest<Result>
+    {
+        public DateTime? DeadLine { get; set; }
+        public int Id { get; set; }
+    }
 
-    public class UpdateComStageCommandHandler : IRequestHandler<UpdateComStageCommand, Result>
+    public class UpdateComStageCommandHandler : IRequestHandler<UpdateComStageCommand, Result>, IRequestHandler<UpdateDeadlineComStageCommand, Result>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -46,6 +52,20 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Update
                 await _context.SaveChangesAsync(cancellationToken);
            }
            return Result.Success();
+        }
+
+        public async Task<Result> Handle(UpdateDeadlineComStageCommand request, CancellationToken cancellationToken)
+        {
+            var item = await _context.ComStages.FindAsync(new object[] { request.Id }, cancellationToken);
+            if (item != null && request.DeadLine is not null && item.DeadlineDate!=request.DeadLine)
+            {
+                if (request.DeadLine < item.DeadlineDate)
+                    return Result.Failure(new string[] {"Дату можно менять только в сторону увеличения" });
+                item.DeadlineDate = request.DeadLine.Value;
+                
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            return Result.Success();
         }
     }
 }

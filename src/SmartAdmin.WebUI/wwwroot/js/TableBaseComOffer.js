@@ -22,6 +22,42 @@ $('#importbutton').click(function () {
 $('#gettemplatebutton').click(function () {
     onGetTemplate();
 });
+$('#changeDeadline').click(function (e) {
+    //
+    bootbox.prompt({
+        //title: `На портале ОАО "КАРАВАЙ" по работе с поставщиками появилась возможность \n предоставить ценовое предложение по лоту № ${currentEditRow.Number}.
+        //          Просим предоставить Ваши предложения пройдя по ссылке ___` ,
+        title: 'Изменить срок ответа до',
+        inputType: 'date',
+        buttons: {
+            confirm: {
+                label: `${translations.Ok}`, //'@_localizer["Yes"]',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: `${translations.Cancel}`, //'@_localizer["No"]',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+
+            console.log(result);
+            let stageid = $('#StageId').val();
+            SubmitForm("?handler=Deadline&deadline=" + result + "&stageid=" + stageid, function (res) {
+                SetReadOnlyForm();
+                openEditpanel(currentEditRow, true);
+                //LoadComState(currentEditRow.Id);
+            });
+
+        }
+
+    });
+
+
+
+});
+
+
 $('#startStage').click(function (e) {
     //
     bootbox.prompt({
@@ -82,7 +118,7 @@ function SubmitForm(addParam,callback) {
         //if (AppendFilesToFormData) {
         //    AppendFilesToFormData(request);
         //}
-        axios.post(`${pagelink}${addParam ? addParam: ''}`, request).then(res => {
+        axios.post(`${pagelink}${addParam ? addParam : ''}`, request).then(res => {
             toastr["info"](`${translations.SaveSuccess} `);
 
             //$('#table-page-content').show();
@@ -90,15 +126,6 @@ function SubmitForm(addParam,callback) {
             reloadData();
             if (callback) {
                 callback(res.data);
-            }
-        }).catch((error) => {
-            if (error.response.data.Errors) {
-                const errors = error.response.data.Errors;
-                errors.forEach(item => {
-                    toastr["error"](item);
-                });
-            } else {
-                toastr["error"](`${translations.SaveFail},${error.response.data}`);
             }
         });
     }
@@ -174,23 +201,25 @@ function openEditpanel(row,stage) {
         if (row.Status > 0) {
             
             $('#ComStageTab').show();
-            $('#ComState').show();
+            $('#ComStage').show();
             SetReadOnlyForm();
-            if (stage)
-                $('a[href="#ComState"]').click();
-            
+            $('a[href="#ComStage"]').click();
+
             
         } else {
             SetEditable();
             SetEnableToRoleButton(true);
             $('#save').prop('disabled', false);
             $('#startStage').prop('disabled', false);
-            $('#ComState').hide();
+            $('#ComStage').hide();
             $('#ComStageTab').hide();
+            $('a[href="#ComPosition"]').click();
         }
+        showHideButtons(row);
      
     }
     else {
+        //ADd
         $('#edit_form_panel #Input_Id').val(0)
         
         let total = $dg.datagrid('getData').total;
@@ -200,11 +229,31 @@ function openEditpanel(row,stage) {
         if (typeof OnNewRow == 'function')
             OnNewRow();
         SetEnableToRoleButton(false);
-        $('#ComState').hide();
+        $('#ComStage').hide();
         $('#ComStageTab').hide();
+        $('a[href="#ComPosition"]').click();
     }
-    $('a[href="#ComPosition"]').click();
+    
 
+}
+function showHideButtons(row) {
+    switch (row.Status) {
+        case 0:
+            $('#save').show();
+            $('#startStage').show();
+
+            $('#endStage').hide();
+            $('#changeDeadline').hide();
+            break;
+        case 1:
+            $('#save').hide();
+            $('#startStage').hide();
+            $('#endStage').show();
+            $('#changeDeadline').show();
+            break;
+
+
+    }
 }
 function SetEditable() {
     const form = document.querySelector('#edit_form_panel');

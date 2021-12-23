@@ -36,6 +36,7 @@ using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.AddE
 using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.Import;
 using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create;
 using CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update;
+using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Update;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
@@ -150,6 +151,20 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             catch (Exception ex)
             {
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
+        public async Task<IActionResult> OnPostDeadlineAsync([FromQuery] DateTime deadline, int stageId)
+        {
+            if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting)
+                return BadRequest("Изменение  'срок ответа до' можно только в статусе 'Ожидание КП' ");
+            var result = await _mediator.Send(new UpdateDeadlineComStageCommand() { Id = stageId, DeadLine = deadline });
+
+            if (result.Succeeded)
+            {
+                return new JsonResult("");
+            }else
+            {
+                return BadRequest(result);
             }
         }
         public async Task<IActionResult> OnPostRunAsync([FromQuery] DateTime deadline)

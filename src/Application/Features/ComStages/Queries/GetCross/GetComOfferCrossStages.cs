@@ -63,6 +63,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                 {
                     queryResult.Add(dataLast);
                     result.CurrentStage = dataLast.Number;
+                    result.CurrentStageId = dataLast.Id;
                 }
             }
             else
