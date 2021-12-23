@@ -13,6 +13,7 @@ using System.Linq;
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 using System.Text.Json.Serialization;
 using CleanArchitecture.Razor.Domain.Enums;
+using CleanArchitecture.Razor.Application.Common.Extensions;
 
 namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
 {
@@ -141,6 +142,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         public int Stage { get; set; }
         public int StageId { get; set; }
         public ParticipantStatus ParticipantStatus { get; set; }
+        public string ParticipantStatusStr { get { return ParticipantStatus.ToDescriptionString(); } }
     }
 
 }

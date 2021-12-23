@@ -23,6 +23,11 @@ $('#gettemplatebutton').click(function () {
     onGetTemplate();
 });
 $('#sendStage').click(function (e) {
+    let stageid = $('#StageId').val();
+    if (!stageid || stageid == "0") {
+        bootbox.alert("Отправить запрос, можно только на 'Последнее предложение'");
+        return;
+    }
     var rows = dgcomstage.datagrid('getRows');
     console.log(rows);
     
@@ -42,7 +47,7 @@ $('#sendStage').click(function (e) {
     
     let tmpOjb = {
         "ComOfferId": currentEditRow.Id,
-        "StageId": parseInt($('#StageId').val()),
+        "StageId": parseInt(stageid),
         "ContrPrices": ContrPrice
     }
     console.log(tmpOjb);
@@ -83,13 +88,15 @@ $('#changeDeadline').click(function (e) {
         },
         callback: function (result) {
 
-            console.log(result);
-            let stageid = $('#StageId').val();
-            SubmitForm("?handler=Deadline&deadline=" + result + "&stageid=" + stageid, function (res) {
-                SetReadOnlyForm();
-                openEditpanel(currentEditRow, true);
-                //LoadComState(currentEditRow.Id);
-            });
+            if (result) {
+
+                let stageid = $('#StageId').val();
+                SubmitForm("?handler=Deadline&deadline=" + result + "&stageid=" + stageid, function (res) {
+                    SetReadOnlyForm();
+                    openEditpanel(currentEditRow, true);
+                    //LoadComState(currentEditRow.Id);
+                });
+            }
 
         }
 

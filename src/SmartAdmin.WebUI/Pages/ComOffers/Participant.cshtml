@@ -199,7 +199,7 @@
         $("input[name=GetStageType]:radio").change(function () {
             if (GetStageType() != 1) {
                 ActionButtonAccess(true);
-                
+
                 @*let changet = getChanges();
                 if (changet.length > 0) {
                     bootbox.confirm({
@@ -224,7 +224,7 @@
                 }*@
             } else {
                 ActionButtonAccess(false);
-                
+
             }
             reloadDataCP();
             //if (GetStageType() == 1)
@@ -361,8 +361,10 @@
 
                 }
         ]
-       let  tblColumnsComPosition = [
-                {
+        let tblColumnsComPosition = [
+            { field: 'ParticipantStatusStr', title: '@_localizer["Статус участия"]', sortable: true, width: 80 },
+           {
+
                field: 'CategoryName', title: '@_localizer["Category"]', sortable: true, width: 130 },
                 {
                     field: 'NomName', title: '@_localizer["Nomenclature"]', sortable: true, width: 150
@@ -378,7 +380,7 @@
                     field: 'UnitOfName', title: '@_localizer["UnitOf"]', sortable: true, width: 80,
                 },
                 { field: 'DeliveryCount', title: '@_localizer["Delivery count"]', sortable: true, width: 130},
-           { field: 'RequestPrice', title: '@_localizer["Request price"]', sortable: true, align: 'center', width: 80, formatter: checkboxformatter },
+           { field: 'RequestPrice', title: '@_localizer["Запрос цены"]', sortable: true, align: 'center', width: 80, formatter: checkboxformatter },
            { field: 'InputPrice', title: '@_localizer["Price"]', sortable: true, width: 80, align: 'right', formatter: formatPrice,   editor: { type: 'numberbox', options: { precision: 2 } } },
 
            { field: 'NomStavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
@@ -408,6 +410,7 @@
                 pageList: [5, 10, 30, 50, 100, 1000],
 
                 columns: [tblColumnsComPosition],
+
                 onLoadSuccess: function (res) {
                     $dgCP.datagrid("gotoCell", {
                         index: 0,
@@ -430,7 +433,7 @@
                         $('#StageStatus').val(null);
                         ActionButtonAccess(true);
                     }
-                    
+
                 },
                 onClickCell: onClickRow,
                 //onEndEdit: function (index, row) {
@@ -468,7 +471,25 @@
                         toastr["error"](`@_localizer["Load fail"],${error.responseJSON}`);
 				}
                 }
-            }).datagrid('enableFilter', {});
+            }).datagrid('enableFilter', [
+                 {
+                    field: 'ParticipantStatusStr',
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        data: ParticipantStatus,
+                        onChange: function (newValue, oldValue) {
+                            
+                            $dg.datagrid('addFilterRule', {
+                                field: 'ParticipantStatus',
+                                op: 'equal',
+                                value: newValue
+                            });
+                        }
+                    }
+
+                }
+            ]);
             //if (GetStageType() == 1)
             //$dgCP.datagrid('enableCellEditing').datagrid('gotoCell', {
             //    index: 0,
@@ -703,7 +724,7 @@
                         className: "btn-success",
                         callback: function () {
                             var name = $('#description').val();
-                            
+
                             SendPost('@Url.Page("/ComOffers/Participant")?handler=Failure', { StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id, Description: name });
                         }
                         },
@@ -722,7 +743,7 @@
 
         })
         function ActionButtonAccess(access) {
-            
+
             let status = $('#StageStatus').val();
             $("#failure").prop("disabled", access || status!=1);
             $("#confirm").prop("disabled", access || status != 1);
@@ -733,7 +754,7 @@
 		$('#participant_form').clearForm();
             $('#participant_form')[0].reset();
             ActionButtonAccess(false);
-            
+
         if (participant) {
                 currentEditRow = participant;
 			$('#participant_modal .modal-title').html('@_localizer["Edit"]');
