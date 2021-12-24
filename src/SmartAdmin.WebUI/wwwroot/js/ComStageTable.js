@@ -27,67 +27,67 @@ const tblStageColumns = [[
 ], [
 
     {
-        field: 'ContrPrice1', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }
+        field: 'ContrPrice1', title: 'Цена', width: 100,  formatter: function (value, row) { return formatPriceStage(value); }
     },
     {
         field: 'RequestPrice1', title: 'Запрос цены', width: 100,  formatter: function (value, row, index) {return checkboxformatterEdit(value, row, index,1); }
     },
     
-    { field: 'ContrPrice2', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'ContrPrice2', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); }},
     { field: 'RequestPrice2', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 2); } },
     
-    { field: 'ContrPrice3', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'ContrPrice3', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); } },
     { field: 'RequestPrice3', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 3); } },
     
-    { field: 'ContrPrice4', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'ContrPrice4', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); } },
     { field: 'RequestPrice4', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 4); } },
     
-    { field: 'ContrPrice5', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'ContrPrice5', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); }},
     { field: 'RequestPrice5', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 5); } },
     
-    { field: 'ContrPrice6', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'ContrPrice6', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); } },
     { field: 'RequestPrice6', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 6); } },
     
-    { field: 'ContrPrice7', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'ContrPrice7', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); } },
     { field: 'RequestPrice7', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 7); } },
     
-    { field: 'ContrPrice8', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'ContrPrice8', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); }},
     { field: 'RequestPrice8', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 8); } },
     
-    { field: 'ContrPrice9', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'ContrPrice9', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); }},
     { field: 'RequestPrice9', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 9); } },
     
-    { field: 'ContrPrice10', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'ContrPrice10', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); }},
     { field: 'RequestPrice10', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 10); } },
     
-    { field: 'ContrPrice11', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'ContrPrice11', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); }},
     { field: 'RequestPrice11', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 11); } },
     
-    { field: 'ContrPrice12', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'ContrPrice12', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); }},
     { field: 'RequestPrice12', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 12); } },
     
-    { field: 'ContrPrice13', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'ContrPrice13', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); } },
     { field: 'RequestPrice13', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 13); } },
     
-    { field: 'ContrPrice14', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'ContrPrice14', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); } },
     { field: 'RequestPrice14', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 14); } },
     
-    { field: 'ContrPrice15', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'ContrPrice15', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); } },
     { field: 'RequestPrice15', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 15); } },
     
-    { field: 'ContrPrice16', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'ContrPrice16', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); } },
     { field: 'RequestPrice16', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 16); } },
     
-    { field: 'ContrPrice17', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'ContrPrice17', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); }},
     { field: 'RequestPrice17', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 17); } },
     
-    { field: 'ContrPrice18', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'ContrPrice18', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); }},
     { field: 'RequestPrice18', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 18); } },
 
-    { field: 'ContrPrice19', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); }},
+    { field: 'ContrPrice19', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); }},
     { field: 'RequestPrice19', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 19); } },
     
-    { field: 'ContrPrice20', title: 'Цена', width: 100, formatter: function (value, row) { return formatPrice(value); } },
+    { field: 'ContrPrice20', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value); } },
     { field: 'RequestPrice20', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 20); } },
     ]
     
@@ -135,35 +135,35 @@ initdatagridComStage = (cdata, dataComStages) => {
 }
 function checkboxformatterEdit(value, row, index,colIndex) {
 
-     if (istrue(value)) {
+    // if (istrue(value)) {
 
-         const checked = `<div >
-                       <input type="checkbox" class="editable"  checked="checked"  id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}>
+    //     const checked = `<div >
+    //                   <input type="checkbox" class="editable"  checked="checked"  id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}>
                        
-                   </div>`;
-        return checked;
-    } else {
-        var unchecked = `<div >
-                       <input type="checkbox" class="editable" id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]} >
-                   </div>`;
-
-        return unchecked;
-    }
-    //if (istrue(value)) {
-
-    //    const checked = `<div class="custom-control custom-checkbox">
-    //                   <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}" checked="checked" >
-    //                   <label class="custom-control-label" for="defaultCheckedDisabledEditable${index}"></label>
     //               </div>`;
     //    return checked;
     //} else {
-    //    var unchecked = `<div class="custom-control custom-checkbox">
-    //                   <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}"  >
-    //                   <label class="custom-control-label" for="defaultCheckedDisabledEditable${index}"></label>
+    //    var unchecked = `<div >
+    //                   <input type="checkbox" class="editable" id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]} >
     //               </div>`;
 
     //    return unchecked;
     //}
+    if (istrue(value)) {
+
+        const checked = `<div class="custom-control custom-checkbox">
+                       <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}" checked="checked"  id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}  disabled>
+                       <label class="custom-control-label" for=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}></label>
+                   </div>`;
+        return checked;
+    } else {
+        var unchecked = `<div class="custom-control custom-checkbox">
+                       <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}"  id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]} disabled>
+                       <label class="custom-control-label" for=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}></label>
+                   </div>`;
+
+        return unchecked;
+    }
 
 
 }

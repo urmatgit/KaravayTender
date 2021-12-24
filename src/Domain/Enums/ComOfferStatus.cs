@@ -23,8 +23,8 @@ namespace CleanArchitecture.Razor.Domain.Enums
         [Display(Name = "Ожидание КП")]
         [Description(@"Ожидание КП")]
         Waiting = 1,
-        [Description(@"Оценка")]
-        [Display(Name = "Оценка")]
+        [Description(@"Оценка КП")]
+        [Display(Name = "Оценка КП")]
         Evaluation = 2,
         [Description(@"Определение победителя")]
         [Display(Name ="Определение победителя")]

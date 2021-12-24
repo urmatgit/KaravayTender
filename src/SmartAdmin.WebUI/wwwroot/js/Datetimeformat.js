@@ -23,7 +23,26 @@ function formatPrice(value) {
     if (isNaN(number) || number==0) {
         return '';
     } else {
-        return formatter.format(number); //number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
+        return formatter.format(number);
         
     }
 }
+function formatPriceStage(value) {
+    var formatter = new Intl.NumberFormat('ru-Ru', {
+        style: 'currency',
+        currency: 'RUB',
+
+        // These options are needed to round to whole numbers if that's what you want.
+        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+    });
+
+    var number = Number(value);
+    if (isNaN(number) || number == 0) {
+        return '<span class="stageprice" style="color:red;"></span>';
+    } else {
+        return '<span class="stageprice" style="color:red;">' + formatter.format(number) + '</span>'; //number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
+
+    }
+}
+

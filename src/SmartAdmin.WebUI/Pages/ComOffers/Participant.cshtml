@@ -374,7 +374,7 @@
                 },
 
                 {
-                    field: 'AriaNames', title: '@_localizer["Arias"]', sortable: true, width: 150
+                    field: 'AreaNames', title: '@_localizer["Arias"]', sortable: true, width: 150
                 },
                 {
                     field: 'UnitOfName', title: '@_localizer["UnitOf"]', sortable: true, width: 80,
@@ -682,10 +682,11 @@
             axios.post(url, param, {
                 headers: headers
             }).then(res => {
-				toastr["info"]('@_localizer["Save Success."]');
-				$('#participant_modal').modal('toggle');
-				reloadData();
-			}).catch((error) => {
+                toastr["info"]('@_localizer["Save Success."]');
+                $('#participant_modal').modal('toggle');
+                reloadData();
+            });
+                @*.catch((error) => {
 				if (error.response.data.Errors) {
 					const errors = error.response.data.Errors;
 					errors.forEach(item => {
@@ -694,7 +695,7 @@
 				} else {
 					toastr["error"](`@_localizer["Save fail"],${error.response.data}`);
 				}
-			});
+			});*@
         }
         $('#participant_form :submit').click(function (e) {
 		const form = document.querySelector('#participant_form');

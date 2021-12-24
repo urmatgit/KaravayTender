@@ -4,6 +4,9 @@
 //_canEdit
 //_catDelete
 
+$('#comstage_updatebutton').click(function () {
+    LoadComState(currentEditRow.Id);
+});
 $('#searchbutton').click(function () {
     reloadData();
 });
@@ -22,7 +25,7 @@ $('#importbutton').click(function () {
 $('#gettemplatebutton').click(function () {
     onGetTemplate();
 });
-$('#sendStage').click(function (e) {
+$('#btnSendStage').click(function (e) {
     let stageid = $('#StageId').val();
     if (!stageid || stageid == "0") {
         bootbox.alert("Отправить запрос, можно только на 'Последнее предложение'");
@@ -69,7 +72,65 @@ $('#sendStage').click(function (e) {
     //    //LoadComState(currentEditRow.Id);
     
 });
-$('#changeDeadline').click(function (e) {
+
+$('#btnEndStage').click(function (e) {
+    let stageid = $('#StageId').val();
+    if (!stageid || stageid == "0") {
+        bootbox.alert("завершит этап, можно только на 'Последнее предложение'");
+        return;
+    }
+
+    
+        bootbox.confirm({
+            title: "Вы уверенны завершит этап?",
+            message: (checkEmptyPrices() ?  "Имеются не заполненные цены, поставщики с не заполненными ценами будут исключены из торги":" "),
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Отмена',
+                    className: 'btn-danger'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Подтвердить',
+                    className: 'btn-success'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    endStage();
+                }
+
+            }
+        });
+    
+    //check empty prices
+   
+
+})
+function endStage() {
+
+    let stageid = $('#StageId').val();
+    SubmitForm("?handler=EndStage&stageid=" + stageid, function (res) {
+        SetReadOnlyForm();
+        openEditpanel(res.Data, true);
+        //LoadComState(currentEditRow.Id);
+    });
+}
+function checkEmptyPrices() {
+    
+    let hasEmpty = false;
+    console.log($('span.stageprice').length);
+    $('span.stageprice').each(function () {
+        console.log($(this).html());
+        if (!$.trim($(this).html()))
+            hasEmpty = true;
+        //var sThisVal = $(this).val();
+    });
+    return hasEmpty;
+
+
+
+}
+$('#btnChangeDeadline').click(function (e) {
     //
     bootbox.prompt({
         //title: `На портале ОАО "КАРАВАЙ" по работе с поставщиками появилась возможность \n предоставить ценовое предложение по лоту № ${currentEditRow.Number}.
@@ -95,7 +156,7 @@ $('#changeDeadline').click(function (e) {
                     SetReadOnlyForm();
                     openEditpanel(currentEditRow, true);
                     //LoadComState(currentEditRow.Id);
-                });
+                } );
             }
 
         }
@@ -107,7 +168,7 @@ $('#changeDeadline').click(function (e) {
 });
 
 
-$('#startStage').click(function (e) {
+$('#btnStartStage').click(function (e) {
     //
     bootbox.prompt({
         //title: `На портале ОАО "КАРАВАЙ" по работе с поставщиками появилась возможность \n предоставить ценовое предложение по лоту № ${currentEditRow.Number}.
@@ -127,11 +188,20 @@ $('#startStage').click(function (e) {
         callback: function (result) {
 
             console.log(result);
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста подождите, запускаем первый этап...</p>',
+                centerVertical: true,
+                closeButton: false
+            });
 
             SubmitForm("?handler=Run&deadline=" + result, function (res) {
+
+                dialog.modal('hide');
                 SetReadOnlyForm();
                 openEditpanel(res.Data,true);
                 //LoadComState(currentEditRow.Id);
+            }, function (error) {
+                dialog.modal('hide');
             });
             
         }
@@ -153,9 +223,9 @@ function SetReadOnlyForm() {
     
     
     $('#save').prop('disabled', true);
-    $('#startStage').prop('disabled', true);
+    $('#btnStartStage').prop('disabled', true);
 }
-function SubmitForm(addParam,callback) {
+function SubmitForm(addParam,callback,onerror) {
     const form = document.querySelector('#edit_form_panel');
     if ($(form).valid() === false) {
         form.classList.add('was-validated');
@@ -176,6 +246,9 @@ function SubmitForm(addParam,callback) {
             if (callback) {
                 callback(res.data);
             }
+        }).catch((error) => {
+            if (onerror)
+                onerror(error)
         });
     }
     event.preventDefault();
@@ -258,13 +331,12 @@ function openEditpanel(row,stage) {
         } else {
             SetEditable();
             SetEnableToRoleButton(true);
-            $('#save').prop('disabled', false);
-            $('#startStage').prop('disabled', false);
+           
             $('#ComStage').hide();
             $('#ComStageTab').hide();
             $('a[href="#ComPosition"]').click();
         }
-        showHideButtons(row);
+        showHideButtons(row.Status);
      
     }
     else {
@@ -281,26 +353,49 @@ function openEditpanel(row,stage) {
         $('#ComStage').hide();
         $('#ComStageTab').hide();
         $('a[href="#ComPosition"]').click();
+        showHideButtons(-1);
     }
     
 
 }
-function showHideButtons(row) {
-    switch (row.Status) {
-        case 0:
+function showHideButtons(Status) {
+    $('#save').hide();
+    $('#btnStartStage').hide();
+    $('#btnSendStage').hide();
+    $('#btnEndStage').hide();
+    $('#btnChangeDeadline').hide();
+    $('#btnCancelStage').hide();
+    $('#btnSelectWinnerStage').hide();
+    switch (Status) {
+        case -1:
             $('#save').show();
-            $('#startStage').show();
-            
-            $('#sendStage').hide();
-            $('#endStage').hide();
-            $('#changeDeadline').hide();
             break;
-        case 1:
-            $('#save').hide();
-            $('#startStage').hide();
-            $('#sendStage').show();
-            $('#endStage').show();
-            $('#changeDeadline').show();
+        case 0://Подготовка
+            $('#save').show();
+            $('#btnStartStage').show();
+            
+            
+            break;
+        case 1: //Ожидание КП
+            ;
+            $('#btnEndStage').show();
+            $('#btnChangeDeadline').show();
+            break;
+        case 2:   //Оценка КП
+            $('input.editable:checkbox').removeAttr('disabled');
+            $('input.editable:checkbox').each(function () {
+                //$(this)[0].removeAttr("disabled");
+                //$(this)[0].prop('disabled', false);
+                console.log($(this)[0]);
+                //var sThisVal = $(this).val();
+            });
+
+            $('#btnSendStage').show();
+            $('#btnCancelStage').show();
+            $('#btnSelectWinnerStage').show();
+            
+            
+
             break;
 
 

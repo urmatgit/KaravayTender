@@ -9,6 +9,7 @@ using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.ComOffers.DTOs;
 using CleanArchitecture.Razor.Application.Features.StageParticipants.Caching;
 using CleanArchitecture.Razor.Application.Features.StageParticipants.DTOs;
+using CleanArchitecture.Razor.Application.Features.StageParticipants.EventHandlers;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Events;
@@ -60,11 +61,14 @@ namespace CleanArchitecture.Razor.Application.Features.StageParticipants.Command
                     if (exist==null)
                     {
                         stageParticipants.Add(stPart);
+                        var createevent = new StageParticipantUpdatedEvent(stPart);
+                        stPart.DomainEvents.Add(createevent);
                     }
                 }
                 if (stageParticipants.Count > 0)
                 {
                     await _context.StageParticipants.AddRangeAsync(stageParticipants, cancellationToken);
+                    
                     await _context.SaveChangesAsync(cancellationToken);
                 }
             }

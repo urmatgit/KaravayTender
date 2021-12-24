@@ -154,6 +154,26 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
+        public async Task<IActionResult> OnPostEndStageAsync([FromQuery] int stageid)
+        {
+            try
+            {
+                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting)
+                    return BadRequest(Result.Failure(new string[] { "Статус не соответствует для этой операции!" }));
+                var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation });
+                return new JsonResult(resultComOffer);
+                
+            }
+            catch (ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
         public async Task<IActionResult> OnPostSendPriceAsync([FromBody] UpdateStageCompositionPricesManagerCommand command)
         {
             try
