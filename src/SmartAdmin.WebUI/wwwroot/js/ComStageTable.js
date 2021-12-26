@@ -121,6 +121,7 @@ initdatagridComStage = (cdata, dataComStages) => {
             //$(".editable[type='checkbox']").bind('click', function (e) {
             //    $(this).prop('checked', false);
             //});
+            showHideButtons(currentEditRow.Status);
         },
         onCellEdit: function (index, field, value) {
             //if (field == 'RequestPrice1') {
