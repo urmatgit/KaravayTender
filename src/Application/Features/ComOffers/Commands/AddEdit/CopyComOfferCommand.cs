@@ -66,6 +66,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
                 item.WinnerId = null;
                 item.ComParticipants = null;
                 item.ComPositions = null;
+                item.ComStages = null;
                 item.DateBegin= _dateTime.Now;
                 item.DateEnd = null;
 
@@ -73,7 +74,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
                 item.LastModified = null;
                 item.LastModifiedBy = "";
                 item.CreatedBy = "";
-
+                
                 _context.ComOffers.Add(item);
                 await _context.SaveChangesAsync(cancellationToken);
                 _logger.LogInformation($"Commercial offer ({request.Id}) copied to {item.Id}");

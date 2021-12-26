@@ -222,8 +222,8 @@ function SetReadOnlyForm() {
     SetEnableToRoleButton(false);
     
     
-    $('#save').prop('disabled', true);
-    $('#btnStartStage').prop('disabled', true);
+    //$('#save').prop('disabled', true);
+    //$('#btnStartStage').prop('disabled', true);
 }
 function SubmitForm(addParam,callback,onerror) {
     const form = document.querySelector('#edit_form_panel');
@@ -330,8 +330,8 @@ function openEditpanel(row,stage) {
             
         } else {
             SetEditable();
-            SetEnableToRoleButton(true);
-           
+            SetEnableToRoleButton(false);
+            
             $('#ComStage').hide();
             $('#ComStageTab').hide();
             $('a[href="#ComPosition"]').click();
@@ -382,11 +382,13 @@ function showHideButtons(Status) {
             $('#btnChangeDeadline').show();
             break;
         case 2:   //Оценка КП
-            $('input.editable:checkbox').removeAttr('disabled');
+            //$('input.editable:checkbox').removeAttr('disabled');
             $('input.editable:checkbox').each(function () {
-                //$(this)[0].removeAttr("disabled");
-                //$(this)[0].prop('disabled', false);
-                console.log($(this)[0]);
+
+                let id = $(this)[0].id;
+                $(`#${id}`).removeAttr("disabled");
+                //$(this).prop('disabled', false);
+                console.log($(`#${id}`));
                 //var sThisVal = $(this).val();
             });
 

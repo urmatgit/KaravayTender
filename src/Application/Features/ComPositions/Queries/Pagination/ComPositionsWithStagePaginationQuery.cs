@@ -23,6 +23,7 @@ using CleanArchitecture.Razor.Domain.Identity;
 using CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy;
 using Microsoft.Extensions.Logging;
 using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
+using CleanArchitecture.Razor.Domain.Enums;
 
 namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagination
 {
@@ -92,7 +93,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             {
                 LastStage = await _mediator.Send(new GetByStageLastQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
             }
-                var filters = PredicateBuilder.FromFilter<ComPosition>(request.FilterRules);
+            var filters = PredicateBuilder.FromFilter<ComPosition>(request.FilterRules);
             //var data1 = await _context.ComPositions
             //   .Specify(new FilterByComOfferQuerySpec(request.ComOfferId, ContragentId, (request.IsLastStage == 1 ? LastStage.Number : 0)))
             //   .Include(a => a.AreaComPositions)
@@ -106,8 +107,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                  .Where(filters)
                 // .Include(n => n.Nomenclature)
                 // .ThenInclude(n => n.Category)
-                 //.Include(a => a.AreaComPositions)
-                 //.ThenInclude(a => a.Area)
+                //.Include(a => a.AreaComPositions)
+                //.ThenInclude(a => a.Area)
                 //.Include(n => n.Nomenclature)
                 //.ThenInclude(n => n.UnitOf)
                 //.Include(n => n.Nomenclature)
@@ -117,8 +118,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                 //.ThenInclude(d => d.QualityDoc)
                 //.Include(s => s.StageCompositions)
                 //.ThenInclude(s=>s.ComStage)
-                
-                .SelectMany(c => c.StageCompositions.Where(s=>s.ContragentId==ContragentId).DefaultIfEmpty(), (c, s) => new ComPositionDtoEx
+
+                .SelectMany(c => c.StageCompositions.Where(s => s.ContragentId == ContragentId).DefaultIfEmpty(), (c, s) => new ComPositionDtoEx
                 {
                     Id = c.Id,
 
@@ -128,19 +129,19 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                     Volume = c.Volume,
                     AddRequirement = c.AddRequirement,
                     Stage = s.ComStage.Number,
-                    ParticipantStatus = s.ComStage.StageParticipants.FirstOrDefault(f => f.ContragentId == ContragentId && f.ComOfferId == request.ComOfferId).Status,
+                    ParticipantStatus = GetParticipant(s.ComStage,ContragentId,request.ComOfferId),  //s.ComStage.StageParticipants.FirstOrDefault(f => f.ContragentId == ContragentId && f.ComOfferId == request.ComOfferId).Status ,
                     StageId = s.ComStageId,
                     NomenclatureId = c.NomenclatureId,
                     NomName = c.Nomenclature.Name,
                     UnitOfName = c.Nomenclature.UnitOf.Name,
                     NomVolume = c.Nomenclature.Volume,
                     NomSpecification = c.Nomenclature.Specifications,
-                    AreaNames = string.Join(", ", c.AreaComPositions.Select(n => n.Area != null ? n.Area.Name : "").ToArray()),
+                    AreaNames = c.AreaComPositions !=null ? string.Join(", ", c.AreaComPositions.Select(n => n.Area != null ? n.Area.Name : "").ToArray()):"",
                     RequestPrice = s.RequestPrice,
                     InputPrice = s.Price,
                     NomStavka = c.Nomenclature.Vat.Stavka,
 
-                    QualityDocsNames = string.Join(", ", c.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name))
+                    QualityDocsNames = c.Nomenclature.NomenclatureQualityDocs !=null && c.Nomenclature.NomenclatureQualityDocs.Count>0 ? string.Join(", ", c.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)):""
                 })
                   
                    //.Distinct()
@@ -153,6 +154,20 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             //return new PaginatedData<ComPositionDtoEx>(data, data.total); ;
             return data;
             
+        }
+        public static ParticipantStatus GetParticipant(ComStage  comStage, int ContragentId, int ComOfferId)
+        {
+            var StageParticipants = comStage.StageParticipants ?? null;
+            if (StageParticipants is not null)
+            {
+                var StageParticipant = comStage.StageParticipants.FirstOrDefault(f => f.ContragentId == ContragentId && f.ComOfferId == ComOfferId);
+                if (StageParticipant is not null)
+                    return StageParticipant.Status;
+                return ParticipantStatus.Excluded;
+
+            }
+            else
+                return ParticipantStatus.Excluded;
         }
         public class FilterByComOfferQuerySpec : Specification<ComPosition>
         {
