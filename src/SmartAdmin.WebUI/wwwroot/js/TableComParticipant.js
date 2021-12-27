@@ -105,6 +105,19 @@ class TableComParticipant extends clsBaseTable {
 
 
 }
+function CheckPriceConfirmed() {
+    let rows = clsparticipant.dg.datagrid('getRows');
+    let result = true;
+    for (let i = 0; i < rows.length; i++) {
+        //[Display(Name = "Цена предоставлена")]
+        //PriceConfirmed = 2,
+        if (rows[0].Status != 2) {
+            result = false;
+            break;
+        }
+    }
+    return result;
+}
 let clsparticipant = null;
 var $dgContr = {};
 

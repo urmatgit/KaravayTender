@@ -438,8 +438,9 @@ function showHideButtons(Status) {
             
             break;
         case 1: //Ожидание КП
-            ;
-            $('#btnEndStage').show();
+            let now = new Date();
+            if (CheckPriceConfirmed() || (currentStage && Date.parse(now) > Date.parse(currentStage.DeadlineDate)))
+                $('#btnEndStage').show();
             $('#btnChangeDeadline').show();
             break;
         case 2:   //Оценка КП

@@ -168,6 +168,7 @@ function checkboxformatterEdit(value, row, index,colIndex) {
 
 
 }
+var currentStage = undefined;
 function LoadComState(comofferid) {
     
     let StageType = $('input[name="GetStageType"]:checked').val();
@@ -195,13 +196,14 @@ function LoadComState(comofferid) {
             }
             $('#StageNumber').html(res.data.CurrentStage);
             $('#StageId').val(res.data.CurrentStageId);
+            currentStage = res.data;
             if (StageType === '1') {
                 $(`#comstage_dg`).datagrid('hideColumn', 'Stage');
             } else {
                 $(`#comstage_dg`).datagrid('showColumn', 'Stage');
                 $('#StageId').val(0);
             }
-            
+            showHideButtons(currentEditRow.Status)
             
         })
         .catch((error) => {

@@ -64,6 +64,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                     queryResult.Add(dataLast);
                     result.CurrentStage = dataLast.Number;
                     result.CurrentStageId = dataLast.Id;
+                    result.DeadlineDate = dataLast.DeadlineDate;
                 }
             }
             else
@@ -141,6 +142,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                 
                     row.Add($"Stage",pos.keys. Number);
                 row.Add($"StageId", pos.keys.Id);
+                
                 row.Add($"StageDeadline", pos.stage1.stage.DeadlineDate);
                     int Indexcontrgent = 0;
                 foreach (var stagecom in pos.stage1.stage.StageCompositions.Where(s=>s.ComPosition.NomenclatureId==pos.keys.Nomenclature.Id).OrderBy(o=>o.Contragent.Name))
