@@ -178,10 +178,16 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
         {
             try
             {
-                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
-                    return BadRequest("Коммерческое предложения уже запущена!!! ");
+                //if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation)
+                //    return BadRequest(Result.Failure(new string[] { "Статус КП не соответствует для отправки запроса!" })) ;
                 var result = await _mediator.Send(command);
-                return new JsonResult(result);
+                if (result.Succeeded)
+                {
+                    var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = command.stageComRequest.ComOfferId, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting });
+                    return new JsonResult(resultComOffer);
+                }
+                else
+                    return BadRequest(result.Errors);
             }
             catch (ValidationException ex)
             {

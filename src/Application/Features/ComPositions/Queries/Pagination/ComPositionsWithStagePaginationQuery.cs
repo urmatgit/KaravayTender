@@ -24,6 +24,7 @@ using CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy;
 using Microsoft.Extensions.Logging;
 using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
 using CleanArchitecture.Razor.Domain.Enums;
+using CleanArchitecture.Razor.Application.Features.StageCompositions.DTOs;
 
 namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagination
 {
@@ -100,7 +101,11 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             //     .ThenInclude(a => a.Area)
             //    .Where(filters)
             //    .ToListAsync(cancellationToken);
-
+            //var data1 = await _context.ComPositions
+            //   .Specify(new FilterByComOfferQuerySpec(request.ComOfferId, ContragentId, (request.IsLastStage == 1 ? LastStage.Number : 0)))
+            //    .Where(filters)
+            //    .GroupJoin(_context.StageCompositions.Where(s => s.ContragentId == ContragentId && s.ComStageId == LastStage.Id)
+            //    .ToListAsync(cancellationToken);
 
             var data = await _context.ComPositions
                 .Specify(new FilterByComOfferQuerySpec(request.ComOfferId, ContragentId, (request.IsLastStage == 1 ? LastStage.Number : 0)))
@@ -116,10 +121,11 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                 //.Include(n => n.Nomenclature)
                 //.ThenInclude(n => n.NomenclatureQualityDocs)
                 //.ThenInclude(d => d.QualityDoc)
-                //.Include(s => s.StageCompositions)
-                //.ThenInclude(s=>s.ComStage)
+                .Include(s => s.StageCompositions)
+                .ThenInclude(s=>s.ComStage)
 
-                .SelectMany(c => c.StageCompositions.Where(s => s.ContragentId == ContragentId).DefaultIfEmpty(), (c, s) => new ComPositionDtoEx
+                .Select(c=>
+                new ComPositionDtoEx
                 {
                     Id = c.Id,
 
@@ -128,17 +134,18 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                     DeliveryCount = c.DeliveryCount,
                     Volume = c.Volume,
                     AddRequirement = c.AddRequirement,
-                    Stage = s.ComStage.Number,
-                    ParticipantStatus = GetParticipant(s.ComStage,ContragentId,request.ComOfferId),  //s.ComStage.StageParticipants.FirstOrDefault(f => f.ContragentId == ContragentId && f.ComOfferId == request.ComOfferId).Status ,
-                    StageId = s.ComStageId,
+                    Stage = LastStage.Number,
+                    ParticipantStatus = GetParticipant(LastStage, ContragentId),
+                    //GetParticipant(s,ContragentId,request.ComOfferId),  //s.ComStage.StageParticipants.FirstOrDefault(f => f.ContragentId == ContragentId && f.ComOfferId == request.ComOfferId).Status ,
+                    StageId = LastStage.Id,
                     NomenclatureId = c.NomenclatureId,
                     NomName = c.Nomenclature.Name,
                     UnitOfName = c.Nomenclature.UnitOf.Name,
                     NomVolume = c.Nomenclature.Volume,
                     NomSpecification = c.Nomenclature.Specifications,
-                    AreaNames = c.AreaComPositions !=null ? string.Join(", ", c.AreaComPositions.Select(n => n.Area != null ? n.Area.Name : "").ToArray()):"",
-                    RequestPrice = s.RequestPrice,
-                    InputPrice = s.Price,
+                    AreaNames = c.AreaComPositions !=null ? string.Join(", ", c.AreaComPositions.Select(n => n.Area != null ? n.Area.Name : "")):"",
+                    RequestPrice = GetPrices(LastStage,ContragentId,c.Id). RequestPrice,
+                    InputPrice = GetPrices(LastStage, ContragentId, c.Id).Price,
                     NomStavka = c.Nomenclature.Vat.Stavka,
 
                     QualityDocsNames = c.Nomenclature.NomenclatureQualityDocs !=null && c.Nomenclature.NomenclatureQualityDocs.Count>0 ? string.Join(", ", c.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)):""
@@ -155,12 +162,16 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             return data;
             
         }
-        public static ParticipantStatus GetParticipant(ComStage  comStage, int ContragentId, int ComOfferId)
+        public static StageCompositionDto GetPrices(ComStageDto comStage, int ContragentId,int compostionId)
+        {
+            return comStage.StageCompositions.FirstOrDefault(i => i.ContragentId == ContragentId && i.ComPositionId == compostionId);
+        }
+        public static ParticipantStatus GetParticipant(ComStageDto  comStage, int ContragentId)
         {
             var StageParticipants = comStage.StageParticipants ?? null;
             if (StageParticipants is not null)
             {
-                var StageParticipant = comStage.StageParticipants.FirstOrDefault(f => f.ContragentId == ContragentId && f.ComOfferId == ComOfferId);
+                var StageParticipant = comStage.StageParticipants.FirstOrDefault(f => f.ContragentId == ContragentId);
                 if (StageParticipant is not null)
                     return StageParticipant.Status;
                 return ParticipantStatus.Excluded;

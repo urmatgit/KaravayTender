@@ -1,10 +1,13 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.Constants;
 using CleanArchitecture.Razor.Application.Features.ComPositions.DTOs;
+using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create;
 using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
 using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.Caching;
@@ -29,7 +32,8 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
     }
     public class UpdateStageCompositionPricesManagerCommand : IRequest<Result>
     {
-        public  StageComRequestDto stageComRequest { get; set; }
+        public StageComRequestDto stageComRequest { get; set; }
+        public DateTime Deadline { get; set; }
     }
     public class FailureParitipateStageCompositionCommand : IRequest<Result>
     {
@@ -117,13 +121,18 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
 
         public async Task<Result> Handle(UpdateStageCompositionPricesManagerCommand request, CancellationToken cancellationToken)
         {
-            foreach(var contrPrice in request.stageComRequest.ContrPrices)
+
+            var next = await _mediator.Send(new NextComStageCommand() { ComOfferId = request.stageComRequest.ComOfferId,DeadlineDate=request.Deadline },cancellationToken);
+            if (next is null)
+                return Result.Failure(next.Errors);
+            foreach (var contrPrice in request.stageComRequest.ContrPrices)
             {
-                var stageCom = await _context.StageCompositions.FindAsync(new object[] { request.stageComRequest.StageId, contrPrice.ContrId, contrPrice.ComPositionId },cancellationToken);
+                var stageCom = await _context.StageCompositions.FindAsync(new object[] { next.Data.Id, contrPrice.ContrId, contrPrice.ComPositionId }, cancellationToken);
                 if (stageCom is not null && stageCom.RequestPrice != contrPrice.RequestPrice)
                     stageCom.RequestPrice = contrPrice.RequestPrice;
             }
             await _context.SaveChangesAsync(cancellationToken);
+
             return Result.Success();
         }
     }

@@ -47,30 +47,35 @@ $('#btnSendStage').click(function (e) {
         ContrPrice.push(tmpCP);
         //var sThisVal = $(this).val();
     });
-    
-    let tmpOjb = {
-        "ComOfferId": currentEditRow.Id,
-        "StageId": parseInt(stageid),
-        "ContrPrices": ContrPrice
-    }
-    console.log(tmpOjb);
 
 
-    var headers = {
-        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
-    }
+    DeadLinePrompt(function (result) {
 
-    axios.post(`${pagelink}?handler=SendPrice`, { stageComRequest: tmpOjb }, {
-        headers: headers
-    }).then(res => {
-        toastr["info"](`${translations.SaveSuccess} `);
-        
-        reloadData();
-    })
-    //    SetReadOnlyForm();
-    //    openEditpanel(currentEditRow, true);
-    //    //LoadComState(currentEditRow.Id);
-    
+
+        let tmpOjb = {
+            "ComOfferId": currentEditRow.Id,
+            "StageId": parseInt(stageid),
+            "ContrPrices": ContrPrice,
+
+        }
+        console.log(tmpOjb);
+
+
+        var headers = {
+            "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+        }
+
+        axios.post(`${pagelink}?handler=SendPrice`, { stageComRequest: tmpOjb, Deadline: result }, {
+            headers: headers
+        }).then(res => {
+            toastr["info"](`${translations.SaveSuccess} `);
+            openEditpanel(res.data.Data, true);
+            reloadData();
+        })
+        //    SetReadOnlyForm();
+        //    openEditpanel(currentEditRow, true);
+        //    //LoadComState(currentEditRow.Id);
+    });
 });
 
 $('#btnEndStage').click(function (e) {
@@ -167,9 +172,7 @@ $('#btnChangeDeadline').click(function (e) {
 
 });
 
-
-$('#btnStartStage').click(function (e) {
-    //
+function DeadLinePrompt(callback) {
     bootbox.prompt({
         //title: `На портале ОАО "КАРАВАЙ" по работе с поставщиками появилась возможность \n предоставить ценовое предложение по лоту № ${currentEditRow.Number}.
         //          Просим предоставить Ваши предложения пройдя по ссылке ___` ,
@@ -187,26 +190,80 @@ $('#btnStartStage').click(function (e) {
         },
         callback: function (result) {
 
-            console.log(result);
-            var dialog = bootbox.dialog({
-                message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста подождите, запускаем первый этап...</p>',
-                centerVertical: true,
-                closeButton: false
-            });
+            if (callback && result)
+                callback(result);
 
-            SubmitForm("?handler=Run&deadline=" + result, function (res) {
-
-                dialog.modal('hide');
-                SetReadOnlyForm();
-                openEditpanel(res.Data,true);
-                //LoadComState(currentEditRow.Id);
-            }, function (error) {
-                dialog.modal('hide');
-            });
-            
         }
-    
+
     });
+}
+$('#btnStartStage').click(function (e) {
+
+    const form = document.querySelector('#edit_form_panel');
+    if ($(form).valid() === false) {
+
+        form.classList.add('was-validated');
+
+    } else {
+        DeadLinePrompt(function (result) {
+            if (result) {
+                console.log(result);
+                var dialogWait = bootbox.dialog({
+                    message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста подождите, запускаем первый этап...</p>',
+                    centerVertical: true,
+                    closeButton: false
+                });
+
+                SubmitForm("?handler=Run&deadline=" + result, function (res) {
+
+                    dialogWait.modal('hide');
+                    SetReadOnlyForm();
+                    openEditpanel(res.Data, true);
+                    //LoadComState(currentEditRow.Id);
+                }, function (error) {
+                    dialogWait.modal('hide');
+                });
+            }
+        });
+    }
+    ////
+    //bootbox.prompt({
+    //    //title: `На портале ОАО "КАРАВАЙ" по работе с поставщиками появилась возможность \n предоставить ценовое предложение по лоту № ${currentEditRow.Number}.
+    //    //          Просим предоставить Ваши предложения пройдя по ссылке ___` ,
+    //    title: 'Срок предоставления до',
+    //    inputType: 'date',
+    //    buttons: {
+    //        confirm: {
+    //            label: `${translations.Ok}`, //'@_localizer["Yes"]',
+    //            className: 'btn-success'
+    //        },
+    //        cancel: {
+    //            label: `${translations.Cancel}`, //'@_localizer["No"]',
+    //            className: 'btn-danger'
+    //        }
+    //    },
+    //    callback: function (result) {
+
+    //        console.log(result);
+    //        var dialog = bootbox.dialog({
+    //            message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста подождите, запускаем первый этап...</p>',
+    //            centerVertical: true,
+    //            closeButton: false
+    //        });
+
+    //        SubmitForm("?handler=Run&deadline=" + result, function (res) {
+
+    //            dialog.modal('hide');
+    //            SetReadOnlyForm();
+    //            openEditpanel(res.Data,true);
+    //            //LoadComState(currentEditRow.Id);
+    //        }, function (error) {
+    //            dialog.modal('hide');
+    //        });
+            
+    //    }
+    
+    //});
 
     
 
@@ -228,7 +285,9 @@ function SetReadOnlyForm() {
 function SubmitForm(addParam,callback,onerror) {
     const form = document.querySelector('#edit_form_panel');
     if ($(form).valid() === false) {
+        
         form.classList.add('was-validated');
+        
     } else {
         let request = $('#edit_form_panel').serialize();
         if (typeof UpdateFiles == 'function')
@@ -256,8 +315,9 @@ function SubmitForm(addParam,callback,onerror) {
 }
 $('#save').click(function (e) {
     SubmitForm("", function (res) {
-        SetEnableToRoleButton(true);
+        
         openEditpanel(res.Data);
+        
     });
 });
 function SetEnableToRoleButton(enable) {
@@ -325,12 +385,13 @@ function openEditpanel(row,stage) {
             $('#ComStageTab').show();
             $('#ComStage').show();
             SetReadOnlyForm();
+            //SetEnableToRoleButton(true);
             $('a[href="#ComStage"]').click();
 
             
         } else {
             SetEditable();
-            SetEnableToRoleButton(false);
+            SetEnableToRoleButton(true);
             
             $('#ComStage').hide();
             $('#ComStageTab').hide();
@@ -383,10 +444,16 @@ function showHideButtons(Status) {
             break;
         case 2:   //Оценка КП
             //$('input.editable:checkbox').removeAttr('disabled');
+            let StageType = $('input[name="GetStageType"]:checked').val();
+
             $('input.editable:checkbox').each(function () {
 
                 let id = $(this)[0].id;
-                $(`#${id}`).removeAttr("disabled");
+                if (StageType == 1) {
+                    $(`#${id}`).removeAttr("disabled");
+                }
+                else
+                    $(`#${id}`).attr("disabled");
                 //$(this).prop('disabled', false);
                 console.log($(`#${id}`));
                 //var sThisVal = $(this).val();
