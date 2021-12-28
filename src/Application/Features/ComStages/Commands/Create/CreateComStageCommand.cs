@@ -6,6 +6,7 @@ using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.Constants;
 using CleanArchitecture.Razor.Application.Features.ComStages.Caching;
 using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.Commands.Create;
@@ -47,7 +48,18 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
         public async Task<Result<ComStageDto>> Handle(CreateComStageCommand request, CancellationToken cancellationToken)
         {
             //TODO:Implementing CreateComStageCommandHandler method
-            
+            var comoffer = await _context.ComOffers
+                   .Include(c => c.ComPositions)
+                   .Include(c => c.ComParticipants)
+                   .Where(c => c.Id == request.ComOfferId)
+                   .FirstOrDefaultAsync(cancellationToken);
+            if (comoffer.ComPositions==null || comoffer.ComPositions.Count==0)
+
+                return Result<ComStageDto>.Failure( new string[] { ErrorMessages.PositionsNotFound });
+            if (comoffer.ComParticipants == null || comoffer.ComParticipants.Count == 0)
+
+                return Result<ComStageDto>.Failure(new string[] { ErrorMessages.ParcipantsNotFound });
+
             var item = await _context.ComStages.FirstOrDefaultAsync(c => c.ComOfferId == request.ComOfferId && c.Number == request.Number,cancellationToken);
             if (item != null)
             {

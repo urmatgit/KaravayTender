@@ -45,7 +45,17 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
             _mapper = mapper;
             _localizer = localizer;
         }
-
+        private static   int? getLastStage(IApplicationDbContext _context, int contrId,int comOfferid)
+        {
+            var result =  _context.StageParticipants
+                .Include(s => s.ComStage)
+                .Where(s => s.ComOfferId == comOfferid && s.ContragentId == contrId)
+                .OrderBy(o => o.ComStage.Number)
+                .LastOrDefault();
+            if (result is not null)
+                return result.ComStage.Number;
+            return null;
+        }
         public async Task<PaginatedData<ComParticipantDto>> Handle(ComParticipantsWithPaginationQuery request, CancellationToken cancellationToken)
         {
             //TODO:Implementing ComParticipantsWithPaginationQueryHandler method 
@@ -73,15 +83,15 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
                                  cp => cp.ContragentId,
                                  sp => sp.ContragentId,
                                  (c, s) => new { cp = c, sp = s })
-                       .SelectMany(
+                       .SelectMany (
                              x => x.sp.DefaultIfEmpty(),
                              (c, s) => new ComParticipantDto()
                              {
                                  ComOfferId = c.cp.ComOfferId,
                                  ContragentId = c.cp.ContragentId,
                                  ContragentName = c.cp.Contragent.Name,
-                                 Status = s == null ?  Domain.Enums.ParticipantStatus.PriceRequest : s.Status,
-                                 StepFailure= s == null || s.Status != Domain.Enums.ParticipantStatus.FailureParitipate  ? null: s.ComStage.Number
+                                 Status = s == null ?  Domain.Enums.ParticipantStatus.FailureParitipate : s.Status,
+                                 StepFailure= s == null || s.Status != Domain.Enums.ParticipantStatus.FailureParitipate  ?  getLastStage(_context,c.cp.ContragentId,c.cp.ComOfferId ) : s.ComStage.Number
                                  
                              }
                         );

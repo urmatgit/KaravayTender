@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -125,15 +126,36 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
             var next = await _mediator.Send(new NextComStageCommand() { ComOfferId = request.stageComRequest.ComOfferId,DeadlineDate=request.Deadline },cancellationToken);
             if (next is null)
                 return Result.Failure(next.Errors);
+            List<int> ForChangeParticipantStatus = new List<int>();
             foreach (var contrPrice in request.stageComRequest.ContrPrices)
             {
                 var stageCom = await _context.StageCompositions.FindAsync(new object[] { next.Data.Id, contrPrice.ContrId, contrPrice.ComPositionId }, cancellationToken);
-                if (stageCom is not null && stageCom.RequestPrice != contrPrice.RequestPrice)
-                    stageCom.RequestPrice = contrPrice.RequestPrice;
-            }
+
+                if (stageCom is not null) {
+                    //Обнуляем цены если стоит галочка
+                    if (contrPrice.RequestPrice)
+                    {
+                        if (!ForChangeParticipantStatus.Contains(contrPrice.ContrId))
+                            ForChangeParticipantStatus.Add(contrPrice.ContrId);
+                        if ((stageCom.Price != default(decimal?) || stageCom.Price != 0m))
+                            stageCom.Price = default(decimal?);
+                    }
+                    if (stageCom.RequestPrice != contrPrice.RequestPrice)
+                        stageCom.RequestPrice = contrPrice.RequestPrice;
+                } }
             await _context.SaveChangesAsync(cancellationToken);
+            foreach(int contrid in ForChangeParticipantStatus)
+            {
+                var sp = await _context.StageParticipants.FindAsync(new object[] { next.Data.Id, contrid, request.stageComRequest.ComOfferId }, cancellationToken);
+                if (sp is not null)
+                {
+                    sp.Status = Domain.Enums.ParticipantStatus.PriceRequest;
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+            }
 
             return Result.Success();
         }
+        
     }
 }

@@ -53,7 +53,7 @@ $('#btnSendStage').click(function (e) {
 
 
         let tmpOjb = {
-            "ComOfferId": currentEditRow.Id,
+            "ComOfferId": currentEditRow.Id, 
             "StageId": parseInt(stageid),
             "ContrPrices": ContrPrice,
 
@@ -117,6 +117,7 @@ function endStage() {
     SubmitForm("?handler=EndStage&stageid=" + stageid, function (res) {
         SetReadOnlyForm();
         openEditpanel(res.Data, true);
+
         //LoadComState(currentEditRow.Id);
     });
 }
@@ -211,9 +212,13 @@ $('#btnStartStage').click(function (e) {
                 var dialogWait = bootbox.dialog({
                     message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста подождите, запускаем первый этап...</p>',
                     centerVertical: true,
-                    closeButton: false
+                    closeButton: true
                 });
-
+                dialogWait.init(function () {
+                    setTimeout(function () {
+                        dialogWait.modal('hide');
+                    }, 2000);
+                });
                 SubmitForm("?handler=Run&deadline=" + result, function (res) {
 
                     dialogWait.modal('hide');
@@ -223,6 +228,7 @@ $('#btnStartStage').click(function (e) {
                 }, function (error) {
                     dialogWait.modal('hide');
                 });
+                dialogWait.modal('hide');
             }
         });
     }
@@ -439,6 +445,8 @@ function showHideButtons(Status) {
             break;
         case 1: //Ожидание КП
             let now = new Date();
+            if (currentStage === undefined)
+                currentStage = false;
             if (CheckPriceConfirmed() || (currentStage && Date.parse(now) > Date.parse(currentStage.DeadlineDate)))
                 $('#btnEndStage').show();
             $('#btnChangeDeadline').show();

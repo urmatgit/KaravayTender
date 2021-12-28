@@ -6,6 +6,7 @@ using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.ComOffers.Caching;
 using CleanArchitecture.Razor.Application.Features.ComOffers.DTOs;
+using CleanArchitecture.Razor.Application.Features.StageCompositions.Commands.Update;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Enums;
@@ -29,13 +30,16 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
         private readonly IStringLocalizer<UpdateStatusComOfferCommandHandler> _localizer;
         public UpdateStatusComOfferCommandHandler(
             IApplicationDbContext context,
-            IStringLocalizer<UpdateStatusComOfferCommandHandler> localizer,
+            IMediator mediator,
+        IStringLocalizer<UpdateStatusComOfferCommandHandler> localizer,
              IMapper mapper
             )
         {
+            _mediator = mediator;
             _context = context;
             _localizer = localizer;
             _mapper = mapper;
@@ -51,6 +55,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update
                 item.DomainEvents.Add(createevent);
                 _context.ComOffers.Update(item);
                 await _context.SaveChangesAsync(cancellationToken);
+                
+
            }
             var itemDto = _mapper.Map<ComOfferDto>(item);
                  

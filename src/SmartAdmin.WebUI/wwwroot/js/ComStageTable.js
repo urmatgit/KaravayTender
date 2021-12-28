@@ -168,7 +168,7 @@ function checkboxformatterEdit(value, row, index,colIndex) {
 
 
 }
-var currentStage = undefined;
+var currentStage = false;
 function LoadComState(comofferid) {
     
     let StageType = $('input[name="GetStageType"]:checked').val();

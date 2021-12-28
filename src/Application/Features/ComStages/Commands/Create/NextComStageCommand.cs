@@ -79,7 +79,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
             foreach (var sc in last.StageParticipants)
             {
                 sc.ComStageId = 0;
-                sc.Status = Domain.Enums.ParticipantStatus.PriceRequest;
+                //sc.Status = Domain.Enums.ParticipantStatus.PriceRequest;
             }
 
             _context.ComStages.Add(last);

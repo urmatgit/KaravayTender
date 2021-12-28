@@ -92,7 +92,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
 
             if (request.IsLastStage == 1)
             {
-                LastStage = await _mediator.Send(new GetByStageLastQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
+                LastStage = await _mediator.Send(new GetByStageLastDtoQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
             }
             var filters = PredicateBuilder.FromFilter<ComPosition>(request.FilterRules);
             //var data1 = await _context.ComPositions
@@ -162,11 +162,11 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             return data;
             
         }
-        public static StageCompositionDto GetPrices(ComStageDto comStage, int ContragentId,int compostionId)
+        private static StageCompositionDto GetPrices(ComStageDto comStage, int ContragentId,int compostionId)
         {
             return comStage.StageCompositions.FirstOrDefault(i => i.ContragentId == ContragentId && i.ComPositionId == compostionId);
         }
-        public static ParticipantStatus GetParticipant(ComStageDto  comStage, int ContragentId)
+        private static ParticipantStatus GetParticipant(ComStageDto  comStage, int ContragentId)
         {
             var StageParticipants = comStage.StageParticipants ?? null;
             if (StageParticipants is not null)

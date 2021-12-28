@@ -11,7 +11,10 @@ namespace CleanArchitecture.Razor.Application.Constants
 {
     public  static class ErrorMessages
     {
-        public static string NotFoundComStage = "Не найден этап";
-        public static string StatusDontMatchForSentRequest = "Статус КП не соответствует для отправки запроса!";
+        public   const string NotFoundComStage = "Не найден этап";
+        public  const string StatusDontMatchForSentRequest = "Статус КП не соответствует для отправки запроса!";
+
+        public const string ParcipantsNotFound= "Участники не добавлены";
+        public const string PositionsNotFound = "Позиции не добавлены";
     }
 }

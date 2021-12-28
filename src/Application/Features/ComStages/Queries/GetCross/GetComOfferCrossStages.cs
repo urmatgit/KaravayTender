@@ -58,7 +58,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
             IEnumerable<ForTableHeader> forTableHeaders= new List<ForTableHeader>() ;
             if (request.Stage == 1)
             {
-                var dataLast = await _mediator.Send(new GetByStageLastQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
+                var dataLast = await _mediator.Send(new GetByStageLastDtoQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
                 if (dataLast != null)
                 {
                     queryResult.Add(dataLast);
@@ -189,8 +189,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                          {
                              Contragent = s,
                              ParticipantStatus = p == null
-                             ? ""
-                             : p.status.ToDescriptionString()
+                             ? ParticipantStatus.FailureParitipate.ToDescriptionString()
+                             :  p.status!=null?  p.status.ToDescriptionString() : ParticipantStatus.FailureParitipate.ToDescriptionString()
                              //:  (p.status == ParticipantStatus.PriceRequest || p.status==ParticipantStatus.PriceConfirmed
                              //   ? ParticipantStatus.Participates.ToDescriptionString()
                              //   : ParticipantStatus.NotParticipate.ToDescriptionString())

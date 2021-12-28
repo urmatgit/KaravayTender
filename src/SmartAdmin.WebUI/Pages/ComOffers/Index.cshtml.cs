@@ -161,6 +161,11 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting)
                     return BadRequest(Result.Failure(new string[] { "Статус не соответствует для этой операции!" }));
                 var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation });
+                //TODO снят галочки у запроса цен
+                var uncheck = await _mediator.Send(new UncheckPriceRequesStageCompositionCommand() { ComOfferId = Input.Id });
+                if (!uncheck.Succeeded)
+                    return BadRequest(uncheck); 
+
                 return new JsonResult(resultComOffer);
                 
             }

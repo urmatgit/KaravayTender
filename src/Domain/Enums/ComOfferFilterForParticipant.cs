@@ -16,12 +16,21 @@ namespace CleanArchitecture.Razor.Domain.Enums
         [Description(@"Все")]
         [Display(Name = "Все")]
         All = 0,
+        /// <summary>
+        /// Действующие
+        /// </summary>
         [Description(@"Действующие")]
         [Display(Name = "Действующие")]
         Actials = 1,
+        /// <summary>
+        /// Архивные
+        /// </summary>
         [Description(@"Архивные")]
         [Display(Name = "Архивные")]
         Archives = 2,
+        /// <summary>
+        /// В работе
+        /// </summary>
         [Description(@"В работе")]
         [Display(Name = "В работе")]
         Waitings = 3,
