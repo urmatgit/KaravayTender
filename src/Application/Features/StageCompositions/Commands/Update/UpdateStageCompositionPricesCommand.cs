@@ -129,8 +129,9 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
             List<int> ForChangeParticipantStatus = new List<int>();
             foreach (var contrPrice in request.stageComRequest.ContrPrices)
             {
-                var stageCom = await _context.StageCompositions.FindAsync(new object[] { next.Data.Id, contrPrice.ContrId, contrPrice.ComPositionId }, cancellationToken);
-
+                //var stageCom = await _context.StageCompositions.FindAsync(new object[] { next.Data.Id, contrPrice.ContrId, contrPrice.ComPositionId }, cancellationToken);
+                var stageCom = await _context.StageCompositions
+                                                    .FindAsync(new object[] { next.Data.Id, contrPrice.ContrId, contrPrice.ComPositionId }, cancellationToken);
                 if (stageCom is not null) {
                     //Обнуляем цены если стоит галочка
                     if (contrPrice.RequestPrice)

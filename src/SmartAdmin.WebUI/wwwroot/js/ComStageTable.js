@@ -150,16 +150,19 @@ function checkboxformatterEdit(value, row, index,colIndex) {
 
     //    return unchecked;
     //}
+    let editable = "editable";
+    if (row["ContrStatus" + colIndex] != 1 && row["ContrStatus" + colIndex] != 2)
+        editable = "";
     if (istrue(value)) {
 
         const checked = `<div class="custom-control custom-checkbox">
-                       <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}" checked="checked"  id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}  disabled>
+                       <input type="checkbox" class="custom-control-input ${editable}" name="defaultCheckedDisabledEditable${index}" checked="checked"  id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}  disabled>
                        <label class="custom-control-label" for=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}></label>
                    </div>`;
         return checked;
     } else {
         var unchecked = `<div class="custom-control custom-checkbox">
-                       <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}"  id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]} disabled>
+                       <input type="checkbox" class="custom-control-input ${editable}" name="defaultCheckedDisabledEditable${index}"  id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]} disabled>
                        <label class="custom-control-label" for=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}></label>
                    </div>`;
 

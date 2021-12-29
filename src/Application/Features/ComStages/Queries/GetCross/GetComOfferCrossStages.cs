@@ -108,6 +108,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
             
             return Result<ComStageCrossDTO>.Success(result) ;
         }
+
         private List<ExpandoObject> GetBody(IEnumerable<ComStageDto> dataDto)
         {
             //var Nomenclatures = result.StageCompositions.GroupBy(c => new { c.ComPosition, c.ComStage }).Select(c => new
@@ -122,14 +123,14 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
 
             var postions = dataDto.SelectMany(
                                         c => c.StageCompositions.Select(p => new { position =  p.ComPosition, child = c, stage = p.ComStage })
-                                    ).GroupBy(cs =>  new { cs.position.Nomenclature, cs.stage.Number,cs.stage.Id }  )
+                                    ).GroupBy(cs =>  new { cs.position, cs.stage.Number,cs.stage.Id }  )
                                     .Select(g => new
                                     {
                                         keys = g.Key,
                                         stagecoms = g.Select(cp => cp.child).OrderBy(o=>o.Number).ToList(),
                                         stage1=g.FirstOrDefault(s=>s.stage.Number==g.Key.Number)
                                         
-                                    }).OrderBy(o =>o.keys.Number).ThenBy(o=> o.keys.Nomenclature.Name);
+                                    }).OrderBy(o =>o.keys.Number).ThenBy(o=> o.keys.position.Nomenclature.Name);
 
             
             foreach(var pos in postions)
@@ -138,7 +139,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                 
                 
                     var row = new ExpandoObject() as IDictionary<string, object>;
-                    row.Add($"NomName", pos.keys.Nomenclature.Name);
+                    row.Add($"NomName", pos.keys.position.Nomenclature.Name);
                 
                     row.Add($"Stage",pos.keys. Number);
                 row.Add($"StageId", pos.keys.Id);
@@ -146,7 +147,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                 row.Add($"StageDeadline", pos.stage1.stage.DeadlineDate);
                     int Indexcontrgent = 0;
                 decimal? GoodPrice = null; 
-                foreach (var stagecom in pos.stage1.stage.StageCompositions.Where(s=>s.ComPosition.NomenclatureId==pos.keys.Nomenclature.Id ).OrderBy(o=>o.Contragent.Name))
+                foreach (var stagecom in pos.stage1.stage.StageCompositions.Where(s=>s.ComPosition.Id==pos.keys.position.Id).OrderBy(o=>o.Contragent.Name))
                     {
                         Indexcontrgent++;
                         row.Add($"ContrId{Indexcontrgent}", stagecom.Contragent.Id);
@@ -155,7 +156,9 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                         GoodPrice = stagecom.Price;
                     row.Add($"ContrPrice{Indexcontrgent}",stagecom.Price);
                         row.Add($"RequestPrice{Indexcontrgent}", stagecom.RequestPrice);
-                    
+                    row.Add($"ContrStatus{Indexcontrgent}", GetStatus(pos.stage1.stage.StageParticipants, stagecom.ContragentId));
+
+
 
                 }
                 row.Add("GoodPrice", GoodPrice);
@@ -166,6 +169,13 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                  
             }
             return resultData;
+        }
+        private static ParticipantStatus  GetStatus(ICollection<StageParticipant> StageParticipants, int contrId)
+        {
+            var stagepart = StageParticipants.FirstOrDefault(p => p.ContragentId == contrId);
+            if (stagepart is null) return ParticipantStatus.FailureParitipate;
+            else
+                return stagepart.Status;
         }
         private IEnumerable<ForTableHeader> GetHeaders(IEnumerable<ComStageDto> comStageDtos)
         {
