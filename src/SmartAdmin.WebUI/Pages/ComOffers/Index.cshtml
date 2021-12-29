@@ -257,10 +257,23 @@ onImportedSucceeded = "reloadData()"
         $("input[name=GetStageType]:radio").change(function () {
             LoadComState(currentEditRow.Id);
         });
+        $("#composition_modal").on("shown.bs.modal", function (event) {
+            var directionId = $("#Input_DirectionId").val();
+            var modelDropDown = $('#InputPos_NomenclatureId');
+            modelDropDown.empty();
+             modelDropDown.append(
+                        $('<option>', {
+                            value: ''
+                        }).text( '@Html.Raw(@_localizer["Choose a nomenclature"])')
+                    );
+            getCategoriesByDirectionId(directionId);
+
+        });
         $("#edit_panel").on("ShowEdit", function (event) {
             let comofferid = 0;
             if (currentEditRow) {
-                    comofferid = currentEditRow.Id;
+                comofferid = currentEditRow.Id;
+
             }
 
 
@@ -278,6 +291,43 @@ onImportedSucceeded = "reloadData()"
             }
 
         })
+        function getCategoriesByDirectionId(id) {
+            console.log(id);
+            axios.get('/ComOffers/Index?handler=Categories&directionid=' + id)
+                .then(res => {
+                    console.log(res);
+
+                    var modelDropDown = $('#InputPos_CategoryId');
+                    modelDropDown.empty();
+                    modelDropDown.append(
+                        $('<option>', {
+                            value: ''
+                        }).text( '@Html.Raw(@_localizer["Choose a category"])')
+                    );
+
+                    $.each(res.data, function (index, model) {
+                        modelDropDown.append(
+                            $('<option>', {
+                                value: model.Id
+                            }).text(model.Name)
+                        );
+                        //if (currentEditRow && currentEditRow.CategoryId == model.Id && currentEditRow.CategoryName) {
+                        //    modelDropDown.val(currentEditRow.CategoryId);
+                        //}
+
+                    });
+                })
+                .catch((error) => {
+                    if (error.response.data.Errors) {
+                        const errors = error.response.data.Errors;
+                        errors.forEach(item => {
+                            toastr["error"](item);
+                        });
+                    } else {
+                        toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
+                    }
+                });
+        }
         $('#InputPos_NomenclatureId').change(function () {
             var nomenId = $(this).val();
             console.log(nomenId);
@@ -362,8 +412,8 @@ onImportedSucceeded = "reloadData()"
 
 
         $(() => {
-            
-            $("#filterForComOffer").val(3); // фильтр  в работе 
+
+            $("#filterForComOffer").val(3); // фильтр  в работе
             clscomposition = new clsBaseTable("composition","clscomposition",'@Url.Page("/ComPositions/Index")');
             tblColumns = [
                 { field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 130 },

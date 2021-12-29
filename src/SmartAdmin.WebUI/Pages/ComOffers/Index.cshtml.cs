@@ -60,7 +60,7 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
         public SelectList Categories { get; set; }
         public SelectList Managers { get; set; }
         public SelectList Areas { get; set; }
-        public List<NomenclatureDto> Nomenclatures {get;private set;}
+        public List<NomenclatureDto> Nomenclatures { get; private set; } = new List<NomenclatureDto>();
 
         private readonly IIdentityService _identityService;
         private readonly IAuthorizationService _authorizationService;
@@ -93,10 +93,10 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             Directions = await _mediator.LoadDirection();
             var fistelement = Directions.FirstOrDefault();
             
-                Categories = await _mediator.LoadCategory(0);
+              //  Categories = await _mediator.LoadCategory(0);
             
-            var nomenclaturies = new  GetAllNomenclaturesQuery();
-            Nomenclatures = (List<NomenclatureDto>)await  _mediator.Send(nomenclaturies);
+            //var nomenclaturies = new  GetAllNomenclaturesQuery();
+            //Nomenclatures = (List<NomenclatureDto>)await  _mediator.Send(nomenclaturies);
             Areas = await _mediator.LoadAreas();
             await LoadManagers();
 

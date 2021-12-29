@@ -91,7 +91,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
                                  ContragentId = c.cp.ContragentId,
                                  ContragentName = c.cp.Contragent.Name,
                                  Status = s == null ?  Domain.Enums.ParticipantStatus.FailureParitipate : s.Status,
-                                 StepFailure= s == null || s.Status != Domain.Enums.ParticipantStatus.FailureParitipate  ?  getLastStage(_context,c.cp.ContragentId,c.cp.ComOfferId ) : s.ComStage.Number
+                                 StepFailure= s == null || s.Status == Domain.Enums.ParticipantStatus.FailureParitipate  ?  getLastStage(_context,c.cp.ContragentId,c.cp.ComOfferId ) : null//s.ComStage.Number
                                  
                              }
                         );

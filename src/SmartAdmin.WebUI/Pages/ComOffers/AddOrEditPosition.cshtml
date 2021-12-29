@@ -25,6 +25,7 @@
                     <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
                     <div class="form-row">
                         <div class="col-md-6">
+                            
                             <label class="form-label" for="Category">@_localizer["Category"] <span class="text-danger">*</span></label>
                             <select type="text" asp-for="InputPos.CategoryId" asp-items="Model.Categories" class="select2" placeholder="@_localizer["Category"]" data-val-required="Не выбрано 'Категория'">
                                 <option value="">@_localizer["Choose a category"]</option>
