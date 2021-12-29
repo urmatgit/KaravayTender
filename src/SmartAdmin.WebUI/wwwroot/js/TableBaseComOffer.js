@@ -547,46 +547,8 @@ var initdatagrid = () => {
             this.dispatchEvent(checkRowEvent);
         },
         columns: [createColumnsComOffer()]
-        ,
-        view: detailview,
-        detailFormatter: function (index, row) {
-            return '<div style="padding:2px"><table class="ddv"></table></div>';
-        },
-        onExpandRow: function (index, row) {
-            var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
-            ddv.datagrid({
-
-                method: 'GET',
-                rownumbers: true,
-                singleSelect: true,
-                selectOnCheck: false,
-                checkOnSelect: false,
-                pagination: true,
-                clientPaging: false,
-                remoteFilter: true,
-
-                sortName: 'Nomenclature.Name',
-                sortOrder: 'asc',
-                pageSize: 5,
-                pageList: [5, 10, 30, 50, 100, 1000],
-
-                columns: [clscomposition.tblColumns],
-
-
-                //,
-                //onResize: function () {
-                //    $('#product_dg').datagrid('fixDetailRowheight', index);
-                //    }
-
-                onLoadSuccess: function () {
-                    setTimeout(function () {
-                        $('#main_dg').datagrid('fixDetailRowHeight', index);
-                    }, 0);
-                }
-            }).datagrid('enableFilter', clscomposition.tblFilters)
-                .datagrid('load', "/ComOffers/Index?handler=DataPos&ComOfferId=" + row.Id);
-            $('#main_dg').datagrid('fixDetailRowHeight', index);
-        }
+        
+    
     })
     
         .datagrid('enableFilter', this.tblFilters)

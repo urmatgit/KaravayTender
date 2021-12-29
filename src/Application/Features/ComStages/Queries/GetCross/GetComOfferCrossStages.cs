@@ -145,15 +145,20 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                 
                 row.Add($"StageDeadline", pos.stage1.stage.DeadlineDate);
                     int Indexcontrgent = 0;
-                foreach (var stagecom in pos.stage1.stage.StageCompositions.Where(s=>s.ComPosition.NomenclatureId==pos.keys.Nomenclature.Id).OrderBy(o=>o.Contragent.Name))
+                decimal? GoodPrice = null; 
+                foreach (var stagecom in pos.stage1.stage.StageCompositions.Where(s=>s.ComPosition.NomenclatureId==pos.keys.Nomenclature.Id ).OrderBy(o=>o.Contragent.Name))
                     {
                         Indexcontrgent++;
                         row.Add($"ContrId{Indexcontrgent}", stagecom.Contragent.Id);
                     row.Add($"ComPositionId{Indexcontrgent}", stagecom.ComPositionId);
+                    if (GoodPrice==null || stagecom.Price <= GoodPrice)
+                        GoodPrice = stagecom.Price;
                     row.Add($"ContrPrice{Indexcontrgent}",stagecom.Price);
                         row.Add($"RequestPrice{Indexcontrgent}", stagecom.RequestPrice);
-                        
-                    }
+                    
+
+                }
+                row.Add("GoodPrice", GoodPrice);
                     resultData.Add((ExpandoObject)row);
                  
 

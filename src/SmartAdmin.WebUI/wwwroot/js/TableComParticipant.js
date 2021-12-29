@@ -243,10 +243,11 @@ function InitParticipantTable() {
 
     clsparticipant.tblColumns = [
         { field: 'ContragentName', title: translations.Participant, sortable: true, width: 130 },
-        { field: 'StatusStr', title: translations.Status, sortable: true, width: 100 },
+        { field: 'StatusStr', title: translations.Status, sortable: true, width: 150 },
 
 
-        { field: 'StepFailure', title: translations.StepFailure, sortable: true, width: 150 }
+        { field: 'StepFailure', title: translations.StepFailure, sortable: true, width: 150 },
+        { field: 'Description', title: "Комментарий", sortable: true, width: 250 }
 
 
     ];

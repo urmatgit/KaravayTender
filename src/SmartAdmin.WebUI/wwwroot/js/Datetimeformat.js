@@ -27,7 +27,7 @@ function formatPrice(value) {
         
     }
 }
-function formatPriceStage(value) {
+function formatPriceStage(value,row) {
     var formatter = new Intl.NumberFormat('ru-Ru', {
         style: 'currency',
         currency: 'RUB',
@@ -39,10 +39,12 @@ function formatPriceStage(value) {
 
     var number = Number(value);
     if (isNaN(number) || number == 0) {
-        return '<span class="stageprice" style="color:red;"></span>';
+        return '<span class="stageprice" ></span>';
     } else {
-        return '<span class="stageprice" style="color:red;">' + formatter.format(number) + '</span>'; //number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
-
+        if (value==row.GoodPrice)
+            return '<span class="stageprice" style="color:red;">' + formatter.format(number) + '</span>'; //number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
+        else 
+            return '<span class="stageprice">' + formatter.format(number) + '</span>';
     }
 }
 

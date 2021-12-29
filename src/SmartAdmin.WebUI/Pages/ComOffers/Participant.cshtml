@@ -595,45 +595,8 @@
                 },
                 columns: [createColumnsComOffer()]
                 ,
-                view: detailview,
-                detailFormatter: function (index, row) {
-                    return '<div style="padding:2px"><table class="ddv"></table></div>';
-                },
-                onExpandRow: function (index, row) {
-                    var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
-                    ddv.datagrid({
-
-                        method: 'GET',
-                        rownumbers: true,
-                        singleSelect: true,
-                        selectOnCheck: false,
-                        checkOnSelect: false,
-                        pagination: true,
-                        clientPaging: false,
-                        remoteFilter: true,
-
-                        sortName: 'Id',
-                        sortOrder: 'asc',
-                        pageSize: 5,
-                        pageList: [5, 10, 30, 50, 100, 1000],
-
-                        columns: [tblColumnsComPosition],
-
-
-                        //,
-                        //onResize: function () {
-                        //    $('#product_dg').datagrid('fixDetailRowheight', index);
-                        //    }
-
-                        onLoadSuccess: function () {
-                            setTimeout(function () {
-                                $('#main_dg').datagrid('fixDetailRowHeight', index);
-                            }, 0);
-                        }
-                    }).datagrid('enableFilter', {})
-                        .datagrid('load', "/ComOffers/Participant?handler=DataPos&ComOfferId=" + row.Id);
-                    $('#main_dg').datagrid('fixDetailRowHeight', index);
-                }
+                 
+                
             })
 
                 .datagrid('enableFilter', tblFilters);
@@ -719,7 +682,7 @@
                 message: '<div class="row">  ' +
                     '<div class="col-md-12"> ' +
                     '<label class="form-label" for="name">Комментарий</label> ' +
-                    '<input id="description"  type="textarea" placeholder="ваше комменарий" class="form-control"> ' +
+                    '<input id="description"  type="textarea" placeholder="Причина отказа от участий" class="form-control"> ' +
                     '</div>  </div>',
                 buttons: {
                     success: {

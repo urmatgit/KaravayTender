@@ -25,6 +25,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs
         /// Этап отказа
         /// </summary>
         public int? StepFailure { get; set; }
+        public string Description { get; set; }
         public ParticipantStatus Status { get; set; } = ParticipantStatus.PriceRequest;
         public string StatusStr => Status.ToDescriptionString();
         [Required]
