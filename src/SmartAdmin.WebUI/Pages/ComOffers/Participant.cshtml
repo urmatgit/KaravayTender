@@ -263,7 +263,8 @@
 							  </div>`;
                         }
                     },
-                    { field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 130 },
+                    { field: 'LastStatusStr', title: '@_localizer["Статус поставщика"]', sortable: true, width: 130 },
+                    { field: 'StatusStr', title: '@_localizer["Статус КП"]', sortable: true, width: 130 },
                 { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
                 { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
 
@@ -421,14 +422,14 @@
                     if (StageType === '1') {
                         $dgCP.datagrid('hideColumn', 'Stage');
                         if (res.rows && res.rows.length > 0) {
-                          
+
                             $('#StageNumber').html(res.rows[0].Stage);
                             $('#StageId').val(res.rows[0].StageId);
                             $('#StageStatus').val(res.rows[0].ParticipantStatus);
                         }
                         ActionButtonAccess(false);
                     } else {
-                        
+
                         $dgCP.datagrid('showColumn', 'Stage');
                         $('#StageNumber').html("");
                         $('#StageId').val(0);
@@ -481,7 +482,7 @@
                         panelHeight: 'auto',
                         data: ParticipantStatus,
                         onChange: function (newValue, oldValue) {
-                            
+
                             $dg.datagrid('addFilterRule', {
                                 field: 'ParticipantStatus',
                                 op: 'equal',
@@ -595,8 +596,8 @@
                 },
                 columns: [createColumnsComOffer()]
                 ,
-                 
-                
+
+
             })
 
                 .datagrid('enableFilter', tblFilters);
