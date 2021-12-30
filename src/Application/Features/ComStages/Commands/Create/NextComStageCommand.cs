@@ -74,6 +74,15 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
             if (ExcludedParticipants != null && ExcludedParticipants.Any())
                 foreach (var part in ExcludedParticipants)
                     last.StageParticipants.Remove(part);
+            var excludeStCom = last.StageCompositions.Where(s => !last.StageParticipants.Any(p => p.ContragentId == s.ContragentId));
+            foreach (var stcom in excludeStCom)
+            {
+                stcom.Price = null;
+                stcom.RequestPrice = false;
+                //TODO на будущее удалить позиции при отказе поставщика когда переходим на сл. этап
+                // last.StageCompositions.Remove(stcom);
+            }
+
             foreach (var sc in last.StageCompositions)
                 sc.ComStageId = 0;
             foreach (var sc in last.StageParticipants)

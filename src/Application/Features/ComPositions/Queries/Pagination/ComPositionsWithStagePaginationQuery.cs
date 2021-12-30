@@ -93,73 +93,92 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             if (request.IsLastStage == 1)
             {
                 LastStage = await _mediator.Send(new GetByStageLastDtoQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
-            }
-            var filters = PredicateBuilder.FromFilter<ComPosition>(request.FilterRules);
-            //var data1 = await _context.ComPositions
-            //   .Specify(new FilterByComOfferQuerySpec(request.ComOfferId, ContragentId, (request.IsLastStage == 1 ? LastStage.Number : 0)))
-            //   .Include(a => a.AreaComPositions)
-            //     .ThenInclude(a => a.Area)
-            //    .Where(filters)
-            //    .ToListAsync(cancellationToken);
-            //var data1 = await _context.ComPositions
-            //   .Specify(new FilterByComOfferQuerySpec(request.ComOfferId, ContragentId, (request.IsLastStage == 1 ? LastStage.Number : 0)))
-            //    .Where(filters)
-            //    .GroupJoin(_context.StageCompositions.Where(s => s.ContragentId == ContragentId && s.ComStageId == LastStage.Id)
-            //    .ToListAsync(cancellationToken);
 
-            var data = await _context.ComPositions
-                .Specify(new FilterByComOfferQuerySpec(request.ComOfferId, ContragentId, (request.IsLastStage == 1 ? LastStage.Number : 0)))
-                 .Where(filters)
-                // .Include(n => n.Nomenclature)
-                // .ThenInclude(n => n.Category)
-                //.Include(a => a.AreaComPositions)
-                //.ThenInclude(a => a.Area)
-                //.Include(n => n.Nomenclature)
-                //.ThenInclude(n => n.UnitOf)
-                //.Include(n => n.Nomenclature)
-                //.ThenInclude(n => n.Vat)
-                //.Include(n => n.Nomenclature)
-                //.ThenInclude(n => n.NomenclatureQualityDocs)
-                //.ThenInclude(d => d.QualityDoc)
-                .Include(s => s.StageCompositions)
-                .ThenInclude(s=>s.ComStage)
+                var filters = PredicateBuilder.FromFilter<ComPosition>(request.FilterRules);
 
-                .Select(c=>
-                new ComPositionDtoEx
-                {
-                    Id = c.Id,
+                var data = await _context.ComPositions
+                    .Specify(new FilterByComOfferQuerySpec(request.ComOfferId, ContragentId, (request.IsLastStage == 1 ? LastStage.Number : 0)))
+                     .Where(filters)
 
-                    CategoryId = c.CategoryId,
-                    CategoryName = c.Category.Name,
-                    DeliveryCount = c.DeliveryCount,
-                    Volume = c.Volume,
-                    AddRequirement = c.AddRequirement,
-                    Stage = LastStage.Number,
-                    ParticipantStatus = GetParticipant(LastStage, ContragentId),
+                    .Include(s => s.StageCompositions)
+                    .ThenInclude(s => s.ComStage)
+
+                    .Select(c =>
+                    new ComPositionDtoEx
+                    {
+                        Id = c.Id,
+
+                        CategoryId = c.CategoryId,
+                        CategoryName = c.Category.Name,
+                        DeliveryCount = c.DeliveryCount,
+                        Volume = c.Volume,
+                        AddRequirement = c.AddRequirement,
+                        Stage = LastStage == null ? 0 : LastStage.Number,
+                        ParticipantStatus = LastStage == null ? ParticipantStatus.PriceConfirmed : GetParticipant(LastStage, ContragentId),
                     //GetParticipant(s,ContragentId,request.ComOfferId),  //s.ComStage.StageParticipants.FirstOrDefault(f => f.ContragentId == ContragentId && f.ComOfferId == request.ComOfferId).Status ,
-                    StageId = LastStage.Id,
-                    NomenclatureId = c.NomenclatureId,
-                    NomName = c.Nomenclature.Name,
-                    UnitOfName = c.Nomenclature.UnitOf.Name,
-                    NomVolume = c.Nomenclature.Volume,
-                    NomSpecification = c.Nomenclature.Specifications,
-                    AreaNames = c.AreaComPositions !=null ? string.Join(", ", c.AreaComPositions.Select(n => n.Area != null ? n.Area.Name : "")):"",
-                    RequestPrice = GetPrices(LastStage,ContragentId,c.Id). RequestPrice,
-                    InputPrice = GetPrices(LastStage, ContragentId, c.Id).Price,
-                    NomStavka = c.Nomenclature.Vat.Stavka,
+                    StageId = LastStage == null ? 0 : LastStage.Id,
+                        NomenclatureId = c.NomenclatureId,
+                        NomName = c.Nomenclature.Name,
+                        UnitOfName = c.Nomenclature.UnitOf.Name,
+                        NomVolume = c.Nomenclature.Volume,
+                        NomSpecification = c.Nomenclature.Specifications,
+                        AreaNames = c.AreaComPositions != null ? string.Join(", ", c.AreaComPositions.Select(n => n.Area != null ? n.Area.Name : "")) : "",
+                        RequestPrice = LastStage == null ? false : GetPrices(LastStage, ContragentId, c.Id).RequestPrice,
+                        InputPrice = LastStage == null ? null : GetPrices(LastStage, ContragentId, c.Id).Price,
+                        NomStavka = c.Nomenclature.Vat.Stavka,
 
-                    QualityDocsNames = c.Nomenclature.NomenclatureQualityDocs !=null && c.Nomenclature.NomenclatureQualityDocs.Count>0 ? string.Join(", ", c.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)):""
-                })
-                  
-                   //.Distinct()
-                   .OrderBy($"{request.Sort} {request.Order}")
+                        QualityDocsNames = c.Nomenclature.NomenclatureQualityDocs != null && c.Nomenclature.NomenclatureQualityDocs.Count > 0 ? string.Join(", ", c.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)) : ""
+                    })
 
-                    .PaginatedDataAsync(request.Page, request.Rows);
-                    
-            //.ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
-            //var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data.rows);
-            //return new PaginatedData<ComPositionDtoEx>(data, data.total); ;
-            return data;
+                       //.Distinct()
+                       .OrderBy($"{request.Sort} {request.Order}")
+                       .ToListAsync(cancellationToken);
+                //.PaginatedDataAsync(request.Page, request.Rows);
+
+                //.ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
+                var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data);
+                return new PaginatedData<ComPositionDtoEx>(datDto, datDto.Count());
+            }
+            else
+            {
+                var filters = PredicateBuilder.FromFilter<StageComposition>(request.FilterRules);
+                var data = await _context.StageCompositions
+                    .Specify(new FilterByComOfferWithStageQuerySpec(request.ComOfferId, ContragentId))
+                    .Where(filters)
+                    .Select(c => new ComPositionDtoEx()
+                    {
+                        Id = c.ComPositionId,
+
+                        CategoryId = c.ComPosition.CategoryId,
+                        CategoryName = c.ComPosition.Category.Name,
+                        DeliveryCount = c.ComPosition.DeliveryCount,
+                        Volume = c.ComPosition.Volume,
+                        AddRequirement = c.ComPosition.AddRequirement,
+                        Stage = c.ComStage.Number,
+                        ParticipantStatus =c.ComStage.StageParticipants.First(s=>s.ContragentId==ContragentId).Status,
+                        //GetParticipant(s,ContragentId,request.ComOfferId),  //s.ComStage.StageParticipants.FirstOrDefault(f => f.ContragentId == ContragentId && f.ComOfferId == request.ComOfferId).Status ,
+                        StageId =c.ComStageId,
+                        NomenclatureId = c.ComPosition.NomenclatureId,
+                        NomName = c.ComPosition.Nomenclature.Name,
+                        UnitOfName = c.ComPosition.Nomenclature.UnitOf.Name,
+                        NomVolume = c.ComPosition.Nomenclature.Volume,
+                        NomSpecification = c.ComPosition.Nomenclature.Specifications,
+                        AreaNames = c.ComPosition.AreaComPositions != null ? string.Join(", ", c.ComPosition.AreaComPositions.Select(n => n.Area != null ? n.Area.Name : "")) : "",
+                        RequestPrice =c.RequestPrice,//  LastStage == null ? false : GetPrices(LastStage, ContragentId, c.Id).RequestPrice,
+                        InputPrice =c.Price, //   LastStage == null ? null : GetPrices(LastStage, ContragentId, c.Id).Price,
+                        NomStavka = c.ComPosition.Nomenclature.Vat.Stavka,
+
+                        QualityDocsNames = c.ComPosition.Nomenclature.NomenclatureQualityDocs != null && c.ComPosition.Nomenclature.NomenclatureQualityDocs.Count > 0 ? string.Join(", ", c.ComPosition.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)) : ""
+
+                    })
+                    .OrderBy($"{request.Sort} {request.Order}")
+                   // .PaginatedDataAsync(request.Page, request.Rows);
+                     .ToListAsync(cancellationToken);
+                var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data);
+                return new PaginatedData<ComPositionDtoEx>(datDto, datDto.Count());
+                //TODO for all step
+            }
+            //return data;
             
         }
         private static StageCompositionDto GetPrices(ComStageDto comStage, int ContragentId,int compostionId)
@@ -179,6 +198,17 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             }
             else
                 return ParticipantStatus.Excluded;
+        }
+        public class FilterByComOfferWithStageQuerySpec : Specification<StageComposition>
+        {
+            public FilterByComOfferWithStageQuerySpec(int comOfferId, int contrgentid)
+            {
+                
+                    Criteria = p => p.ComStage.ComOfferId == comOfferId && p.ContragentId == contrgentid;
+                //&& s.ComStage.StageParticipants.Any(st => st.Status != Domain.Enums.ParticipantStatus.FailureParitipate || st.Status == Domain.Enums.ParticipantStatus.Excluded));
+            }
+
+
         }
         public class FilterByComOfferQuerySpec : Specification<ComPosition>
         {
