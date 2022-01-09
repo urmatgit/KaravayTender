@@ -48,6 +48,14 @@ namespace CleanArchitecture.Razor.Infrastructure
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
 
                     );
+            }if (configuration.GetValue<bool>("UsePostgreDatabase"))
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseNpgsql(
+                        configuration.GetConnectionString("DefaultConnectionPosgre"),
+                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
+
+                    );
             }
             else
             {
