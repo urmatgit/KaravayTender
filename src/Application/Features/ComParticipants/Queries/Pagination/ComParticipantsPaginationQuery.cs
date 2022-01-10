@@ -45,6 +45,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
             _mapper = mapper;
             _localizer = localizer;
         }
+        //TODO make one collection for this functions
         private static   int? getLastStage(IApplicationDbContext _context, int contrId,int comOfferid, StageParticipant s)
         {
 

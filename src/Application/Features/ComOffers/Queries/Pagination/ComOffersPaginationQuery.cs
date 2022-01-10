@@ -31,14 +31,14 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
     {
         public ComOfferFilterForParticipant comOfferFilterFor { get; set; }
     }
-    public class ComOffersMyWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<ComOfferDto>>
+    public class ComOffersMyWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<ComOfferMyDto>>
     {
         public ComOfferFilterForParticipant comOfferFilterFor { get; set; }
     }
 
     public class ComOffersWithPaginationQueryHandler :
          IRequestHandler<ComOffersWithPaginationQuery, PaginatedData<ComOfferDto>>,
-        IRequestHandler<ComOffersMyWithPaginationQuery, PaginatedData<ComOfferDto>>
+        IRequestHandler<ComOffersMyWithPaginationQuery, PaginatedData<ComOfferMyDto>>
         
     {
         private readonly IApplicationDbContext _context;
@@ -122,8 +122,26 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
             //var dataDto = _mapper.Map<IEnumerable<ComOfferDto>>(data.rows);
             //return new PaginatedData<ComOfferDto>(dataDto, data.total); ;
         }
+        public async Task GetLastStages(int contrId, CancellationToken cancellationToken)
+        {
+            var result = await _context.ComOffers
+              .Include(s => s.ComStages)
+              .ThenInclude(p => p.StageParticipants)
+              .Include(s => s.StageParticipants)
+              .Where(s => s.StageParticipants.Any(p => p.ContragentId == contrId))
+              
+              .ToListAsync(cancellationToken);
+              
+            var data = result;
+              
 
-        public async Task<PaginatedData<ComOfferDto>> Handle(ComOffersMyWithPaginationQuery request, CancellationToken cancellationToken)
+        }
+        private static string GetStatusStr(StageParticipant stageParticipant)
+        {
+            if (stageParticipant is null) return "";
+            return stageParticipant.Status.ToDescriptionString();
+        }
+        public async Task<PaginatedData<ComOfferMyDto>> Handle(ComOffersMyWithPaginationQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get Only contragent commercial offers");
             int ContragentId = 0;
@@ -168,13 +186,14 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                     filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));
                     filters = filters.And(s => (short)s.Status > 0); break;
             }
+           // await GetLastStages(ContragentId,cancellationToken);
             var data = await _context.ComOffers.Where(filters)
                  .Include(c => c.Direction)
                  .Include(c => c.Winner)
                  .Include(u => u.Manager)
                  .Include(s=>s.ComStages)
                  .OrderBy($"{request.Sort} {request.Order}")
-                 .Select(c=>new ComOfferDto
+                 .Select(c=>new ComOfferMyDto
                  {
                      Id=c.Id,
                      Name=c.Name,
@@ -194,7 +213,13 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                      Winner=c.Winner!=null? _mapper.Map<ContragentDto>(c.Winner): null,
                      IsDeliveryInPrice=c.IsDeliveryInPrice,
                      //ComParticipants=_mapper.Map<ICollection<ComParticipantDto>>(c.ComParticipants),
-                     DeadlineDate=c.ComStages.OrderBy(o=>o.Number).LastOrDefault().DeadlineDate
+                     DeadlineDate=c.ComStages.OrderBy(o=>o.Number).LastOrDefault().DeadlineDate,
+                     LastStatusStr= (from st in c.ComStages
+                                     orderby st.Number descending
+                                     select st)
+                              .FirstOrDefault()
+                              .StageParticipants
+                              .FirstOrDefault(sp => sp.ContragentId == ContragentId).Status.ToDescriptionString()
 
                  })
                  //.ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)

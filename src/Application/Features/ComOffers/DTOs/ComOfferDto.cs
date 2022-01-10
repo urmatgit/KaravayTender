@@ -98,4 +98,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
         public virtual ICollection<ComStageDto> ComStages { get; set; }
         public virtual ICollection<ComPositionDto> ComPositions { get; set; }
     }
+    public class ComOfferMyDto : ComOfferDto
+    {
+        public string LastStatusStr { get; set; }
+    }
 }
