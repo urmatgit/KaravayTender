@@ -111,7 +111,8 @@ function CheckPriceConfirmed() {
     for (let i = 0; i < rows.length; i++) {
         //[Display(Name = "Цена предоставлена")]
         //PriceConfirmed = 2,
-        if (rows[0].Status == 1)  {
+        //"Отказ поставщика" =3
+        if (rows[0].Status != 3 && rows[0].Status == 1) {
             result = false;
             break;
         }
