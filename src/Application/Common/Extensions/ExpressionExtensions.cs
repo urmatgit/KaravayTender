@@ -16,6 +16,27 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
 {
     public static class PredicateBuilder
     {
+        
+        public static bool CheckProperty<T>(string fieldName)
+        {
+            var props = TypeDescriptor.GetProperties(typeof(T));
+            
+            if (!fieldName.Contains('.'))
+            {
+                return props.Find(fieldName, true)!=null ;
+            }
+            PropertyDescriptor result = null;
+            var fieldNameProperty = fieldName.Split('.');
+            if (fieldNameProperty.Length < 3)
+            {
+                result= props.Find(fieldNameProperty[0], true).GetChildProperties().Find(fieldNameProperty[1], true);
+            }
+            else
+                result= props.Find(fieldNameProperty[0], true).GetChildProperties().Find(fieldNameProperty[1], true).GetChildProperties().Find(fieldNameProperty[2], true);
+
+            return result != null;
+        }
+             
         public static Expression<Func<T, bool>> FromFilter<T>(string filters)
         {
             Expression<Func<T, bool>> any = x => true;

@@ -64,11 +64,12 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                     .Include(n => n.Nomenclature)
                     .ThenInclude(n => n.NomenclatureQualityDocs)
                     .ThenInclude(d=>d.QualityDoc)
-                    .OrderBy($"{request.Sort} {request.Order}")
-                    
+                    //.OrderBy($"{request.Sort} {request.Order}")
+                    . OrderByWithCheck(request.Sort,request.Order)
                     .PaginatedDataAsync(request.Page, request.Rows);
                   //.ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
                   var datDto = _mapper.Map<IEnumerable<ComPositionDto>>(data.rows);
+                 
                 return new PaginatedData<ComPositionDto>(datDto, data.total); ;
              
         }

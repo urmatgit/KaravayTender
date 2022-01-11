@@ -87,11 +87,13 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                 default:
                     break;
             }
+            var exitSortProperty = PredicateBuilder.CheckProperty<ComOffer>(request.Sort);
             var data = await _context.ComOffers.Where(filters)
                 .Include(c=>c.Direction)
                 .Include(c=>c.Winner)
                 .Include(u=>u.Manager)
-                .OrderBy($"{request.Sort} {request.Order}")
+                .OrderByWithCheck(request.Sort,request.Order)
+                //.OrderBy($"{request.Sort} {request.Order}")
                 .Select(c => new ComOfferDto
                 {
                     Id = c.Id,
