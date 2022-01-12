@@ -137,8 +137,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                 //.PaginatedDataAsync(request.Page, request.Rows);
 
                 //.ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
-                var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data.rows);
-                return PaginatedData<ComPositionDtoEx>.CreateWithCheckSort(datDto, data.total, data.IsSorted,request.Sort,request.Order);
+                //var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data.rows);
+                return PaginatedData<ComPositionDtoEx>.CreateWithCheckSort(data.rows, data.total, data.IsSorted,request.Sort,request.Order);
             }
             else
             {
@@ -179,8 +179,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
 
                       
                     .PaginatedDataLazySortAsync(request.Page, request.Rows, request.Sort, request.Order);
-                var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data.rows);
-                return PaginatedData<ComPositionDtoEx>.CreateWithCheckSort(datDto, data.total, data.IsSorted, request.Sort, request.Order);
+                //var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data.rows);
+                return PaginatedData<ComPositionDtoEx>.CreateWithCheckSort(data.rows, data.total, data.IsSorted, request.Sort, request.Order);
                 //return new PaginatedData<ComPositionDtoEx>(datDto, datDto.Count());
                 //TODO for all step
             }

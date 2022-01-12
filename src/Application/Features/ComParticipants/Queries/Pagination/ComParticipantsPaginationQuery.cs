@@ -90,29 +90,32 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
                                 .OrderBy(n => n.Number)
                                 .LastOrDefaultAsync(cancellationToken);
 
-            var data0 = _context.ComParticipants
+            var data0 =await  _context.ComParticipants
                        .Where(filters)
+                      .OrderByWithCheck(request.Sort, request.Order)
                        .GroupJoin(_context.StageParticipants
-                                .Where(c => c.ComOfferId == request.ComOfferId && lastComStaget!=null? c.ComStageId==lastComStaget.Id : false),
+                                .Where(c => c.ComOfferId == request.ComOfferId && lastComStaget != null ? c.ComStageId == lastComStaget.Id : false),
                                  cp => cp.ContragentId,
                                  sp => sp.ContragentId,
                                  (c, s) => new { cp = c, sp = s })
-                       .SelectMany (
+                       .SelectMany(
                              x => x.sp.DefaultIfEmpty(),
-                             
+
                              (c, s) => new ComParticipantDto()
                              {
                                  ComOfferId = c.cp.ComOfferId,
                                  ContragentId = c.cp.ContragentId,
                                  ContragentName = c.cp.Contragent.Name,
-                                 Status = s == null ?  Domain.Enums.ParticipantStatus.PriceRequest : s.Status,
-                                 StepFailure= s == null || s.Status == Domain.Enums.ParticipantStatus.FailureParitipate  ?  getLastStage(_context,c.cp.ContragentId,c.cp.ComOfferId,s ) : null//s.ComStage.Number
-                                 ,Description= s == null || s.Status == Domain.Enums.ParticipantStatus.FailureParitipate ? getLastStageComment(_context, c.cp.ContragentId, c.cp.ComOfferId, s) : ""  
+                                 Status = s == null ? Domain.Enums.ParticipantStatus.PriceRequest : s.Status,
+                                 StepFailure = s == null || s.Status == Domain.Enums.ParticipantStatus.FailureParitipate ? getLastStage(_context, c.cp.ContragentId, c.cp.ComOfferId, s) : null//s.ComStage.Number
+                                 ,
+                                 Description = s == null || s.Status == Domain.Enums.ParticipantStatus.FailureParitipate ? getLastStageComment(_context, c.cp.ContragentId, c.cp.ComOfferId, s) : ""
 
                              }
-                        );
+                        ).PaginatedDataLazySortAsync(request.Page, request.Rows, request.Sort, request.Order);
                        
 
+            return data0;
 
             //var data1 = await _context.ComStages
             //            .Include(s => s.StageCompositions)
@@ -149,7 +152,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
             //{
             //var dataDto = _mapper.Map<IEnumerable<ComParticipantDto>>(data0.rows);
             //.ProjectTo<ComParticipantDto>(_mapper.ConfigurationProvider)
-            return new PaginatedData<ComParticipantDto>(data0, data0.Count());
+            //return new PaginatedData<ComParticipantDto>(data0, data0.Count());
             //}
         }
         public class FilterByComOfferQuerySpec : Specification<ComParticipant>
