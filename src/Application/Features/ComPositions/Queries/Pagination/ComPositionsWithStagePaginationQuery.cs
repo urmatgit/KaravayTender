@@ -102,7 +102,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
 
                     .Include(s => s.StageCompositions)
                     .ThenInclude(s => s.ComStage)
-
+                    .OrderByWithCheck(request.Sort, request.Order)
                     .Select(c =>
                     new ComPositionDtoEx
                     {
@@ -129,15 +129,16 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
 
                         QualityDocsNames = c.Nomenclature.NomenclatureQualityDocs != null && c.Nomenclature.NomenclatureQualityDocs.Count > 0 ? string.Join(", ", c.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)) : ""
                     })
-
-                       //.Distinct()
-                       .OrderBy($"{request.Sort} {request.Order}")
-                       .ToListAsync(cancellationToken);
+                    
+                    .PaginatedDataLazySortAsync(request.Page, request.Rows, request.Sort, request.Order);
+                //.Distinct()
+                //.OrderBy($"{request.Sort} {request.Order}")
+                //.ToListAsync(cancellationToken);
                 //.PaginatedDataAsync(request.Page, request.Rows);
 
                 //.ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
-                var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data);
-                return new PaginatedData<ComPositionDtoEx>(datDto, datDto.Count());
+                var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data.rows);
+                return PaginatedData<ComPositionDtoEx>.CreateWithCheckSort(datDto, data.total, data.IsSorted,request.Sort,request.Order);
             }
             else
             {
@@ -145,6 +146,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                 var data = await _context.StageCompositions
                     .Specify(new FilterByComOfferWithStageQuerySpec(request.ComOfferId, ContragentId))
                     .Where(filters)
+                    .OrderByWithCheck(request.Sort, request.Order)
                     .Select(c => new ComPositionDtoEx()
                     {
                         Id = c.ComPositionId,
@@ -171,11 +173,15 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                         QualityDocsNames = c.ComPosition.Nomenclature.NomenclatureQualityDocs != null && c.ComPosition.Nomenclature.NomenclatureQualityDocs.Count > 0 ? string.Join(", ", c.ComPosition.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)) : ""
 
                     })
-                    .OrderBy($"{request.Sort} {request.Order}")
-                   // .PaginatedDataAsync(request.Page, request.Rows);
-                     .ToListAsync(cancellationToken);
-                var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data);
-                return new PaginatedData<ComPositionDtoEx>(datDto, datDto.Count());
+                        // .OrderBy($"{request.Sort} {request.Order}")
+                      // .PaginatedDataAsync(request.Page, request.Rows);
+
+
+                      
+                    .PaginatedDataLazySortAsync(request.Page, request.Rows, request.Sort, request.Order);
+                var datDto = _mapper.Map<IEnumerable<ComPositionDtoEx>>(data.rows);
+                return PaginatedData<ComPositionDtoEx>.CreateWithCheckSort(datDto, data.total, data.IsSorted, request.Sort, request.Order);
+                //return new PaginatedData<ComPositionDtoEx>(datDto, datDto.Count());
                 //TODO for all step
             }
             //return data;

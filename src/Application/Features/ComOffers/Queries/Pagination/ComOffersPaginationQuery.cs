@@ -92,7 +92,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                 .Include(c=>c.Direction)
                 .Include(c=>c.Winner)
                 .Include(u=>u.Manager)
-                .OrderByWithCheck(request.Sort,request.Order)
+                .OrderByWithCheck(request.Sort, request.Order)
                 //.OrderBy($"{request.Sort} {request.Order}")
                 .Select(c => new ComOfferDto
                 {
@@ -117,8 +117,9 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                     DeadlineDate = c.ComStages.OrderBy(o => o.Number).LastOrDefault().DeadlineDate
 
                 })
+                
                 //.ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.Page, request.Rows);
+                .PaginatedDataLazySortAsync(request.Page, request.Rows,request.Sort,request.Order);
             return data;
             //.ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)
             //var dataDto = _mapper.Map<IEnumerable<ComOfferDto>>(data.rows);
@@ -194,7 +195,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                  .Include(c => c.Winner)
                  .Include(u => u.Manager)
                  .Include(s=>s.ComStages)
-                 .OrderBy($"{request.Sort} {request.Order}")
+                 .OrderByWithCheck(request.Sort, request.Order)
                  .Select(c=>new ComOfferMyDto
                  {
                      Id=c.Id,
@@ -225,7 +226,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
 
                  })
                  //.ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)
-                 .PaginatedDataAsync(request.Page, request.Rows);
+                 .PaginatedDataLazySortAsync(request.Page, request.Rows, request.Sort, request.Order);
+                 //.PaginatedDataAsync(request.Page, request.Rows);
             //return data;
             //.ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)
             // var dataDto = _mapper.Map<IEnumerable<ComOfferDto>>(data.rows);
