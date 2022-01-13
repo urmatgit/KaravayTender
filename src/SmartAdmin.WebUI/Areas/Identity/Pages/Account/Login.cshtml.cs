@@ -45,10 +45,10 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage = "Логин не указан")]
             public string UserName { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Пароль не указан")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 

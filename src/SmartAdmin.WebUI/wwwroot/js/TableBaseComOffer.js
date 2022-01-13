@@ -546,6 +546,12 @@ var initdatagrid = () => {
             checkRowEvent.detail.check = !checked;
             this.dispatchEvent(checkRowEvent);
         },
+        onClickCell: function (index, field, value) {
+            if (field == 'Number' || field == 'Name') {
+                console.log(value);
+                onEdit(index);
+            }
+        },
         columns: [createColumnsComOffer()]
         
     

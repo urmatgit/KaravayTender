@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Razor.Domain.Entities;
+using CleanArchitecture.Razor.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Razor.Infrastructure.Persistence.Configurations
@@ -17,6 +18,22 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence.Configurations
             //      .IsRequired();
             builder.Property(c => c.Name)
                 .HasMaxLength(50);
+
+
+            
+            builder.HasOne(a => a.ApplicationUser)
+                .WithOne(a => a.Contragent)
+                .HasForeignKey<Contragent>(a => a.ApplicationUserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .IsRequired(false);
+
+            builder.HasOne(m => m.Manager)
+
+                .WithMany(a => a.MyContragents)
+                .HasForeignKey(m => m.ManagerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .IsRequired(false);
+
 
 
 

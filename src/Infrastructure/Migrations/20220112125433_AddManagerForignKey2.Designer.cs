@@ -3,14 +3,16 @@ using System;
 using CleanArchitecture.Razor.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CleanArchitecture.Razor.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220112125433_AddManagerForignKey2")]
+    partial class AddManagerForignKey2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -170,9 +172,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique();
 
                     b.HasIndex("DirectionId");
 
@@ -1124,6 +1123,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ContragentId")
+                        .IsUnique();
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -1230,10 +1232,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Contragent", b =>
                 {
-                    b.HasOne("CleanArchitecture.Razor.Domain.Identity.ApplicationUser", "ApplicationUser")
-                        .WithOne("Contragent")
-                        .HasForeignKey("CleanArchitecture.Razor.Domain.Entities.Contragent", "ApplicationUserId");
-
                     b.HasOne("CleanArchitecture.Razor.Domain.Entities.Direction", "Direction")
                         .WithMany()
                         .HasForeignKey("DirectionId")
@@ -1243,8 +1241,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.HasOne("CleanArchitecture.Razor.Domain.Identity.ApplicationUser", "Manager")
                         .WithMany("MyContragents")
                         .HasForeignKey("ManagerId");
-
-                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Direction");
 
@@ -1510,6 +1506,15 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Identity.ApplicationUser", b =>
+                {
+                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Contragent", "Contragent")
+                        .WithOne("ApplicationUser")
+                        .HasForeignKey("CleanArchitecture.Razor.Domain.Identity.ApplicationUser", "ContragentId");
+
+                    b.Navigation("Contragent");
+                });
+
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Identity.ApplicationUserClaim", b =>
                 {
                     b.HasOne("CleanArchitecture.Razor.Domain.Identity.ApplicationUser", "User")
@@ -1571,6 +1576,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Contragent", b =>
                 {
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("ComOffers");
 
                     b.Navigation("ComParticipants");
@@ -1660,8 +1667,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Identity.ApplicationUser", b =>
                 {
                     b.Navigation("Claims");
-
-                    b.Navigation("Contragent");
 
                     b.Navigation("Logins");
 

@@ -32,5 +32,7 @@ namespace CleanArchitecture.Razor.Domain.Identity
         public virtual ICollection<ApplicationUserToken> Tokens { get; set; }
         public int? ContragentId { get; set; }
         public virtual Contragent Contragent { get; set; }
+
+        public virtual ICollection<Contragent> MyContragents { get; set; }
     }
 }

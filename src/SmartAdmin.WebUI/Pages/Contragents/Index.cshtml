@@ -401,7 +401,11 @@
 				{ field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 140 },
 				{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 100 },
 				{ field: 'FullName', title: '@_localizer["Full name"]', sortable: true, width: 180 },
-				{ field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 180 },
+                {
+                    field: 'Direction.Name', title: '@_localizer["Direction"]', sortable: true, width: 180, formatter: function (val, rec) {
+                        return rec.Direction.Name;
+                    }
+                },
 				{
                 field: 'IsServiceStr', title: '@_localizer["Service"]', align: 'center', sortable: true, width: 80, formatter: checkboxformatter
 

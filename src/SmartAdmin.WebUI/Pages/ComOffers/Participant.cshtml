@@ -595,6 +595,12 @@
                     const checked = $(this).datagrid('getChecked').length > 0;
 
                 },
+                onClickCell: function (index, field, value) {
+                    if (field == 'Number' || field == 'Name') {
+                        console.log(value);
+                        onEdit(index);
+                    }
+                },
                 columns: [createColumnsComOffer()]
                 ,
 
