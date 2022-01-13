@@ -60,18 +60,20 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
         }
        public async Task<ComStageDto>  Handle(GetByStageQuery request, CancellationToken cancellationToken)
         {
-              var data = await _context.ComStages
-                 .Specify(new FilterByStageQuerySpec(request.Stage,request.ComOfferId))
-                 .Include(s => s.StageCompositions)
-                .ThenInclude(c => c.Contragent)
-                .Include(s => s.StageCompositions)
-                .ThenInclude(c => c.ComPosition)
-                .ThenInclude(c=>c.Nomenclature)
-                .Include(s => s.ComOffer)
-                .ThenInclude(p=>p.ComParticipants)
-                .ThenInclude(p => p.Contragent)
-                .Include(sp=>sp.StageParticipants)
-                .FirstOrDefaultAsync(cancellationToken);
+            var data = await _context.ComStages
+               .Specify(new FilterByStageQuerySpec(request.Stage, request.ComOfferId))
+               .Include(s => s.StageCompositions)
+              .ThenInclude(c => c.Contragent)
+              .Include(s => s.StageCompositions)
+              .ThenInclude(c => c.ComPosition)
+              .ThenInclude(c => c.Nomenclature)
+              .Include(s => s.ComOffer)
+              .ThenInclude(p => p.ComParticipants)
+              .ThenInclude(p => p.Contragent)
+              .Include(sp => sp.StageParticipants)
+              
+              .FirstOrDefaultAsync(cancellationToken);
+                
 
             var dataDto = _mapper.Map<ComStageDto>(data);
             return dataDto;
@@ -111,6 +113,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
                 .ThenInclude(p => p.Contragent)
                 .Include(p=>p.StageParticipants)
                 .ThenInclude(c=>c.Contragent)
+                .OrderBy(o=>o.Number)
                 .ToListAsync(cancellationToken);
 
             var dataDto = _mapper.Map<IEnumerable<ComStageDto>>(data);

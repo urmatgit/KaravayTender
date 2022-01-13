@@ -31,6 +31,10 @@ namespace CleanArchitecture.Razor.Application.Hubs
             _identityService = identityService;
 
         }
+        public async Task SendMessageToAll(string message)
+        {
+             await Clients.All.SendAsync(SignalR.ReceiveMessage, message);
+        }
         public override async Task OnConnectedAsync()
         {
             var userId = _currentUserService.UserId;

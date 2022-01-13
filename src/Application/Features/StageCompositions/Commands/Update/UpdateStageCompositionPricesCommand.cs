@@ -30,17 +30,19 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
         public string Description { get; set; }
         public int StageId { get; set; }
         public int ComOfferId { get; set; }
+        public Domain.Enums.ParticipantStatus status { get; set; } = Domain.Enums.ParticipantStatus.PriceConfirmed;
     }
     public class UpdateStageCompositionPricesManagerCommand : IRequest<Result>
     {
         public StageComRequestDto stageComRequest { get; set; }
         public DateTime Deadline { get; set; }
     }
-    public class FailureParitipateStageCompositionCommand : IRequest<Result>
+    public class FailureParitipateStageCompositionCommand : UpdateStageCompositionPricesCommand
     {
-        public int StageId { get; set; }
-        public int ComOfferId { get; set; }
-        public string Description { get; set; }
+        public FailureParitipateStageCompositionCommand()
+        {
+            status = Domain.Enums.ParticipantStatus.FailureParitipate;
+        }
 
     }
     public class UpdateStageCompositionPricesCommandHandler :
@@ -86,15 +88,17 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
                     if (item is not null && req.InputPrice!=item.Price)
                     {
                         item.Price = req.InputPrice;
+                       
                         await _context.SaveChangesAsync(cancellationToken);
                     }
                 }
             }
             //dc.ComStageId, dc.ContragentId,dc.ComOfferId
             var stageParticipant = await _context.StageParticipants.FindAsync(new object[] { request.StageId, contragentId.Data, request.ComOfferId },cancellationToken);
-            if (stageParticipant is not null && stageParticipant.Status == Domain.Enums.ParticipantStatus.PriceRequest)
+            if (stageParticipant is not null) // && stageParticipant.Status == Domain.Enums.ParticipantStatus.PriceRequest)
             {
-                stageParticipant.Status = Domain.Enums.ParticipantStatus.PriceConfirmed;
+                stageParticipant.Status =request.status;
+                stageParticipant.Description = request.Description;
                 await _context.SaveChangesAsync(cancellationToken);
             }
             else Result.Failure(new string[] { "Цены уже установлены или не найдена запись!" });
@@ -108,16 +112,19 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
 
         public async Task<Result> Handle(FailureParitipateStageCompositionCommand request, CancellationToken cancellationToken)
         {
-            var contragentId = await _mediator.Send(new GetContragentIdByUserIdQuery(), cancellationToken);
-            //dc.ComStageId, dc.ContragentId,dc.ComOfferId
-            var stageParticipant = await _context.StageParticipants.FindAsync(new object[] { request.StageId, contragentId.Data, request.ComOfferId }, cancellationToken);
-            if (stageParticipant is not null)
-            {
-                stageParticipant.Status = Domain.Enums.ParticipantStatus.FailureParitipate;
-                stageParticipant.Description = request.Description;
-                await _context.SaveChangesAsync(cancellationToken);
-            }
-            return Result.Success();
+            UpdateStageCompositionPricesCommand updatePrice = request as UpdateStageCompositionPricesCommand;
+
+            return await Handle(updatePrice, cancellationToken);
+            //var contragentId = await _mediator.Send(new GetContragentIdByUserIdQuery(), cancellationToken);
+            ////dc.ComStageId, dc.ContragentId,dc.ComOfferId
+            //var stageParticipant = await _context.StageParticipants.FindAsync(new object[] { request.StageId, contragentId.Data, request.ComOfferId }, cancellationToken);
+            //if (stageParticipant is not null)
+            //{
+            //    stageParticipant.Status = Domain.Enums.ParticipantStatus.FailureParitipate;
+            //    stageParticipant.Description = request.Description;
+            //    await _context.SaveChangesAsync(cancellationToken);
+            //}
+            //return Result.Success();
         }
 
         public async Task<Result> Handle(UpdateStageCompositionPricesManagerCommand request, CancellationToken cancellationToken)

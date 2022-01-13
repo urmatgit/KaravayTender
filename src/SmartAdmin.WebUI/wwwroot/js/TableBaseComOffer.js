@@ -25,6 +25,9 @@ $('#importbutton').click(function () {
 $('#gettemplatebutton').click(function () {
     onGetTemplate();
 });
+$('#btnSelectWinnerStage').click(function (e) {
+    alert("btnSelectWinnerStage clicked");
+});
 $('#btnSendStage').click(function (e) {
     let stageid = $('#StageId').val();
     if (!stageid || stageid == "0") {
@@ -547,10 +550,10 @@ var initdatagrid = () => {
             this.dispatchEvent(checkRowEvent);
         },
         onClickCell: function (index, field, value) {
-            if (field == 'Number' || field == 'Name') {
+            
                 console.log(value);
                 onEdit(index);
-            }
+            
         },
         columns: [createColumnsComOffer()]
         

@@ -16,6 +16,7 @@ using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Common.Specification;
 using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
 using CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy;
+using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Enums;
 using MediatR;
@@ -56,7 +57,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
             ComStageCrossDTO result = new ComStageCrossDTO();
             List<ComStageDto> queryResult = new List<ComStageDto>();
             IEnumerable<ForTableHeader> forTableHeaders= new List<ForTableHeader>() ;
-            if (request.Stage == 1)
+            if (request.Stage == 1) //Последний этап
             {
                 var dataLast = await _mediator.Send(new GetByStageLastDtoQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
                 if (dataLast != null)
@@ -179,13 +180,17 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
             else
                 return stagepart.Status;
         }
+        private ParticipantStatus getFailureStatus(ContragentDto contragent)
+        {
+            return ParticipantStatus.FailureParitipate;
+        }
         private IEnumerable<ForTableHeader> GetHeaders(IEnumerable<ComStageDto> comStageDtos)
         {
-            
+
             var contragents = from s in comStageDtos
                               from c in s.StageCompositions//.Where(sc=>s.StageParticipants.Any(p=>p.ContragentId== sc.ContragentId))
                               group s by c.Contragent into contrs
-                              
+
                               orderby contrs.Key.Name
                               select contrs.Key;
             var Participants = from c in comStageDtos.GroupBy(r => r.ComOffer).Select(g => g.Key).FirstOrDefault().ComParticipants
@@ -208,7 +213,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                              Contragent = s,
                              ParticipantStatus = p == null
                              ? ParticipantStatus.FailureParitipate.ToDescriptionString()
-                             :  p.status!=null?  p.status.ToDescriptionString() : ParticipantStatus.FailureParitipate.ToDescriptionString()
+                             : p.status != null ? p.status.ToDescriptionString() : getFailureStatus(s).ToDescriptionString()
+                             
                              //:  (p.status == ParticipantStatus.PriceRequest || p.status==ParticipantStatus.PriceConfirmed
                              //   ? ParticipantStatus.Participates.ToDescriptionString()
                              //   : ParticipantStatus.NotParticipate.ToDescriptionString())

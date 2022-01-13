@@ -154,6 +154,26 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
+        public async Task<IActionResult> OnPostSelectWinnerAsync([FromQuery] int winnerid)
+        {
+            try
+            {
+                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation)
+                    return BadRequest(Result.Failure(new string[] { "Статус не соответствует для этой операции!" }));
+
+                return new JsonResult("");
+
+            }
+            catch (ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
         public async Task<IActionResult> OnPostEndStageAsync([FromQuery] int stageid)
         {
             try

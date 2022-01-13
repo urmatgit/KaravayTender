@@ -82,7 +82,7 @@
     </div>
 </div>
 
-<partial name="AddOrEdit" />
+<partial name="AddOrEditPartcipantCard" />
 
 
 @section ScriptsBlock {
@@ -596,10 +596,10 @@
 
                 },
                 onClickCell: function (index, field, value) {
-                    if (field == 'Number' || field == 'Name') {
+                    //if (field == 'Number' || field == 'Name') {
                         console.log(value);
                         onEdit(index);
-                    }
+                    //}
                 },
                 columns: [createColumnsComOffer()]
                 ,
@@ -639,14 +639,7 @@
 
 
         }
-        function submit(message="") {
 
-            //const request = $('#participant_form').serialize();
-            var UpdatedRows = getChanges().map(x => x);
-
-            SendPost('@Url.Page("/ComOffers/Participant")?handler=Prices', { inputPrices: UpdatedRows, Description: message, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id });
-
-        }
         function SendPost(url, param) {
             var headers = {
                 "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
@@ -697,9 +690,11 @@
                         label: "Ok",
                         className: "btn-success",
                         callback: function () {
+                            endEditing();
                             var name = $('#description').val();
-
-                            SendPost('@Url.Page("/ComOffers/Participant")?handler=Failure', { StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id, Description: name });
+                            var UpdatedRows = getChanges().map(x => x);
+                                                                                          //  { inputPrices: UpdatedRows, Description: message, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id }
+                            SendPost('@Url.Page("/ComOffers/Participant")?handler=Failure', { inputPrices: UpdatedRows, Description: name ,StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id});
                         }
                         },
                     cancel: {
@@ -716,6 +711,14 @@
 
 
         })
+         function submit(message="") {
+
+            //const request = $('#participant_form').serialize();
+            var UpdatedRows = getChanges().map(x => x);
+
+            SendPost('@Url.Page("/ComOffers/Participant")?handler=Prices', { inputPrices: UpdatedRows, Description: message, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id });
+
+        }
         function ActionButtonAccess(access) {
 
             let status = $('#StageStatus').val();
@@ -773,8 +776,69 @@
 	}
         var onEdit = (index) => {
             var participant = $dg.datagrid('getRows')[index];
-            popupmodal(participant);
+            //popupmodal(participant);
+            openEditpanel(participant);
         }
+        $("#edit_panel").on("ShowEdit", function (event) {
+            reloadDataCP();
+
+            $dgCP.datagrid('resize');
+        })
+        function openEditpanel(row, stage) {
+            currentEditRow = row;
+            $('#table-page-content').hide();
+            $('#edit_panel').show();
+            $("#edit_panel").trigger("ShowEdit");
+            $('#edit_panel .panel-title').html('@_localizer["Add"]');
+
+            $('#participant_form').clearForm();
+            $('#participant_form')[0].reset();
+            ActionButtonAccess(false);
+            if (row) {
+                $('#edit_panel .panel-title').html('@_localizer["Edit"]');
+                $('#participant_form').jsonToForm(participant, {
+                    IsDeliveryInPrice: function (value) {
+                        if (value == true) {
+                            $('#participant_form [name*="IsDeliveryInPrice"]').prop('checked', true);
+                        } else {
+                            $('#participant_form [name*="IsDeliveryInPrice"]').prop('checked', false);
+                        }
+                    },
+                    IsBankDays: function (value) {
+                        if (value == true) {
+                            $('#participant_form [name*="IsBankDays"]').prop('checked', true);
+                        } else {
+                            $('#participant_form [name*="IsBankDays"]').prop('checked', false);
+                        }
+                    },
+                    TermBegin: function (value) {
+                        var dateFormat = "YYYY-MM-DD";
+
+                        var date = moment(value).format(dateFormat);
+                        $('#participant_form [name*="TermBegin"]').val(date);
+                    },
+                    TermEnd: function (value) {
+                        var dateFormat = "YYYY-MM-DD";
+
+                        var date = moment(value).format(dateFormat);
+                        $('#Input_TermEnd').val(date);
+                    },
+                    Name: function (value) {
+                        $('#Input_Name').val(value);
+                    }
+
+                })
+            } else {
+                $('#participant_form #Input_Id').val(0)
+            }
+        }
+        function closePanel() {
+            $('#table-page-content').show();
+            $dg.datagrid('resize');
+            $('#edit_panel').hide();
+
+        }
+
         $(document).ready(function () {
             $(window).keydown(function (event) {
                 if (event.keyCode == 13) {
