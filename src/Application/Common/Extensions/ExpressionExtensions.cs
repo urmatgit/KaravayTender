@@ -97,6 +97,10 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                         return x => false;
                     }
                 }
+                if (prop.PropertyType == typeof(int?) && selectedOperator==OperationExpression.contains)
+                {
+                    selectedOperator = OperationExpression.equal;
+                }
                 switch (selectedOperator)
                 {
                     case OperationExpression.equal:

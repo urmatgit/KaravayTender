@@ -154,7 +154,7 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
-        public async Task<IActionResult> OnPostCancelComOfferAsync([FromQuery] id)
+        public async Task<IActionResult> OnPostCancelComOfferAsync([FromQuery] int id)
         {
             try
             {

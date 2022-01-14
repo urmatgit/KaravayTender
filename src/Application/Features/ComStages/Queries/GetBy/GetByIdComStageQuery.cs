@@ -114,6 +114,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
                 .Include(p=>p.StageParticipants)
                 .ThenInclude(c=>c.Contragent)
                 .OrderBy(o=>o.Number)
+                
                 .ToListAsync(cancellationToken);
 
             var dataDto = _mapper.Map<IEnumerable<ComStageDto>>(data);

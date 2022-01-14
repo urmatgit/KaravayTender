@@ -42,6 +42,7 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
         public DbSet<StageComposition> StageCompositions { get; set; }
         public DbSet<AreaComPosition> AreaComPositions { get; set; }
         public DbSet<StageParticipant> StageParticipants { get; set; }
+        
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
