@@ -145,3 +145,13 @@ pre.prettyprint {
 .ColTopHeader{
     width: 198px;
 }
+.page-content {
+    padding: 0.5rem;
+}
+.page-header {
+    height: 3rem;
+}
+
+.header-icon:not(.btn)[data-toggle="dropdown"] + .dropdown-menu {
+    top: 3.0625rem !important;
+}

@@ -96,7 +96,7 @@ const tblStageColumns = [[
 var dgcomstage = {};
 initdatagridComStage = (cdata, dataComStages) => {
     dgcomstage = $(`#comstage_dg`).datagrid({
-        height: (window.innerHeight / 3),
+        height: (window.innerHeight / 2 -50),
         method: 'GET',
         rownumbers: true,
         singleSelect: true,

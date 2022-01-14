@@ -32,6 +32,7 @@
     <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
     <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
     <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/ForOffer.css">
     <style>
 
         .main_dg_datagrid-cell-c1-_action {
@@ -248,7 +249,7 @@
             var InitColumns =
                 [
 
-                    { field: 'ck', checkbox: true },
+                   // { field: 'ck', checkbox: true },
                     {
                         field: '_action',
                         title: `${window.translations.Command} `,
@@ -396,7 +397,7 @@
         var $dgCP = {};
         var initdatagridCP = () => {
             $dgCP = $('#compostion_dg').datagrid({
-                height: (window.innerHeight /3),
+                height: (window.innerHeight /2),
                 method: 'GET',
                 rownumbers: true,
                 singleSelect: true,
@@ -437,6 +438,7 @@
                         $('#StageStatus').val(null);
                         ActionButtonAccess(true);
                     }
+                   
 
                 },
                 onClickCell: onClickRow,
@@ -563,7 +565,7 @@
 
         var initdatagrid = () => {
             $dg = $('#main_dg').datagrid({
-                height: (window.innerHeight - 320),
+                height: (window.innerHeight - 250),
                 method: 'GET',
                 rownumbers: false,
                 singleSelect: true,
@@ -603,7 +605,15 @@
                 },
                 columns: [createColumnsComOffer()]
                 ,
-
+                onLoadSuccess: function (res) {
+                    console.log($('.datagrid-row .btn-group'));
+                    console.log($('.datagrid-row .btn-group').length);
+                },
+                rowStyler: function (index, row) {
+                    
+                    return 'cursor: pointer;';
+                    }
+                
 
             })
 
@@ -796,7 +806,7 @@
             ActionButtonAccess(false);
             if (row) {
                 $('#edit_panel .panel-title').html('@_localizer["Edit"]');
-                $('#participant_form').jsonToForm(participant, {
+                $('#participant_form').jsonToForm(row, {
                     IsDeliveryInPrice: function (value) {
                         if (value == true) {
                             $('#participant_form [name*="IsDeliveryInPrice"]').prop('checked', true);

@@ -20,18 +20,18 @@ namespace CleanArchitecture.Razor.Domain.Enums
         [Display(Name = "Победитель")]
         Winner = 0,
         
-        [Description(@"Запрос цены")]
-        [Display(Name = "Запрос цены")]
+        [Description(@"Ожидание")]
+        [Display(Name = "Ожидание")]
         PriceRequest = 1,
 
-        [Description(@"Цена предоставлена")]
-        [Display(Name = "Цена предоставлена")]
+        [Description(@"Подтверждение")]
+        [Display(Name = "Подтверждение")]
         PriceConfirmed = 2,
-        [Description(@"Отказ поставщика")]
-        [Display(Name = "Отказ поставщика")]
+        [Description(@"Отказ")]
+        [Display(Name = "Отказ")]
         FailureParitipate = 3,
-        [Description(@"Исключен менеджером")]
-        [Display(Name = "Исключен менеджером")]
+        [Description(@"Отмена")]
+        [Display(Name = "Отмена")]
         Excluded = -1
 
     }

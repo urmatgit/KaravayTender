@@ -57,9 +57,10 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
             ComStageCrossDTO result = new ComStageCrossDTO();
             List<ComStageDto> queryResult = new List<ComStageDto>();
             IEnumerable<ForTableHeader> forTableHeaders= new List<ForTableHeader>() ;
+            var dataLast = await _mediator.Send(new GetByStageLastDtoQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
             if (request.Stage == 1) //Последний этап
             {
-                var dataLast = await _mediator.Send(new GetByStageLastDtoQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
+                
                 if (dataLast != null)
                 {
                     queryResult.Add(dataLast);
@@ -83,7 +84,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                 {
                     result.Header = forTableHeaders.Select(c => $"{c.Contragent.Name} ({c.ParticipantStatus}) ").ToArray();
                 }
-                result.Body = GetBody(queryResult,request.Stage);
+                result.Body = GetBody(queryResult,request.Stage,dataLast);
             }
             
            //  List<ExpandoObject> sampleObjects = new List<ExpandoObject>();
@@ -110,7 +111,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
             return Result<ComStageCrossDTO>.Success(result) ;
         }
 
-        private List<ExpandoObject> GetBody(IEnumerable<ComStageDto> dataDto, int stage)
+        private List<ExpandoObject> GetBody(IEnumerable<ComStageDto> dataDto, int stage,ComStageDto lastStage)
         {
             //var Nomenclatures = result.StageCompositions.GroupBy(c => new { c.ComPosition, c.ComStage }).Select(c => new
             //{
@@ -155,17 +156,21 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                         Indexcontrgent++;
                         row.Add($"ContrId{Indexcontrgent}", stagecom.Contragent.Id);
                     row.Add($"ComPositionId{Indexcontrgent}", stagecom.ComPositionId);
-                    if (GoodPrice==null || stagecom.Price <= GoodPrice)
+
+                    if (GoodPrice ==null || stagecom.Price <= GoodPrice)
                         GoodPrice = stagecom.Price;
                     row.Add($"ContrPrice{Indexcontrgent}",stagecom.Price);
                         row.Add($"RequestPrice{Indexcontrgent}", stagecom.RequestPrice);
-                    row.Add($"ContrStatus{Indexcontrgent}", status);
+                    row.Add($"ContrStatus{Indexcontrgent}", pos.keys.Id == lastStage.Id ?status:0);
 
 
 
                 }
-                row.Add("GoodPrice", GoodPrice);
-                    resultData.Add((ExpandoObject)row);
+                if (stage == 1 || pos.keys.Id==lastStage.Id)
+                    row.Add("GoodPrice", GoodPrice);
+                else 
+                    row.Add("GoodPrice", null);
+                resultData.Add((ExpandoObject)row);
                  
 
                 

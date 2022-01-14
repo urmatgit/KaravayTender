@@ -31,6 +31,7 @@
     <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
     <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
     <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/ForOffer.css">
     <style>
 
         .main_dg_datagrid-cell-c1-_action {
@@ -53,13 +54,13 @@
             <small>@_localizer["See all available options"]</small>
         </h4>
         <div class="ml-auto">
-            @if (_canStart.Succeeded)
+            @*@if (_canStart.Succeeded)
             {
             <button class="btn btn-sm btn-outline-primary " id="startbutton">
                 <span class="@(Settings.Theme.IconPrefix) fa-bolt mr-1"></span>
                 @_localizer["Start"]
             </button>
-            }
+            }*@
 
             @if (_canCreate.Succeeded)
             {
@@ -68,13 +69,13 @@
                 @_localizer["Add"]
             </button>
             }
-            @if (_canDelete.Succeeded)
+            @*@if (_canDelete.Succeeded)
             {
             <button class="btn btn-sm btn-outline-danger" disabled id="deletebutton">
                 <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
                 @_localizer["Delete"]
             </button>
-            }
+            }*@
             @if (_canSearch.Succeeded)
             {
             <button class="btn btn-sm btn-outline-primary " id="searchbutton">
@@ -96,13 +97,13 @@
                     </div>
                 </div>
                 }*@
-            @if (_canExport.Succeeded)
+            @*@if (_canExport.Succeeded)
             {
             <button class="btn btn-sm btn-outline-primary " id="exportbutton">
                 <span class="@(Settings.Theme.IconPrefix) fa-download mr-1"></span>
                 @_localizer["Export Excel"]
             </button>
-            }
+            }*@
         </div>
     </div>
     <div class="card-body">
@@ -379,7 +380,7 @@ onImportedSucceeded = "reloadData()"
 
             var InitColumns =
                 [
-                    { field: 'ck', checkbox: true },
+                  //  { field: 'ck', checkbox: true },
                     {
                         field: '_action',
                         title: `${window.translations.Command} `,
@@ -393,7 +394,7 @@ onImportedSucceeded = "reloadData()"
 								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
 								   <button class="dropdown-item" onclick="onEdit(${index})" @(_canEdit.Succeeded ? "" : "disabled")><i class="fal fa-edit mr-1"></i> ${translations.Edit}</button>
 								   <button class="dropdown-item" onclick="onCopy(${index})" @(_canEdit.Succeeded ? "" : "disabled")><i class="fal fa-edit mr-1"></i> @_localizer["Copy"]</button>
-                                    @Html.Raw(_canDelete.Succeeded ? "<button class='dropdown-item' onclick='onDelete(${row.Id})' ><i class='fal fa-trash-alt mr-1'></i> ${translations.Delete}</button>" : "")
+                                   @Html.Raw(_canDelete.Succeeded ? "<button class='dropdown-item' onclick='onDelete(${row.Id})' ><i class='fal fa-trash-alt mr-1'></i> ${translations.Delete}</button>" : "")
 
 								 </div>
 							  </div>`;

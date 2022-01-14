@@ -139,7 +139,7 @@ class clsBaseTable {
 
     initdatagrid1() {
         this.dg = $(`#${this._name}_dg`).datagrid({
-            height: (window.innerHeight / 3),
+            height: (window.innerHeight / 2-50),
             method: 'GET',
             rownumbers: false,
             singleSelect: true,

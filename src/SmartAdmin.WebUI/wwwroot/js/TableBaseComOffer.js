@@ -25,9 +25,13 @@ $('#importbutton').click(function () {
 $('#gettemplatebutton').click(function () {
     onGetTemplate();
 });
+$('#btnCancelStage').click(function (e) {
+    alert("btnCancelStage clicked");
+})
 $('#btnSelectWinnerStage').click(function (e) {
     alert("btnSelectWinnerStage clicked");
 });
+
 $('#btnSendStage').click(function (e) {
     let stageid = $('#StageId').val();
     if (!stageid || stageid == "0") {
@@ -507,7 +511,7 @@ var $dg = {};
 
 var initdatagrid = () => {
     $dg = $('#main_dg').datagrid({
-        height: (window.innerHeight - 320),
+        height: (window.innerHeight - 250),
         method: 'GET',
         rownumbers: false,
         singleSelect: true,
@@ -554,6 +558,10 @@ var initdatagrid = () => {
                 console.log(value);
                 onEdit(index);
             
+        },
+        rowStyler: function (index, row) {
+
+            return 'cursor: pointer;';
         },
         columns: [createColumnsComOffer()]
         

@@ -124,7 +124,7 @@ var $dgContr = {};
 
 var initdatagridContr = () => {
     $dgContr = $('#contragent_dg').datagrid({
-        height: (window.innerHeight / 3),
+        height: (window.innerHeight / 2),
         method: 'GET',
         rownumbers: false,
         singleSelect: true,

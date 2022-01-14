@@ -19,7 +19,7 @@
         <div class="panel-content">
 
             <form id="participant_form" class="needs-validation" novalidate="novalidate">
-                <div class="modal-body">
+                
                     @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="Input.Id" />
                     <input type="hidden" asp-for="Input.Status" />
@@ -134,7 +134,7 @@
 
                     </div>
 
-                </div>
+                
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
                     <button type="button" id="failure" class="btn btn-danger">@_localizer["Отказаться от участие"]</button>

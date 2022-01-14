@@ -105,7 +105,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetBy
                  .Specify( new FilterByComOfferQuerySpec(request.Stage, request.ComOfferId))
                  .Include(s => s.StageCompositions)
                 .ThenInclude(c => c.Contragent)
-                .Include(s => s.StageCompositions)
+                .Include(s => s.StageCompositions.OrderBy(o=>o.ComPosition.Category.Name).ThenBy(o=>o.ComPosition.Nomenclature.Name))
                 .ThenInclude(c => c.ComPosition)
                 .ThenInclude(c => c.Nomenclature)
                 .Include(s => s.ComOffer)
