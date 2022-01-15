@@ -54,6 +54,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
         }
         public async Task<Result<ComStageCrossDTO>> Handle(GetComOfferCrossStages request, CancellationToken cancellationToken)
         {
+
             ComStageCrossDTO result = new ComStageCrossDTO();
             List<ComStageDto> queryResult = new List<ComStageDto>();
             IEnumerable<ForTableHeader> forTableHeaders= new List<ForTableHeader>() ;
@@ -87,25 +88,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                 result.Body = GetBody(queryResult,request.Stage,dataLast);
             }
             
-           //  List<ExpandoObject> sampleObjects = new List<ExpandoObject>();
-            //dynamic row1 = new ExpandoObject() 
-            //row1.NomName = "Позиция1";
-            //row1.Stage = 1;
-            //row1.ContName1 = "Контрагет21";
-            //row1.ContrId1 = "1";
-            //row1.ContrPrice1 = "100";
-            //row1.RequestPrice1 = "true";
-            //sampleObjects.Add(row1);
-
-            //dynamic row2 = new ExpandoObject();
-            //row2.NomName = "Позиция2";
-            //row2.Stage = 1;
-            //row2.ContName1 = "Контрагет22";
-            //row2.ContrId1 = "2";
-            //row2.ContrPrice1 = "110";
-            //row2.RequestPrice1 = "false";
-            
-            //sampleObjects.Add(row2);
+          
             
             
             return Result<ComStageCrossDTO>.Success(result) ;
@@ -113,14 +96,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
 
         private List<ExpandoObject> GetBody(IEnumerable<ComStageDto> dataDto, int stage,ComStageDto lastStage)
         {
-            //var Nomenclatures = result.StageCompositions.GroupBy(c => new { c.ComPosition, c.ComStage }).Select(c => new
-            //{
-            //    ComPosition = c.Key.ComPosition,
-            //    comStage = c.Key.ComStage,
-            //    stageNumber = result.Number,
-            //    participients = c.ToList(),
-
-            //});
+         
             List<ExpandoObject> resultData = new List<ExpandoObject>();
 
             var postions = dataDto.SelectMany(

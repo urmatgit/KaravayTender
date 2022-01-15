@@ -11,6 +11,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -99,6 +101,41 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                 }
             }
 
+        }
+        public static IQueryable<ParticipantCrossDto> GetParicipantsForTab(this IApplicationDbContext _context, int comOfferId)
+        {
+            var dataStep1 = from c in _context.ComStages
+                            join p in _context.StageParticipants on c.Id equals p.ComStageId
+                            where c.ComOfferId == comOfferId
+                            group c by new { c.ComOfferId, p.ContragentId } into gr
+                            select new
+                            {
+                                ComOfferId = gr.Key.ComOfferId,
+                                ContragentId = gr.Key.ContragentId,
+
+                                Number = gr.Max(m => m.Number)
+
+                            };
+            var dataStep2 = from a in dataStep1
+                            join c in _context.ComStages on new { Id = a.ComOfferId, Number = a.Number } equals new { Id = c.ComOfferId, Number = c.Number }
+                            select new
+                            {
+                                a,
+                                ComStageID = c.Id
+                            };
+            var dataStep3 = from a in dataStep2
+                            join b in _context.StageParticipants on new { Id = a.ComStageID, ContrId = a.a.ContragentId } equals new { Id = b.ComStageId, ContrId = b.ContragentId }
+
+                            select new ParticipantCrossDto
+                            {
+                                ComOfferId = a.a.ComOfferId,
+                                ContragentId =b.ContragentId,
+                                Number = a.a.Number,
+                                ComStageId = a.ComStageID,
+                                Status = b.Status,
+                                Description = b.Description
+                            };
+            return dataStep3;
         }
     }
 

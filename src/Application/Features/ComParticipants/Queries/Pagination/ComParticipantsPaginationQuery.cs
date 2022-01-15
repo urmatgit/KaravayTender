@@ -67,9 +67,33 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
                 return result.Description;
             return "";
         }
+    
         public async Task<PaginatedData<ComParticipantDto>> Handle(ComParticipantsWithPaginationQuery request, CancellationToken cancellationToken)
         {
             var comOfferId = request.ComOfferId;
+            var dataStep31 = from a in _context.GetParicipantsForTab(comOfferId)
+
+                             join c in _context.Contragents on a.ContragentId equals c.Id into contr
+                             from d in contr.DefaultIfEmpty()
+                             orderby d.Name
+                             select new ComParticipantDto
+                             {
+                                 ComOfferId = a.ComOfferId,
+                                 ContragentId = a.ContragentId,
+                                 ContragentName = d.Name,
+                                 Status = a.Status,
+                                 StepFailure = a.Status == Domain.Enums.ParticipantStatus.FailureParitipate ? a.Number : null,
+                                 Description = a.Description
+                             };
+
+
+
+            var filters = PredicateBuilder.FromFilter<ComParticipantDto>(request.FilterRules, new List<string>() { "StatusStr" });
+            var res = await dataStep31
+                 .Where(filters)
+                .PaginatedDataLazySortAsync(request.Page, request.Rows, request.Sort, request.Order);
+            Debug.WriteLine(res.total);
+            return res;
             //var res1 = _context.ExecuteSqlRawExt1<ComParticipant, ComParticipant>("select ComOfferId, ContragentId from ComParticipants ", x=>new ComParticipant() {ComOfferId =(int)(long)x[0],ContragentId=(int)(long)x[1]});
             //List<SqlParameter> sqlParameters = new List<SqlParameter>();
             //sqlParameters.Add(new SqlParameter("@comOfferId", comOfferId));
@@ -98,49 +122,42 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
 
 
 
-            var dataStep1 = from c in _context.ComStages
-                            join p in _context.StageParticipants on c.Id equals p.ComStageId
-                            where c.ComOfferId == comOfferId
-                            group c by new { c.ComOfferId, p.ContragentId } into gr
-                            select new
-                            {
-                                ComOfferId = gr.Key.ComOfferId,
-                                ContragentId = gr.Key.ContragentId,
-                                
-                                Number = gr.Max(m => m.Number)
+            //var dataStep1 = from c in _context.ComStages
+            //                join p in _context.StageParticipants on c.Id equals p.ComStageId
+            //                where c.ComOfferId == comOfferId
+            //                group c by new { c.ComOfferId, p.ContragentId } into gr
+            //                select new
+            //                {
+            //                    ComOfferId = gr.Key.ComOfferId,
+            //                    ContragentId = gr.Key.ContragentId,
 
-                            };
-            var dataStep2 = from a in dataStep1
-                            join c in _context.ComStages on new { Id = a.ComOfferId, Number = a.Number } equals new { Id = c.ComOfferId, Number = c.Number }
-                            select new
-                            {
-                                a,
-                                c.Id
-                            };
+            //                    Number = gr.Max(m => m.Number)
 
-            var dataStep3 = from a in dataStep2
-                            join b in _context.StageParticipants on new { Id = a.Id, ContrId = a.a.ContragentId } equals new { Id = b.ComStageId, ContrId = b.ContragentId }
-                            join c in _context.Contragents on a.a.ContragentId equals c.Id into contr
-                            from d in contr.DefaultIfEmpty()
-                            orderby d.Name
-                            select new ComParticipantDto
-                            {
-                                ComOfferId=a.a.ComOfferId,
-                                ContragentId=a.a.ContragentId,
-                                ContragentName=d.Name,
-                                Status= b.Status,
-                                StepFailure=b.Status==Domain.Enums.ParticipantStatus.FailureParitipate? a.a.Number : null,
-                                Description= b.Description
-                            };
+            //                };
+            //var dataStep2 = from a in dataStep1
+            //                join c in _context.ComStages on new { Id = a.ComOfferId, Number = a.Number } equals new { Id = c.ComOfferId, Number = c.Number }
+            //                select new
+            //                {
+            //                    a,
+            //                    ComStageID= c.Id
+            //                };
+            //// var dataStep2_1 = GetParicipants(comOfferId);
 
-             
+            //var dataStep3 = from a in dataStep2
+            //                join b in _context.StageParticipants on new { Id = a.ComStageID, ContrId = a.a.ContragentId } equals new { Id = b.ComStageId, ContrId = b.ContragentId }
 
-            var filters = PredicateBuilder.FromFilter<ComParticipantDto>(request.FilterRules,new List<string>() { "StatusStr"});
-            var res = await dataStep3
-                 .Where(filters)
-                .PaginatedDataLazySortAsync(request.Page, request.Rows, request.Sort, request.Order);
-            Debug.WriteLine(res.total);
-            return res;
+            //                select new ParticipantCrossDto
+            //                {
+            //                    ComOfferId= a.a.ComOfferId,
+            //                    ContragentId=a.a.ContragentId,
+            //                    Number=a.a.Number,
+            //                    ComStageId=a.ComStageID,
+            //                    Status= b.Status,
+            //                    Description= b.Description
+            //                };
+
+
+
             //var dataTemp= _context.ComStages
             //    .GroupJoin(_context.StageParticipants
             //    ,ComStages=>ComStages.Id
@@ -150,13 +167,13 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
             //        ComOfferId=cs.ComOfferId,
             //        ContragentId=
             //    }
-                 //ComOfferId = c.cp.ComOfferId,
-                 //                ContragentId = c.cp.ContragentId,
-                 //                ContragentName = c.cp.Contragent.Name,
-                 //                Status = s == null ? Domain.Enums.ParticipantStatus.PriceRequest : s.Status,
-                 //                StepFailure = s == null || s.Status == Domain.Enums.ParticipantStatus.FailureParitipate ? getLastStage(_context, c.cp.ContragentId, c.cp.ComOfferId, s) : null//s.ComStage.Number
-                 //                ,
-                 //                Description = s == null || s.Status == Domain.Enums.ParticipantStatus.FailureParitipate ? getLastStageComment(_context, c.cp.ContragentId, c.cp.ComOfferId, s) : ""
+            //ComOfferId = c.cp.ComOfferId,
+            //                ContragentId = c.cp.ContragentId,
+            //                ContragentName = c.cp.Contragent.Name,
+            //                Status = s == null ? Domain.Enums.ParticipantStatus.PriceRequest : s.Status,
+            //                StepFailure = s == null || s.Status == Domain.Enums.ParticipantStatus.FailureParitipate ? getLastStage(_context, c.cp.ContragentId, c.cp.ComOfferId, s) : null//s.ComStage.Number
+            //                ,
+            //                Description = s == null || s.Status == Domain.Enums.ParticipantStatus.FailureParitipate ? getLastStageComment(_context, c.cp.ContragentId, c.cp.ComOfferId, s) : ""
 
 
 
