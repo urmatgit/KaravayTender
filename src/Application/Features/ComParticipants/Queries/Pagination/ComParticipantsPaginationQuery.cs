@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -6,11 +5,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Domain.Entities;
 using System.Linq.Dynamic.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper.QueryableExtensions;
 using Microsoft.Extensions.Localization;
 using CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs;
 using CleanArchitecture.Razor.Application.Models;
@@ -18,10 +15,8 @@ using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Application.Common.Specification;
-using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
-using Microsoft.EntityFrameworkCore.Internal;
 using System.Diagnostics;
-using System.Text.Json;
+using Microsoft.Data.SqlClient;
 
 namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.Pagination
 {
@@ -75,14 +70,32 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
         public async Task<PaginatedData<ComParticipantDto>> Handle(ComParticipantsWithPaginationQuery request, CancellationToken cancellationToken)
         {
             var comOfferId = request.ComOfferId;
-            //var dataraw = _context.ComStages
-            //             .FromSqlRaw("select a.ComOfferId , b.ContragentId  , MAX(a.Number) as Number " +
+            //var res1 = _context.ExecuteSqlRawExt1<ComParticipant, ComParticipant>("select ComOfferId, ContragentId from ComParticipants ", x=>new ComParticipant() {ComOfferId =(int)(long)x[0],ContragentId=(int)(long)x[1]});
+            //List<SqlParameter> sqlParameters = new List<SqlParameter>();
+            //sqlParameters.Add(new SqlParameter("@comOfferId", comOfferId));
+            //var dataraw = _context.ExecuteSqlRawExt1<ComParticipant, SqlParameter>("with s_1 as ( select a.ComOfferId , b.ContragentId  , MAX(a.Number) as Number " +
             //                           "from ComStages a" +
-            //                           "  join StageParticipants b on b.ComStageId = a.Id" +
-            //                           $" where a.ComOfferId = {comOfferId}" +
+            //                           "  join StageParticipants b on b.ComStageId = a.Id " +
+            //                           $" where a.ComOfferId = {comOfferId} " +
             //                           "  group by a.ComOfferId" +
-            //                           "       , b.ContragentId")
-            //             .ToListAsync (cancellationToken);
+            //                           "       , b.ContragentId" +
+            //                           "), s_2 as (" +
+            //                           "select a.*, b.Id " +
+            //                           "from s_1 a " +
+            //                            "join ComStages b on b.ComOfferId = a.ComOfferId " +
+            //                            "and b.Number = a.Number " +
+            //                           ") " +
+            //                        "select a.* " +
+            //                        ", b.Status " +
+            //                        ", b.Description " +
+            //                        "from s_2 a " +
+            //                        "join StageParticipants b on b.ComStageId = a.Id " +
+            //                        "and b.ContragentId = a.ContragentId",x=>new ComParticipant {
+            //                            ComOfferId=(int)(long)x[0],ContragentId=(int)(long)x[1]
+            //                        }
+            //                        );
+
+
 
 
             var dataStep1 = from c in _context.ComStages
@@ -122,7 +135,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
 
              
 
-            var filters = PredicateBuilder.FromFilter<ComParticipantDto>(request.FilterRules);
+            var filters = PredicateBuilder.FromFilter<ComParticipantDto>(request.FilterRules,new List<string>() { "StatusStr"});
             var res = await dataStep3
                  .Where(filters)
                 .PaginatedDataLazySortAsync(request.Page, request.Rows, request.Sort, request.Order);

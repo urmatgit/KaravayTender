@@ -37,7 +37,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
             return result != null;
         }
              
-        public static Expression<Func<T, bool>> FromFilter<T>(string filters)
+        public static Expression<Func<T, bool>> FromFilter<T>(string filters,List<string> Excludes=null )
         {
             Expression<Func<T, bool>> any = x => true;
             if (!string.IsNullOrEmpty(filters))
@@ -51,6 +51,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
 
                 foreach (var filter in filterRules)
                 {
+                    if (Excludes!=null &&  Excludes.Contains(filter.field)) continue;
                     if (Enum.TryParse(filter.op, out OperationExpression op) && !string.IsNullOrEmpty(filter.value))
                     {
                         var expression = GetCriteriaWhere<T>(filter.field, op, filter.value);
