@@ -23,7 +23,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                         from n1 in nom.DefaultIfEmpty()
                         join c in _context.Contragents on a.ContragentId equals c.Id into contr
                         from c1 in contr.DefaultIfEmpty()
-                        orderby c1.Name
+                      //  orderby c1.Name
                         select new StagesCrossDto
                         {
                             ComOfferId = a.ComOfferId,
@@ -42,22 +42,11 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                         };
             return stage;
         }
-        public static IQueryable<ParticipantCrossDto> GetParicipantsForAllStage(this IApplicationDbContext _context, int comOfferId)
+        public static IQueryable<ParticipantCrossDto> GetParicipantsForAllStage(this IApplicationDbContext _context, int comOfferId,int? contragentId=null)
         {
-            var dataStep1 = from c in _context.ComStages
-                            join p in _context.StageParticipants on c.Id equals p.ComStageId
-                            where c.ComOfferId == comOfferId
-                            group c by new { c.ComOfferId, p.ContragentId } into gr
-                            select new
-                            {
-                                ComOfferId = gr.Key.ComOfferId,
-                                ContragentId = gr.Key.ContragentId,
-
-                                Number = gr.Max(m => m.Number)
-
-                            };
-            var dataStep2 = from a in _context.ComStages
-                            where a.ComOfferId==comOfferId
+            
+            var dataStep2 = from a in _context.ComStages 
+                            where a.ComOfferId==comOfferId  
                             select new
                             {
                                 Number=a.Number,
@@ -66,7 +55,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                             };
             var dataStep3 = from a in dataStep2
                             join b in _context.StageParticipants on  a.ComStageID equals  b.ComStageId
-
+                            where  (contragentId != null ? b.ContragentId == contragentId : true)
                             select new ParticipantCrossDto
                             {
                                 ComOfferId = comOfferId,
@@ -79,11 +68,11 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                             };
             return dataStep3;
         }
-        public static IQueryable<ParticipantCrossDto> GetParicipantsForLastStage(this IApplicationDbContext _context, int comOfferId)
+        public static IQueryable<ParticipantCrossDto> GetParicipantsForLastStage(this IApplicationDbContext _context, int comOfferId, int? contragentId = null)
         {
             var dataStep1 = from c in _context.ComStages
                             join p in _context.StageParticipants on c.Id equals p.ComStageId
-                            where c.ComOfferId == comOfferId
+                            where c.ComOfferId == comOfferId 
                             group c by new { c.ComOfferId, p.ContragentId } into gr
                             select new
                             {
@@ -103,7 +92,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                             };
             var dataStep3 = from a in dataStep2
                             join b in _context.StageParticipants on new { Id = a.ComStageID, ContrId = a.a.ContragentId } equals new { Id = b.ComStageId, ContrId = b.ContragentId }
-
+                            where (contragentId != null ? b.ContragentId == contragentId : true)
                             select new ParticipantCrossDto
                             {
                                 ComOfferId = a.a.ComOfferId,
