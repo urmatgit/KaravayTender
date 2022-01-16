@@ -16,6 +16,6 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.DTOs
 
         public int? CurrentStage { get; set; }
         public int? CurrentStageId { get; set; }
-        public DateTime DeadlineDate { get; set; }
+        public DateTime? DeadlineDate { get; set; }
     }
 }

@@ -53,93 +53,184 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
             _localizer = localizer;
             _mediator = mediator;
         }
-        private async  Task<IEnumerable<StagesCrossDto>> GetDataLastStage(int comofferid, CancellationToken cancellationToken)
+        private async Task<IEnumerable<StagesCrossDto>> GetDataAllStage(int comofferid, CancellationToken cancellationToken)
         {
-            var datas =  _context.GetParicipantsForTab(comofferid);
-            var stage = from a in datas
-                        join s in _context.StageCompositions on new { StageId = a.ComStageId, ContrId = a.ContragentId } equals new { StageId = s.ComStageId, ContrId = s.ContragentId }
-                        join p in _context.ComPositions on s.ComPositionId equals p.Id into pos
-                        from p1 in pos.DefaultIfEmpty()
-                        join n in _context.Nomenclatures on p1.NomenclatureId equals n.Id into nom
-                        from n1 in nom.DefaultIfEmpty()
-                        join c in _context.Contragents on a.ContragentId equals c.Id into contr
-                        from c1 in contr.DefaultIfEmpty()
-                        orderby c1.Name
-                        select new StagesCrossDto
-                        {
-                            ComOfferId=a.ComOfferId,
-                            ContragentId=a.ContragentId,
-                            ContragentName=c1.Name,
-                            ComStageId=a.ComStageId,
-                            Number=a.Number,
-                            DeadlineDate=a.DeadlineDate,
-                            Status=a.Status,
-                            Description=a.Description,
-                            ComPositionId=s.ComPositionId,
-                            NomenclatureName=n1.Name,
-                            Price=s.Price,
-                            RequestPrice=s.RequestPrice
-                            
-                        };
-            //var datas= await stage.ToListAsync(cancellationToken);
-            return await stage.ToListAsync(cancellationToken);
+            var datas = _context.GetParicipantsForAllStage(comofferid);
+            var stage = _context.GetFullInfoForCrossData(datas);
+            var result = stage.OrderBy(o => o.NomenclatureName)
+                       .ThenBy(o => o.Number)
+                       .ThenBy(o => o.ContragentName);
+            return await result.ToListAsync(cancellationToken);
         }
-        public async Task<Result<ComStageCrossDTO>> Handle(GetComOfferCrossStages request, CancellationToken cancellationToken)
+        private async Task<ComStageCrossDTO> GetCrossDataAllStagePage(int comOfferId, CancellationToken cancellationToken)
         {
             ComStageCrossDTO result = new ComStageCrossDTO();
-            var lastStageData =await  GetDataLastStage(request.ComOfferId,cancellationToken);
+            var lastStageData = await GetDataAllStage(comOfferId, cancellationToken);
+            var lastStageNumber = lastStageData.OrderBy(o => o.Number).LastOrDefault();
+            var contrgents = from s in lastStageData
+                             group s by s.ContragentName into contr
+                             orderby contr.Key
+                             select new
+                             {
+                                 caption= $"{contr.Key}",
+                                 number = contr.Max(x => x.Number),
+                                 status=contr.Select(x=>x.Status).LastOrDefault()
+                             };
+            result.Header = contrgents.Select(x=> $"{x.caption} ({x.status.ToDescriptionString()})").ToArray();
+            List<ExpandoObject> resultData = new List<ExpandoObject>();
+            
+            var listPosition = lastStageData.GroupBy(g => new { g.ComPositionId, g.ComStageId });
+            foreach (var position in listPosition)
+                foreach (var nomenclture in lastStageData.Where(p => p.ComPositionId == position.Key.ComPositionId && p.ComStageId==position.Key.ComStageId).Select(n => new {
+                    n.NomenclatureName,
+                    n.DeadlineDate,
+                    n.ComPositionId,
+                    n.ComStageId,
+                    n.Number
+                }).Distinct())
+                {
+
+
+                    var row = new ExpandoObject() as IDictionary<string, object>;
+                    row.Add($"NomName", nomenclture.NomenclatureName);
+
+                    row.Add($"Stage", nomenclture.Number);
+                    row.Add($"StageId", nomenclture.ComStageId);
+
+                    row.Add($"StageDeadline", nomenclture.DeadlineDate);
+                    int Indexcontrgent = 0;
+                    decimal? GoodPrice = null;
+                    //перечисляем контрагентов
+                    foreach (var contr in lastStageData.Where(c => c.ComPositionId == nomenclture.ComPositionId && c.ComStageId==nomenclture.ComStageId))
+                    {
+                        // var status = GetStatus(pos.stage1.stage.StageParticipants, stagecom.ContragentId);
+                        // if (status == ParticipantStatus.FailureParitipate && stage==1) continue;
+                        Indexcontrgent++;
+                        row.Add($"ContrId{Indexcontrgent}", contr.ContragentId);
+                        row.Add($"ComPositionId{Indexcontrgent}", contr.ComPositionId);
+
+                        if (GoodPrice == null || contr.Price <= GoodPrice)
+                            GoodPrice = contr.Price;
+                        row.Add($"ContrPrice{Indexcontrgent}", contr.Price);
+                        row.Add($"RequestPrice{Indexcontrgent}", contr.RequestPrice);
+                        row.Add($"ContrStatus{Indexcontrgent}", contr.Status);
+                    }
+                    if (nomenclture.ComStageId==lastStageNumber.ComStageId)
+                        row.Add("GoodPrice", GoodPrice);
+                    else 
+                        row.Add("GoodPrice", null);
+                    resultData.Add((ExpandoObject)row);
+
+                }
+            result.Body = resultData;
+
+            return result;
+
+        }
+        private async  Task<IEnumerable<StagesCrossDto>> GetDataLastStage(int comofferid, CancellationToken cancellationToken)
+        {
+            var datas =  _context.GetParicipantsForLastStage(comofferid);
+            var stage = _context.GetFullInfoForCrossData(datas);
+            #region getFullInfo
+            //var stageO = from a in datas
+            //            join s in _context.StageCompositions on new { StageId = a.ComStageId, ContrId = a.ContragentId } equals new { StageId = s.ComStageId, ContrId = s.ContragentId }
+            //            join p in _context.ComPositions on s.ComPositionId equals p.Id into pos
+            //            from p1 in pos.DefaultIfEmpty()
+            //            join n in _context.Nomenclatures on p1.NomenclatureId equals n.Id into nom
+            //            from n1 in nom.DefaultIfEmpty()
+            //            join c in _context.Contragents on a.ContragentId equals c.Id into contr
+            //            from c1 in contr.DefaultIfEmpty()
+            //            orderby c1.Name
+            //            select new StagesCrossDto
+            //            {
+            //                ComOfferId=a.ComOfferId,
+            //                ContragentId=a.ContragentId,
+            //                ContragentName=c1.Name,
+            //                ComStageId=a.ComStageId,
+            //                Number=a.Number,
+            //                DeadlineDate=a.DeadlineDate,
+            //                Status=a.Status,
+            //                Description=a.Description,
+            //                ComPositionId=s.ComPositionId,
+            //                NomenclatureName=n1.Name,
+            //                Price=s.Price,
+            //                RequestPrice=s.RequestPrice
+
+            //            };
+            //var datas= await stage.ToListAsync(cancellationToken);
+            #endregion
+            return await stage.ToListAsync(cancellationToken);
+        }
+
+        private async Task<ComStageCrossDTO>  GetCrossDataLastStagePage(int comOfferId,CancellationToken cancellationToken)
+        {
+            ComStageCrossDTO result = new ComStageCrossDTO();
+            var lastStageData = await GetDataLastStage(comOfferId, cancellationToken);
             var contrgents = from s in lastStageData
                              group s by new { s.ContragentName, s.Status } into contr
                              select $"{contr.Key.ContragentName} ({contr.Key.Status.ToDescriptionString()})";
             result.Header = contrgents.ToArray();
-           // var contrForBody= lastStage. Where(c => c.ComPositionId == nomenclture.ComPositionId)
+            // var contrForBody= lastStage. Where(c => c.ComPositionId == nomenclture.ComPositionId)
             List<ExpandoObject> resultData = new List<ExpandoObject>();
             var listPosition = lastStageData.GroupBy(g => g.ComPositionId);
-            var lastStageNumber = lastStageData.OrderBy(o=>o.Number).LastOrDefault();
-            foreach(var position in listPosition)
-            foreach (var nomenclture in lastStageData.Where(p=>p.ComPositionId==position.Key).Select(n=>new {
-                n.NomenclatureName,
-                
-                
-                n.DeadlineDate,
-                n.ComPositionId
-            }).Distinct())
-            {
-
-                
-                var row = new ExpandoObject() as IDictionary<string, object>;
-                row.Add($"NomName", nomenclture.NomenclatureName);
-
-                row.Add($"Stage", lastStageNumber.Number);
-               row.Add($"StageId", lastStageNumber.ComStageId);
-
-                row.Add($"StageDeadline", nomenclture.DeadlineDate);
-                int Indexcontrgent = 0;
-                decimal? GoodPrice = null;
-                //перечисляем контрагентов
-                foreach (var contr in lastStageData.Where(c => c.ComPositionId == nomenclture.ComPositionId))
+            var lastStageNumber = lastStageData.OrderBy(o => o.Number).LastOrDefault();
+            foreach (var position in listPosition)
+                foreach (var nomenclture in lastStageData.Where(p => p.ComPositionId == position.Key).Select(n => new {
+                    n.NomenclatureName,
+                    
+                    n.ComPositionId
+                }).Distinct())
                 {
-                   // var status = GetStatus(pos.stage1.stage.StageParticipants, stagecom.ContragentId);
-                    // if (status == ParticipantStatus.FailureParitipate && stage==1) continue;
-                    Indexcontrgent++;
-                    row.Add($"ContrId{Indexcontrgent}", contr.ContragentId);
-                    row.Add($"ComPositionId{Indexcontrgent}", contr.ComPositionId);
 
-                    if (GoodPrice == null || contr.Price <= GoodPrice)
-                        GoodPrice = contr.Price;
-                    row.Add($"ContrPrice{Indexcontrgent}", contr.Price);
-                    row.Add($"RequestPrice{Indexcontrgent}", contr.RequestPrice);
-                    row.Add($"ContrStatus{Indexcontrgent}", contr.Status);
+
+                    var row = new ExpandoObject() as IDictionary<string, object>;
+                    row.Add($"NomName", nomenclture.NomenclatureName);
+
+                    row.Add($"Stage", lastStageNumber.Number);
+                    row.Add($"StageId", lastStageNumber.ComStageId);
+
+                    row.Add($"StageDeadline", lastStageNumber.DeadlineDate);
+                    int Indexcontrgent = 0;
+                    decimal? GoodPrice = null;
+                    //перечисляем контрагентов
+                    foreach (var contr in lastStageData.Where(c => c.ComPositionId == nomenclture.ComPositionId))
+                    {
+                        // var status = GetStatus(pos.stage1.stage.StageParticipants, stagecom.ContragentId);
+                        // if (status == ParticipantStatus.FailureParitipate && stage==1) continue;
+                        Indexcontrgent++;
+                        row.Add($"ContrId{Indexcontrgent}", contr.ContragentId);
+                        row.Add($"ComPositionId{Indexcontrgent}", contr.ComPositionId);
+
+                        if (GoodPrice == null || contr.Price <= GoodPrice)
+                            GoodPrice = contr.Price;
+                        row.Add($"ContrPrice{Indexcontrgent}", contr.Price);
+                        row.Add($"RequestPrice{Indexcontrgent}", contr.RequestPrice);
+                        row.Add($"ContrStatus{Indexcontrgent}", contr.Status);
+                    }
+                    row.Add("GoodPrice", GoodPrice);
+                    resultData.Add((ExpandoObject)row);
+
                 }
-                row.Add("GoodPrice", GoodPrice);
-                resultData.Add((ExpandoObject)row);
-
-            }
             result.Body = resultData;
-            result.CurrentStage = lastStageNumber.Number;
-            result.CurrentStageId = lastStageNumber.ComStageId;
-            result.DeadlineDate = lastStageNumber.DeadlineDate;
-            return Result<ComStageCrossDTO>.Success(result);
+            result.CurrentStage = lastStageNumber?.Number;
+            result.CurrentStageId = lastStageNumber?.ComStageId;
+            result.DeadlineDate = lastStageNumber?.DeadlineDate;
+            return result;
+        }
+        public async Task<Result<ComStageCrossDTO>> Handle(GetComOfferCrossStages request, CancellationToken cancellationToken)
+        {
+            ComStageCrossDTO result = new ComStageCrossDTO();
+            if (request.Stage == 1) //Последний этап
+            {
+                result = await GetCrossDataLastStagePage(request.ComOfferId, cancellationToken);
+                return Result<ComStageCrossDTO>.Success(result);
+            }
+            else
+            {
+                result = await GetCrossDataAllStagePage(request.ComOfferId, cancellationToken);
+                return Result<ComStageCrossDTO>.Success(result);
+            }
+
         }
         public async Task<Result<ComStageCrossDTO>> HandleO(GetComOfferCrossStages request, CancellationToken cancellationToken)
         {
