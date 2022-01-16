@@ -121,7 +121,8 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                             select new
                             {
                                 a,
-                                ComStageID = c.Id
+                                ComStageID = c.Id,
+                                DeadlineDate=c.DeadlineDate
                             };
             var dataStep3 = from a in dataStep2
                             join b in _context.StageParticipants on new { Id = a.ComStageID, ContrId = a.a.ContragentId } equals new { Id = b.ComStageId, ContrId = b.ContragentId }
@@ -132,6 +133,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                                 ContragentId =b.ContragentId,
                                 Number = a.a.Number,
                                 ComStageId = a.ComStageID,
+                                DeadlineDate=a.DeadlineDate,
                                 Status = b.Status,
                                 Description = b.Description
                             };

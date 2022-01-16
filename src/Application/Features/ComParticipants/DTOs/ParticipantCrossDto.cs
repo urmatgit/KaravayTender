@@ -19,5 +19,15 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs
         public string Description { get; set; }
         //current Stage number
         public int Number { get; set; }
+        public DateTime DeadlineDate { get; set; }
+    }
+    public class StagesCrossDto : ParticipantCrossDto
+    {
+        public int ComPositionId { get; set; }
+        public string ContragentName { get; set; }
+        public string NomenclatureName { get; set; }
+        public decimal? Price { get; set; }
+        public bool RequestPrice { get; set; }
+        
     }
 }
