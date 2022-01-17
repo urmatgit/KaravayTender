@@ -52,7 +52,7 @@ namespace CleanArchitecture.Razor.Domain.Enums
         /// </summary>
         [Description(@"Отменено")]
         [Display(Name = "Отменено")]
-        Cancelled = -1
+        Cancelled = 5
 
     }
 }

@@ -22,17 +22,17 @@ namespace CleanArchitecture.Razor.Domain.Enums
         
         [Description(@"Ожидание")]
         [Display(Name = "Ожидание")]
-        PriceRequest = 1,
+        Request = 1,
 
         [Description(@"Подтверждение")]
         [Display(Name = "Подтверждение")]
-        PriceConfirmed = 2,
+        Confirmed = 2,
         [Description(@"Отказ")]
         [Display(Name = "Отказ")]
         FailureParitipate = 3,
         [Description(@"Отмена")]
         [Display(Name = "Отмена")]
-        Excluded = -1
+        Cancel = 4
 
     }
 }

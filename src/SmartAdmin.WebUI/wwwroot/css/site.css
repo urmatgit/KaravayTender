@@ -155,3 +155,6 @@ pre.prettyprint {
 .header-icon:not(.btn)[data-toggle="dropdown"] + .dropdown-menu {
     top: 3.0625rem !important;
 }
+.align_right{
+    text-align: right;
+}

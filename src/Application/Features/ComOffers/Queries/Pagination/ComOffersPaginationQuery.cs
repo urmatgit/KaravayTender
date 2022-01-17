@@ -183,7 +183,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                     filters = filters.And(c => _dateTime.Now > c.TermEnd && c.WinnerId == ContragentId);
                     break;
                 case ComOfferFilterForParticipant.Waitings:
-                    filters = filters.And(s => (short)s.Status > 0 && s.WinnerId==default(int?) && s.StageParticipants.Any(p=>p.ContragentId==ContragentId && p.Status!=ParticipantStatus.Excluded && p.Status!=ParticipantStatus.FailureParitipate)); 
+                    filters = filters.And(s => (short)s.Status > 0 && s.WinnerId==default(int?) && s.StageParticipants.Any(p=>p.ContragentId==ContragentId && p.Status!=ParticipantStatus.Cancel && p.Status!=ParticipantStatus.FailureParitipate)); 
                     break;
                 default:
                     filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));

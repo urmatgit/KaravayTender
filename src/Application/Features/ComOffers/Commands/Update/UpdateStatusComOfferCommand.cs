@@ -7,6 +7,7 @@ using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.ComOffers.Caching;
 using CleanArchitecture.Razor.Application.Features.ComOffers.DTOs;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.Commands.Update;
+using CleanArchitecture.Razor.Application.Features.StageParticipants.Commands.Update;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Enums;
@@ -44,18 +45,32 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update
             _localizer = localizer;
             _mapper = mapper;
         }
+        private async Task<Result> CancelStageParticipants(int comOfferId)
+        {
+            var canceled = await _mediator.Send(new UpdateComParticipantLastStatusCommand() { ComOfferId = comOfferId, ParticipantStatus = ParticipantStatus.Cancel });
+            return canceled;
+        }
         public async Task<Result<ComOfferDto>> Handle(UpdateStatusComOfferCommand request, CancellationToken cancellationToken)
         {
            //TODO:Implementing UpdateStatusComOfferCommandHandler method 
            var item =await _context.ComOffers.FindAsync( new object[] { request.Id }, cancellationToken);
-           if (item != null && item.Status!=request.Status)
+
+           if (item != null)
            {
-                item.Status = request.Status;
-                var createevent = new ComOfferUpdatedEvent(item);
-                item.DomainEvents.Add(createevent);
-                _context.ComOffers.Update(item);
-                await _context.SaveChangesAsync(cancellationToken);
-                
+                if (request.Status == ComOfferStatus.Cancelled)
+                {
+                    var cancelStageParticipants =await CancelStageParticipants(request.Id);
+                    if (!cancelStageParticipants.Succeeded)
+                        return Result<ComOfferDto>.Failure(cancelStageParticipants.Errors);
+                }
+                if (item.Status != request.Status)
+                {
+                    item.Status = request.Status;
+                    var createevent = new ComOfferUpdatedEvent(item);
+                    item.DomainEvents.Add(createevent);
+                    _context.ComOffers.Update(item);
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
 
            }
             var itemDto = _mapper.Map<ComOfferDto>(item);

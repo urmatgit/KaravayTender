@@ -25,7 +25,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public int ComOfferId { get; set; }
         public virtual ComOffer ComOffer { get; set; }
 
-        public ParticipantStatus Status { get; set; } = ParticipantStatus.PriceRequest;
+        public ParticipantStatus Status { get; set; } = ParticipantStatus.Request;
 
         public string Description { get; set; }
 

@@ -289,11 +289,11 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                 var StageParticipant = comStage.StageParticipants.FirstOrDefault(f => f.ContragentId == ContragentId);
                 if (StageParticipant is not null)
                     return StageParticipant.Status;
-                return ParticipantStatus.Excluded;
+                return ParticipantStatus.Cancel;
 
             }
             else
-                return ParticipantStatus.Excluded;
+                return ParticipantStatus.Cancel;
         }
         public class FilterByComOfferWithStageQuerySpec : Specification<StageComposition>
         {

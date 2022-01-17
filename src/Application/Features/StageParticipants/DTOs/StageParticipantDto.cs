@@ -29,7 +29,7 @@ namespace CleanArchitecture.Razor.Application.Features.StageParticipants.DTOs
         public int ComOfferId { get; set; }
         public virtual ComOfferDto ComOffer { get; set; }
 
-        public ParticipantStatus Status { get; set; } = ParticipantStatus.PriceRequest;
+        public ParticipantStatus Status { get; set; } = ParticipantStatus.Request;
         public string StatusStr => Status.ToDescriptionString();
         public string Description { get; set; }
     }

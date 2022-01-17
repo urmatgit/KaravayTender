@@ -26,7 +26,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs
         /// </summary>
         public int? StepFailure { get; set; }
         public string Description { get; set; }
-        public ParticipantStatus Status { get; set; } = ParticipantStatus.PriceRequest;
+        public ParticipantStatus Status { get; set; } = ParticipantStatus.Request;
         public string StatusStr => Status.ToDescriptionString();
         [Required]
         public int ContragentId { get; set; }

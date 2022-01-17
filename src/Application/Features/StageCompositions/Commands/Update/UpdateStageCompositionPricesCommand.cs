@@ -30,7 +30,7 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
         public string Description { get; set; }
         public int StageId { get; set; }
         public int ComOfferId { get; set; }
-        public Domain.Enums.ParticipantStatus status { get; set; } = Domain.Enums.ParticipantStatus.PriceConfirmed;
+        public Domain.Enums.ParticipantStatus status { get; set; } = Domain.Enums.ParticipantStatus.Confirmed;
     }
     public class UpdateStageCompositionPricesManagerCommand : IRequest<Result>
     {
@@ -157,7 +157,7 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
                 var sp = await _context.StageParticipants.FindAsync(new object[] { next.Data.Id, contrid, request.stageComRequest.ComOfferId }, cancellationToken);
                 if (sp is not null)
                 {
-                    sp.Status = Domain.Enums.ParticipantStatus.PriceRequest;
+                    sp.Status = Domain.Enums.ParticipantStatus.Request;
                     await _context.SaveChangesAsync(cancellationToken);
                 }
             }

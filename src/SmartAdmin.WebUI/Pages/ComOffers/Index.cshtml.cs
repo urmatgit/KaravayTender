@@ -154,14 +154,15 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
-        public async Task<IActionResult> OnPostCancelComOfferAsync([FromQuery] int id)
+        public async Task<IActionResult> OnPostCancelComOfferAsync()
         {
             try
             {
                 if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation)
                     return BadRequest(Result.Failure(new string[] { "Статус не соответствует для этой операции!" }));
-                var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation });
-                return new JsonResult("");
+                
+                var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Cancelled });
+                return new JsonResult(resultComOffer);
 
             }
             catch (ValidationException ex)
@@ -174,14 +175,20 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
-        public async Task<IActionResult> OnPostSelectWinnerAsync([FromQuery] int winnerid)
+        public async Task<IActionResult> OnPostSelectWinnerAsync([FromBody] NextComStageWinnerCommand command)
         {
             try
             {
-                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation)
-                    return BadRequest(Result.Failure(new string[] { "Статус не соответствует для этой операции!" }));
+                //if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation)
+                //    return BadRequest(Result.Failure(new string[] { "Статус не соответствует для этой операции!" }));
+                
 
-                return new JsonResult("");
+                var result = await _mediator.Send(command);
+                if (!result.Succeeded)
+                    return BadRequest(result.Errors);
+                //return new JsonResult("");
+                var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = command.ComOfferId, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.WinnerDetermining });
+                return new JsonResult(resultComOffer);
 
             }
             catch (ValidationException ex)

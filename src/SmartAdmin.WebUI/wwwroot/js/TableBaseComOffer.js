@@ -26,10 +26,54 @@ $('#gettemplatebutton').click(function () {
     onGetTemplate();
 });
 $('#btnCancelStage').click(function (e) {
-    alert("btnCancelStage clicked");
+    bootbox.confirm({
+        title: "Вы уверены, отменить проведения КП?",
+        message: "Всем участникам с статусом 'Ожидание' и 'Подтверждение' будут присвоена статус 'Отмена'",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> Отмена',
+                className: 'btn-danger'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Подтвердить',
+                className: 'btn-success'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                CancelComOffer();
+            }
+
+        }
+    });
 })
+function CancelComOffer() {
+    SubmitForm("?handler=CancelComOffer", function (res) {
+        
+        openEditpanel(res.Data, true);
+
+        //LoadComState(currentEditRow.Id);
+    });
+}
 $('#btnSelectWinnerStage').click(function (e) {
-    alert("btnSelectWinnerStage clicked");
+    let particicpants = clsparticipant.dg.datagrid('getRows');
+    console.log(particicpants);
+    ShowSelectWinnerDialog(particicpants, function (id, date, message) {
+        
+        var headers = {
+            "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+        }
+
+        axios.post(`${pagelink}?handler=SelectWinner`, { "ComOfferId": currentEditRow.Id, DeadlineDate: date, ContragentId: id, Message: message }, {
+            headers: headers
+        }).then(res => {
+            toastr["info"](`${translations.SaveSuccess} `);
+            openEditpanel(res.data.Data, true);
+            reloadData();
+        })
+    });
+
+    
 });
 
 $('#btnSendStage').click(function (e) {

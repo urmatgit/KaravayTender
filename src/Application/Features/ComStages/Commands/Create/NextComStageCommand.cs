@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Constants;
 using CleanArchitecture.Razor.Application.Features.ComStages.Caching;
 using CleanArchitecture.Razor.Application.Features.ComStages.DTOs;
+using CleanArchitecture.Razor.Application.Features.ComStages.EventHandlers;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.Commands.Create;
 using CleanArchitecture.Razor.Application.Features.StageParticipants.Commands.Create;
 using CleanArchitecture.Razor.Domain.Entities;
@@ -17,6 +20,7 @@ using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
 {
@@ -26,20 +30,30 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
 
         public CancellationTokenSource ResetCacheToken => ComStageCacheTokenSource.ResetCacheToken;
     }
-
-    public class NextComStageCommandHandler : IRequestHandler<NextComStageCommand, Result<ComStageDto>>
+    public class NextComStageWinnerCommand : IRequest<Result<ComStageDto>>, IMapFrom<ComStage>
+    {
+        public int ContragentId { get; set; }
+        public int ComOfferId { get; set; }
+        public DateTime DeadlineDate { get; set; }
+        public string Message { get; set; }
+    }
+    public class NextComStageCommandHandler : IRequestHandler<NextComStageCommand, Result<ComStageDto>>,
+        IRequestHandler<NextComStageWinnerCommand, Result<ComStageDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly IStringLocalizer<NextComStageCommand> _localizer;
+        private readonly ILogger<NextComStageCommand> _logger;
         public NextComStageCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<NextComStageCommand> localizer,
             IMapper mapper,
-            IMediator mediator
+            IMediator mediator,
+            ILogger<NextComStageCommand> logger
             )
         {
+            _logger = logger;
             _context = context;
             _localizer = localizer;
             _mapper = mapper;
@@ -70,7 +84,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
             last.DeadlineDate = request.DeadlineDate;
             last.ComOffer = null;
             last.Id = 0;
-            var ExcludedParticipants = last.StageParticipants.Where(p => p.Status == Domain.Enums.ParticipantStatus.Excluded || p.Status == Domain.Enums.ParticipantStatus.FailureParitipate);
+            var ExcludedParticipants = last.StageParticipants.Where(p => p.Status == Domain.Enums.ParticipantStatus.Cancel || p.Status == Domain.Enums.ParticipantStatus.FailureParitipate);
             if (ExcludedParticipants != null && ExcludedParticipants.Any())
                 foreach (var part in ExcludedParticipants)
                     last.StageParticipants.Remove(part);
@@ -92,8 +106,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
             }
 
             _context.ComStages.Add(last);
-            await _context.SaveChangesAsync(cancellationToken);
-            
+            //  await _context.SaveChangesAsync(cancellationToken);
+
 
 
 
@@ -111,6 +125,52 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
             //}
             var itemDto = _mapper.Map<ComStageDto>(last);
             return Result<ComStageDto>.Success(itemDto);
+        }
+
+        public async Task<Result<ComStageDto>> Handle(NextComStageWinnerCommand request, CancellationToken cancellationToken)
+        {
+            var datas = _context.GetParicipantsForLastStage(request.ComOfferId, contragentId: request.ContragentId);
+            
+            var lastList = await _context.GetFullInfoForCrossData(datas)
+                        .OrderByDescending(o => o.Number)
+                        .ToListAsync(cancellationToken);
+            var last = lastList.FirstOrDefault();
+            if (last != null)
+            {
+                ComStage comStage = new ComStage();
+                comStage.Number = last.Number + 1;
+                comStage.ComOfferId = request.ComOfferId;
+                comStage.DeadlineDate = request.DeadlineDate;
+                comStage.StageParticipants = new List<StageParticipant>(){
+                    new StageParticipant()
+                        {
+                            ContragentId = request.ContragentId,
+                            ComOfferId = request.ComOfferId,
+                            Status=Domain.Enums.ParticipantStatus.Request
+                        }
+                };
+                comStage.StageCompositions = new List<StageComposition>();
+                lastList.ForEach(x =>
+                {
+                    comStage.StageCompositions.Add(new StageComposition
+                    {
+                        ComPositionId=x.ComPositionId,
+                        ContragentId=x.ContragentId,
+                        Price=x.Price,
+                        RequestPrice=x.RequestPrice
+                    });
+                });
+                _context.ComStages.Add(comStage);
+
+                var updateEvent = new ComStageUpdatedEvent(comStage);
+                comStage.DomainEvents.Add(updateEvent);
+
+                await _context.SaveChangesAsync(cancellationToken);
+                var itemDto = _mapper.Map<ComStageDto>(comStage);
+                return Result<ComStageDto>.Success(itemDto);
+            }
+            _logger.LogError("Не найден участник!", request);
+            return Result<ComStageDto>.Failure(new string[] { "Не найден участник!" });
         }
     }
 }
