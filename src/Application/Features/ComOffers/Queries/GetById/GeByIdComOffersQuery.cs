@@ -20,6 +20,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.GetAll
     public class GeByIdComOffersQuery : IRequest<Result<ComOfferDto>>
     {
        public int Id { get; set; }
+        public bool FullInfo { get; set; } = true;
     }
     
     public class GeByIdComOffersQueryHandler :
@@ -42,14 +43,25 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.GetAll
 
         public async Task<Result<ComOfferDto>> Handle(GeByIdComOffersQuery request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing GeByIdComOffersQueryHandler method 
-            var comoffer = await _context.ComOffers
-                  .Include(c => c.ComPositions)
-                  .Include(c => c.ComParticipants)
-                  .Where(c => c.Id == request.Id)
-                  .FirstOrDefaultAsync(cancellationToken);
-            var dto = _mapper.Map<ComOfferDto>(comoffer);
-            return Result<ComOfferDto>.Success(dto);
+            //TODO:Implementing GeByIdComOffersQueryHandler method
+            if (request.FullInfo)
+            {
+                var comoffer = await _context.ComOffers
+                      .Include(c => c.ComPositions)
+                      .Include(c => c.ComParticipants)
+                      .Where(c => c.Id == request.Id)
+                      .FirstOrDefaultAsync(cancellationToken);
+                var dto = _mapper.Map<ComOfferDto>(comoffer);
+                return Result<ComOfferDto>.Success(dto);
+            }
+            else
+            {
+                var comoffer = await _context.ComOffers
+                      .Where(c => c.Id == request.Id)
+                      .FirstOrDefaultAsync(cancellationToken);
+                var dto = _mapper.Map<ComOfferDto>(comoffer);
+                return Result<ComOfferDto>.Success(dto);
+            }
         }
     }
 }

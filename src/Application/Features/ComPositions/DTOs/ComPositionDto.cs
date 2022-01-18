@@ -114,7 +114,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         //public decimal SummaVAT { get; set; }
 
         
-
+        public DateTime DeadlineDate { get; set; }
+             
         public int NomenclatureId { get; set; }
         public string NomName { get; set; }
         public string UnitOfName { get; set; }

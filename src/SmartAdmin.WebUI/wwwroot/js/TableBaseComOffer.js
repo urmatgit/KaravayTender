@@ -484,6 +484,8 @@ function showHideButtons(Status) {
     $('#btnChangeDeadline').hide();
     $('#btnCancelStage').hide();
     $('#btnSelectWinnerStage').hide();
+    $('#btnReturnToEvaluation').hide();
+    
     switch (Status) {
         case -1:
             $('#save').show();
@@ -526,6 +528,14 @@ function showHideButtons(Status) {
             
 
             break;
+        case 3: //"Определение победителя"
+            let now1 = new Date();
+            if (currentStage === undefined)
+            currentStage = false;
+            if (currentStage && Date.parse(now1) > Date.parse(currentStage.DeadlineDate))
+                $('#btnReturnToEvaluation').show();
+            break;
+
 
 
     }
@@ -603,12 +613,17 @@ var initdatagrid = () => {
                 onEdit(index);
             
         },
-        rowStyler: function (index, row) {
-
-            return 'cursor: pointer;';
-        },
-        columns: [createColumnsComOffer()]
         
+        columns: [createColumnsComOffer()]
+        ,
+        rowStyler: function (index, row) {
+            let style = 'cursor: pointer;';
+            if (row["Status"] == 4 && row["WinnerName"]) {//"Победитель определён"
+                style += 'background-color:lightgreen;color:blue;';
+            }
+             
+            return style;
+        }
     
     })
     

@@ -218,6 +218,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                      //ComParticipants=_mapper.Map<ICollection<ComParticipantDto>>(c.ComParticipants),
                      DeadlineDate=c.ComStages.OrderBy(o=>o.Number).LastOrDefault().DeadlineDate,
                      LastStatusStr= (from st in c.ComStages
+                                     join sp in _context.StageParticipants on st.Id equals sp.ComStageId
+                                     where sp.ContragentId== ContragentId
                                      orderby st.Number descending
                                      select st)
                               .FirstOrDefault()

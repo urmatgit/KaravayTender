@@ -62,51 +62,81 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
         public async Task<Result<ComStageDto>> Handle(NextComStageCommand request, CancellationToken cancellationToken)
         {
             //TODO:Implementing NextComStageCommandHandler method
-
-
-            var last = await _context.ComStages
-                .Include(l => l.StageCompositions)
-                .Include(l => l.StageParticipants)
-                .Include(c => c.ComOffer)
-                .Where(c => c.ComOfferId == request.ComOfferId).OrderBy(o => o.Number)
-                .AsNoTracking()
-                .LastOrDefaultAsync(cancellationToken);
-            if (last is null)
-            {
-                return Result<ComStageDto>.Failure(new string[] { ErrorMessages.NotFoundComStage });
-            }
-            if (last.ComOffer.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation)
-            {
-                return Result<ComStageDto>.Failure(new string[] { ErrorMessages.StatusDontMatchForSentRequest });
-            }
-
-            last.Number = last.Number + 1;
+            var lastComStage = _context.GetParicipantsForLastStageWithInfo(request.ComOfferId);
+            var datas = await lastComStage
+                      .ToListAsync(cancellationToken);
+            var maxNumber = datas.Max(x => x.Number);
+            var last = new ComStage();
+            last.ComOfferId = request.ComOfferId;
+            last.Number = maxNumber + 1;
             last.DeadlineDate = request.DeadlineDate;
-            last.ComOffer = null;
-            last.Id = 0;
-            var ExcludedParticipants = last.StageParticipants.Where(p => p.Status == Domain.Enums.ParticipantStatus.Cancel || p.Status == Domain.Enums.ParticipantStatus.FailureParitipate);
-            if (ExcludedParticipants != null && ExcludedParticipants.Any())
-                foreach (var part in ExcludedParticipants)
-                    last.StageParticipants.Remove(part);
-            var excludeStCom = last.StageCompositions.Where(s => !last.StageParticipants.Any(p => p.ContragentId == s.ContragentId));
-            foreach (var stcom in excludeStCom)
+            last.StageCompositions = new List<StageComposition>();
+            foreach (var pos in datas.Where(x => x.Status == Domain.Enums.ParticipantStatus.Confirmed).GroupBy(g=>new {g.ContragentId,g.ComPositionId }))
             {
-                stcom.Price = null;
-                stcom.RequestPrice = false;
-                //TODO на будущее удалить позиции при отказе поставщика когда переходим на сл. этап
-                // last.StageCompositions.Remove(stcom);
-            }
+                last.StageCompositions.Add(new  StageComposition
+                {
+                    ComPositionId = pos.Key.ComPositionId,
+                    ContragentId = pos.Key.ContragentId,
+                    RequestPrice = true,
+                    Price = null
 
-            foreach (var sc in last.StageCompositions)
-                sc.ComStageId = 0;
-            foreach (var sc in last.StageParticipants)
+                });
+            }
+            last.StageParticipants = new List<StageParticipant>();
+            foreach (var pos in datas.Where(x => x.Status == Domain.Enums.ParticipantStatus.Confirmed).GroupBy(g =>  g.ContragentId  ))
             {
-                sc.ComStageId = 0;
-                //sc.Status = Domain.Enums.ParticipantStatus.PriceRequest;
+                last.StageParticipants.Add(new StageParticipant
+                {
+                    ContragentId = pos.Key,
+                    ComOfferId = request.ComOfferId,
+                    Status = Domain.Enums.ParticipantStatus.Request
+                });
             }
-
             _context.ComStages.Add(last);
-            //  await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+            //var last = await _context.ComStages
+            //    .Include(l => l.StageCompositions)
+            //    .Include(l => l.StageParticipants)
+            //    .Include(c => c.ComOffer)
+            //    .Where(c => c.ComOfferId == request.ComOfferId).OrderBy(o => o.Number)
+            //    .AsNoTracking()
+            //    .LastOrDefaultAsync(cancellationToken);
+            //if (last is null)
+            //{
+            //    return Result<ComStageDto>.Failure(new string[] { ErrorMessages.NotFoundComStage });
+            //}
+            //if (last.ComOffer.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation)
+            //{
+            //    return Result<ComStageDto>.Failure(new string[] { ErrorMessages.StatusDontMatchForSentRequest });
+            //}
+
+            //last.Number = last.Number + 1;
+            //last.DeadlineDate = request.DeadlineDate;
+            //last.ComOffer = null;
+            //last.Id = 0;
+            //var ExcludedParticipants = last.StageParticipants.Where(p => p.Status == Domain.Enums.ParticipantStatus.Cancel || p.Status == Domain.Enums.ParticipantStatus.FailureParitipate);
+            //if (ExcludedParticipants != null && ExcludedParticipants.Any())
+            //    foreach (var part in ExcludedParticipants)
+            //        last.StageParticipants.Remove(part);
+            //var excludeStCom = last.StageCompositions.Where(s => !last.StageParticipants.Any(p => p.ContragentId == s.ContragentId));
+            //foreach (var stcom in excludeStCom)
+            //{
+            //    stcom.Price = null;
+            //    stcom.RequestPrice = false;
+            //    //TODO на будущее удалить позиции при отказе поставщика когда переходим на сл. этап
+            //    // last.StageCompositions.Remove(stcom);
+            //}
+
+            //foreach (var sc in last.StageCompositions)
+            //    sc.ComStageId = 0;
+            //foreach (var sc in last.StageParticipants)
+            //{
+            //    sc.ComStageId = 0;
+            //    //sc.Status = Domain.Enums.ParticipantStatus.PriceRequest;
+            //}
+
+            //_context.ComStages.Add(last);
+            //await _context.SaveChangesAsync(cancellationToken);
 
 
 

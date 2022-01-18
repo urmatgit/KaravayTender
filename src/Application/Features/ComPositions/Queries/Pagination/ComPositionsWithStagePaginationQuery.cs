@@ -103,9 +103,9 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
 
           //  if (request.IsLastStage == 1)
             {
-                
-                
-                
+
+
+
 
                 //.Include(z => z.Category)
                 //                        .Include(z => z.Nomenclature)
@@ -141,36 +141,39 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                 //               NomStavka = gr.Key.p.Nomenclature.Vat.Stavka,
                 //             //  AreaNames = gr.Select(x => x.a1.Id).Count().ToString()   //string.Join(',', gr.Select(g=>g.a1.Name).ToList())
                 //           };
+                //.Include(x => x.Nomenclature)
+                //.ThenInclude(x=>x.NomenclatureQualityDocs)
+                //.ThenInclude(x=>x.QualityDoc)
 
+                //.Join(_context.ComPositions, s=>s.ComPositionId,p=>p.Id,(s,p)=>
 
-                var result=await  _context.ComPositions
-                                  //.Include(x=>x.Nomenclature)
-                                  //.ThenInclude(x=>x.NomenclatureQualityDocs)
-                                  //.ThenInclude(x=>x.QualityDoc)
-                                  
-                                  .Join(stage,p=>p.Id,s=>s.ComPositionId,(p,s)=> new ComPositionDtoEx
-                           {
-                               Id=s.ComPositionId,
-                               CategoryId=p.CategoryId,
-                               CategoryName=p.Category.Name,
-                               DeliveryCount=p.DeliveryCount,
-                               Volume=p.Volume,
-                               AddRequirement=p.AddRequirement,
-                               Stage=s.Number,
-                               ParticipantStatus=s.Status,
-                               StageId=s.ComStageId,
-                               NomenclatureId=p.NomenclatureId,
-                               NomName=p.Nomenclature.Name,
-                               UnitOfName=p.Nomenclature.UnitOf.Name,
-                               NomVolume=p.Nomenclature.Volume,
-                               NomSpecification=p.Nomenclature.Specifications,
-                               
-                               RequestPrice=s.RequestPrice,
-                               InputPrice=s.Price,
-                               NomStavka=p.Nomenclature.Vat.Stavka,
-                               //AreaNames =string.Join(',', p.AreaComPositions.Select(a=>a.Area.Name).ToList())
-                              // QualityDocsNames =p.Nomenclature.NomenclatureQualityDocs != null && p.Nomenclature.NomenclatureQualityDocs.Count > 0 ? string.Join(", ", p.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)) : ""
-                           })
+                var result1 = from s in stage
+                             join p in _context.ComPositions on s.ComPositionId equals p.Id into cp
+                             from p1 in cp.DefaultIfEmpty()
+                             select new ComPositionDtoEx
+                             {
+                                 Id = s.ComPositionId,
+                                 CategoryId = p1.CategoryId,
+                                 CategoryName = p1.Category.Name,
+                                 DeliveryCount = p1.DeliveryCount,
+                                 Volume = p1.Volume,
+                                 AddRequirement = p1.AddRequirement,
+                                 Stage = s.Number,
+                                 ParticipantStatus = s.Status,
+                                 StageId = s.ComStageId,
+                                 NomenclatureId = p1.NomenclatureId,
+                                 NomName = p1.Nomenclature.Name,
+                                 UnitOfName = p1.Nomenclature.UnitOf.Name,
+                                 NomVolume = p1.Nomenclature.Volume,
+                                 NomSpecification = p1.Nomenclature.Specifications,
+                                 DeadlineDate=s.DeadlineDate,
+                                 RequestPrice = s.RequestPrice,
+                                 InputPrice = s.Price,
+                                 NomStavka = p1.Nomenclature.Vat.Stavka,
+                                 //AreaNames =string.Join(',', p.AreaComPositions.Select(a=>a.Area.Name).ToList())
+                                 // QualityDocsNames =p.Nomenclature.NomenclatureQualityDocs != null && p.Nomenclature.NomenclatureQualityDocs.Count > 0 ? string.Join(", ", p.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)) : ""
+                             };
+                  var result =await result1
                     .Where(filters)
                     .PaginatedDataLazySortAsync(request.Page, request.Rows, request.Sort, request.Order);
 

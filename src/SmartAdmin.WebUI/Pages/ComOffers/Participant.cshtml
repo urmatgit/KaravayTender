@@ -399,7 +399,7 @@
             $dgCP = $('#compostion_dg').datagrid({
                 height: (window.innerHeight /2),
                 method: 'GET',
-                rownumbers: true,
+                rownumbers: false,
                 singleSelect: true,
                 selectOnCheck: false,
                 checkOnSelect: false,
@@ -409,7 +409,7 @@
 
                 sortName: 'Id',
                 sortOrder: 'asc',
-                pageSize: 5,
+                pageSize: 15,
                 pageList: [5, 10, 30, 50, 100, 1000],
 
                 columns: [tblColumnsComPosition],
@@ -435,10 +435,12 @@
                         $dgCP.datagrid('showColumn', 'Stage');
                         $('#StageNumber').html("");
                         $('#StageId').val(0);
-                        $('#StageStatus').val(null);
+
+                        $('#StageStatus').val(res.rows[res.rows.length-1].ParticipantStatus);
+                        //$('#StageStatus').val(null);
                         ActionButtonAccess(true);
                     }
-                   
+                    showWinnerText();
 
                 },
                 onClickCell: onClickRow,
@@ -503,6 +505,28 @@
             //});
 
         }
+        function showWinnerText() {
+
+            let stageStatus = $('#StageStatus').val();
+
+            //[Display(Name ="Определение победителя")]
+            //WinnerDetermining = 3,
+            
+            if (currentEditRow.Status == 3 && stageStatus == 1) {
+                let rows = $dgCP.datagrid('getRows');
+                if (rows && rows.length > 0) {
+                    let deadlinedate = rows[rows.length - 1].DeadlineDate;
+                    let date = new Date(deadlinedate);
+                    $('#yourWinner').html("Вы объявлены победителем. Подтвердите спецификацию до " + moment(date).format("DD.MM.YYYY"));
+                } else
+                    $('#yourWinner').html("");
+                $('#yourWinner').removeAttr("hidden")
+            } else {
+
+               
+                $('#yourWinner').attr("hidden", true);
+            }
+        }
         function onClickRow(index) {
             if (editIndex != index) {
                 if (endEditing()) {
@@ -510,6 +534,7 @@
                         .datagrid('beginEdit', index);
                     editIndex = index;
                 } else {
+
                     $dgCP.datagrid('selectRow', editIndex);
                 }
             }
@@ -610,10 +635,13 @@
                     console.log($('.datagrid-row .btn-group').length);
                 },
                 rowStyler: function (index, row) {
-                    
-                    return 'cursor: pointer;';
-                    }
-                
+                    let style = 'cursor: pointer;';
+                    if (row["Status"] == 3 && row["LastStatusStr"] == "Ожидание") {
+                        style += 'background-color:pink;color:blue;font-weight:bold;';
+                    } else if (row["Status"] == 4 && row["LastStatusStr"] == "Подтверждение") //"Победитель определён"
+                        style += 'background-color:lightgreen;color:blue; ';
+                    return style;
+                }
 
             })
 
@@ -650,7 +678,7 @@
 
         }
 
-        function SendPost(url, param) {
+        function SendPost(url, param,callback) {
             var headers = {
                 "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
             }
@@ -661,6 +689,8 @@
                 toastr["info"]('@_localizer["Save Success."]');
                 $('#participant_modal').modal('toggle');
                 reloadData();
+                if (callback)
+                    callback(res.data.Data);
             });
                 @*.catch((error) => {
 				if (error.response.data.Errors) {
@@ -704,7 +734,10 @@
                             var name = $('#description').val();
                             var UpdatedRows = getChanges().map(x => x);
                                                                                           //  { inputPrices: UpdatedRows, Description: message, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id }
-                            SendPost('@Url.Page("/ComOffers/Participant")?handler=Failure', { inputPrices: UpdatedRows, Description: name ,StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id});
+                            SendPost('@Url.Page("/ComOffers/Participant")?handler=Failure', { inputPrices: UpdatedRows, Description: name, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id }
+                                , function (res) {
+                                    openEditpanel(res);
+                                });
                         }
                         },
                     cancel: {
@@ -726,14 +759,23 @@
             //const request = $('#participant_form').serialize();
             var UpdatedRows = getChanges().map(x => x);
 
-            SendPost('@Url.Page("/ComOffers/Participant")?handler=Prices', { inputPrices: UpdatedRows, Description: message, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id });
+             SendPost('@Url.Page("/ComOffers/Participant")?handler=Prices', { inputPrices: UpdatedRows, Description: message, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id }
+                 , function (arg) {
+                     openEditpanel(arg);
+                 });
 
         }
         function ActionButtonAccess(access) {
 
             let status = $('#StageStatus').val();
-            $("#failure").prop("disabled", access || status!=1);
-            $("#confirm").prop("disabled", access || status != 1);
+            $("#failure").hide();
+            $("#confirm").hide();
+            if (status == 1 && !access) {
+                $("#failure").show();
+                $("#confirm").show();
+            }
+            //$("#failure").prop("disabled", access || status!=1);
+            //$("#confirm").prop("disabled", access || status != 1);
         }
         var popupmodal = (participant) => {
 		$('#participant_modal').modal('toggle');
@@ -779,6 +821,7 @@
             })
             //reloadDataCP();
             //$('#compostion_dg').datagrid('resize');
+
 		} else {
 			$('#participant_form #Input_Id').val(0)
 
@@ -793,6 +836,7 @@
             reloadDataCP();
 
             $dgCP.datagrid('resize');
+
         })
         function openEditpanel(row, stage) {
             currentEditRow = row;
@@ -838,6 +882,8 @@
                     }
 
                 })
+                
+        
             } else {
                 $('#participant_form #Input_Id').val(0)
             }

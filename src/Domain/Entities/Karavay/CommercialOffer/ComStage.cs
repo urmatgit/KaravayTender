@@ -20,8 +20,8 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
     {
         public ComStage()
         {
-            
 
+            
         }
         public int Id { get; set; }
         /// <summary>

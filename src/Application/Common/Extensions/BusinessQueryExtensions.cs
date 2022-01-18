@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs;
@@ -13,6 +14,15 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
 {
    public static class BusinessQueryExtensions
     {
+        public static async Task<bool>  CheckPartipiatnIsWinning(this IApplicationDbContext _context, int stageId, int ContragentId,int comOfferId, CancellationToken cancellationToken)
+        {
+             var data1=await _context.StageParticipants.FindAsync(new object[] { stageId, ContragentId, comOfferId }, cancellationToken);
+            var data2 =  _context.ComStages.Where(x => x.ComOfferId == comOfferId).OrderByDescending(o => o.Number).FirstOrDefault();
+
+
+            return data1.ComStageId==data2.Id;
+
+        }
         public static IQueryable<StagesCrossDto> GetFullInfoForCrossData(this IApplicationDbContext _context, IQueryable<ParticipantCrossDto> participantCrosses)
         {
             var stage = from a in participantCrosses
@@ -78,7 +88,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                             {
                                 ComOfferId = gr.Key.ComOfferId,
                                 ContragentId = gr.Key.ContragentId,
-
+                                
                                 Number = gr.Max(m => m.Number)
 
                             };
@@ -104,6 +114,11 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                                 Description = b.Description
                             };
             return dataStep3;
+        }
+        public static IQueryable<StagesCrossDto> GetParicipantsForLastStageWithInfo(this IApplicationDbContext _context, int comOfferId, int? contragentId = null)
+        {
+            var data1 = _context.GetParicipantsForLastStage(comOfferId, contragentId);
+            return _context.GetFullInfoForCrossData(data1);
         }
     }
 }
