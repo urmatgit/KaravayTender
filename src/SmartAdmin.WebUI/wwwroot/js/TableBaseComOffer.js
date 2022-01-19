@@ -132,13 +132,13 @@ $('#btnSendStage').click(function (e) {
 $('#btnEndStage').click(function (e) {
     let stageid = $('#StageId').val();
     if (!stageid || stageid == "0") {
-        bootbox.alert("завершит этап, можно только на 'Последнее предложение'");
+        bootbox.alert("завершить этап, можно только на 'Последней предложение'");
         return;
     }
 
     
         bootbox.confirm({
-            title: "Вы уверенны завершит этап?",
+            title: "Вы уверенны завершить этап?",
             message: (checkEmptyPrices() ?  "Имеются не заполненные цены, поставщики с не заполненными ценами будут исключены из торги":" "),
             buttons: {
                 cancel: {
@@ -503,7 +503,7 @@ function showHideButtons(Status) {
             let now = new Date();
             if (currentStage === undefined)
                 currentStage = false;
-            if (CheckPriceConfirmed() || (currentStage && Date.parse(now) > Date.parse(currentStage.DeadlineDate)))
+            if (CheckPriceConfirmed() || (currentStage && Date.parse(moment(now).format("DD.MM.YYYY")) > Date.parse(currentStage.DeadlineDate)))
                 $('#btnEndStage').show();
             $('#btnChangeDeadline').show();
             break;

@@ -53,13 +53,15 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
 
             
             var filters = PredicateBuilder.FromFilter<Contragent>(request.FilterRules);
-            var ExistContrs = _context.ComParticipants
-                            .Where(x => x.ComOfferId == request.ComOfferId)
-                            .Select(x => x.ContragentId);
+            var ExistContrs = _context.ComOffers
+                            .Include(x=>x.ComParticipants)
+                            .Where(x => x.Id == request.ComOfferId)
+                            .SingleOrDefault();
 
             var data = await _context.Contragents
                 .Where(filters)
-                .Where(x=>!ExistContrs.Contains(x.Id) )
+                .Where(x=>! _context.ComParticipants.Where(p=>p.ComOfferId==request.ComOfferId).Select(z=>z.ContragentId).Contains(x.Id))
+                .Where(x=>_context.ComOffers.Where(c=>c.Id==request.ComOfferId).SingleOrDefault().DirectionId==x.DirectionId)
                 .Specify(new ContragentActiveQuerySpec())
                 .Include(i => i.Direction)
                 .Include(u=>u.Manager)

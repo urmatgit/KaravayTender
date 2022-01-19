@@ -233,7 +233,7 @@ var initdatagridContr = () => {
 
 }
 var reloadDataContragent = () => {
-    $dgContr.datagrid('load', '/Contragents/Index?handler=DataActive&ComOfferId' + currentEditRow.Id);
+    $dgContr.datagrid('load', '/Contragents/Index?handler=DataActive&ComOfferId=' + currentEditRow.Id);
 
 }
 $('#participant_modal').on('shown.bs.modal', function () {
