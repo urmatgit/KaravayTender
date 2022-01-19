@@ -460,9 +460,12 @@ function openEditpanel(row,stage) {
     else {
         //ADd
         $('#edit_form_panel #Input_Id').val(0)
-        
-        let total = $dg.datagrid('getData').total;
-        $('#edit_form_panel #Input_Number').val(total+1)
+        axios.get(`${pagelink}?handler=NextNumber`).then(res => {
+            
+            $('#edit_form_panel #Input_Number').val(res.data);
+        })
+        //let total = $dg.datagrid('getData').total;
+        //$('#edit_form_panel #Input_Number').val(total+1)
         
         SetEditable();
         if (typeof OnNewRow == 'function')

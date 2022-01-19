@@ -25,7 +25,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
 {
     public class ContragentsActivePaginationQuery : PaginationRequest, IRequest<PaginatedData<ContragentDto>>
     {
-
+        public int ComOfferId { get; set; }
     }
 
     public class ContragentsActivePaginationQueryHandler :
@@ -51,9 +51,15 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
         public async Task<PaginatedData<ContragentDto>> Handle(ContragentsActivePaginationQuery request, CancellationToken cancellationToken)
         {
 
+            
             var filters = PredicateBuilder.FromFilter<Contragent>(request.FilterRules);
+            var ExistContrs = _context.ComParticipants
+                            .Where(x => x.ComOfferId == request.ComOfferId)
+                            .Select(x => x.ContragentId);
 
-            var data = await _context.Contragents.Where(filters)
+            var data = await _context.Contragents
+                .Where(filters)
+                .Where(x=>!ExistContrs.Contains(x.Id) )
                 .Specify(new ContragentActiveQuerySpec())
                 .Include(i => i.Direction)
                 .Include(u=>u.Manager)

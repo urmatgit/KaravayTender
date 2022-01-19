@@ -7,6 +7,7 @@ using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.ComOffers.Caching;
 using CleanArchitecture.Razor.Application.Features.ComOffers.DTOs;
+using CleanArchitecture.Razor.Application.Features.ComOffers.Queries.GetAll;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Events;
@@ -28,17 +29,20 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<AddEditComOfferCommandHandler> _localizer;
         private readonly IDateTime _dateTime;
+        private readonly IMediator _mediator;
         public AddEditComOfferCommandHandler(
             IApplicationDbContext context,
             IDateTime dateTime,
             IStringLocalizer<AddEditComOfferCommandHandler> localizer,
-            IMapper mapper
+            IMapper mapper,
+            IMediator mediator
             )
         {
             _context = context;
             _localizer = localizer;
             _mapper = mapper;
             _dateTime = dateTime;
+            _mediator = mediator;
         }
         public async Task<Result<ComOfferDto>> Handle(AddEditComOfferCommand request, CancellationToken cancellationToken)
         {
@@ -61,6 +65,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
             {
                 //request.DateBegin = _dateTime.Now;
                 var item = _mapper.Map<ComOffer>(request);
+                item.Number = await _mediator.Send(new GetNextNumberCommand(), cancellationToken);
                 var now = _dateTime.Now;
                 if (now != default(DateTime))
                     item.DateBegin = _dateTime.Now;

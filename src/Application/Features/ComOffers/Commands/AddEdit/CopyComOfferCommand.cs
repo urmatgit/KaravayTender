@@ -57,7 +57,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
             if (request.Id > 0)
             {
                 var item = await _context.ComOffers.AsNoTracking().FirstOrDefaultAsync(f=>f.Id== request.Id , cancellationToken);
-                
+                var maxNumber = await _context.ComOffers.MaxAsync(x => x.Number, cancellationToken);
                 item.Id = 0;
                 item.Status = Domain.Enums.ComOfferStatus.Preparation;
                 item.TermBegin = default(DateTime);
@@ -69,7 +69,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.AddEdi
                 item.ComStages = null;
                 item.DateBegin= _dateTime.Now;
                 item.DateEnd = null;
-
+                item.Number = maxNumber+1;
                 item.Created = _dateTime.Now;
                 item.LastModified = null;
                 item.LastModifiedBy = "";

@@ -427,6 +427,11 @@
                 if (row.Status == 1) {
                     return 'background-color:pink;color:blue;font-weight:bold;'
                 }
+            }, onClickCell: function (index, field, value) {
+                //if (field == 'Number' || field == 'Name') {
+                
+                onEdit(index);
+                //}
             }
 		})
 			.datagrid('enableFilter', [

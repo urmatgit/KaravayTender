@@ -29,7 +29,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         /// Номер лота
         /// </summary>
         [Required]
-        public string Number { get; set; }
+        public int Number { get; set; }
         
         [Required]
         public DateTime DateBegin { get; set; }

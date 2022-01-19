@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Razor.Application.Common.Extensions
 {
@@ -78,8 +79,64 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                             };
             return dataStep3;
         }
+        public static IQueryable<ParticipantCrossDto> GetParicipantsForParcipantPage(this IApplicationDbContext _context,int comOfferId)
+        {
+            //var data1=_context.ComParticipants
+            //          .Include(x=>x.ComOffer)
+            //          .ThenInclude(x=>x.StageParticipants.Where(y=>x.ComParticipants.Any(a=>a.ComOfferId== y.ContragentId)))
+            //          .ThenInclude(x=>x.ComStage)
+            //          .Where(x=>x.ComOfferId==12)
+            //          .Select(x=>new
+            //          {
+
+            //          })
+            var dataStep1N1 = from c in _context.ComParticipants
+                              where c.ComOfferId == comOfferId
+                              from s in _context.StageParticipants.Where(b => b.ComOfferId == c.ComOfferId && b.ContragentId == c.ContragentId).DefaultIfEmpty()
+                              from cs in _context.ComStages.Where(x => x.Id == s.ComStageId).DefaultIfEmpty()
+                              group new { c, cs } by new { c.ComOfferId, c.ContragentId } into gr
+
+                              select new ParticipantCrossDto
+                              {
+                                  ComOfferId = gr.Key.ComOfferId,
+                                  ContragentId = gr.Key.ContragentId,
+                                  Number = gr.Max(x => x.cs == null ? 0 : x.cs.Number),
+                              };
+            var data2 = from a in dataStep1N1
+                        join b in _context.ComStages on new { comID = a.ComOfferId, num = a.Number } equals new { comID = b.ComOfferId, num = b.Number } into gr
+                        from b1 in gr.DefaultIfEmpty()
+                        select new ParticipantCrossDto
+                        {
+                            ComOfferId = a.ComOfferId,
+                            ContragentId =a.ContragentId,
+                            Number = a.Number,
+                            
+                            ComStageId =b1!=null? b1.Id : default(int),
+                            DeadlineDate = b1 != null ? b1.DeadlineDate: default(DateTime)
+                        };
+            var dataStep3 = from a in data2
+                            join b in _context.StageParticipants on new { Id = a.ComStageId, ContrId = a.ContragentId } equals new { Id = b.ComStageId, ContrId = b.ContragentId } into gr
+                            from b1 in gr.DefaultIfEmpty()
+                            select new ParticipantCrossDto
+                            {
+                                ComOfferId = a.ComOfferId,
+                                ContragentId = a.ContragentId,
+                                Number = a.Number,
+                                ComStageId = a.ComStageId,
+                                DeadlineDate = a.DeadlineDate,
+                                Status = b1!=null? b1.Status : Domain.Enums.ParticipantStatus.Request ,
+                                Description =b1!=null? b1.Description: ""
+                            };
+            
+
+            return dataStep3;
+        }
         public static IQueryable<ParticipantCrossDto> GetParicipantsForLastStage(this IApplicationDbContext _context, int comOfferId, int? contragentId = null)
         {
+
+            
+
+            //
             var dataStep1 = from c in _context.ComStages
                             join p in _context.StageParticipants on c.Id equals p.ComStageId
                             where c.ComOfferId == comOfferId 

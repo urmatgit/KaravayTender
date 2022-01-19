@@ -38,6 +38,7 @@ using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create;
 using CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update;
 using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Update;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.Commands.Update;
+using CleanArchitecture.Razor.Application.Features.ComOffers.Queries.GetAll;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
@@ -105,6 +106,11 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
         {
             var managers = await _userManager.GetUsersInRoleAsync("Manager");
             Managers = new SelectList(managers.Select(u => new { Id = u.Id, Name = string.IsNullOrEmpty(u.DisplayName) ? u.UserName : u.DisplayName }), "Id", "Name");
+        }
+        public async Task<IActionResult> OnGetNextNumberAsync()
+        {
+            var result =await  _mediator.Send(new GetNextNumberCommand());
+            return new JsonResult(result);
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] ComOffersWithPaginationQuery command)
         {

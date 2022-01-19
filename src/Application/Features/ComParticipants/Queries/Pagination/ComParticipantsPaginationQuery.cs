@@ -71,7 +71,12 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.Queries.P
         public async Task<PaginatedData<ComParticipantDto>> Handle(ComParticipantsWithPaginationQuery request, CancellationToken cancellationToken)
         {
             var comOfferId = request.ComOfferId;
-            var dataStep31 = from a in _context.GetParicipantsForLastStage(comOfferId)
+            IQueryable<ParticipantCrossDto> step1 = null;
+            if (_context.ComStages.Any(x=>x.ComOfferId==request.ComOfferId))
+                step1= _context.GetParicipantsForLastStage(comOfferId);
+            else
+                step1 = _context.GetParicipantsForParcipantPage(comOfferId);
+            var dataStep31 = from a in step1
 
                              join c in _context.Contragents on a.ContragentId equals c.Id into contr
                              from d in contr.DefaultIfEmpty()

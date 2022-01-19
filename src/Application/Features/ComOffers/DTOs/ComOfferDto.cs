@@ -40,7 +40,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
         /// Номер лота
         /// </summary>
         [Required(ErrorMessage = "'№ ком. предложения' является обязательным ")]
-        public string Number { get; set; }
+        public int Number { get; set; }
 
         
         public DateTime DateBegin { get; set; }
