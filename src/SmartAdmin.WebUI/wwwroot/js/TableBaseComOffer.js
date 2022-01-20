@@ -500,10 +500,14 @@ function showHideButtons(Status) {
             
             break;
         case 1: //Ожидание КП
-            let now = new Date();
-            if (currentStage === undefined)
+            if (currentStage === undefined) 
                 currentStage = false;
-            if (CheckPriceConfirmed() || (currentStage && Date.parse(moment(now).format("DD.MM.YYYY")) > Date.parse(currentStage.DeadlineDate)))
+            
+            let now = new Date();
+            //let deadlineDate = new Date(currentStage.DeadlineDate);
+            //moment(value) > moment().utc()
+            if (CheckPriceConfirmed() || (currentStage && moment(currentStage.DeadlineDate) <= moment().utc()))
+            //if (CheckPriceConfirmed() || (currentStage && Date.parse(moment(now).format("DD.MM.YYYY")) > Date.parse(moment(new Date(currentStage.DeadlineDate)).format("DD.MM.YYYY"))))
                 $('#btnEndStage').show();
             $('#btnChangeDeadline').show();
             break;

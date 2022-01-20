@@ -587,6 +587,8 @@
     if (contragent) {
         currentEditRow = contragent;
         console.log(contragent);
+        $('#file').val("");
+        $('#Input_Files').val("");
             $('#contragent_modal #Main-modal-title').html('@_localizer["Edit Contragent"]');
 			$('#contragent_form').jsonToForm(contragent, {
         IsService: function (value) {
@@ -595,6 +597,11 @@
                 } else {
 						$('#contragent_form [name*="IsService"]').prop('checked', false);
                 }
+                },
+
+                Files: function (value) {
+                    $('#Input_Files').val("");
+                    
                 },
                 Status: function (value) {
                     //"На регистрации"
@@ -609,7 +616,8 @@
                 }
 
 
-        });
+            });
+        $('#Input_DirectionId').val(contragent.DirectionId);
 			$('#contragent_form #Input_ApplicationUserId').val(contragent.ApplicationUserId);
 			$('#contragent_form #UserFormModel_ManagerPhone').val(contragent.ManagerPhone);
             $('#contragent_form #RejectModel_Status').val(3);
