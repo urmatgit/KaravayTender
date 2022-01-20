@@ -201,12 +201,13 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Queries.GetCros
                         row.Add($"ContrId{Indexcontrgent}", contr.ContragentId);
                         row.Add($"ComPositionId{Indexcontrgent}", contr.ComPositionId);
 
-                        if (GoodPrice == null || contr.Price <= GoodPrice)
+                        if ((contr.Status!=ParticipantStatus.FailureParitipate &&  contr.Status!=ParticipantStatus.Cancel) && (GoodPrice == null || contr.Price <= GoodPrice))
                             GoodPrice = contr.Price;
                         row.Add($"ContrPrice{Indexcontrgent}", contr.Price);
                         row.Add($"RequestPrice{Indexcontrgent}", contr.RequestPrice);
                         row.Add($"ContrStatus{Indexcontrgent}", contr.Status);
                     }
+                    
                     row.Add("GoodPrice", GoodPrice);
                     resultData.Add((ExpandoObject)row);
 

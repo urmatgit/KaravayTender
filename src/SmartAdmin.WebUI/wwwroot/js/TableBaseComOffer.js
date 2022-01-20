@@ -5,6 +5,7 @@
 //_catDelete
 
 $('#comstage_updatebutton').click(function () {
+    
     LoadComState(currentEditRow.Id);
 });
 $('#searchbutton').click(function () {
@@ -615,8 +616,9 @@ var initdatagrid = () => {
             this.dispatchEvent(checkRowEvent);
         },
         onClickCell: function (index, field, value) {
-            
-                console.log(value);
+                
+            console.log(value);
+            if (field !="_action")
                 onEdit(index);
             
         },
