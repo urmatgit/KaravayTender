@@ -28,8 +28,14 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.GetAll
         }
         public async Task<int> Handle(GetNextNumberCommand request, CancellationToken cancellationToken)
         {
-            var maxNumber = await _context.ComOffers.MaxAsync(x => x.Number,cancellationToken);
-            return maxNumber+1;
+            try
+            {
+                var maxNumber = await _context.ComOffers.MaxAsync(x => x.Number, cancellationToken);
+                return maxNumber + 1;
+            }catch(Exception er)
+            {
+                return 1;
+            }
         }
     }
 
