@@ -245,7 +245,7 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                     return new JsonResult(resultComOffer);
                 }
                 else
-                    return BadRequest(result.Errors);
+                    return BadRequest(result);
             }
             catch (ValidationException ex)
             {

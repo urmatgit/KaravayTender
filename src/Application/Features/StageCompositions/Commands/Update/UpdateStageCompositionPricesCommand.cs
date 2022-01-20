@@ -198,6 +198,8 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
     public async Task<Result> Handle(UpdateStageCompositionPricesManagerCommand request, CancellationToken cancellationToken)
     {
 
+            if (request.stageComRequest.ContrPrices == null || request.stageComRequest.ContrPrices.Count == 0)
+                return Result.Failure(new string[] {Constants.ErrorMessages.ParcipantsNotFound });
         var next = await _mediator.Send(new NextComStageCommand() { ComOfferId = request.stageComRequest.ComOfferId, DeadlineDate = request.Deadline }, cancellationToken);
         if (next is null)
             return Result.Failure(next.Errors);

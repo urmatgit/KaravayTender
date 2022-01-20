@@ -159,7 +159,7 @@ var initdatagridContr = () => {
         },
         columns: [[
 
-            { field: 'ck', checkbox: true },
+            
 
 
             { field: 'StatusStr', title: translations.Status, sortable: true, width: 140 },
