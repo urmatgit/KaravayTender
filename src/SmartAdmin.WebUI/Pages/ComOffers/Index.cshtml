@@ -385,7 +385,7 @@ onImportedSucceeded = "reloadData()"
                     {
                         field: '_action',
                         title: `${window.translations.Command} `,
-                        width: 100,
+                        width: 80,
                         align: 'center',
                         formatter: function (value, row, index) {
                             return `<div class="btn-group" role="group">
@@ -422,20 +422,20 @@ onImportedSucceeded = "reloadData()"
 
                 { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
                 { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
-                { field: 'DeadlineDate', title: '@_localizer["Срок ответа до"]', sortable: true, width: 130, formatter: dateformatter  },
+                { field: 'DeadlineDate', title: '@_localizer["Срок ответа до"]', sortable: true, width: 90, formatter: dateformatter  },
 
                 { field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 150 },
-                { field: 'TermBegin', title: '@_localizer["Term from"]', sortable: true, width: 130, formatter: dateformatter  },
-                { field: 'TermEnd', title: '@_localizer["Term to"]', sortable: true, width: 130, formatter: dateformatter  },
+                { field: 'TermBegin', title: '@_localizer["Term from"]', sortable: true, width: 90, formatter: dateformatter  },
+                { field: 'TermEnd', title: '@_localizer["Term to"]', sortable: true, width: 90, formatter: dateformatter  },
 
                 { field: 'ManagerName', title: '@_localizer["Manager"]', sortable: true, width: 150 },
                 { field: 'WinnerName', title: '@_localizer["Winner"]', sortable: true, width: 150 },
 
-                { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 100 },
-                { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 80, formatter: checkboxformatter },
+                { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 60 },
+                { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 70, formatter: checkboxformatter },
                 { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter },
-                { field: 'DateBegin', title: '@_localizer["Date open"]', sortable: true, width: 130, formatter: dateformatter  },
-                { field: 'DateEnd', title: '@_localizer["Date close"]', sortable: true, width: 130, formatter: dateformatter  },
+                { field: 'DateBegin', title: '@_localizer["Date open"]', sortable: true, width: 90, formatter: dateformatter  },
+                { field: 'DateEnd', title: '@_localizer["Date close"]', sortable: true, width: 90, formatter: dateformatter  },
 
             ];
 

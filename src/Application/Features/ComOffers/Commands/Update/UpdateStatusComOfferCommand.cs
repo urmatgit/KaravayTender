@@ -34,9 +34,11 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly IStringLocalizer<UpdateStatusComOfferCommandHandler> _localizer;
+        private readonly IDateTime _dateTime;
         public UpdateStatusComOfferCommandHandler(
             IApplicationDbContext context,
             IMediator mediator,
+            IDateTime dateTime,
         IStringLocalizer<UpdateStatusComOfferCommandHandler> localizer,
              IMapper mapper
             )
@@ -45,6 +47,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update
             _context = context;
             _localizer = localizer;
             _mapper = mapper;
+            _dateTime = dateTime;
         }
         private async Task<Result> CancelStageParticipants(int comOfferId)
         {
@@ -63,6 +66,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update
                     var cancelStageParticipants =await CancelStageParticipants(request.Id);
                     if (!cancelStageParticipants.Succeeded)
                         return Result<ComOfferDto>.Failure(cancelStageParticipants.Errors);
+                    item.DateEnd = _dateTime.Now;
                 }
                 if (item.Status != request.Status)
                 {
@@ -71,6 +75,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update
                     {
                         //TODO: send email
                         item.WinnerId = request.WinnerId.Value;
+                        item.DateEnd = _dateTime.Now;
                     }
                     var createevent = new ComOfferUpdatedEvent(item);
                     item.DomainEvents.Add(createevent);

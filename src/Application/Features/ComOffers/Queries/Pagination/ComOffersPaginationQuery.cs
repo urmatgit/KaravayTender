@@ -29,7 +29,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
 {
     public class ComOffersWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<ComOfferDto>>
     {
-        public ComOfferFilterForParticipant comOfferFilterFor { get; set; }
+        public ComOfferFilterForParticipant comOfferFilterFor { get; set; } = ComOfferFilterForParticipant.Waitings;
     }
     public class ComOffersMyWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<ComOfferMyDto>>
     {

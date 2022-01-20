@@ -628,7 +628,7 @@ var initdatagrid = () => {
         rowStyler: function (index, row) {
             let style = 'cursor: pointer;';
             if (row["Status"] == 4 && row["WinnerName"]) {//"Победитель определён"
-                style += 'background-color:lightgreen;color:blue;';
+                style += 'background-color:rgb(198,239,206);color:rgb(0,97,0);';
             }
              
             return style;
