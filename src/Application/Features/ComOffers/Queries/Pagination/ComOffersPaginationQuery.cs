@@ -76,13 +76,13 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
             {
                 case ComOfferFilterForParticipant.Actials:
                     var now = _dateTime.Now;
-                    filters = filters.And(c => now >= c.TermBegin && now <= c.TermEnd );
+                    filters = filters.And(c => now >= c.TermBegin && now <= c.TermEnd && c.WinnerId!=null  );
                     break;
                 case ComOfferFilterForParticipant.Archives:
-                    filters = filters.And(c => _dateTime.Now > c.TermEnd );
+                    filters = filters.And(c => _dateTime.Now > c.TermEnd && c.WinnerId!=null);
                     break;
                 case ComOfferFilterForParticipant.Waitings:
-                    filters = filters.And(s => (s.Status !=ComOfferStatus.WinnerDetermined));
+                    filters = filters.And(s => (s.Status !=ComOfferStatus.WinnerDetermined && s.Status!=ComOfferStatus.Cancelled));
                     break;
                 default:
                     break;
@@ -176,14 +176,18 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                 case ComOfferFilterForParticipant.Actials:
                     var now = _dateTime.Now;
                     filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));
-                    filters = filters.And(c=>now>=c.TermBegin && now<=c.TermEnd && c.WinnerId== ContragentId);
+                    filters = filters.And(c=> now>=c.TermBegin && now<=c.TermEnd && c.WinnerId== ContragentId);
                     break;
                 case ComOfferFilterForParticipant.Archives:
                     filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));
                     filters = filters.And(c => _dateTime.Now > c.TermEnd && c.WinnerId == ContragentId);
                     break;
                 case ComOfferFilterForParticipant.Waitings:
-                    filters = filters.And(s => (short)s.Status > 0 && s.WinnerId==default(int?) && s.StageParticipants.Any(p=>p.ContragentId==ContragentId && p.Status!=ParticipantStatus.Cancel && p.Status!=ParticipantStatus.FailureParitipate)); 
+                    filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));
+                    filters = filters.And(s => s.Status ==ComOfferStatus.Waiting || s.Status==ComOfferStatus.Evaluation || s.Status==ComOfferStatus.WinnerDetermining);
+                    filters = filters.And(s =>s.WinnerId==default(int?)
+                                    && s.StageParticipants.Any(p=>p.ContragentId==ContragentId
+                                    && p.Status!=ParticipantStatus.Cancel && p.Status!=ParticipantStatus.FailureParitipate)); 
                     break;
                 default:
                     filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));
