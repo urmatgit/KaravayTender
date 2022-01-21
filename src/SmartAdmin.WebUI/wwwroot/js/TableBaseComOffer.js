@@ -147,7 +147,7 @@ $('#btnEndStage').click(function (e) {
 
     
         bootbox.confirm({
-            title: "Вы уверенны завершить этап?",
+            title: "Вы уверены, что хотите завершить этап?",
             message: (checkEmptyPrices() ?  "Имеются не заполненные цены, поставщики с не заполненными ценами будут исключены из торги":" "),
             buttons: {
                 cancel: {

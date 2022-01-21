@@ -92,15 +92,17 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
             switch (comoffer.Data.Status)
             {
                 case Domain.Enums.ComOfferStatus.Waiting:
+                    
                     foreach (var req in request.inputPrices)
                     {
                         //StageId = req.StageId;
                         //ComOfferId = req.ComOfferId;
                         var item = await _context.StageCompositions.FindAsync(new object[] { req.StageId, contragentId.Data, req.Id }, cancellationToken);
-                        if (item is not null && req.InputPrice != item.Price)
+                        if (item is not null && (req.InputPrice != item.Price || req.InputPrice==null))
                         {
                             item.Price = req.InputPrice;
-
+                            if (request.status == Domain.Enums.ParticipantStatus.FailureParitipate)
+                                item.RequestPrice = false;
                             await _context.SaveChangesAsync(cancellationToken);
                         }
                     }
