@@ -515,7 +515,7 @@ function showHideButtons(Status) {
             let now = new Date();
             //let deadlineDate = new Date(currentStage.DeadlineDate);
             //moment(value) > moment().utc()
-            if (CheckPriceConfirmed() || (currentStage && moment(currentStage.DeadlineDate) < moment().utc()))
+            if (CheckPriceConfirmed() || (currentStage && moment(currentStage.DeadlineDate).format("DD.MM.YYYY") < moment().utc().format("DD.MM.YYYY")))
             //if (CheckPriceConfirmed() || (currentStage && Date.parse(moment(now).format("DD.MM.YYYY")) > Date.parse(moment(new Date(currentStage.DeadlineDate)).format("DD.MM.YYYY"))))
                 $('#btnEndStage').show();
             $('#btnChangeDeadline').show();

@@ -434,7 +434,16 @@ onImportedSucceeded = "reloadData()"
 
                 { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
                 { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
-                { field: 'DeadlineDate', title: '@_localizer["Срок ответа до"]', sortable: true, width: 90, formatter: dateformatter  },
+                {
+                    field: 'DeadlineDate', title: '@_localizer["Срок ответа до"]', sortable: true, width: 90, formatter: function (val, rec,index) {
+                        // WinnerDetermined = 4 || 
+                        if (rec.Status != 4 && rec.Status != 5)
+                            return dateformatter(val, rec, index);
+                        else
+                            return "";
+                    }
+                       
+                },
 
                 { field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 150 },
                 { field: 'TermBegin', title: '@_localizer["Term from"]', sortable: true, width: 90, formatter: dateformatter  },
@@ -653,6 +662,7 @@ onImportedSucceeded = "reloadData()"
                         );
                         if (clscomposition.currentEditRow && clscomposition.currentEditRow.NomenclatureId == model.Id) {
                             modelDropDown.val(clscomposition.currentEditRow.NomenclatureId);
+                            $('#InputPos_NomenclatureId').trigger();
                         }
 
                     });
