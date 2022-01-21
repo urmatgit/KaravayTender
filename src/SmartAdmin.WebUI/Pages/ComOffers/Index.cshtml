@@ -662,7 +662,7 @@ onImportedSucceeded = "reloadData()"
                         );
                         if (clscomposition.currentEditRow && clscomposition.currentEditRow.NomenclatureId == model.Id) {
                             modelDropDown.val(clscomposition.currentEditRow.NomenclatureId);
-                            $('#InputPos_NomenclatureId').trigger();
+                            $('#InputPos_NomenclatureId').trigger('change');
                         }
 
                     });
