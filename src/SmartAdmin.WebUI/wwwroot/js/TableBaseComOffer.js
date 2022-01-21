@@ -87,9 +87,11 @@ $('#btnSendStage').click(function (e) {
     console.log(rows);
     
     let ContrPrice = new Array();
+    let hasRequestPrice = false;
     $('input.editable:checkbox').each(function () {
         let id = $(this).attr('id').split("_");
         const value = $(this).prop("checked");
+        hasRequestPrice = hasRequestPrice || value;
         tmpCP = {
             "ContrId": parseInt(id[1]),
               "ComPositionId": parseInt(id[0]),
@@ -99,7 +101,10 @@ $('#btnSendStage').click(function (e) {
         ContrPrice.push(tmpCP);
         //var sThisVal = $(this).val();
     });
-
+    if (!ContrPrice || ContrPrice.length == 0 || !hasRequestPrice) {
+        bootbox.alert("Не выбрана ни одна позиция для запроса цены.");
+        return;
+    }
 
     DeadLinePrompt(function (result) {
 

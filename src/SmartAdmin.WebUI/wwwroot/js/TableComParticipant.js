@@ -160,7 +160,7 @@ var initdatagridContr = () => {
         columns: [[
 
             
-
+            { field: 'ck', checkbox: true },
 
             { field: 'StatusStr', title: translations.Status, sortable: true, width: 140 },
             { field: 'Name', title: translations.Name, sortable: true, width: 100 },
@@ -243,6 +243,7 @@ function InitParticipantTable() {
     clsparticipant = new TableComParticipant("participant", "clsparticipant", '/ComParticipants/Index');
 
     clsparticipant.tblColumns = [
+
         { field: 'ContragentName', title: translations.Participant, sortable: true, width: 130 },
         { field: 'StatusStr', title: translations.Status, sortable: true, width: 150 },
 

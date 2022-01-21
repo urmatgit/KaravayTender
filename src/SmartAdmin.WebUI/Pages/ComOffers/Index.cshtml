@@ -388,15 +388,18 @@ onImportedSucceeded = "reloadData()"
                         width: 80,
                         align: 'center',
                         formatter: function (value, row, index) {
+                            let delAction = `@Html.Raw(_canDelete.Succeeded ? "<button class='dropdown-item' onclick='onDelete(${row.Id})' ><i class='fal fa-trash-alt mr-1'></i> ${translations.Delete}</button>" : "")`;
+                            if (row['Status'] != 0)
+                                delAction = "";
+                            
                             return `<div class="btn-group" role="group">
 								  <button id="commandbtngroup" type="button" @(_canEdit.Succeeded ? "" : "disabled")  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<i class="${window.translations.IconPrefix} fa-edit"></i>
 								 </button>
 								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
 								   <button class="dropdown-item" onclick="onEdit(${index})" @(_canEdit.Succeeded ? "" : "disabled")><i class="fal fa-edit mr-1"></i> ${translations.Edit}</button>
-								   <button class="dropdown-item" onclick="onCopy(${index})" @(_canEdit.Succeeded ? "" : "disabled")><i class="fal fa-edit mr-1"></i> @_localizer["Copy"]</button>
-                                   @Html.Raw(_canDelete.Succeeded ? "<button class='dropdown-item' onclick='onDelete(${row.Id})' ><i class='fal fa-trash-alt mr-1'></i> ${translations.Delete}</button>" : "")
-
+								   <button class="dropdown-item" onclick="onCopy(${index})" @(_canEdit.Succeeded ? "" : "disabled")><i class="fal fa-edit mr-1"></i> @_localizer["Copy"]</button> 
+                                   ${delAction}
 								 </div>
 							  </div>`;
                         }
@@ -523,7 +526,7 @@ onImportedSucceeded = "reloadData()"
                     }
                 },
                 {
-                    field: 'Nomenclature.Name', title: '@_localizer["Nomenclature"]', sortable: true, width: 150 , formatter: function (val, rec) {
+                    field: 'Nomenclature.Name', title: '@_localizer["Nomenclature"]', sortable: true, width: 200 , formatter: function (val, rec) {
                         return rec.Nomenclature.Name;
                     }
                 },
