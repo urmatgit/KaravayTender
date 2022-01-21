@@ -1,8 +1,8 @@
 const tblStageColumns = [[
-    { field: 'NomName', title: 'Позиция', sortable: true, width: 130, rowspan: 2, align: 'center' },
+    { field: 'NomName', title: 'Позиция', sortable: true, width: 180, rowspan: 2, align: 'center' },
     { field: 'Stage', title: 'Этап', sortable: true, width: 100, rowspan: 2 },
     {
-        field: 'StageDeadline', title: 'Срок ответа до', sortable: true, width: 100, rowspan: 2, formatter: dateformatter
+        field: 'StageDeadline', title: 'Срок ответа до', sortable: true, width: 90, rowspan: 2, formatter: dateformatter
     },
     { field: "ContName1", title: "name1", colspan: 2, styler: function (value, row,index) { return { class: 'clHead' }; } },
     { field: "ContName2", title: "name2", colspan: 2, styler: function (value, row, index) { return { class: 'clHead' }; }},

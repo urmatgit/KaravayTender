@@ -267,8 +267,13 @@ onImportedSucceeded = "reloadData()"
                         $('<option>', {
                             value: ''
                         }).text( '@Html.Raw(@_localizer["Choose a nomenclature"])')
-                    );
-            getCategoriesByDirectionId(directionId);
+            );
+            getCategoriesByDirectionId(directionId, function (e) {
+                if (clscomposition.currentEditRow) {
+                    $('#InputPos_CategoryId').val(clscomposition.currentEditRow.CategoryId);
+                    $('#InputPos_CategoryId').trigger('change');
+                }
+            });
 
         });
         $("#edit_panel").on("ShowEdit", function (event) {
@@ -283,9 +288,11 @@ onImportedSucceeded = "reloadData()"
             clscomposition.ResizeGrid();
             clsparticipant.reloadData('@Url.Page("/ComParticipants/Index")?handler=Data' + `&ComOfferId=${comofferid}`);
             clsparticipant.ResizeGrid();
-            if (!currentEditRow || currentEditRow.Status != 0) {
-                clscomposition.HideAction();
-                clsparticipant.HideAction();
+            clscomposition.HideAction();
+            clsparticipant.HideAction();
+            if (currentEditRow && currentEditRow.Status == 0) {
+                clscomposition.ShowAction();
+                clsparticipant.ShowAction();
 
             }
             if (currentEditRow) {
@@ -293,7 +300,7 @@ onImportedSucceeded = "reloadData()"
             }
 
         })
-        function getCategoriesByDirectionId(id) {
+        function getCategoriesByDirectionId(id, callback) {
             console.log(id);
             axios.get('/ComOffers/Index?handler=Categories&directionid=' + id)
                 .then(res => {
@@ -318,6 +325,8 @@ onImportedSucceeded = "reloadData()"
                         //}
 
                     });
+                    if (callback)
+                        callback();
                 })
                 .catch((error) => {
                     if (error.response.data.Errors) {
@@ -566,6 +575,9 @@ onImportedSucceeded = "reloadData()"
                 AreaIds: function (value) {
                     $('#AreaIds').val(value);
                     $('#AreaIds').trigger('change');
+                },
+                CategoryId: function (value) {
+                    $('#InputPos_CategoryId').val(value);
                 }
             }
             clscomposition.OnNewRow = () => {
@@ -584,12 +596,12 @@ onImportedSucceeded = "reloadData()"
                 allowClear: true,
                 dropdownParent: $('#composition_edit_form')
             });
-            $('#InputPos_CategoryId').select2({
+            @*$('#InputPos_CategoryId').select2({
 
                 placeholder: '@Html.Raw(@_localizer["Choose a category"])',
                 allowClear: true,
                 dropdownParent: $('#composition_edit_form')
-            });
+            });*@
             //$('.summernote').summernote({
             //    focus: true,
             //    height: (window.innerHeight / 2),
@@ -640,10 +652,14 @@ onImportedSucceeded = "reloadData()"
                             }).text(model.Name)
                         );
                         if (clscomposition.currentEditRow && clscomposition.currentEditRow.NomenclatureId == model.Id) {
-                            modelDropDown.val(clscomposition.currentEditRow.CategoryId);
+                            modelDropDown.val(clscomposition.currentEditRow.NomenclatureId);
                         }
 
                     });
+                    //if (clscomposition.currentEditRow) {
+                    //    $('#InputPos_NomenclatureId').val(clscomposition.currentEditRow.nommo);
+                        
+                    //}
                 })
                 .catch((error) => {
                     if (error.response.data.Errors) {

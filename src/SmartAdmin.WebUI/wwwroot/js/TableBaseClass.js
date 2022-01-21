@@ -100,6 +100,9 @@ class clsBaseTable {
     HideAction() {
         this.dg.datagrid('hideColumn', '_action');
     }
+    ShowAction() {
+        this.dg.datagrid('showColumn', '_action');
+    }
     CreateActionColumn(self, row, index) {
         return `<div class="btn-group" role="group">
 								  <button id="commandbtngroup1" type="button" ${(_canEdit ? "" : "disabled")}  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -37,7 +37,7 @@ function formatPriceStage(value, row, colIndex) {
         //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
     });
     let showIconX = false;
-    if (row["ContrStatus" + colIndex] == 3 || row["ContrStatus" + colIndex] == -1)
+    if (row["ContrStatus" + colIndex] == 3 || row["ContrStatus" + colIndex] == 4)
         showIconX = true;
     var number = Number(value);
     if (isNaN(number) || number == 0) {

@@ -7,6 +7,9 @@
 $('#comstage_updatebutton').click(function () {
     
     LoadComState(currentEditRow.Id);
+    clsparticipant.reloadData();
+
+
 });
 $('#searchbutton').click(function () {
     reloadData();
@@ -80,7 +83,7 @@ $('#btnSelectWinnerStage').click(function (e) {
 $('#btnSendStage').click(function (e) {
     let stageid = $('#StageId').val();
     if (!stageid || stageid == "0") {
-        bootbox.alert("Отправить запрос, можно только на 'Последнее предложение'");
+        bootbox.alert('"Для совершения действия выберите представление "Последнее предложение"');
         return;
     }
     var rows = dgcomstage.datagrid('getRows');
@@ -512,7 +515,7 @@ function showHideButtons(Status) {
             let now = new Date();
             //let deadlineDate = new Date(currentStage.DeadlineDate);
             //moment(value) > moment().utc()
-            if (CheckPriceConfirmed() || (currentStage && moment(currentStage.DeadlineDate) <= moment().utc()))
+            if (CheckPriceConfirmed() || (currentStage && moment(currentStage.DeadlineDate) < moment().utc()))
             //if (CheckPriceConfirmed() || (currentStage && Date.parse(moment(now).format("DD.MM.YYYY")) > Date.parse(moment(new Date(currentStage.DeadlineDate)).format("DD.MM.YYYY"))))
                 $('#btnEndStage').show();
             $('#btnChangeDeadline').show();

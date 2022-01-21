@@ -71,14 +71,15 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
             last.Number = maxNumber + 1;
             last.DeadlineDate = request.DeadlineDate;
             last.StageCompositions = new List<StageComposition>();
-            foreach (var pos in datas.Where(x => x.Status == Domain.Enums.ParticipantStatus.Confirmed).GroupBy(g=>new {g.ContragentId,g.ComPositionId }))
+            foreach (var pos in datas.Where(x => x.Status == Domain.Enums.ParticipantStatus.Confirmed))// .GroupBy(g=>new {g.ContragentId,g.ComPositionId }))
             {
                 last.StageCompositions.Add(new  StageComposition
                 {
-                    ComPositionId = pos.Key.ComPositionId,
-                    ContragentId = pos.Key.ContragentId,
-                    RequestPrice = true,
-                    Price = null
+                    ComPositionId = pos.ComPositionId,
+                    ContragentId = pos.ContragentId,
+                    Price = pos.Price,
+                    RequestPrice = pos.RequestPrice,
+                    
 
                 });
             }
@@ -176,7 +177,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
                         {
                             ContragentId = request.ContragentId,
                             ComOfferId = request.ComOfferId,
-                            Status=Domain.Enums.ParticipantStatus.Request
+                            Status=Domain.Enums.ParticipantStatus.Request,
+                            
                         }
                 };
                 comStage.StageCompositions = new List<StageComposition>();
