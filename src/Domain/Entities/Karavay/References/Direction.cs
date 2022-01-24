@@ -12,7 +12,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-
+        public bool IsService { get; set; }
         public virtual ICollection<Category> Categories { get; set; }
         //public virtual ICollection<Customer> Customers { get; set; }
         public virtual ICollection<Nomenclature> Nomenclatures { get; set; }

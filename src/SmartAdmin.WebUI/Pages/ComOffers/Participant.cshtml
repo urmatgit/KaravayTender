@@ -281,7 +281,17 @@
                 { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 60 },
                 { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 70, formatter: checkboxformatter },
                 { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter },
-                { field: 'DeadlineDate', title: '@_localizer["Срок ответа до"]', sortable: true, width: 90, formatter: dateformatter  },
+                    
+                {
+                    field: 'DeadlineDate', title: '@_localizer["Срок ответа до"]', sortable: true, width: 90, formatter: function (val, rec,index) {
+                        // WinnerDetermined = 4 ||
+                        if (rec.Status != 4 && rec.Status != 5)
+                            return dateformatter(val, rec, index);
+                        else
+                            return "";
+                    }
+
+                },
                 { field: 'DateBegin', title: '@_localizer["Date open"]', sortable: true, width: 90, formatter: dateformatter  },
                 { field: 'DateEnd', title: '@_localizer["Date close"]', sortable: true, width: 90, formatter: dateformatter  },
 
@@ -569,10 +579,10 @@
         function getChanges() {
             var rowEx = $dgCP.datagrid('getRows');
             if (rowEx) {
-                
+
                 var checkRows = rowEx.filter(x => x.RequestPrice == true);
                 return checkRows;
-                
+
             }
             var rows = $dgCP.datagrid('getChanges');
             return rows
@@ -643,9 +653,10 @@
                 rowStyler: function (index, row) {
                     let style = 'cursor: pointer;';
                     if (row["Status"] == 3 && row["LastStatusStr"] == "Ожидание") {
-                        style += 'background-color:pink;color:blue;font-weight:bold;';
+                        style += 'background-color:rgb(255,199,206);color:rgb(156,0,0);';
                     } else if (row["Status"] == 4 && row["LastStatusStr"] == "Подтверждение") //"Победитель определён"
-                        style += 'background-color:lightgreen;color:blue; ';
+                        style += 'background-color:rgb(198,239,206);color:rgb(0,97,0);';
+
                     return style;
                 }
 

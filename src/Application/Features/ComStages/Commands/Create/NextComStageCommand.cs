@@ -90,7 +90,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create
                 {
                     ContragentId = pos.Key,
                     ComOfferId = request.ComOfferId,
-                    Status = Domain.Enums.ParticipantStatus.Request
+                    Status = Domain.Enums.ParticipantStatus.Confirmed
                 });
             }
             _context.ComStages.Add(last);

@@ -97,10 +97,17 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             IQueryable<ParticipantCrossDto> participantCrosses  = null;
             if (request.IsLastStage == 1)
                 participantCrosses=_context.GetParicipantsForLastStage(request.ComOfferId, ContragentId);
-            else
-                participantCrosses= _context.GetParicipantsForAllStage(request.ComOfferId, ContragentId);
+            else {
+                //var result = stage.OrderBy(o => o.NomenclatureName)
+                //       .ThenBy(o => o.Number)
+                //       .ThenBy(o => o.ContragentName);
+                participantCrosses = _context.GetParicipantsForAllStage(request.ComOfferId, ContragentId);
+            }
             var stage = _context.GetFullInfoForCrossData(participantCrosses);
-
+            if (request.IsLastStage != 1)
+            {
+                stage = stage.OrderBy(o => o.NomenclatureName).ThenBy(o => o.Number).ThenBy(o => o.ContragentName);
+            }
           //  if (request.IsLastStage == 1)
             {
 
@@ -146,9 +153,10 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                 //.ThenInclude(x=>x.QualityDoc)
 
                 //.Join(_context.ComPositions, s=>s.ComPositionId,p=>p.Id,(s,p)=>
-
+                
                 var result1 = from s in stage
-                             join p in _context.ComPositions on s.ComPositionId equals p.Id into cp
+                             join p in _context.ComPositions.Include(a=>a.AreaComPositions)
+                                         on s.ComPositionId equals p.Id into cp
                              from p1 in cp.DefaultIfEmpty()
                              select new ComPositionDtoEx
                              {
@@ -170,14 +178,45 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                                  RequestPrice = s.RequestPrice,
                                  InputPrice = s.Price,
                                  NomStavka = p1.Nomenclature.Vat.Stavka,
-                                 //AreaNames =string.Join(',', p.AreaComPositions.Select(a=>a.Area.Name).ToList())
+                                 //AreaNames = String.Join(',', _context.AreaComPositions.Where(a => a.ComPositionId == s.ComPositionId).Select(x => x.Area.Name))
+                                // AreaNames=_context.AreaComPositions.Where(a=>a.ComPositionId==s.ComPositionId)
+                                
                                  // QualityDocsNames =p.Nomenclature.NomenclatureQualityDocs != null && p.Nomenclature.NomenclatureQualityDocs.Count > 0 ? string.Join(", ", p.Nomenclature.NomenclatureQualityDocs.Select(n => n.QualityDoc.Name)) : ""
                              };
                   var result =await result1
                     .Where(filters)
+                    
                     .PaginatedDataLazySortAsync(request.Page, request.Rows, request.Sort, request.Order);
+                var data = result.rows
+                  .Select(p1 => new ComPositionDtoEx
+                  {
+                      Id = p1.Id,
+                      CategoryId = p1.CategoryId,
+                      CategoryName = p1.CategoryName,
+                      DeliveryCount = p1.DeliveryCount,
+                      Volume = p1.Volume,
+                      AddRequirement = p1.AddRequirement,
+                      Stage = p1.Stage,
+                      ParticipantStatus = p1.ParticipantStatus,
+                      StageId = p1.StageId,
+                      NomenclatureId = p1.NomenclatureId,
+                      NomName = p1.NomName,
+                      UnitOfName = p1.UnitOfName,
+                      NomVolume = p1.NomVolume,
+                      NomSpecification = p1.NomSpecification,
+                      DeadlineDate = p1.DeadlineDate,
+                      RequestPrice = p1.RequestPrice,
+                      InputPrice = p1.InputPrice,
+                      NomStavka = p1.NomStavka,
+                      AreaNames = String.Join(',', _context.AreaComPositions.Where(a => a.ComPositionId == p1.Id).Select(x => x.Area.Name)),
+                        // AreaNames=_context.AreaComPositions.Where(a=>a.ComPositionId==s.ComPositionId)
 
-                return PaginatedData<ComPositionDtoEx>.CreateWithCheckSort(result.rows, result.total, result.IsSorted, request.Sort, request.Order);
+                         QualityDocsNames = String.Join(',', _context.NomenclatureQualityDocs.Where(a => a.NomenclatureId == p1.NomenclatureId).Select(x => x.Nomenclature.Name))
+                  });
+
+                    
+
+                return PaginatedData<ComPositionDtoEx>.CreateWithCheckSort(data, result.total, result.IsSorted, request.Sort, request.Order);
                 #region OldVersion
                 //LastStage = await _mediator.Send(new GetByStageLastDtoQuery() { ComOfferId = request.ComOfferId }, cancellationToken);
 

@@ -19,6 +19,14 @@ namespace CleanArchitecture.Razor.Application.Features.Directions.DTOs
         }
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool IsService { get; set; }
+        public bool IsServiceStr
+        {
+            get
+            {
+                return IsService;
+            }
+        }
         public string Description { get; set; }
         public virtual ICollection<CategoryDto> Categories { get; set; }
         public virtual ICollection<CustomerDto> Customers { get; set; }

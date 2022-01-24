@@ -62,6 +62,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
                 .Where(filters)
                 .Where(x=>! _context.ComParticipants.Where(p=>p.ComOfferId==request.ComOfferId).Select(z=>z.ContragentId).Contains(x.Id))
                 .Where(x=>_context.ComOffers.Where(c=>c.Id==request.ComOfferId).SingleOrDefault().DirectionId==x.DirectionId)
+                .Where(x=>x.Direction.IsService==x.IsService)
                 .Specify(new ContragentActiveQuerySpec())
                 .Include(i => i.Direction)
                 .Include(u=>u.Manager)

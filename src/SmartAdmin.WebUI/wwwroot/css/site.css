@@ -165,3 +165,20 @@ pre.prettyprint {
 .AddTextToPanelCaption {
     flex: auto;
 }
+td {
+    border-width: 0px 1px 1px 0px !important;
+}
+.clHead {
+    background-color: rgb(221,235,247)
+}
+.datagrid-header-row{
+    background-color: lightgrey;
+}
+.datagrid-header .datagrid-cell {
+    height: auto;
+    padding: 8px 8px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-evenly;
+    position: relative;
+}

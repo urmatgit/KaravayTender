@@ -228,6 +228,7 @@ namespace CleanArchitecture.Razor.Application.Features.StageCompositions.Command
         await _context.SaveChangesAsync(cancellationToken);
         foreach (int contrid in ForChangeParticipantStatus)
         {
+           
             var sp = await _context.StageParticipants.FindAsync(new object[] { next.Data.Id, contrid, request.stageComRequest.ComOfferId }, cancellationToken);
             if (sp is not null)
             {

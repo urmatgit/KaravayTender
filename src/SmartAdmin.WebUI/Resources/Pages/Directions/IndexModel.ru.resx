@@ -189,6 +189,9 @@
   <data name="See all available options" xml:space="preserve">
     <value>Смотрите все доступные варианты</value>
   </data>
+  <data name="Service" xml:space="preserve">
+    <value>Услуга</value>
+  </data>
   <data name="Yes" xml:space="preserve">
     <value>Да</value>
   </data>
