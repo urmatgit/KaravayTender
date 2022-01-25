@@ -513,7 +513,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         }
         private async Task LoadDirection()
         {
-            var request = new GetAllDirectionsQuery();
+            var request = new GetAllDirectionsQuery() { HideService = true };
             var directionsDtos = (List<DirectionDto>)await _mediator.Send(request);
             //Debug.WriteLine(JsonConvert.SerializeObject(directionsDtos));
             //Input.Directions = directionsDtos;

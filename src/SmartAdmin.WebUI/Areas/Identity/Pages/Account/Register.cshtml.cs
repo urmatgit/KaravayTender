@@ -47,7 +47,10 @@ namespace SmartAdmin.WebUI.Areas.Identity.Pages.Account
         public async Task OnGetAsync(string returnUrl = null)
         {
             contragentForm.ReturnUrl = returnUrl;
-            var request = new GetAllDirectionsQuery();
+            var request = new GetAllDirectionsQuery()
+            {
+                HideService = true
+            };
             var directionsDtos = await _mediator.Send(request);
             contragentForm.Directions = new SelectList(directionsDtos, "Id", "Name");
         }

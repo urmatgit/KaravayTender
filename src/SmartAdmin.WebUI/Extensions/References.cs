@@ -20,9 +20,9 @@ namespace SmartAdmin.WebUI.Extensions
 {
     public static class References
     {
-        public  static async Task<SelectList> LoadDirection(this ISender _mediator)
+        public  static async Task<SelectList> LoadDirection(this ISender _mediator,bool hideService=false)
         {
-            var request = new GetAllDirectionsQuery();
+            var request = new GetAllDirectionsQuery() {HideService=hideService };
             var directionsDtos = (List<DirectionDto>)await _mediator.Send(request);
             //Debug.WriteLine(JsonConvert.SerializeObject(directionsDtos));
             //Input.Directions = directionsDtos;

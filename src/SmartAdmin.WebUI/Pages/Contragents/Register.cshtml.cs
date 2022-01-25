@@ -91,7 +91,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         {
             ReturnUrl = returnUrl;
 
-            Directions= await _mediator.LoadDirection();
+            Directions= await _mediator.LoadDirection(hideService: true);
             //contragentForm.Categories = directionsDtos.SelectMany(d => d.Categories).ToList();
 
         }

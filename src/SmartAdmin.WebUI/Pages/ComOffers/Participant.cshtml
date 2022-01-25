@@ -471,6 +471,46 @@
                     }
                    // $dgCP.datagrid('refreshrow', index);
                 },
+                onCellEdit: function (index, field) {
+                    var dg = $(this);
+                    var input = dg.datagrid('input', { index: index, field: field });
+                    input.bind('keydown', function (e) {
+                        if (e.keyCode == 38 && index > 0) {	// up
+                            dg.datagrid('endEdit', index);
+                            let prevIndex = GetPrevEditRow(index);
+                            if (prevIndex != index)
+                            dg.datagrid('editCell', {
+                                index: prevIndex,
+                                field: field
+                            });
+                        } else if (e.keyCode == 40  && index < dg.datagrid('getRows').length - 1) {	// down
+                            dg.datagrid('endEdit', index);
+                            let nextIindex = GetNextEditRow(index);
+                            if (nextIindex != index)
+                            dg.datagrid('editCell', {
+                                index: nextIindex,// index + 1,
+                                field: field
+                            });
+
+
+                        }
+                        else if (e.keyCode == 13 || e.keyCode==9) {
+                            dg.datagrid('endEdit', index);
+                            let nextIindex = GetNextEditRow(index);
+
+                            if (nextIindex != index) {
+                                dg.datagrid('editCell', {
+                                    index: nextIindex,// index + 1,
+                                    field: field
+                                });
+                            } else {
+                                setFocus($('#confirm'));
+                            }
+                        }
+                        
+                    })
+                },
+
                 //onAfterEdit: function (index, row) {
                 //    row.editing = false;
                 //    $(this).datagrid('refreshRow', index);
@@ -489,7 +529,8 @@
                         toastr["error"](`@_localizer["Load fail"],${error.responseJSON}`);
 				}
                 }
-            }).datagrid('enableFilter', [
+            }).datagrid('enableCellEditing')
+                .datagrid('enableFilter', [
                  {
                     field: 'ParticipantStatusStr',
                     type: 'combobox',
@@ -513,6 +554,39 @@
             //    index: 0,
             //    field: 'Id'
             //});
+
+        }
+        function GetNextEditRow(startIndex) {
+            let indexNext = startIndex + 1;
+            if (indexNext >= $dgCP.datagrid('getRows').length)
+                return startIndex;
+
+            while (indexNext <= $dgCP.datagrid('getRows').length) {
+                var row = $dgCP.datagrid('getRows')[indexNext];
+                if (row && row.RequestPrice) {
+                    return indexNext;
+                }
+                indexNext++;
+            }
+            return startIndex; //setFocus($('#confirm'));
+            
+        }
+        function setFocus(element) {
+            $(element).focus();
+        }
+        function GetPrevEditRow(startIndex) {
+            let indexNext = startIndex -1;
+            if (indexNext <0)
+                return startIndex;
+
+            while (indexNext >=0) {
+                var row = $dgCP.datagrid('getRows')[indexNext];
+                if (row && row.RequestPrice) {
+                    return indexNext;
+                }
+                indexNext--;
+            }
+            return startIndex;
 
         }
         function showWinnerText() {
