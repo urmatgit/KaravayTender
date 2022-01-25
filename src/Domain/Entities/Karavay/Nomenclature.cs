@@ -30,6 +30,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public virtual UnitOf UnitOf { get; set; }
         public int VatId { get; set; }
         public virtual Vat Vat { get; set; }
+        public string Requirement { get; set; }
         public virtual ICollection<NomenclatureQualityDoc> NomenclatureQualityDocs { get; set; }
         public virtual ICollection<ComPosition> ComPositions { get; set; }
         public List<DomainEvent> DomainEvents { get; set; } = new();

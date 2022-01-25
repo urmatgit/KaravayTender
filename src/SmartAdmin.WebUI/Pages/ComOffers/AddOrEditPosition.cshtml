@@ -25,7 +25,7 @@
                     <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
                     <div class="form-row">
                         <div class="col-md-6">
-                            
+
                             <label class="form-label" for="Category">@_localizer["Category"] <span class="text-danger">*</span></label>
                             <select type="text" asp-for="InputPos.CategoryId" asp-items="Model.Categories" class="custom-select" placeholder="@_localizer["Category"]" data-val-required="Не выбрано 'Категория'">
                                 <option value="">@_localizer["Choose a category"]</option>
@@ -96,6 +96,14 @@
                             <input type="text" asp-for="InputPos.NomSpecification" class="form-control" placeholder="@_localizer["Specification"]" readonly />
 
                             <span class="invalid-feedback" asp-validation-for="InputPos.NomSpecification"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <label class="form-label" for="Requirement">@_localizer["Additional requirement"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="InputPos.Requirement" class="form-control" placeholder="@_localizer["Требование к позиции"]" readonly/>
+
+                            <span class="invalid-feedback" asp-validation-for="InputPos.Requirement"></span>
                         </div>
                     </div>
                     <div class="form-row">

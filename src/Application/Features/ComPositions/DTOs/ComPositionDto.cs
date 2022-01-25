@@ -65,7 +65,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.DTOs
         public decimal? NomVolume => Nomenclature?.Volume;
         public string NomSpecification => Nomenclature?.Specifications;
         public string QualityDocsNames => Nomenclature?.QualityDocsNames;
-        
+        public string Requirement => Nomenclature?.Requirement;
         [Required]
         public int CategoryId { get; set; }
         public virtual CategoryDto Category { get; set; }

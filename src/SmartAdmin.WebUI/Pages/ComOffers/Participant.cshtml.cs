@@ -39,6 +39,7 @@ using CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.Queries.Pagination;
 using CleanArchitecture.Razor.Application.Features.ComPositions.DTOs;
 using CleanArchitecture.Razor.Application.Features.StageCompositions.Commands.Update;
+using CleanArchitecture.Razor.Application.Features.ComOffers.Queries.GetAll;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
@@ -92,7 +93,12 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             //await LoadManagers();
 
         }
-       
+        public async Task<IActionResult> OnGetRequestCountAsync()
+        {
+            var command = new GetParticipantRequestCountCommand();
+            var result = await _mediator.Send(command);
+            return new JsonResult(result);
+        }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] ComOffersMyWithPaginationQuery command)
         {
             var result = await _mediator.Send(command);

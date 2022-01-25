@@ -144,9 +144,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
             if (stageParticipant is null) return "";
             return stageParticipant.Status.ToDescriptionString();
         }
-        public async Task<PaginatedData<ComOfferMyDto>> Handle(ComOffersMyWithPaginationQuery request, CancellationToken cancellationToken)
+        public async Task<int> GetContragentId(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Get Only contragent commercial offers");
             int ContragentId = 0;
             var currentUser = await _userManager.FindByIdAsync(_currentUserService.UserId);
 
@@ -169,6 +168,12 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                 }
                 ContragentId = contragent.Id;
             }
+            return ContragentId;
+        }
+        public async Task<PaginatedData<ComOfferMyDto>> Handle(ComOffersMyWithPaginationQuery request, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Get Only contragent commercial offers");
+            var ContragentId = await GetContragentId(cancellationToken);
             var filters = PredicateBuilder.FromFilter<ComOffer>(request.FilterRules);
            
             switch (request.comOfferFilterFor)

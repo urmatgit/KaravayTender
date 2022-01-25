@@ -172,6 +172,47 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                             };
             return dataStep3;
         }
+        public static IQueryable<ParticipantCrossDto> GetComOfferWithLastStage(this IApplicationDbContext _context, int? comOfferId=null, int? contragentId = null)
+        {
+
+
+
+            //
+            var dataStep1 = from c in _context.ComStages
+                            join p in _context.StageParticipants on c.Id equals p.ComStageId
+                            where  (comOfferId !=null? c.ComOfferId == comOfferId : true) && (contragentId != null ? p.ContragentId == contragentId : true)
+                            group c by new { c.ComOfferId, p.ContragentId } into gr
+                            select new
+                            {
+                                ComOfferId = gr.Key.ComOfferId,
+                                ContragentId = gr.Key.ContragentId,
+
+                                Number = gr.Max(m => m.Number)
+
+                            };
+            var dataStep2 = from a in dataStep1
+                            join c in _context.ComStages on new { Id = a.ComOfferId, Number = a.Number } equals new { Id = c.ComOfferId, Number = c.Number }
+                            select new
+                            {
+                                a,
+                                ComStageID = c.Id,
+                                DeadlineDate = c.DeadlineDate
+                            };
+            var dataStep3 = from a in dataStep2
+                            join b in _context.StageParticipants on new { Id = a.ComStageID, ContrId = a.a.ContragentId } equals new { Id = b.ComStageId, ContrId = b.ContragentId }
+                            where b.Status==Domain.Enums.ParticipantStatus.Request
+                            select new ParticipantCrossDto
+                            {
+                                ComOfferId = a.a.ComOfferId,
+                                ContragentId = b.ContragentId,
+                                Number = a.a.Number,
+                                ComStageId = a.ComStageID,
+                                DeadlineDate = a.DeadlineDate,
+                                Status = b.Status,
+                                Description = b.Description
+                            };
+            return dataStep3;
+        }
         public static IQueryable<StagesCrossDto> GetParicipantsForLastStageWithInfo(this IApplicationDbContext _context, int comOfferId, int? contragentId = null)
         {
             var data1 = _context.GetParicipantsForLastStage(comOfferId, contragentId);

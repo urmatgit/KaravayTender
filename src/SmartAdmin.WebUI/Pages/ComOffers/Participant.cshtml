@@ -281,7 +281,7 @@
                 { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 60 },
                 { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 70, formatter: checkboxformatter },
                 { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter },
-                    
+
                 {
                     field: 'DeadlineDate', title: '@_localizer["Срок ответа до"]', sortable: true, width: 90, formatter: function (val, rec,index) {
                         // WinnerDetermined = 4 ||
@@ -507,7 +507,7 @@
                                 setFocus($('#confirm'));
                             }
                         }
-                        
+
                     })
                 },
 
@@ -556,6 +556,30 @@
             //});
 
         }
+        function getComOfferRequestCount() {
+            axios.get('@Url.Page("/ComOffers/Participant")?handler=RequestCount')
+                .then(res => {
+                    console.log(res);
+                    //ContragentOnRegistrationCount
+                    $('*[id*=ComOfferRequestCount]:visible').each(function () {
+                        if (res.data <= 0) {
+                            $(this).hide();
+                        } else
+                            $(this).text(res.data);
+                    });
+                })
+                .catch((error) => {
+                    if (error.response.data.Errors) {
+                        const errors = error.response.data.Errors;
+                        errors.forEach(item => {
+                            toastr["error"](item);
+                        });
+                    } else {
+                        toastr["error"](`Получение количество КП ,${error.response.data}`);
+                    }
+                });
+        }
+
         function GetNextEditRow(startIndex) {
             let indexNext = startIndex + 1;
             if (indexNext >= $dgCP.datagrid('getRows').length)
@@ -569,7 +593,7 @@
                 indexNext++;
             }
             return startIndex; //setFocus($('#confirm'));
-            
+
         }
         function setFocus(element) {
             $(element).focus();
@@ -744,7 +768,7 @@
 
 
 		$(() => {
-
+            getComOfferRequestCount();
             $("#filterForComOffer").val(3);
             initdatagrid();
             initdatagridCP();

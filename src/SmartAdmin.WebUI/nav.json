@@ -30,6 +30,11 @@
         {
           "title": "Коммерческие предложения",
           "icon": "fal fa-comments-alt-dollar",
+          "span": {
+            "class": "dl-ref bg-danger-500 hidden-nav-function-minify hidden-nav-function-top",
+            "text": "",
+            "id": "ComOfferRequestCount"
+          },
           "href": "comoffers_participant.html",
           "roles": [ "Admin", "Supplier" ]
         }

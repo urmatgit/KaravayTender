@@ -130,7 +130,7 @@
     <value>Добавление позиции</value>
   </data>
   <data name="Additional requirement" xml:space="preserve">
-    <value>Доп. требования</value>
+    <value>Общее требование к поставке</value>
   </data>
   <data name="Are you sure delete a row?" xml:space="preserve">
     <value>Вы уверены, удалить эту строку?</value>
@@ -325,7 +325,7 @@
     <value>НДС,%</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Объем</value>
+    <value>Средний объем потребления в мес.</value>
   </data>
   <data name="Volume delivery  in term" xml:space="preserve">
     <value>Объем поставки на контракт</value>

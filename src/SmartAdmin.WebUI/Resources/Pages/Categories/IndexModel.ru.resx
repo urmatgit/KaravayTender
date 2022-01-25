@@ -157,7 +157,7 @@
     <value>Строка удалена</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Описание</value>
+    <value>Общее требование к поставке</value>
   </data>
   <data name="Direction" xml:space="preserve">
     <value>Направление</value>

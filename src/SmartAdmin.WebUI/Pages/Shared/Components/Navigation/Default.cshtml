@@ -63,7 +63,7 @@
                                     @{
                                         var SpanTitle = @Model.FindInSpanValues(item.Span.Text);
                                     }
-                                    @if (item.Span.HasValue() && !string.IsNullOrEmpty(SpanTitle))
+                                    @if (item.Span.HasValue())  //&& !string.IsNullOrEmpty(SpanTitle))
                                                {
                                 <span class="@item.Span.Class"  @(!string.IsNullOrEmpty(item.Span.id) ? $"id={@item.Span.id}":"")
 
