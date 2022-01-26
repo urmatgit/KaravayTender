@@ -247,7 +247,7 @@ onImportedSucceeded = "reloadData()"
                             },
         </text>
     }]
-
+        var Categories = undefined;
         document.addEventListener("rowCheck", function (event) { // (1)
             console.log(event.detail.check);
             $('#startbutton').prop('disabled', event.detail.check);
@@ -268,10 +268,13 @@ onImportedSucceeded = "reloadData()"
                             value: ''
                         }).text( '@Html.Raw(@_localizer["Choose a nomenclature"])')
             );
-            getCategoriesByDirectionId(directionId, function (e) {
+            getCategoriesByDirectionId(directionId, function (res) {
+                Categories = res;
                 if (clscomposition.currentEditRow) {
                     $('#InputPos_CategoryId').val(clscomposition.currentEditRow.CategoryId);
                     $('#InputPos_CategoryId').trigger('change');
+                    
+                    
                 }
             });
 
@@ -304,7 +307,7 @@ onImportedSucceeded = "reloadData()"
             console.log(id);
             axios.get('/ComOffers/Index?handler=Categories&directionid=' + id)
                 .then(res => {
-                    console.log(res);
+                    
 
                     var modelDropDown = $('#InputPos_CategoryId');
                     modelDropDown.empty();
@@ -326,7 +329,7 @@ onImportedSucceeded = "reloadData()"
 
                     });
                     if (callback)
-                        callback();
+                        callback(res.data);
                 })
                 .catch((error) => {
                     if (error.response.data.Errors) {
@@ -350,6 +353,7 @@ onImportedSucceeded = "reloadData()"
                     $('#InputPos_NomVolume').val(res.data.Volume);
                     $('#InputPos_QualityDocsNames').val(res.data.QualityDocsNames);
                     $('#InputPos_NomSpecification').val(res.data.Specifications);
+                    $('#InputPos_Requirement').val(res.data.Requirement);
                 })
                 .catch((error) => {
                     if (error.response.data.Errors) {
@@ -638,6 +642,9 @@ onImportedSucceeded = "reloadData()"
 
             var id = $(this).val();
             console.log(id);
+            let currentCate = Categories.find(x => x.Id == id);
+            $('#InputPos_AddRequirement').val(currentCate.Description);
+
             axios.get('/ComPositions/Index?handler=Nomenclatures&categoryid=' + id)
                 .then(res => {
                     console.log(res);
@@ -647,6 +654,8 @@ onImportedSucceeded = "reloadData()"
                     $('#InputPos_NomVolume').val("");
                     $('#InputPos_QualityDocsNames').val("");
                     $('#InputPos_NomSpecification').val("");
+                    
+                   
                     var modelDropDown = $('#InputPos_NomenclatureId');
                     modelDropDown.empty();
                     modelDropDown.append(

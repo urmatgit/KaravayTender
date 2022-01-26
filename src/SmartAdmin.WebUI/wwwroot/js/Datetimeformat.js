@@ -47,7 +47,7 @@ function formatPriceStage(value, row, colIndex) {
         return (showIconX ? '<i class="fas fa-times-circle" style="color:red;margin-right:4px""></i>' : '') + '<span class="stageprice" >' + formatter.format(number) + '</span>';
     } else {
         if (value == row.GoodPrice && !showIconX)
-            return (showIconX ? '<i class="fas fa-times-circle" style="color:red;margin-right:4px"></i>': '')+ '<span class="stageprice" style="color:red;">' + formatter.format(number) + '</span>'; //number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
+            return (showIconX ? '<i class="fas fa-times-circle" style="color:red;margin-right:4px"></i>': '')+ '<span class="stageprice" style="color:green;">' + formatter.format(number) + '</span>'; //number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
         else 
             return (showIconX ? '<i class="fas fa-times-circle" style="color:red;margin-right:4px"></i>' : '') +'<span class="stageprice">' + formatter.format(number) + '</span>';
     }

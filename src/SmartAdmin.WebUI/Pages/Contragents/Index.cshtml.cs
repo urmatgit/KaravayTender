@@ -104,8 +104,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public async Task OnGetAsync()
         {
             //var result = await _identityService.FetchUsers("Admin");
-            var result = await _mediator.Send(new GetAllCategoriesQuery());
-            Categories = (List<CategoryDto>)result;
+           // var result = await _mediator.Send(new GetAllCategoriesQuery());
+            Categories = new List<CategoryDto>();//  (List<CategoryDto>)result;
             //string description = Enum.GetName(typeof(CleanArchitecture.Razor.Domain.Enums.RequestStatus), -1);
             await LoadDirection();
             await LoadManagers();

@@ -99,6 +99,7 @@
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/select2/select2.bundle.js"></script>
     <script src="~/js/EditGridCaching.js"></script>
+    <script src="~/js/FilesDownloadDialog.js"></script>
 
     <script type="text/javascript">
         let clscomposition = null;
@@ -635,7 +636,7 @@
                 $('#yourWinner').attr("hidden", true);
             }
         }
-        function onClickRow(index) {
+        function onClickRow(index, field, value) {
             if (editIndex != index) {
                 if (endEditing()) {
                     $dgCP.datagrid('selectRow', index)
@@ -645,6 +646,9 @@
 
                     $dgCP.datagrid('selectRow', editIndex);
                 }
+            }
+            if (field == "NomSpecification") {
+                ShowFileDownloadrDialog(value);
             }
         }
         function endEditing() {

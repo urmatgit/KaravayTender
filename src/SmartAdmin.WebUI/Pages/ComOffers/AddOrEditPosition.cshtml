@@ -76,7 +76,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label" for="name">@_localizer["Volume delivery  in term"] <span class="text-danger">*</span></label>
-                            <input type="number" asp-for="InputPos.Volume" class="form-control" placeholder="@_localizer["Volume"]" />
+                            <input type="number" asp-for="InputPos.Volume" class="form-control" placeholder="@_localizer["Объем поставки"]" />
 
                             <span class="invalid-feedback" asp-validation-for="InputPos.Volume"></span>
                         </div>
@@ -101,17 +101,17 @@
                     <div class="form-row">
                         <div class="col-md-12">
                             <label class="form-label" for="Requirement">@_localizer["Additional requirement"] <span class="text-danger">*</span></label>
-                            <input type="text" asp-for="InputPos.Requirement" class="form-control" placeholder="@_localizer["Требование к позиции"]" readonly/>
+                            <input type="text" asp-for="InputPos.AddRequirement" class="form-control" placeholder="@_localizer["Additional requirement"]" readonly/>
 
-                            <span class="invalid-feedback" asp-validation-for="InputPos.Requirement"></span>
+                            <span class="invalid-feedback" asp-validation-for="InputPos.AddRequirement"></span>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-md-12">
-                            <label class="form-label" for="AddRequirement">@_localizer["Additional requirement"] <span class="text-danger">*</span></label>
-                            <input type="text" asp-for="InputPos.AddRequirement" class="form-control" placeholder="@_localizer["Requirement"]" />
+                            <label class="form-label" for="Requirement">@_localizer["Требование к позиции"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="InputPos.Requirement" class="form-control" placeholder="@_localizer["Требование к позиции"]" readonly />
 
-                            <span class="invalid-feedback" asp-validation-for="InputPos.AddRequirement"></span>
+                            <span class="invalid-feedback" asp-validation-for="InputPos.Requirement"></span>
                         </div>
                     </div>
 

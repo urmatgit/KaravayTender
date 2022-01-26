@@ -135,13 +135,16 @@
     <script src="~/js/Karavay/GeneratePass.js" type="text/javascript"></script>
     
     <script type="text/javascript">
-
+        
         var Statuses = [{
             id: '',
             text: 'Все'
 
         }]
         $(document).ready(function () {
+            jQuery.validator.addMethod("HasOneChecked", function (value, element) {
+                return getCheckedCategories();
+            }, "* Не одного категория не выбрана");
 			$(":input").inputmask();
             $("#contragent_form").data("validator").settings.ignore = "";
                 @foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
@@ -277,8 +280,8 @@
         $('#contragent_form  :submit').click(function (e) {
             const form = document.querySelector('#contragent_form');
             $(form).validate().settings.ignore = ".ignore";
-                
-                    if ($(form).valid() === false) {
+            let hasOneChecked= getCheckedCategories();
+            if ($(form).valid() === false ) {
                         form.classList.add('was-validated');
                     } else {
 

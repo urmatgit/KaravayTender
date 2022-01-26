@@ -50,19 +50,34 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
 
         public async Task<PaginatedData<ContragentDto>> Handle(ContragentsActivePaginationQuery request, CancellationToken cancellationToken)
         {
+            //var comOfferContrs = from a in _context.Directions
+            //                     join b in _context.ComOffers on a.Id equals b.DirectionId
+            //                     join c in _context.Categories on a.Id equals c.DirectionId into cg
+            //                     from c1 in cg.DefaultIfEmpty()
+            //                     where b.Id == request.ComOfferId
+            //                     select new
+            //                     {
+            //                         DirectionId = a.Id,
+            //                         CategoryId = c1.Id
+            //                     };
 
-            
+            //var query1=from a in  _context.Contragents
+            //           join b in _context.ContragentCategories on a.Id equals b.ContragentId
+            //           join d in comOfferContrs on b.CategoryId equals d.CategoryId 
+
+
             var filters = PredicateBuilder.FromFilter<Contragent>(request.FilterRules);
-            var ExistContrs = _context.ComOffers
-                            .Include(x=>x.ComParticipants)
-                            .Include(x=>x.Direction)
-                            .Where(x => x.Id == request.ComOfferId)
+            var direction = _context.Directions
+                            .Where(x => x.ComOffers.Any(z=>z.Id==request.ComOfferId))
                             .SingleOrDefault();
-            var IsService = ExistContrs.Direction.IsService;
+            var AddedPosition = _context.ComPositions.Where(x => x.ComOfferId == request.ComOfferId);
+                                
+            var IsService = direction.IsService;
             var data = await _context.Contragents
                 .Where(filters)
                 .Where(x=>! _context.ComParticipants.Where(p=>p.ComOfferId==request.ComOfferId).Select(z=>z.ContragentId).Contains(x.Id))
-                .Where(x=> (IsService? x.IsService :  ExistContrs.DirectionId==x.DirectionId) )
+                .Where(x=> (IsService? x.IsService :  direction.Id==x.DirectionId ))
+                .Where(x=>x.ContragentCategories.Where(y=>AddedPosition.Any(z=>z.CategoryId==y.CategoryId)).Any())
                 //.Where(x=>x.Direction.IsService==x.IsService)
                 .Specify(new ContragentActiveQuerySpec())
                 .Include(i => i.Direction)

@@ -201,7 +201,7 @@ onImportedSucceeded = "reloadData()"
                 { field: 'DirectionName', title: `${window.translations.Direction} `, sortable: true, width: 180 },
                 { field: 'UnitOfName', title: `${window.translations.UnitOf} `, sortable: true, width: 100 },
                 { field: 'Volume', title: `${window.translations.Volume} `, sortable: true, width: 120 },
-                { field: 'Requirement', title: 'Требование к позиции', sortable: true, width: 200 },
+                { field: 'Requirement', title: 'Требование к позиции', sortable: true, width: 200 }
 
             ];
 
@@ -228,7 +228,7 @@ onImportedSucceeded = "reloadData()"
                     }
 
                 }
-            ]
+            ];
             initdatagrid();
             $('.select2').select2({
                 placeholder: '@Html.Raw(@_localizer["Choose quality documents"])',
