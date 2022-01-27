@@ -16,6 +16,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         //public string Name { get; set; }
 
         //public string Content { get; set; }
+        public string URL { get; set; }
         public virtual ICollection<NomenclatureQualityDoc> NomenclatureQualityDocs { get; set; }
         public List<DomainEvent> DomainEvents { get; set; } = new();
     }

@@ -1,15 +1,24 @@
-function ShowFileDownloadrDialog(files, onOk) {
+function ShowFileDownloadrDialog(files,id, onOk) {
      
     let rows = "";
     let filesArr = files.split(',')
-    $.each(filesArr, function (index, value) {
-        rows += `<tr><td><button type="button" name="download_files" title="Загрузить файл" class="btn btn-sm btn-outline-primary" onclick="onDownloadFile('${value.replaceAll('\\', '/')}')" >
+    if (id) {
+        $.each(filesArr, function (index, value) {
+            rows += `<tr><td><button type="button" name="download_files" title="Загрузить файл" class="btn btn-sm btn-outline-primary" onclick="onDownloadFileSpec('Files/Specifications/${id}/${value.replaceAll('\\', '/')}')" >
                             <i class="${window.translations.IconPrefix} fa-download" ></i>
 							</button> </td>
                     <td>  ${value}  </td>
                  </tr>`;
-
-    });
+        });
+    } else {
+        $.each(filesArr, function (index, value) {
+            rows += `<tr><td><button type="button" name="download_files" title="Загрузить файл" class="btn btn-sm btn-outline-primary" onclick="onDownloadQualityDoc('${value}')" >
+                            <i class="${window.translations.IconPrefix} fa-download" ></i>
+							</button> </td>
+                    <td>  ${value}  </td>
+                 </tr>`;
+        });
+    }
 
     bootbox.dialog({
         title: "Скачать файлы",

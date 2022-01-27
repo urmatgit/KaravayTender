@@ -20,6 +20,20 @@ function clienUploadfilename(withtablse=true) {
     }
     $("#Files").rules("add", "required");
 }
+var getFileName = (disposition) => {
+    const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\.]+)(?:; ?|$)/;
+    const asciiFilenameRegex = /filename=(["']?)(.*?[^\\])\1(?:; ?|$)/;
+    let fileName = '';
+    if (utf8FilenameRegex.test(disposition)) {
+        fileName = decodeURIComponent(utf8FilenameRegex.exec(disposition)[1]);
+    } else {
+        const matches = asciiFilenameRegex.exec(disposition);
+        if (matches != null && matches[2]) {
+            fileName = matches[2];
+        }
+    }
+    return fileName;
+}
 var onDownloadFile = (index) => {
 
     const url = index;
@@ -31,6 +45,7 @@ var onDownloadFile = (index) => {
     link.click();
     toastr["info"](`${window.translations.Download_Success}`);
 }
+
 var onRemoveFile = (index, file) => {
     bootbox.confirm({
         message: `${window.translations.DeleteFileDialog}`,  //"@_localizer["Are you sure delete a row?"]",

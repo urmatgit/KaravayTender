@@ -99,8 +99,9 @@
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/select2/select2.bundle.js"></script>
     <script src="~/js/EditGridCaching.js"></script>
+    
     <script src="~/js/FilesDownloadDialog.js"></script>
-
+    
     <script type="text/javascript">
         let clscomposition = null;
         var currentEditRow = "";
@@ -144,7 +145,8 @@
             AddFail: '@_localizerPart["Adding fail"]',
             AddParticipants: '@_localizerPart["Add participant"]',
             Cancel: '@_localizer["Cancel"]',
-            Ok: '@_localizer["Ok"]'
+            Ok: '@_localizer["Ok"]',
+            Download_Success: '@_localizer["Download Success"]',
 
 		}
 		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
@@ -241,9 +243,52 @@
             //    });
         });
 
+        var getFileName = (disposition) => {
+            const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\.]+)(?:; ?|$)/;
+            const asciiFilenameRegex = /filename=(["']?)(.*?[^\\])\1(?:; ?|$)/;
+            let fileName = '';
+            if (utf8FilenameRegex.test(disposition)) {
+                fileName = decodeURIComponent(utf8FilenameRegex.exec(disposition)[1]);
+            } else {
+                const matches = asciiFilenameRegex.exec(disposition);
+                if (matches != null && matches[2]) {
+                    fileName = matches[2];
+                }
+            }
+            return fileName;
+        }
+        function onDownloadFileSpec(value) {
+            const url = value;
+            const filename = getFileName(value);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            toastr["info"](`@_localizer["Файл загружен"]`);
+        }
+        function onDownloadQualityDoc(value) {
+            var data = {
+                name: value
 
+            }
+            var headers = {
+                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+            }
+            axios.post('@Url.Page("/QualityDocs/Index")?handler=Download',
+                data,
+                {
+                    headers: headers
 
-
+                }
+               )
+                .then(response => {
+                    if (response.data)
+                        onDownloadFileSpec(response.data);
+                    else
+                        toastr["error"]('Файл не найден!');
+                })
+        }
 
         function createColumnsComOffer() {
 
@@ -648,6 +693,9 @@
                 }
             }
             if (field == "NomSpecification") {
+                let row = $dgCP.datagrid('getRows')[index];
+                ShowFileDownloadrDialog(value, row.NomenclatureId);
+            } else if (field == "QualityDocsNames") {
                 ShowFileDownloadrDialog(value);
             }
         }
@@ -830,8 +878,10 @@
             endEditing();
             if (checkEmptyPrices())
                 bootbox.alert("Есть не введеные цены, прошу запольнить цены или откажитесь от участие!");
-            else
+            else {
                 submit();
+
+            }
 		}
 		event.preventDefault();
 		event.stopPropagation();
@@ -881,6 +931,7 @@
              SendPost('@Url.Page("/ComOffers/Participant")?handler=Prices', { inputPrices: UpdatedRows, Description: message, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id }
                  , function (arg) {
                      openEditpanel(arg);
+                     getComOfferRequestCount();
                  });
 
         }

@@ -23,9 +23,15 @@ namespace CleanArchitecture.Razor.Application.Features.References.QualityDocs.Qu
         public string Sort { get; set; } = "Id";
         public string Order { get; set; } = "desc";
     }
-    
+    public class DownloadQualityDocsQuery : IRequest<string>
+    {
+        public string name { get; set; }
+        
+    }
+
     public class ExportQualityDocsQueryHandler :
-         IRequestHandler<ExportQualityDocsQuery, byte[]>
+         IRequestHandler<ExportQualityDocsQuery, byte[]>,
+        IRequestHandler<DownloadQualityDocsQuery, string>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -60,6 +66,16 @@ namespace CleanArchitecture.Razor.Application.Features.References.QualityDocs.Qu
                 }
                 , _localizer["QualityDocs"]);
             return result;
+        }
+
+        public async Task<string> Handle(DownloadQualityDocsQuery request, CancellationToken cancellationToken)
+        {
+            var data = await _context.QualityDocs.Where(x => x.Name == request.name).SingleOrDefaultAsync(cancellationToken);
+            if (data != null)
+                return data.URL;
+            else
+                return "";
+
         }
     }
 }

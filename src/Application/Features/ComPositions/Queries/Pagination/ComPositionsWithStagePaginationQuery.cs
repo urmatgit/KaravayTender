@@ -211,7 +211,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                       AreaNames = String.Join(',', _context.AreaComPositions.Where(a => a.ComPositionId == p1.Id).Select(x => x.Area.Name)),
                         // AreaNames=_context.AreaComPositions.Where(a=>a.ComPositionId==s.ComPositionId)
 
-                         QualityDocsNames = String.Join(',', _context.NomenclatureQualityDocs.Where(a => a.NomenclatureId == p1.NomenclatureId).Select(x => x.Nomenclature.Name))
+                         QualityDocsNames = String.Join(',', _context.NomenclatureQualityDocs.Where(a => a.NomenclatureId == p1.NomenclatureId).Select(x => x.QualityDoc.Name))
                   });
 
                     
