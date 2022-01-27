@@ -71,13 +71,16 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
                             .Where(x => x.ComOffers.Any(z=>z.Id==request.ComOfferId))
                             .SingleOrDefault();
             var AddedPosition = _context.ComPositions.Where(x => x.ComOfferId == request.ComOfferId);
-                                
+            var categories = (from a in _context.ContragentCategories
+                              join b in AddedPosition on a.CategoryId equals b.CategoryId
+                              select a.CategoryId).Distinct();
+
             var IsService = direction.IsService;
             var data = await _context.Contragents
                 .Where(filters)
-                .Where(x=>! _context.ComParticipants.Where(p=>p.ComOfferId==request.ComOfferId).Select(z=>z.ContragentId).Contains(x.Id))
-                .Where(x=> (IsService? x.IsService :  direction.Id==x.DirectionId ))
-                .Where(x=>x.ContragentCategories.Where(y=>AddedPosition.Any(z=>z.CategoryId==y.CategoryId)).Any())
+                .Where(x => !_context.ComParticipants.Where(p => p.ComOfferId == request.ComOfferId).Select(z => z.ContragentId).Contains(x.Id))
+                .Where(x => (IsService ? x.IsService : direction.Id == x.DirectionId))
+                .Where(x =>  AddedPosition.All(y=>x.ContragentCategories.Where(z=>z.CategoryId==y.CategoryId).Any()))
                 //.Where(x=>x.Direction.IsService==x.IsService)
                 .Specify(new ContragentActiveQuerySpec())
                 .Include(i => i.Direction)
