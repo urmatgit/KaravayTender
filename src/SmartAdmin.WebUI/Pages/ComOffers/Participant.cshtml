@@ -53,10 +53,10 @@
         <div class="ml-auto">
             @if (_canSearch.Succeeded)
             {
-                <button class="btn btn-sm btn-outline-primary " id="searchbutton">
-                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
-                    @_localizer["Search"]
-                </button>
+            <button class="btn btn-sm btn-outline-primary " id="searchbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                @_localizer["Search"]
+            </button>
             }
 
         </div>
@@ -99,9 +99,9 @@
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
     <script src="~/js/formplugins/select2/select2.bundle.js"></script>
     <script src="~/js/EditGridCaching.js"></script>
-    
+
     <script src="~/js/FilesDownloadDialog.js"></script>
-    
+
     <script type="text/javascript">
         let clscomposition = null;
         var currentEditRow = "";
@@ -312,7 +312,18 @@
                     },
 
                     { field: 'StatusStr', title: '@_localizer["Статус КП"]', sortable: true, width: 130 },
-                    { field: 'LastStatusStr', title: '@_localizer["Статус поставщика"]', sortable: true, width: 130 },
+                    {
+                        field: 'LastStatusStr', title: '@_localizer["Статус поставщика"]', sortable: true, width: 130, formatter: function (val, rec) {
+                            //WinnerDetermined = 4,
+                            if (rec.Status == 4) {
+                                if (val == "Подтверждение")
+                                    return "Победитель";
+                                else if (val == "Отмена" || val =="Отказ")
+                                    return "Проигрыш";
+                            }
+                            return val;
+                        }
+                    },
                 { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
                 { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
 

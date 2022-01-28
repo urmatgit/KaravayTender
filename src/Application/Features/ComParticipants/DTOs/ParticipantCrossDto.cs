@@ -13,6 +13,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComParticipants.DTOs
     public class ParticipantCrossDto
     {
         public int ComOfferId { get; set; }
+        public ComOfferStatus ComOfferStatus { get; set; }
         public int ContragentId { get; set; }
         public int ComStageId { get; set; }
         public ParticipantStatus Status { get; set; }

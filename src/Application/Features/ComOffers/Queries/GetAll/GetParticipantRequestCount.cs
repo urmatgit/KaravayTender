@@ -45,7 +45,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.GetAll
             var ContragentId = await GetContragentId(cancellationToken); 
             try
             {
-                var count = await _context.GetComOfferWithLastStage(contragentId: ContragentId).CountAsync(cancellationToken);
+                var count = await _context.GetComOfferWithLastStage(contragentId: ContragentId,status: Domain.Enums.ParticipantStatus.Request).CountAsync(cancellationToken);
                     
                 return count ;
             }catch(Exception er)

@@ -25,8 +25,8 @@ namespace CleanArchitecture.Razor.Domain.Enums
         /// <summary>
         /// Архивные
         /// </summary>
-        [Description(@"Архивные")]
-        [Display(Name = "Архивные")]
+        [Description(@"Завершенные")]
+        [Display(Name = "Завершенные")]
         Archives = 2,
         /// <summary>
         /// В работе
@@ -34,5 +34,17 @@ namespace CleanArchitecture.Razor.Domain.Enums
         [Description(@"В работе")]
         [Display(Name = "В работе")]
         Waitings = 3,
+        /// <summary>
+        /// Заключенные
+        /// </summary>
+        [Description(@"Заключенные")]
+        [Display(Name = "Заключенные")]
+        Signed = 4,
+        /// <summary>
+        /// Отклоненные
+        /// </summary>
+        [Description(@"Отклоненные")]
+        [Display(Name = "Отклоненные")]
+       Rejected = 5,
     }
 }

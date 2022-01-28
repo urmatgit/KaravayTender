@@ -72,10 +72,11 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
         {
             //TODO:Implementing ComOffersWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<ComOffer>(request.FilterRules);
+            var now = _dateTime.Now;
             switch (request.comOfferFilterFor)
             {
                 case ComOfferFilterForParticipant.Actials:
-                    var now = _dateTime.Now;
+                    
                     filters = filters.And(c => now >= c.TermBegin && now <= c.TermEnd && c.WinnerId!=null  );
                     break;
                 case ComOfferFilterForParticipant.Archives:
@@ -84,6 +85,14 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                 case ComOfferFilterForParticipant.Waitings:
                     filters = filters.And(s => (s.Status !=ComOfferStatus.WinnerDetermined && s.Status!=ComOfferStatus.Cancelled));
                     break;
+                case ComOfferFilterForParticipant.Signed:
+                    filters = filters.And(s => (s.Status == ComOfferStatus.WinnerDetermined && now<=s.TermEnd));
+                    break;
+
+                case ComOfferFilterForParticipant.Rejected:
+                    filters = filters.And(s => (s.Status ==ComOfferStatus.Cancelled));
+                    break;
+
                 default:
                     break;
             }
@@ -174,28 +183,42 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
         {
             _logger.LogInformation("Get Only contragent commercial offers");
             var ContragentId = await GetContragentId(cancellationToken);
+
+
+            var lastcomoffers=   _context.GetComOfferWithLastStage(contragentId: ContragentId);
+
             var filters = PredicateBuilder.FromFilter<ComOffer>(request.FilterRules);
-           
+            
+            filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));
+            var now = _dateTime.Now;
             switch (request.comOfferFilterFor)
             {
                 case ComOfferFilterForParticipant.Actials:
-                    var now = _dateTime.Now;
-                    filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));
+                    
+                    
                     filters = filters.And(c=> now>=c.TermBegin && now<=c.TermEnd && c.WinnerId== ContragentId);
                     break;
                 case ComOfferFilterForParticipant.Archives:
-                    filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));
+                    
                     filters = filters.And(c => _dateTime.Now > c.TermEnd && c.WinnerId == ContragentId);
                     break;
                 case ComOfferFilterForParticipant.Waitings:
-                    filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));
+                    
                     filters = filters.And(s => s.Status ==ComOfferStatus.Waiting || s.Status==ComOfferStatus.Evaluation || s.Status==ComOfferStatus.WinnerDetermining);
-                    filters = filters.And(s =>s.WinnerId==default(int?)
-                                    && s.StageParticipants.Any(p=>p.ContragentId==ContragentId
-                                    && p.Status!=ParticipantStatus.Cancel && p.Status!=ParticipantStatus.FailureParitipate)); 
+                    filters = filters.And(s =>s.WinnerId==default(int?));
+                    lastcomoffers = lastcomoffers.Where(x => x.Status != ParticipantStatus.Cancel && x.Status != ParticipantStatus.FailureParitipate);
+                    break;
+                case ComOfferFilterForParticipant.Signed:
+                    filters = filters.And(s => (s.Status == ComOfferStatus.WinnerDetermined && now <= s.TermEnd && s.WinnerId==ContragentId));
+                    
+                    break;
+
+                case ComOfferFilterForParticipant.Rejected:
+                    //filters = filters.And(s => s.Status == ComOfferStatus.Cancelled  );
+                    lastcomoffers = lastcomoffers.Where(x => (x.Status ==ParticipantStatus.FailureParitipate || x.Status==ParticipantStatus.Cancel) || x.ComOfferStatus==ComOfferStatus.Cancelled);
                     break;
                 default:
-                    filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));
+                    
                     filters = filters.And(s => (short)s.Status > 0); break;
             }
            // await GetLastStages(ContragentId,cancellationToken);
@@ -205,7 +228,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                  .Include(u => u.Manager)
                  .Include(s=>s.ComStages)
                  .OrderByWithCheck(request.Sort, request.Order)
-                 .Select(c=>new ComOfferMyDto
+                 .Join(lastcomoffers,c=>c.Id,l=>l.ComOfferId,(c,l)=>
+                 new ComOfferMyDto
                  {
                      Id=c.Id,
                      Name=c.Name,
@@ -226,14 +250,15 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                      IsDeliveryInPrice=c.IsDeliveryInPrice,
                      //ComParticipants=_mapper.Map<ICollection<ComParticipantDto>>(c.ComParticipants),
                      DeadlineDate=c.ComStages.OrderBy(o=>o.Number).LastOrDefault().DeadlineDate,
-                     LastStatusStr= (from st in c.ComStages
-                                     join sp in _context.StageParticipants on st.Id equals sp.ComStageId
-                                     where sp.ContragentId== ContragentId
-                                     orderby st.Number descending
-                                     select st)
-                              .FirstOrDefault()
-                              .StageParticipants
-                              .FirstOrDefault(sp => sp.ContragentId == ContragentId).Status.ToDescriptionString()
+                     LastStatusStr=l.Status.ToDescriptionString()
+                     //LastStatusStr= (from st in c.ComStages
+                     //                join sp in _context.StageParticipants on st.Id equals sp.ComStageId
+                     //                where sp.ContragentId== ContragentId
+                     //                orderby st.Number descending
+                     //                select st)
+                     //         .FirstOrDefault()
+                     //         .StageParticipants
+                     //         .FirstOrDefault(sp => sp.ContragentId == ContragentId).Status.ToDescriptionString()
 
                  })
                  //.ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Razor.Application.Features.ComOffers.Queries.GetAll;
 using CleanArchitecture.Razor.Application.Features.Contragents.Queries.GetCount;
 using CleanArchitecture.Razor.Domain.Enums;
 using CleanArchitecture.Razor.Domain.Identity;
@@ -46,6 +47,15 @@ namespace SmartAdmin.WebUI.ViewComponents
             if (count?.Data > 0)
             {
                 items.SpanValues.Add("[ContragentOnRegistrationCount]", count?.Data.ToString());
+            }
+            if (_roles.Contains("Supplier"))
+            {
+                var command = new GetParticipantRequestCountCommand();
+                var result = await _mediator.Send(command);
+                if (result > 0)
+                {
+                    items.SpanValues.Add("[ComOfferRequestCount]", result.ToString());
+                }
             }
             return View(items);
         }

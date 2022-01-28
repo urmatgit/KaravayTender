@@ -159,6 +159,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                             };
             var dataStep3 = from a in dataStep2
                             join b in _context.StageParticipants on new { Id = a.ComStageID, ContrId = a.a.ContragentId } equals new { Id = b.ComStageId, ContrId = b.ContragentId }
+                            
                             where (contragentId != null ? b.ContragentId == contragentId : true)
                             select new ParticipantCrossDto
                             {
@@ -172,7 +173,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                             };
             return dataStep3;
         }
-        public static IQueryable<ParticipantCrossDto> GetComOfferWithLastStage(this IApplicationDbContext _context, int? comOfferId=null, int? contragentId = null)
+        public static IQueryable<ParticipantCrossDto> GetComOfferWithLastStage(this IApplicationDbContext _context, int? comOfferId=null, int? contragentId = null, Domain.Enums.ParticipantStatus? status=null)
         {
 
 
@@ -200,10 +201,12 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                             };
             var dataStep3 = from a in dataStep2
                             join b in _context.StageParticipants on new { Id = a.ComStageID, ContrId = a.a.ContragentId } equals new { Id = b.ComStageId, ContrId = b.ContragentId }
-                            where b.Status==Domain.Enums.ParticipantStatus.Request
+                            join c in _context.ComOffers on a.a.ComOfferId equals c.Id
+                            where (status==null? true : b.Status==status) //Domain.Enums.ParticipantStatus.Request)
                             select new ParticipantCrossDto
                             {
                                 ComOfferId = a.a.ComOfferId,
+                                ComOfferStatus=c.Status,
                                 ContragentId = b.ContragentId,
                                 Number = a.a.Number,
                                 ComStageId = a.ComStageID,

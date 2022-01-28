@@ -229,11 +229,11 @@ onImportedSucceeded = "reloadData()"
 			 if (nomenclature) {
 				 uploadbutton.disabled = false;
                 uploadfileinput.required = true;
-
+				 let url = nomenclature.URL ? omenclature.URL.replaceAll('\\', '/') : '';
                 uploadfilename.innerHTML = `
                   <div class="alert alert-info alert-dismissible fadeup show mb-2 mt-2" role="alert">
                          <div class="d-flex align-items-center">
-<button type="button" name="download_files" title="Загрузить файл" class="btn btn-sm btn-outline-primary" onclick="onDownload('${nomenclature.URL.replaceAll('\\', '/')}')" >
+<button type="button" name="download_files" title="Загрузить файл" class="btn btn-sm btn-outline-primary" onclick="onDownload('${url}')" >
                             <i class="${window.translations.IconPrefix} fa-download" ></i>
 							</button>
 							

@@ -519,6 +519,7 @@ function showHideButtons(Status) {
             //if (CheckPriceConfirmed() || (currentStage && Date.parse(moment(now).format("DD.MM.YYYY")) > Date.parse(moment(new Date(currentStage.DeadlineDate)).format("DD.MM.YYYY"))))
                 $('#btnEndStage').show();
             $('#btnChangeDeadline').show();
+            $('#btnCancelStage').show();
             break;
         case 2:   //Оценка КП
             //$('input.editable:checkbox').removeAttr('disabled');

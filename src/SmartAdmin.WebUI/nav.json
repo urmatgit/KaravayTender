@@ -32,11 +32,11 @@
           "icon": "fal fa-comments-alt-dollar",
           "span": {
             "class": "dl-ref bg-danger-500 hidden-nav-function-minify hidden-nav-function-top",
-            "text": "",
+            "text": "[ComOfferRequestCount]",
             "id": "ComOfferRequestCount"
           },
           "href": "comoffers_participant.html",
-          "roles": [ "Admin", "Supplier" ]
+          "roles": [  "Supplier" ]
         }
         
       ]

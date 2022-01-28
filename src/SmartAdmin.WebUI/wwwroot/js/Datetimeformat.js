@@ -37,19 +37,20 @@ function formatPriceStage(value, row, colIndex) {
         //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
     });
     let showIconX = false;
-    if (row["ContrStatus" + colIndex] == 3 || row["ContrStatus" + colIndex] == 4)
+    if (row["ShowX" + colIndex])
         showIconX = true;
     var number = Number(value);
+    var priceColor = row["ContrPriceColor" + colIndex] ? row["ContrPriceColor" + colIndex] : "black";
     if (isNaN(number) || number == 0) {
         return (showIconX ? '<i class="fas fa-times-circle" style="color:red;margin-right:4px""></i>' : '') + '<span class="stageprice" ></span>';
     }
-    else if (row.GoodPrice == null) {
-        return (showIconX ? '<i class="fas fa-times-circle" style="color:red;margin-right:4px""></i>' : '') + '<span class="stageprice" >' + formatter.format(number) + '</span>';
+    else if (row.GoodPrice == null || row.GoodPrice.Price == null) {
+        return (showIconX ? '<i class="fas fa-times-circle" style="color:red;margin-right:4px""></i>' : '') + `<span class="stageprice" style="color:${priceColor}" >` + formatter.format(number) + '</span>';
     } else {
-        if (value == row.GoodPrice && !showIconX)
-            return (showIconX ? '<i class="fas fa-times-circle" style="color:red;margin-right:4px"></i>' : '') + '<span class="stageprice" style="color:rgb(0,176,80);">' + formatter.format(number) + '</span>'; //number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
-        else 
-            return (showIconX ? '<i class="fas fa-times-circle" style="color:red;margin-right:4px"></i>' : '') +'<span class="stageprice">' + formatter.format(number) + '</span>';
+        if (value == row.GoodPrice.Price && row["ContrId" + colIndex] == row.GoodPrice.ContragentId && !showIconX)
+            return (showIconX ? '<i class="fas fa-times-circle" style="color:red;margin-right:4px"></i>' : '') + `<span class="stageprice" style="color:${row.GoodPrice.ColorRGB};">` + formatter.format(number) + '</span>'; //number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
+        else
+            return (showIconX ? '<i class="fas fa-times-circle" style="color:red;margin-right:4px"></i>' : '') + `<span class="stageprice" style="color:${priceColor}">` + formatter.format(number) + '</span>';
     }
 }
 
