@@ -71,7 +71,10 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
         public async Task<PaginatedData<ComOfferDto>> Handle(ComOffersWithPaginationQuery request, CancellationToken cancellationToken)
         {
             //TODO:Implementing ComOffersWithPaginationQueryHandler method 
-           var filters = PredicateBuilder.FromFilter<ComOffer>(request.FilterRules);
+           
+            var filters = PredicateBuilder.FromFilter<ComOffer>("[]");
+            var filterRulse = request.FilterRules;//.Replace("DirectionName", "Direction.Name");
+            var filtersRes = PredicateBuilder.FromFilter<ComOfferDto>(filterRulse, new List<string>() { "StatusStr", "IsBankDaysStr", "IsDeliveryInPriceStr" });
             var now = _dateTime.Now;
             switch (request.comOfferFilterFor)
             {
@@ -112,7 +115,8 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                     DateBegin = c.DateBegin,
                     DateEnd = c.DateEnd,
                     DirectionId = c.DirectionId,
-                    Direction = _mapper.Map<DirectionDto>(c.Direction),
+                   // Direction = _mapper.Map<DirectionDto>(c.Direction),
+                    DirectionName=c.Direction.Name,
                     TermBegin = c.TermBegin == default(DateTime) ? default(DateTime?) : c.TermBegin,
                     TermEnd = c.TermEnd == default(DateTime) ? default(DateTime?) : c.TermEnd,
                     ManagerId = c.ManagerId,
@@ -126,7 +130,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                     DeadlineDate = c.ComStages.OrderBy(o => o.Number).LastOrDefault().DeadlineDate
 
                 })
-                
+                .Where(filtersRes)
                 //.ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataLazySortAsync(request.Page, request.Rows,request.Sort,request.Order);
             return data;
@@ -187,8 +191,9 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
 
             var lastcomoffers=   _context.GetComOfferWithLastStage(contragentId: ContragentId);
 
-            var filters = PredicateBuilder.FromFilter<ComOffer>(request.FilterRules);
-            
+            var filters = PredicateBuilder.FromFilter<ComOffer>("[]");
+            var filterRulse = request.FilterRules;//.Replace("DirectionName", "Direction.Name");
+            var filtersRes= PredicateBuilder.FromFilter<ComOfferMyDto>(filterRulse, new List<string>() { "StatusStr", "LastStatusStr", "IsBankDaysStr", "IsDeliveryInPriceStr" });
             filters = filters.And(o => o.ComParticipants.Any(c => c.ContragentId == ContragentId));
             var now = _dateTime.Now;
             switch (request.comOfferFilterFor)
@@ -229,6 +234,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                  .Include(s=>s.ComStages)
                  .OrderByWithCheck(request.Sort, request.Order)
                  .Join(lastcomoffers,c=>c.Id,l=>l.ComOfferId,(c,l)=>
+
                  new ComOfferMyDto
                  {
                      Id=c.Id,
@@ -238,7 +244,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                      DateBegin=c.DateBegin,
                      DateEnd=c.DateEnd,
                      DirectionId=c.DirectionId,
-                     Direction=_mapper.Map<DirectionDto>(c.Direction),
+                     DirectionName=c.Direction.Name,
                      TermBegin=c.TermBegin==default(DateTime)? default(DateTime?): c.TermBegin,
                      TermEnd = c.TermEnd == default(DateTime) ? default(DateTime?) : c.TermEnd,
                      ManagerId=c.ManagerId,
@@ -249,8 +255,9 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                      Winner=c.Winner!=null? _mapper.Map<ContragentDto>(c.Winner): null,
                      IsDeliveryInPrice=c.IsDeliveryInPrice,
                      //ComParticipants=_mapper.Map<ICollection<ComParticipantDto>>(c.ComParticipants),
-                     DeadlineDate=c.ComStages.OrderBy(o=>o.Number).LastOrDefault().DeadlineDate,
-                     LastStatusStr=l.Status.ToDescriptionString()
+                     DeadlineDate=l.DeadlineDate, //c.ComStages.OrderBy(o=>o.Number).LastOrDefault().DeadlineDate,
+                     LastStatusStr=l.Status.ToDescriptionString(),
+                     LastStatus=l.Status
                      //LastStatusStr= (from st in c.ComStages
                      //                join sp in _context.StageParticipants on st.Id equals sp.ComStageId
                      //                where sp.ContragentId== ContragentId
@@ -261,6 +268,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.Queries.Paginat
                      //         .FirstOrDefault(sp => sp.ContragentId == ContragentId).Status.ToDescriptionString()
 
                  })
+                 .Where(filtersRes)
                  //.ProjectTo<ComOfferDto>(_mapper.ConfigurationProvider)
                  .PaginatedDataLazySortAsync(request.Page, request.Rows, request.Sort, request.Order);
                  //.PaginatedDataAsync(request.Page, request.Rows);

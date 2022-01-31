@@ -36,6 +36,21 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
 
             return result != null;
         }
+        public static FilterRule[] GetFilgerRules(string filters)
+        {
+            if (!string.IsNullOrEmpty(filters))
+            {
+                var opts = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+                opts.Converters.Add(new AutoNumberToStringConverter());
+                var filterRules = JsonSerializer.Deserialize<FilterRule[]>(filters, opts);
+
+                return filterRules;
+            }
+            return Array.Empty<FilterRule>();
+        }
              
         public static Expression<Func<T, bool>> FromFilter<T>(string filters,List<string> Excludes=null )
         {

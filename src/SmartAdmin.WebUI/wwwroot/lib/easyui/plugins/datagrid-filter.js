@@ -469,16 +469,16 @@
   // filter operators
   $.fn.datagrid.defaults.operators = {
     nofilter: {
-      text: '取消'
+          text: 'Отмена'
     },
     between: {
-      text: '之间',
+        text: 'между',
       isMatch: function (source, value) {
         return true;
       }
     },
     contains: {
-      text: '包含',
+        text: 'Включают',
       isMatch: function (source, value) {
         source = String(source);
         value = String(value);
@@ -486,19 +486,19 @@
       }
     },
     equal: {
-      text: '等于',
+        text: 'равно',
       isMatch: function (source, value) {
         return source == value;
       }
     },
     notequal: {
-      text: '不等于',
+        text: 'не равно',
       isMatch: function (source, value) {
         return source != value;
       }
     },
     beginwith: {
-      text: '以开始',
+        text: 'начать с',
       isMatch: function (source, value) {
         source = String(source);
         value = String(value);
@@ -506,7 +506,7 @@
       }
     },
     endwith: {
-      text: '以结束',
+        text: 'закончить с',
       isMatch: function (source, value) {
         source = String(source);
         value = String(value);
@@ -514,25 +514,25 @@
       }
     },
     less: {
-      text: '小于',
+        text: 'меньше, чем',
       isMatch: function (source, value) {
         return source < value;
       }
     },
     lessorequal: {
-      text: '小于等于',
+        text: 'меньше или равно',
       isMatch: function (source, value) {
         return source <= value;
       }
     },
     greater: {
-      text: '大于',
+        text: 'больше, чем',
       isMatch: function (source, value) {
         return source > value;
       }
     },
     greaterorequal: {
-      text: '大于等于',
+        text: 'больше или равно',
       isMatch: function (source, value) {
         return source >= value;
       }

@@ -50,7 +50,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
         public int DirectionId { get; set; }
         public virtual DirectionDto Direction { get; set; }
 
-        public string DirectionName => Direction?.Name;
+        public string DirectionName { get; set; }
 
         [Required(ErrorMessage = "'Срок контракта с' является обязательным ")]
         public DateTime? TermBegin { get; set; }
@@ -101,5 +101,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComOffers.DTOs
     public class ComOfferMyDto : ComOfferDto
     {
         public string LastStatusStr { get; set; }
+        public ParticipantStatus LastStatus { get; set; }
+        
     }
 }

@@ -19,9 +19,9 @@ namespace CleanArchitecture.Razor.Domain.Enums
         /// <summary>
         /// Победитель
         /// </summary>
-        [Description(@"Победитель")]
-        [Display(Name = "Победитель")]
-        Winner = 0,
+        //[Description(@"Победитель")]
+        //[Display(Name = "Победитель")]
+        //Winner = 0,
         /// <summary>
         /// Ожидание
         /// </summary>

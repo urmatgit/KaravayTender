@@ -144,13 +144,13 @@ var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permission
             <div class="panel-footer p-2  " style="text-align:right">
                 @if (_canStart.Succeeded)
                 {
-                    <button type="button" class="btn btn-danger mr-5" id="btnStartStage">@_localizer["Запуск"]</button>
-                    <button type="button" class="btn btn-danger mr-5" id="btnSendStage">@_localizer["Отправить запрос"]</button>
-                    <button type="button" class="btn btn-danger mr-5" id="btnEndStage">@_localizer["Завершить этап"]</button>
-                    <button type="button" class="btn btn-danger mr-5" id="btnChangeDeadline">@_localizer["Изменить срок ответа до"]</button>
-                    <button type="button" class="btn btn-danger mr-5" id="btnCancelStage">@_localizer["Отмена проведения"]</button>
-                    <button type="button" class="btn btn-danger mr-5" id="btnSelectWinnerStage">@_localizer["Объявить победителя"]</button>
-                    <button type="button" class="btn btn-danger mr-5" id="btnReturnToEvaluation">@_localizer["Вернуть на Оценку КП"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnStartStage">@_localizer["Запуск"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnSendStage">@_localizer["Отправить запрос"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnEndStage">@_localizer["Завершить этап"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnChangeDeadline">@_localizer["Изменить срок ответа до"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnCancelStage">@_localizer["Отмена проведения"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnSelectWinnerStage">@_localizer["Объявить победителя"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnReturnToEvaluation">@_localizer["Вернуть на Оценку КП"]</button>
                 }
 
                 @if (_canEdit.Succeeded)

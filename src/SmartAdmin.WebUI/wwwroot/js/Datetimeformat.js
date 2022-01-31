@@ -1,4 +1,12 @@
-  function datetimeformatter(value, row, index) {
+var DateFilterOptions = {
+    formatter: function (date) {
+        return dateformatter(date);
+    },
+    parser: function (s) {
+        if (!s) return new Date();
+    }
+};
+function datetimeformatter(value, row, index) {
     if (typeof value === "undefined") {
         return null;
     }

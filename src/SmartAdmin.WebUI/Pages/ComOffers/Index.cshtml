@@ -465,7 +465,36 @@ onImportedSucceeded = "reloadData()"
             ];
 
             tblFilters = [
-
+                {
+                    field: 'DeadlineDate',
+                    type: 'datebox',
+                    options: DateFilterOptions,
+                    op: 'equal'
+                },
+                {
+                    field: 'TermBegin',
+                    type: 'datebox',
+                    options: DateFilterOptions,
+                    op: 'equal'
+                },
+                {
+                    field: 'TermEnd',
+                    type: 'datebox',
+                    options: DateFilterOptions,
+                    op: 'equal'
+                },
+                {
+                    field: 'DateBegin',
+                    type: 'datebox',
+                    options: DateFilterOptions,
+                    op: 'equal'
+                },
+                {
+                    field: 'DateEnd',
+                    type: 'datebox',
+                    options: DateFilterOptions,
+                    op: 'equal'
+                },
                 {
                     field: 'IsBankDaysStr',
                     type: 'combobox',

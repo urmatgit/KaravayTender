@@ -168,6 +168,7 @@
             }
 
         ]
+        
          var ContragentStatuses=[
                                  {
                                      value: null,
@@ -356,7 +357,37 @@
 
             return InitColumns;
         };
-        let   tblFilters = [
+        let tblFilters = [
+            {
+                field: 'DeadlineDate',
+                type: 'datebox',
+                options: DateFilterOptions,
+                op: 'equal'
+            },
+            {
+                field: 'TermBegin',
+                type: 'datebox',
+                options: DateFilterOptions,
+                op: 'equal'
+            },
+            {
+                field: 'TermEnd',
+                type: 'datebox',
+                options: DateFilterOptions,
+                op: 'equal'
+            },
+            {
+                field: 'DateBegin',
+                type: 'datebox',
+                options: DateFilterOptions,
+                op: 'equal'
+            },
+            {
+                field: 'DateEnd',
+                type: 'datebox',
+                options: DateFilterOptions,
+                op: 'equal'
+            },
 
                 {
                     field: 'IsBankDaysStr',
@@ -429,7 +460,23 @@
                         }
                     }
 
+            }, {
+                    field: 'LastStatusStr',
+                type: 'combobox',
+                options: {
+                    panelHeight: 'auto',
+                    data: ParticipantStatus,
+                    onChange: function (newValue, oldValue) {
+
+                        $dg.datagrid('addFilterRule', {
+                            field: 'LastStatus',
+                            op: 'equal',
+                            value: newValue
+                        });
+                    }
                 }
+
+            }
         ]
         let tblColumnsComPosition = [
             { field: 'ParticipantStatusStr', title: '@_localizer["Статус участия"]', sortable: true, width: 130 },

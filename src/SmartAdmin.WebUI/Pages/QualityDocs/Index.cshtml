@@ -229,7 +229,7 @@ onImportedSucceeded = "reloadData()"
 			 if (nomenclature) {
 				 uploadbutton.disabled = false;
                 uploadfileinput.required = true;
-				 let url = nomenclature.URL ? omenclature.URL.replaceAll('\\', '/') : '';
+				 let url = nomenclature.URL ? nomenclature.URL.replaceAll('\\', '/') : '';
                 uploadfilename.innerHTML = `
                   <div class="alert alert-info alert-dismissible fadeup show mb-2 mt-2" role="alert">
                          <div class="d-flex align-items-center">
