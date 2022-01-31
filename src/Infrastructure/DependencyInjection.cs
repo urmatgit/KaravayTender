@@ -49,6 +49,15 @@ namespace CleanArchitecture.Razor.Infrastructure
 
                     );
             }
+        else if (configuration.GetValue<bool>("UsePostgreDatabase"))
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseNpgsql(
+                        configuration.GetConnectionString("DefaultConnectionPosgre"),
+                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
+
+                    );
+            }
             else
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
