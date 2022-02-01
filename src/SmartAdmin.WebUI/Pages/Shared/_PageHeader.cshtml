@@ -1,7 +1,9 @@
-﻿@if (Settings.Features.AppHeader)
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer _localizer
+@if (Settings.Features.AppHeader)
 {
 <header class="page-header" role="banner">
     <partial name="_Logo" />
+   @if (User.Identity.IsAuthenticated){
     @if (Settings.Features.AppLayoutShortcut)
     {
 <div class="hidden-md-down dropdown-icon-menu position-relative">
@@ -26,62 +28,111 @@
             <i class="ni ni-menu"></i>
         </a>
     </div>
-    <div class="search">
+    @*<div class="search">
         <form class="app-forms hidden-xs-down" role="search" asp-page="Search" autocomplete="off">
-            <input type="text" id="search-field" placeholder="Search for anything" class="form-control" tabindex="1">
+            <input type="text" id="search-field" placeholder="@_localizer["Search for anything"]" class="form-control" tabindex="1">
             <a href="#" onclick="return false;" class="btn-danger btn-search-close js-waves-off d-none" data-action="toggle" data-class="mobile-search-on">
                 <i class="@(Settings.Theme.IconPrefix) fa-times"></i>
             </a>
         </form>
-    </div>
-    <div class="ml-auto d-flex">
+    </div>*@
+    }
+<div class="ml-auto d-flex">
+    @*@if (User.Identity.IsAuthenticated)
+    {
         <div class="hidden-sm-up">
             <a href="#" class="header-icon" data-action="toggle" data-class="mobile-search-on" data-focus="search-field" title="Search">
                 <i class="@(Settings.Theme.IconPrefix) fa-search"></i>
             </a>
         </div>
-        @if (Settings.Features.LayoutSettings)
-        {
-<div class="hidden-md-down">
-    <a href="#" class="header-icon" data-toggle="modal" data-target=".js-modal-settings">
-        <i class="@(Settings.Theme.IconPrefix) fa-cog"></i>
-    </a>
-</div>
-        }
-        <div>
+    }*@
+    @if (Settings.Features.LayoutSettings && User.Identity.IsAuthenticated)
+    {
+        <div class="hidden-md-down">
+            <a href="#" class="header-icon" data-toggle="modal" data-target=".js-modal-settings">
+                <i class="@(Settings.Theme.IconPrefix) fa-cog"></i>
+            </a>
+        </div>
+    }
+
+    @*<div>
             <a href="#" class="header-icon" data-toggle="dropdown" title="My Apps">
                 <i class="@(Settings.Theme.IconPrefix) fa-cube"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-animated w-auto h-auto">
-                <partial name="_DropdownApp" />
+
+            </div>
+        </div>*@
+    @if (CleanArchitecture.Razor.Infrastructure.Constants.Localization.LocalizationConstants.SupportedLanguages.Length > 1)
+    {
+        <div>
+            <a href="#" class="header-icon" data-toggle="dropdown" title="@_localizer["Language"]">
+                <i class="@(Settings.Theme.IconPrefix) fa-language"></i>
+            </a>
+
+            <div class="dropdown-multilevel dropdown-multilevel-left">
+
+                <vc:language-selector />
+
             </div>
         </div>
-        @if (User.Identity.IsAuthenticated)
-        {
-@if (Settings.Features.ChatInterface)
-{
-<a href="#" class="header-icon" data-toggle="modal" data-target=".js-modal-messenger">
-    <i class="@(Settings.Theme.IconPrefix) fa-globe"></i>
-    <span class="badge badge-icon">!</span>
-</a>}
-                    <div>
-                        <a href="#" class="header-icon" data-toggle="dropdown" title="You got 11 notifications">
-                            <i class="@(Settings.Theme.IconPrefix) fa-bell"></i>
-                            <span class="badge badge-icon">11</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-animated dropdown-xl">
-                            <partial name="_DropdownNotification" />
-                        </div>
-                    </div>
-                                        <div>
-                                            <a href="#" data-toggle="dropdown" title="@(User.GetEmail())" class="header-icon d-flex align-items-center justify-content-center ml-2">
-                                                <img src="@(User.GetProfilePictureDataUrl())" class="profile-image rounded-circle" alt="@(User.GetDisplayName())">
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
-                                                <partial name="_DropdownMenu" />
-                                            </div>
-                                        </div>}
+    }
+   
+
+    <div  >
+        <a href="#"  onclick="return false;" class="header-icon" data-action="toggle" title="@_localizer["Dark mode"]"
+           data-class="mod-skin-dark">
+            <i class="@(Settings.Theme.IconPrefix) fa-eclipse-alt"></i>
+        </a>
+
+         
+
+
 
     </div>
+       
+        
+    @if (User.Identity.IsAuthenticated)
+    {
+        @*@if (Settings.Features.ChatInterface)
+            {
+            <a href="#" class="header-icon" data-toggle="modal" data-target=".js-modal-messenger">
+                <i class="@(Settings.Theme.IconPrefix) fa-globe"></i>
+                <span class="badge badge-icon">!</span>
+            </a>}*@
+        @*<div>
+                <a href="#" class="header-icon" data-toggle="dropdown" title="You got 11 notifications">
+                    <i class="@(Settings.Theme.IconPrefix) fa-bell"></i>
+                    <span class="badge badge-icon">11</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-animated dropdown-xl">
+                    <partial name="_DropdownNotification" />
+                </div>
+            </div>*@
+        <div>
+            <a href="#" data-toggle="dropdown" title="@(User.GetEmail())" class="header-icon d-flex align-items-center justify-content-center ml-2">
+                <img src="@(User.GetProfilePictureDataUrl())" class="profile-image rounded-circle" alt="@(User.GetDisplayName())">
+            </a>
+            <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
+                <partial name="_DropdownMenu" />
+            </div>
+        </div>
+    }
+    else
+    {
+
+
+        <div class="d-flex align-items-center container p-0">
+            <span class="opacity-50 ml-auto mr-2 hidden-sm-down">
+                @_localizer["Already a member?"]
+            </span>
+            <a class="btn-link ml-auto ml-sm-0" asp-area="Identity" asp-page="/account/login">
+                @_localizer["Secure Login"]
+            </a>
+        </div>
+
+    }
+
+</div>
 
 </header>}

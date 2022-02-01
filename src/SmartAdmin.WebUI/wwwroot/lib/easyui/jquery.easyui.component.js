@@ -474,7 +474,7 @@ function dateformatter(value, row, index) {
     return null;
   }
   else if (moment(value).isValid() && !moment(value).isSame(moment('/Date(-62135596800000)/'))) {
-    return moment(value).format('YYYY-MM-DD');
+      return moment(value).format('DD.MM.YYYY');
   }
   else {
     return null;
@@ -487,7 +487,7 @@ function datetimeformatter(value, row, index) {
     return null;
   }
   else if (moment(value).isValid() && !moment(value).isSame(moment('/Date(-62135596800000)/'))) {
-    return moment(value).format('YYYY-MM-DD HH:mm:ss');
+    return moment(value).format('DD.MM.YYYY HH:mm:ss');
   } else {
     return null;
   }
@@ -558,7 +558,7 @@ $.extend($.fn.form.methods, {
 $.extend($.fn.datagrid.defaults.filters, {
     dateRange: {
         init: function (container, options) {
-            var defaultvalue = options.value ?? '';
+            var defaultvalue = options.value ? options.value : '';
             var cc = $('<span class="textbox combo datebox " style="padding:0px">\
                      <span class="textbox-addon textbox-addon-right" style="right: 0px; top: 0px;">\
                      <a href="javascript:" class="textbox-icon combo-arrow" icon-index="0" tabindex="-1" style="width: 26px; height: 29px;">\
@@ -571,29 +571,29 @@ $.extend($.fn.datagrid.defaults.filters, {
                 applyClass: 'btn-sm btn-success',
                 cancelClass: 'btn-sm btn-default',
                 locale: {
-                    applyLabel: '确认',
-                    cancelLabel: '清空',
-                    fromLabel: '起始时间',
-                    toLabel: '结束时间',
-                    customRangeLabel: '自定义',
+                    applyLabel: 'Cегодня',
+                    cancelLabel: 'Подтвердить',
+                    fromLabel: 'С',
+                    toLabel: 'по',
+                    customRangeLabel: 'Настроить',
                     firstDay: 1,
-                    daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
-                    monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
-                        '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                    daysOfWeek: ['7', '1', '2', '3', '4', '5', '6'],
+                    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+                        'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
                 },
                 ranges: {
                     //'最近1小时': [moment().subtract('hours',1), moment()],
-                    '今日': [moment(), moment()],
-                    '昨日': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-                    '最近7日': [moment().subtract(6, 'days'), moment()],
-                    '最近30日': [moment().subtract(29, 'days'), moment()],
-                    '本月': [moment().startOf("month"), moment().endOf("month")],
-                    '上个月': [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
+                    'Cегодня': [moment(), moment()],
+                    'Вчера': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+                    'Последние 7 дней': [moment().subtract(6, 'days'), moment()],
+                    'Последние 30 дней': [moment().subtract(29, 'days'), moment()],
+                    'Этот месяц': [moment().startOf("month"), moment().endOf("month")],
+                    'Прошлый месяц': [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
                 },
                 opens: 'right',    // 日期选择框的弹出位置
                 separator: '-',
                 showWeekNumbers: false,     // 是否显示第几周
-                format: 'YYYY/MM/DD'
+                format: 'DD.MM.YYYY'
 
             };
             input.on('blur', function () {
@@ -610,8 +610,8 @@ $.extend($.fn.datagrid.defaults.filters, {
                 $(this).val('');
             });
             input.on('apply.daterangepicker', function (ev, picker) {
-                console.log(picker.startDate.format('YYYY/MM/DD') + '-' + picker.endDate.format('YYYY/MM/DD'));
-                $(this).val(picker.startDate.format('YYYY/MM/DD') + '-' + picker.endDate.format('YYYY/MM/DD'));
+                console.log(picker.startDate.format('DD.MM.YYYY') + '-' + picker.endDate.format('DD.MM.YYYY'));
+                $(this).val(picker.startDate.format('DD.MM.YYYY') + '-' + picker.endDate.format('DD.MM.YYYY'));
                 //options.onChange(picker.startDate.format('YYYY/MM/DD') + '-' + picker.endDate.format('YYYY/MM/DD'));
             });
 
@@ -626,7 +626,7 @@ $.extend($.fn.datagrid.defaults.filters, {
             return $(target).data('daterangepicker').getStartDate() + '-' + $(target).data('daterangepicker').getEndDate();
         },
         setValue: function (target, value) {
-            //console.log($(target), value);
+            console.log($(target), value);
             var daterange = value.split('-');
             $(target).data('daterangepicker').setStartDate(moment(daterange[0]));
             $(target).data('daterangepicker').setEndDate(moment(daterange[1]));

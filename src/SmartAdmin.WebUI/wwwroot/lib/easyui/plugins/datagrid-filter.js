@@ -277,7 +277,7 @@
         var field = $(this).attr('name');
         var input = $(this);
         
-            if (input.data('textbox') && !$(this).is('select') && !$(this).is('combobox') && !$(this).hasClass('combobox-f') && !$(this).hasClass('combogrid-f')) {
+        if (input.data('textbox') && !$(this).is('select') && !$(this).hasClass('combogrid-f')) {
           input = input.textbox('textbox');
         }
             input.unbind('.filter').bind('keydown.filter blur.filter', function (e) {
@@ -296,7 +296,7 @@
           input.unbind('.filter')
             .unbind('apply.daterangepicker')
             .bind('apply.daterangepicker', function (e,picker) {
-                $(this).val(picker.startDate.format('YYYY/MM/DD') + '-' + picker.endDate.format('YYYY/MM/DD'));
+                $(this).val(picker.startDate.format('DD.MM.YYYY') + '-' + picker.endDate.format('DD.MM.YYYY'));
                 var t = $(this);
                 if (this.timer) {
                     clearTimeout(this.timer);
@@ -327,23 +327,23 @@
             });
         }
         //combobox filter
-            if ($(this).is('select') || $(this).is('combobox') || $(this).hasClass('combobox-f')) {
-                input.off('.filter').on('combobox.filter', function (e) {
-                    var t = $(this);
-                    if (this.timer) {
-                        clearTimeout(this.timer);
-                    }
-                    if (e.keyCode == 13) {
-                        _doFilterWithCombobox();
-                    } else {
-                        this.timer = setTimeout(function () {
-                            _doFilterWithCombobox();
-                        }, opts.filterDelay);
-                    }
-                });
-
-
+        if ($(this).is('select')) {
+          input.off('.filter').on('combobox.filter', function (e) {
+            var t = $(this);
+            if (this.timer) {
+              clearTimeout(this.timer);
             }
+            if (e.keyCode == 13) {
+              _doFilterWithCombobox();
+            } else {
+              this.timer = setTimeout(function () {
+                _doFilterWithCombobox();
+              }, opts.filterDelay);
+            }
+          });
+
+
+        }
         //combogrid filter
         if ($(this).hasClass('combogrid-f')) {
           input.off('.filter').on('combobox.filter', function (e) {
@@ -469,16 +469,16 @@
   // filter operators
   $.fn.datagrid.defaults.operators = {
     nofilter: {
-      text: '取消'
+          text: 'Отмена'
     },
     between: {
-      text: '之间',
+        text: 'между',
       isMatch: function (source, value) {
         return true;
       }
     },
     contains: {
-      text: '包含',
+        text: 'Включают',
       isMatch: function (source, value) {
         source = String(source);
         value = String(value);
@@ -486,19 +486,19 @@
       }
     },
     equal: {
-      text: '等于',
+        text: 'равно',
       isMatch: function (source, value) {
         return source == value;
       }
     },
     notequal: {
-      text: '不等于',
+        text: 'не равно',
       isMatch: function (source, value) {
         return source != value;
       }
     },
     beginwith: {
-      text: '以开始',
+        text: 'начать с',
       isMatch: function (source, value) {
         source = String(source);
         value = String(value);
@@ -506,7 +506,7 @@
       }
     },
     endwith: {
-      text: '以结束',
+        text: 'закончить с',
       isMatch: function (source, value) {
         source = String(source);
         value = String(value);
@@ -514,25 +514,25 @@
       }
     },
     less: {
-      text: '小于',
+        text: 'меньше, чем',
       isMatch: function (source, value) {
         return source < value;
       }
     },
     lessorequal: {
-      text: '小于等于',
+        text: 'меньше или равно',
       isMatch: function (source, value) {
         return source <= value;
       }
     },
     greater: {
-      text: '大于',
+        text: 'больше, чем',
       isMatch: function (source, value) {
         return source > value;
       }
     },
     greaterorequal: {
-      text: '大于等于',
+        text: 'больше или равно',
       isMatch: function (source, value) {
         return source >= value;
       }

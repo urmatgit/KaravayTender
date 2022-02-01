@@ -5,17 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.KeyValues.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Enums;
 using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 
 namespace CleanArchitecture.Razor.Application.KeyValues.Commands.AddEdit
 {
-    public class AddEditKeyValueCommand:KeyValueDto,IRequest<Result<int>>
+    public class AddEditKeyValueCommand : KeyValueDto, IRequest<Result<int>>
     {
 
     }
@@ -36,7 +34,7 @@ namespace CleanArchitecture.Razor.Application.KeyValues.Commands.AddEdit
         public async Task<Result<int>> Handle(AddEditKeyValueCommand request, CancellationToken cancellationToken)
         {
 
-           
+
             if (request.Id > 0)
             {
                 var keyValue = await _context.KeyValues.FindAsync(new object[] { request.Id }, cancellationToken);
@@ -53,7 +51,7 @@ namespace CleanArchitecture.Razor.Application.KeyValues.Commands.AddEdit
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(keyValue.Id);
             }
-            
+
 
         }
     }

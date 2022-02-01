@@ -1,0 +1,739 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using CleanArchitecture.Razor.Infrastructure.Constants.Permission
+@model SmartAdmin.WebUI.Pages.DemoMasterDetail.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    ViewData["Title"] = _localizer["Demo master detail table"].Value;
+    ViewData["PageName"] = "demomasterdetail_index";
+    ViewData["Category1"] = _localizer["Master Data"].Value;
+    ViewData["Heading"] = _localizer["Demo master detail table"].Value;
+    ViewData["PageDescription"] = _localizer["See all available options"].Value;
+    ViewData["PreemptiveClass"] = "Default";
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Create);
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Search);
+    var _canImport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Import);
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Export);
+
+    var _canCreateCustomer = await _authorizationService.AuthorizeAsync(User, null, Permissions.Customers.Create);
+    var _canEditCustomer = await _authorizationService.AuthorizeAsync(User, null, Permissions.Customers.Edit);
+    var _canDeleteCustomer = await _authorizationService.AuthorizeAsync(User, null, Permissions.Customers.Delete);
+    var _canSearchCustomer = await _authorizationService.AuthorizeAsync(User, null, Permissions.Customers.Search);
+    var _canImportCustomer = await _authorizationService.AuthorizeAsync(User, null, Permissions.Customers.Import);
+    var _canExportCustomer = await _authorizationService.AuthorizeAsync(User, null, Permissions.Customers.Export);
+
+}
+@section HeadBlock {
+
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+    <style>
+
+        .product_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+
+        .customer_dg_datagrid-cell-c2-_action {
+            overflow: visible !important
+        }
+    </style>
+}
+<div id="js-page-content" class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <h4 class="m-0">
+            @_localizer["Master detail demo page"]
+        </h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+
+                <partial name="ProductView" />
+            </div>
+            <div class="col-md-6">
+                <partial name="CustomerView" />
+
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptsBlock {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-detailview.js" asp-append-version="true"></script>
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+    <script type="text/javascript">
+
+        $('#searchbutton').click(function () {
+            reloadP();
+        });
+        $('#addbutton').click(function () {
+            popupmodal(null);
+        });
+        $('#deletebutton').click(function () {
+            onDeleteChecked();
+        });
+        $('#exportbutton').click(function () {
+            onExport();
+        });
+        $('#importbutton').click(function () {
+            showImportModal();
+        });
+        $('#gettemplatebutton').click(function () {
+            onGetTemplate();
+        });
+        $('#product_form :submit').click(function (e) {
+            console.log('submmit')
+            var form = document.querySelector('#product_form');
+            $(form).find(":valid").parent().removeClass("was-validated");
+            if (form.checkValidity() === false) {
+                form.classList.add('was-validated');
+            } else {
+                var request = $('#product_form').serialize();
+                axios.post('@Url.Page("/Products/Index")', request).then(res => {
+                    toastr["info"]('@_localizer["Save Success"]');
+                    $('#product_modal').modal('toggle');
+                    reloadP();
+                }).catch((error) => {
+                    var msg = error.response.data;
+                    bootbox.alert({
+                        size: "small",
+                        title: "@_localizer["Error"]",
+                        message: msg,
+                        callback: function () { /* your callback code */ }
+                    })
+
+                });
+            }
+            event.preventDefault();
+            event.stopPropagation();
+        })
+        var $dgP={};
+        var initdatagridP = () => {
+            $dgP = $('#product_dg').datagrid({
+                view: detailview,
+                detailFormatter: function (index, row) {
+                    return '<div style="padding:2px"><table class="ddv"></table></div>';
+                },
+                onExpandRow: function (index, row) {
+                    var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
+                    ddv.datagrid({
+
+                        method: 'GET',
+                        rownumbers: false,
+                        singleSelect: true,
+                        selectOnCheck: false,
+                        checkOnSelect: false,
+                        pagination: true,
+                        clientPaging: false,
+                        remoteFilter: true,
+
+                        sortName: 'Id',
+                        sortOrder: 'desc',
+                        pageSize: 5,
+                        pageList: [5, 10, 30, 50, 100, 1000],
+
+                        columns: [[
+
+                            { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
+                            { field: 'NameOfEnglish', title: '@_localizer["Name Of English"]', sortable: true, width: 180 },
+                            { field: 'GroupName', title: '@_localizer["Group Name"]', sortable: true, width: 180 },
+                            { field: 'PartnerType', title: '@_localizer["Partner Type"]', sortable: true, width: 100, align: 'right' },
+                            { field: 'Region', title: '@_localizer["Region"]', sortable: true, width: 120 },
+                            { field: 'Sales', title: '@_localizer["Sales"]', sortable: true, width: 120 },
+                            { field: 'RegionSalesDirector', title: '@_localizer["Region Sales Director"]', sortable: true, width: 140 },
+                            { field: 'Address', title: '@_localizer["Address"]', sortable: true, width: 180 },
+                            { field: 'AddressOfEnglish', title: '@_localizer["Address Of English"]', sortable: true, width: 180 },
+                            { field: 'Contract', title: '@_localizer["Contract"]', sortable: true, width: 120 },
+                            { field: 'Email', title: 'Email', sortable: true, width: 130 },
+                            { field: 'PhoneNumber', title: '@_localizer["Phone Number"]', sortable: true, width: 120 },
+                            { field: 'Fax', title: '@_localizer["Fax"]', sortable: true, width: 120 },
+                            { field: 'Comments', title: '@_localizer["Comments"]', sortable: true, width: 180 }
+
+                        ]]
+                        //,
+                        //onResize: function () {
+                        //    $('#product_dg').datagrid('fixDetailRowheight', index);
+                        //    }
+                        ,
+                        onLoadSuccess: function () {
+                            setTimeout(function () {
+                                $('#product_dg').datagrid('fixDetailRowHeight', index);
+                            }, 0);
+                        }
+                    })
+                        .datagrid('enableFilter', {})
+                        .datagrid('load', '@Url.Page("/Customers/Index")?handler=Data&productid=' + getProductId());
+                    $('#product_dg').datagrid('fixDetailRowHeight', index)
+
+                },
+
+                height: (window.innerHeight - 320),
+                method: 'GET',
+                fitColumns: true,
+                rownumbers: false,
+                singleSelect: true,
+                selectOnCheck: false,
+                checkOnSelect: false,
+                pagination: true,
+                clientPaging: false,
+
+                remoteFilter: true,
+                sortName: 'Id',
+                sortOrder: 'desc',
+                pageSize: 15,
+                pageList: [10, 15, 30, 50, 100, 1000],
+                onBeforeLoad: function () {
+                    $('#deletebutton').prop('disabled', true);
+                },
+                onCheckAll: function (rows) {
+                    const checked = $(this).datagrid('getChecked').length > 0;
+                    $('#deletebutton').prop('disabled', !checked);
+                },
+                onUncheckAll: function () {
+                    $('#deletebutton').prop('disabled', true);
+                },
+                onCheck: function () {
+                    $('#deletebutton').prop('disabled', false);
+                },
+                onUncheck: function () {
+                    const checked = $(this).datagrid('getChecked').length > 0;
+                    $('#deletebutton').prop('disabled', !checked);
+                },
+                onClickRow: function (index, field, value) {
+                    var selectedrow = $("#product_dg").datagrid("getSelected");
+                    //console.log(selectedrow);
+
+                    reloadCustomer();
+                },
+
+                columns: [[
+                    { field: 'ck', checkbox: true },
+
+                    {
+                        field: '_action',
+                        title: '@_localizer["Command"]',
+                        width: 100,
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return `<div class="btn-group" role="group">
+                                      <button id="commandbtngroup" onfocusout="hideActionProduct($(this))" onclick="showActionProduct($(this))" type="button" @(_canEdit.Succeeded? "":"disabled")  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="@(Settings.Theme.IconPrefix) fa-edit"></i>
+                                     </button>
+                                     <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
+                                       <button class="dropdown-item" onclick="onEdit(${index})" @(_canEdit.Succeeded? "":"disabled")><i class="fal fa-edit mr-1"></i> @_localizer["Edit"]</button>
+                                       <button class="dropdown-item" onclick="onDelete('${row.Id}')" @(_canDelete.Succeeded? "":"disabled") ><i class="fal fa-trash-alt mr-1"></i> @_localizer["Delete"]</button>
+                                     </div>
+                                  </div>`;
+                        }
+                    },
+                    { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
+                    { field: 'Price', title: '@_localizer["Price"]', sortable: true, width: 100 },
+                    { field: 'Description', title: '@_localizer["Comments"]', sortable: true, width: 180 }
+
+                ]]
+            })
+                .datagrid('enableFilter', {})
+                .datagrid('load', '@Url.Page("/Products/Index")?handler=Data');
+
+
+
+        }
+        var showActionProduct=(val) => {
+            console.log(val.parent().get(0));
+            var _div = val.parent().get(0);
+            if (_div.classList.contains("show"))
+                _div.classList.remove("show");
+            else
+                _div.classList.add("show");
+        }
+        hideActionProduct = (val)=> {
+            console.log(val.parent().get(0));
+            var _div = val.parent().get(0);
+            _div.classList.remove("show");
+        };
+        var reloadP = () => {
+            $dgP.datagrid('load', '@Url.Page("/Products/Index")?handler=Data');
+        }
+
+
+
+        var popupmodal = (customer) => {
+            $('#product_modal').modal('toggle');
+            $('#product_modal .modal-title').html('@_localizer["Add Product"]');
+
+            $('#product_form')[0].reset();
+            if (customer) {
+                $('#product_modal .modal-title').html('@_localizer["Edit Product"]');
+                $('#product_form').jsonToForm(customer, {
+                    PartnerType: function (value) {
+                        if (value == 'TP') {
+                            $('#product_form [name*="PartnerType"]').val(0);
+                        } else {
+                            $('#product_form [name*="PartnerType"]').val(1);
+                        }
+                    }
+                })
+            } else {
+                $('#product_form #Input_Id').val(0)
+
+            }
+        }
+       
+        var onEdit = (index) => {
+            var customer = $dgP.datagrid('getRows')[index];
+            
+            popupmodal(customer);
+
+        }
+        var onDelete = (id) => {
+            bootbox.confirm({
+                message: "@_localizer["Are you sure delete a row?"]",
+                buttons: {
+                    confirm: {
+                        label: '@_localizer["Yes"]',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: '@_localizer["No"]',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        axios.get('@Url.Page("/Products/Index")?handler=Delete&id=' + id).then(res => {
+                            toastr["info"]('@_localizer["Delete Success"]');
+                            reloadP();
+                        })
+                            .catch((error) => {
+                                var msg = error.response.data;
+                                bootbox.alert({
+                                    size: "small",
+                                    title: "@_localizer["Error"]",
+                                    message: msg,
+                                    callback: function () { /* your callback code */ }
+                                })
+                            });
+                    }
+                }
+            })
+        }
+        var onDeleteChecked = () => {
+            var checkedId = $dg.datagrid('getChecked').map(x => x.Id);
+            if (checkedId.length > 0) {
+                bootbox.confirm({
+                    message: "@_localizer["Are you sure delete checked rows?"]",
+                    buttons: {
+                        confirm: {
+                            label: '@_localizer["Yes"]',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: '@_localizer["No"]',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            var paras = new URLSearchParams(checkedId.map(s => ['id', s]));
+                            console.log(paras.toString())
+                            axios.get('@Url.Page("/Products/Index")?handler=DeleteChecked&' + paras.toString()).then(res => {
+                                toastr["info"](`@_localizer["Delete ${checkedId.length} Success"]`);
+                                reloadP();
+                            })
+                                .catch((error) => {
+                                    var msg = error.response.data;
+                                    bootbox.alert({
+                                        size: "small",
+                                        title: "@_localizer["Error"]",
+                                        message: msg,
+                                        callback: function () { /* your callback code */ }
+                                    })
+                                });
+                        }
+                    }
+                });
+
+            }
+        }
+        var onExport = () => {
+            var options = $dgP.datagrid('options');
+            var data = {
+                filterRules: JSON.stringify(options.filterRules),
+                sort: options.sortName,
+                order: options.sortOrder,
+            }
+            console.log(options,data)
+            var headers = {
+                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+            }
+            axios.post('@Url.Page("/Products/Index")?handler=Export',
+                data,
+                {
+                    headers: headers,
+                    responseType: "blob"
+                })
+                .then(response => {
+                    const filename = getFileName(response.headers['content-disposition']);
+                    const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' }));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', filename);
+                    document.body.appendChild(link);
+                    link.click();
+                }).catch(error => {
+                    console.log(error)
+                })
+
+
+        }
+
+
+        // Customer
+          $('#searchbuttonCustomer').click(function () {
+            reloadCustomer();
+        });
+        $('#addbuttonCustomer').click(function () {
+            popupmodalCustomer(null);
+        });
+        $('#deletebuttonCustomer').click(function () {
+            onDeleteCheckedCustomer();
+        });
+        $('#exportbuttonCustomer').click(function () {
+            onExportCustomer();
+        });
+        $('#importbuttonCustomer').click(function () {
+            showImportModalCustomer();
+        });
+        $('#gettemplatebuttonCustomer').click(function () {
+            onGetTemplatelCustomer();
+        });
+        $('#customer_form :submit').click(function (e) {
+            console.log('submmit')
+            var form = document.querySelector('#customer_form');
+            if ($(form).valid() === false) {
+                form.classList.add('was-validated');
+            } else {
+                var request = $('#customer_form').serialize();
+                console.log(request);
+                axios.post('@Url.Page("/Customers/Index")', request).then(res => {
+                    toastr["info"]('@_localizer["Save Success"]');
+                    $('#customer_modal').modal('toggle');
+                    reloadCustomer();
+                }).catch((error) => {
+                    var msg = error.response.data;
+                    bootbox.alert({
+                        size: "small",
+                        title: "@_localizer["Error"]",
+                        message: msg,
+                        callback: function () { /* your callback code */ }
+                    })
+
+                });
+            }
+            event.preventDefault();
+            event.stopPropagation();
+        })
+     var $dg={};
+        var initdatagrid = () => {
+
+            $dg = $('#customer_dg').datagrid({
+                height: (window.innerHeight-320),
+                method: 'GET',
+
+                rownumbers: false,
+                singleSelect: true,
+                selectOnCheck: false,
+                checkOnSelect: false,
+                pagination: true,
+                clientPaging: false,
+                remoteFilter: true,
+
+
+
+                sortName: 'Id',
+                sortOrder:'desc',
+                pageSize: 15,
+                pageList: [10, 15, 30, 50, 100, 1000],
+                onBeforeLoad: function () {
+                    $('#deletebuttonCustomer').prop('disabled', true);
+                },
+                onCheckAll: function (rows) {
+                    const checked = $(this).datagrid('getChecked').length > 0;
+                    $('#deletebuttonCustomer').prop('disabled', !checked);
+                },
+                onUncheckAll: function () {
+                    $('#deletebuttonCustomer').prop('disabled', true);
+                },
+                onCheck: function () {
+                    $('#deletebuttonCustomer').prop('disabled', false);
+                },
+                onUncheck: function () {
+                    const checked = $(this).datagrid('getChecked').length > 0;
+                    $('#deletebuttonCustomer').prop('disabled', !checked);
+                },
+                columns: [[
+                    { field: 'ck', checkbox: true },
+                     {
+                        field: '_action',
+                        title: '@_localizer["Command"]',
+                        width: 100,
+                        align: 'center',
+                         formatter: function (value, row, index) {
+                             console.log(index);
+                            return `<div class="btn-group" role="group">
+                                      <button id="commandbtngroup1" type="button" @(_canEditCustomer.Succeeded? "":"disabled")  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="@(Settings.Theme.IconPrefix) fa-edit"></i>
+                                     </button>
+                                     <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup1">
+                                       <button class="dropdown-item" onclick="onEditCustomer(${index})" @(_canEditCustomer.Succeeded? "":"disabled")><i class="fal fa-edit mr-1"></i> @_localizer["Edit"]</button>
+                                       <button class="dropdown-item" onclick="onDeleteCustomerproduct_dg_datagrid-cell-c1-_action('${row.Id}')" @(_canDeleteCustomer.Succeeded? "":"disabled") ><i class="fal fa-trash-alt mr-1"></i> @_localizer["Delete"]</button>
+                                     </div>
+                                  </div>`;
+                        }
+                    },
+                    { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
+                    { field: 'NameOfEnglish', title: '@_localizer["Name Of English"]', sortable: true, width: 180 },
+                    { field: 'GroupName', title: '@_localizer["Group Name"]', sortable: true, width: 180 },
+                    { field: 'PartnerType', title: '@_localizer["Partner Type"]', sortable: true, width: 100, align: 'right' },
+                    { field: 'Region', title: '@_localizer["Region"]', sortable: true, width: 120 },
+                    { field: 'Sales', title: '@_localizer["Sales"]', sortable: true, width: 120 },
+                    { field: 'RegionSalesDirector', title: '@_localizer["Region Sales Director"]', sortable: true, width: 140 },
+                    { field: 'Address', title: '@_localizer["Address"]', sortable: true, width: 180 },
+                    { field: 'AddressOfEnglish', title: '@_localizer["Address Of English"]', sortable: true, width: 180 },
+                    { field: 'Contract', title: '@_localizer["Contract"]', sortable: true, width: 120 },
+                    { field: 'Email', title: 'Email', sortable: true, width: 130 },
+                    { field: 'PhoneNumber', title: '@_localizer["Phone Number"]', sortable: true, width: 120 },
+                    { field: 'Fax', title: '@_localizer["Fax"]', sortable: true, width: 120 },
+                    { field: 'Comments', title: '@_localizer["Comments"]', sortable: true, width: 180 }
+
+                ]]
+            })
+                .datagrid('enableFilter', {})
+                .datagrid('load', '@Url.Page("/Customers/Index")?handler=Data&productid='+getProductId());
+
+            }
+
+            $('#product_modal').on('shown.bs.modal', function () {
+                reloadCustomerModal();
+
+                $dgCustomerModal.datagrid('resize');
+                console.log('resize');
+            })
+            var getProductId = () => {
+
+            var selectedrow = $("#product_dg").datagrid("getSelected");
+            if (selectedrow) {
+                return  selectedrow.Id;
+            }
+            return 0 ;
+        }
+        var reloadCustomer = () => {
+
+            var id =   getProductId();
+                $dg.datagrid('load', '@Url.Page("/Customers/Index")?handler=Data&productid='+id);
+
+        }
+        $(() => {
+            initdatagridP();
+
+            initdatagrid();
+            initdatagridCustomer();
+        })
+
+
+
+        var popupmodalCustomer = (customer) => {
+            $('#customer_modal').modal('toggle');
+            $('#customer_modal .modal-title').html('@_localizer["Add Customer"]');
+            $('#customer_form').clearForm();
+            $('#customer_form')[0].reset();
+            if (customer) {
+                $('#customer_modal .modal-title').html('@_localizer["Edit Customer"]');
+                $('#customer_form').jsonToForm(customer, {
+                    PartnerType: function (value) {
+                        if (value == 'TP') {
+                            $('#customer_form [name*="PartnerType"]').val(0);
+                        } else {
+                            $('#customer_form [name*="PartnerType"]').val(1);
+                        }
+                    }
+                })
+            } else {
+                $('#customer_form #Input_Id').val(0)
+
+            }
+        }
+
+        var onEditCustomer = (index) => {
+            var customer = $dg.datagrid('getRows')[index];
+            popupmodalCustomer(customer);
+        }
+        var onDeleteCustomer = (id) => {
+            bootbox.confirm({
+                message: "@_localizer["Are you sure delete a row?"]",
+                buttons: {
+                    confirm: {
+                        label: '@_localizer["Yes"]',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: '@_localizer["No"]',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        axios.get('@Url.Page("/Customers/Index")?handler=Delete&id=' + id).then(res => {
+                            toastr["info"]('@_localizer["Delete Success"]');
+                            reloadCustomer();
+                        })
+                            .catch((error) => {
+                                var msg = error.response.data;
+                                bootbox.alert({
+                                    size: "small",
+                                    title: "@_localizer["Error"]",
+                                    message: msg,
+                                    callback: function () { /* your callback code */ }
+                                })
+                            });
+                    }
+                }
+            })
+        }
+        var onDeleteCheckedCustomer = () => {
+            var checkedId = $dg.datagrid('getChecked').map(x => x.Id);
+            if (checkedId.length > 0) {
+                bootbox.confirm({
+                    message: "@_localizer["Are you sure delete checked rows?"]",
+                    buttons: {
+                        confirm: {
+                            label: '@_localizer["Yes"]',
+                            className: 'btn-success'
+                        },
+                        cancel: {
+                            label: '@_localizer["No"]',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            var paras = new URLSearchParams(checkedId.map(s => ['id', s]));
+                            console.log(paras.toString())
+                            axios.get('@Url.Page("/Customers/Index")?handler=DeleteChecked&' + paras.toString()).then(res => {
+                                toastr["info"](`@_localizer["Delete ${checkedId.length} Success"]`);
+                                reloadCustomer();
+                            })
+                                .catch((error) => {
+                                    var msg = error.response.data;
+                                    bootbox.alert({
+                                        size: "small",
+                                        title: "@_localizer["Error"]",
+                                        message: msg,
+                                        callback: function () { /* your callback code */ }
+                                    })
+                                });
+                        }
+                    }
+                });
+
+            }
+        }
+        var onExportCustomer = () => {
+            var options = $dg.datagrid('options');
+            var data = {
+                filterRules: JSON.stringify(options.filterRules),
+                sort: options.sortName,
+                order: options.sortOrder,
+            }
+            console.log(options,data)
+            var headers = {
+                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+            }
+            axios.post('@Url.Page("/Customers/Index")?handler=Export',
+                data,
+                {
+                    headers: headers,
+                    responseType: "blob"
+                })
+                .then(response => {
+                    const filename = getFileName(response.headers['content-disposition']);
+                    const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' }));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', filename);
+                    document.body.appendChild(link);
+                    link.click();
+                }).catch(error => {
+                    console.log(error)
+                })
+
+
+            }
+
+            ///customerModal_dg
+             var reloadCustomerModal = () => {
+
+            var id = getProductId();
+                $dgCustomerModal.datagrid('load', '@Url.Page("/Customers/Index")?handler=Data&productid='+id);
+
+        }
+            var $dgCustomerModal={};
+        var initdatagridCustomer = () => {
+
+            $dgCustomerModal = $('#customerModal_dg').datagrid({
+                height: (window.innerHeight-320),
+                method: 'GET',
+                rownumbers: false,
+                singleSelect: true,
+                selectOnCheck: false,
+                checkOnSelect: false,
+                pagination: true,
+                clientPaging: false,
+                remoteFilter: true,
+
+                sortName: 'Id',
+                sortOrder:'desc',
+                pageSize: 15,
+                pageList: [10, 15, 30, 50, 100, 1000],
+
+                columns: [[
+
+                    { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
+                    { field: 'NameOfEnglish', title: '@_localizer["Name Of English"]', sortable: true, width: 180 },
+                    { field: 'GroupName', title: '@_localizer["Group Name"]', sortable: true, width: 180 },
+                    { field: 'PartnerType', title: '@_localizer["Partner Type"]', sortable: true, width: 100, align: 'right' },
+                    { field: 'Region', title: '@_localizer["Region"]', sortable: true, width: 120 },
+                    { field: 'Sales', title: '@_localizer["Sales"]', sortable: true, width: 120 },
+                    { field: 'RegionSalesDirector', title: '@_localizer["Region Sales Director"]', sortable: true, width: 140 },
+                    { field: 'Address', title: '@_localizer["Address"]', sortable: true, width: 180 },
+                    { field: 'AddressOfEnglish', title: '@_localizer["Address Of English"]', sortable: true, width: 180 },
+                    { field: 'Contract', title: '@_localizer["Contract"]', sortable: true, width: 120 },
+                    { field: 'Email', title: 'Email', sortable: true, width: 130 },
+                    { field: 'PhoneNumber', title: '@_localizer["Phone Number"]', sortable: true, width: 120 },
+                    { field: 'Fax', title: '@_localizer["Fax"]', sortable: true, width: 120 },
+                    { field: 'Comments', title: '@_localizer["Comments"]', sortable: true, width: 180 }
+
+                ]]
+            })
+                .datagrid('enableFilter', {})
+                .datagrid('load', '@Url.Page("/Customers/Index")?handler=Data&productid='+getProductId());
+
+            }
+    </script>
+
+
+
+
+
+}

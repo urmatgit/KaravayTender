@@ -1,0 +1,112 @@
+﻿@using CleanArchitecture.Razor.Domain.Enums
+@model SmartAdmin.WebUI.Pages.ComPositions.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+<div class="modal fade " id="composition_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog  modal-xl " role="document">
+        <div class="modal-content  ">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <div class="panel-toolbar">
+                    @*<button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" onclick="TogleFullScreen()"><i class="@(Settings.Theme.IconPrefix) fa-expand"></i></button>*@
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
+                    </button>
+                </div>
+            </div>
+
+
+            <form id="composition_edit_form" class="needs-validation" novalidate="novalidate">
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="InputPos.Id" />
+                    <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label class="form-label" for="VatId">@_localizer["Comerial position"] <span class="text-danger">*</span></label>
+                            <select type="text" asp-for="InputPos.NomenclatureId" asp-items="@(new SelectList(Model.Nomenclatures,"Id","Name"))" class="custom-select" placeholder="@_localizer["Nomenclature"]" data-val-required="Не выбрано 'Номенклатура'">
+                                <option value="">@_localizer["Choose a nomenclature"]</option>
+                            </select>
+
+                            <span class="invalid-feedback" asp-validation-for="InputPos.NomenclatureId"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="Category">@_localizer["Category"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="InputPos.Nomenclature.Category.Name" class="form-control" placeholder="@_localizer["Category"]" readonly />
+                            <span class="invalid-feedback" asp-validation-for="InputPos.Nomenclature.Category.Name"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <label class="form-label">@_localizer["Аreas1"] <span class="text-danger">*</span></label>
+                            <select class="select2" multiple="multiple" asp-items="Model.Areas" id="AreaIds" asp-for="InputPos.AreaIds" required>
+                                <option value="">@_localizer["Choose areas"]</option>
+                            </select>
+                            <span class="invalid-feedback" asp-validation-for="InputPos.AreaIds"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <label class="form-label" for="name">@_localizer["UnitOf"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="InputPos.Nomenclature.UnitOf.Name" class="form-control" placeholder="@_localizer["Unitof"]" readonly />
+
+                            <span class="invalid-feedback" asp-validation-for="InputPos.Nomenclature.UnitOf.Name"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="Volume">@_localizer["Volume"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="InputPos.Nomenclature.Volume" class="form-control" placeholder="@_localizer["Volume"]" readonly />
+
+                            <span class="invalid-feedback" asp-validation-for="InputPos.Nomenclature.Volume"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="name">@_localizer["Delivery Count in month"] <span class="text-danger">*</span></label>
+                            <input type="number" asp-for="InputPos.DeliveryCount" class="form-control" placeholder="@_localizer["Count"]"   />
+
+                            <span class="invalid-feedback" asp-validation-for="InputPos.DeliveryCount"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="name">@_localizer["Volume delivery  in term"] <span class="text-danger">*</span></label>
+                            <input type="number" asp-for="InputPos.Volume" class="form-control" placeholder="@_localizer["Volume"]"   />
+
+                            <span class="invalid-feedback" asp-validation-for="InputPos.Volume"></span>
+                        </div>
+
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <label class="form-label" for="QualityDocsNames">@_localizer["Quality documents"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="InputPos.Nomenclature.QualityDocsNames" class="form-control" placeholder="@_localizer["QualityDocs"]" readonly />
+
+                            <span class="invalid-feedback" asp-validation-for="InputPos.Nomenclature.QualityDocsNames"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <label class="form-label" for="AddRequirement">@_localizer["Additional requirement"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="InputPos.AddRequirement" class="form-control" placeholder="@_localizer["Requirement"]" />
+
+                            <span class="invalid-feedback" asp-validation-for="InputPos.AddRequirement"></span>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
+                        <button type="submit" id="composition_save" class="btn btn-primary">@_localizer["Save"]</button>
+                    </div>
+
+</form>
+
+
+        </div>
+
+    </div>
+</div>

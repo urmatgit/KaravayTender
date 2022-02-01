@@ -121,7 +121,7 @@
     <value>Экспорт в Excel</value>
   </data>
   <data name="Add" xml:space="preserve">
-    <value>Добавлять</value>
+    <value>Добавить</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
@@ -178,9 +178,9 @@
     <value>Сбой экспорта</value>
   </data>
   <data name="Save fail" xml:space="preserve">
-    <value>Сохранить не удается</value>
+    <value>Ошибка сохранения</value>
   </data>
   <data name="Delete fail" xml:space="preserve">
-    <value>Удалить не удаляем</value>
+    <value>Ошибка при удалении</value>
   </data>
 </root>

@@ -1,0 +1,1136 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using  CleanArchitecture.Razor.Application.Common.Extensions
+@using CleanArchitecture.Razor.Application.Constants.Permission
+@model SmartAdmin.WebUI.Pages.ComOffers.ParticipantModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComOffers.IndexModel> _localizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.Contragents.IndexModel> _localizerContr
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComParticipants.IndexModel> _localizerPart
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComStages.IndexModel> _localizerStage
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    ViewData["Title"] = _localizer["Сommercial offer"].Value;
+    ViewData["PageName"] = "comoffers_participant";
+    ViewData["Category1"] = _localizer["References"].Value;
+    ViewData["Heading"] = _localizer["Сommercial offer"].Value;
+    ViewData["PageDescription"] = _localizer["Managing supplier referral parameters"].Value;
+    ViewData["PreemptiveClass"] = "Default";
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Create);
+    var _canStart = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Start);
+
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Search);
+
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Export);
+
+}
+@section HeadBlock {
+
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/ForOffer.css">
+    <style>
+
+        .main_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+
+        .composition_dg_datagrid-cell-c2-_action {
+            overflow: visible !important
+        }
+    </style>
+}
+<div id="table-page-content" class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <h4 class="m-0">
+            @_localizer["Commercial offer"]
+            <small>@_localizer["See all available options"]</small>
+        </h4>
+        <div class="ml-auto">
+            @if (_canSearch.Succeeded)
+            {
+            <button class="btn btn-sm btn-outline-primary " id="searchbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                @_localizer["Search"]
+            </button>
+            }
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row mb-2">
+
+            <div class="col-md-2  mat my-auto" style="text-align:right">
+                <label class="form-label">@_localizer["Фильтр КП"]  </label>
+            </div>
+            <div class="col-md-3">
+                <select type="text" id="filterForComOffer" onchange="reloadData()" asp-items="Html.GetEnumSelectList<ComOfferFilterForParticipant>()" class="custom-select" placeholder="@_localizer["Фильтр"]" value="3">
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table id="main_dg">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="AddOrEditPartcipantCard" />
+
+
+@section ScriptsBlock {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
+    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-detailview.js"></script>
+    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-cellediting.js"></script>
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/EditGridCaching.js"></script>
+
+    <script src="~/js/FilesDownloadDialog.js"></script>
+
+    <script type="text/javascript">
+        let clscomposition = null;
+        var currentEditRow = "";
+
+        var pagelink = '@Url.Page("/ComOffers/Participant")';
+        var translations = {
+            SaveSuccess: '@_localizer["Save Success."]',
+            SaveFail: '@_localizer["Save fail"]',
+            IconPrefix: '@(Settings.Theme.IconPrefix)',
+            Command: '@_localizer["Command"]',
+            Edit: '@_localizer["Edit"]',
+            Delete: '@_localizer["Delete"]',
+            AddCaption: '@_localizer["Add commercial offer"]',
+            EditCaption: '@_localizer["Edit commercial offer"]',
+            DeleteRowDialog: '@_localizer["Are you sure delete a row?"]',
+			Yes: '@_localizer["Yes"]',
+			No: '@_localizer["No"]',
+            DeleteSuccess: '@_localizer["Delete Success"]',
+            DeleteFail: '@_localizer["Delete fail"]',
+			DeleteRowsDialog: '@_localizer["Are you sure delete checked rows?"]',
+            Success: '@_localizer["Success"]',
+            ExportFail: '@_localizer["Export fail"]',
+            Name: '@_localizer["Name"]',
+
+             Status: '@_localizerContr["Status"]',
+            FullName: '@_localizerContr["Full name"]',
+            INN: '@_localizerContr["INN"]',
+            Direction: '@_localizerContr["Direction"]',
+            Service: '@_localizerContr["Service"]',
+            KPP: '@_localizerContr["KPP"]',
+            Manager: '@_localizerContr["Manager"]',
+            Phone: '@_localizerContr["Phone"]',
+            ContactPerson: '@_localizerContr["Contact person"]',
+            ContactPhone: '@_localizerContr["Contact person phone"]',
+            LoadFail: '@_localizerPart["load fail"]',
+
+            Participant: '@_localizerPart["Participant"]',
+            StepFailure: '@_localizerPart["Step failure"]',
+            NoParticipantsSel: '@_localizerPart["No participants selected"]',
+            AddSuccess: '@_localizerPart["Participants  is added"]',
+            AddFail: '@_localizerPart["Adding fail"]',
+            AddParticipants: '@_localizerPart["Add participant"]',
+            Cancel: '@_localizer["Cancel"]',
+            Ok: '@_localizer["Ok"]',
+            Download_Success: '@_localizer["Download Success"]',
+
+		}
+		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
+        var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
+
+        var YesNotList = [
+            {
+                id: '',
+                text: 'Все'
+
+            },
+            {
+                id: 'true',
+                text: 'Да'
+            },
+            {
+                id: 'false',
+                text: 'Нет'
+            }
+
+        ]
+        
+         var ContragentStatuses=[
+                                 {
+                                     value: null,
+                                     text: 'Все'
+                                 },
+								@foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
+                                {
+                                    <text>
+                                 {
+                                     value: '@val',
+                                     text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'
+                                 },
+
+                                    </text>
+
+                                }
+        ]
+        var ParticipantStatus = [{
+                    value: null,
+                    text: 'Все'
+                },
+                            @foreach(var val in Enum.GetValues(typeof (CleanArchitecture.Razor.Domain.Enums.ParticipantStatus)))
+    {
+        <text>
+            {
+                value: '@val',
+            text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ParticipantStatus)val).ToDescriptionString()))'
+                            },
+        </text>
+    }]
+
+
+        $("input[name=GetStageType]:radio").change(function () {
+            if (GetStageType() != 1) {
+                ActionButtonAccess(true);
+
+                @*let changet = getChanges();
+                if (changet.length > 0) {
+                    bootbox.confirm({
+                        message: "@_localizer["Сохранить измененные цены?"]",
+                        buttons: {
+                            confirm: {
+                                label: '@_localizer["Yes"]',
+                                className: 'btn-success'
+                            },
+                            cancel: {
+                                label: '@_localizer["No"]',
+                                className: 'btn-danger'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                //save
+                                accept();
+                            }
+                        }
+                    })
+                }*@
+            } else {
+                ActionButtonAccess(false);
+
+            }
+            reloadDataCP();
+            //if (GetStageType() == 1)
+            //    $dgCP.datagrid('enableCellEditing').datagrid('gotoCell', {
+            //        index: 0,
+            //        field: 'InputPrice'
+            //    });
+            //else
+            //    $dgCP.datagrid('disableCellEditing').datagrid('gotoCell', {
+            //        index: 0,
+            //        field: 'InputPrice'
+            //    });
+        });
+
+        var getFileName = (disposition) => {
+            const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\.]+)(?:; ?|$)/;
+            const asciiFilenameRegex = /filename=(["']?)(.*?[^\\])\1(?:; ?|$)/;
+            let fileName = '';
+            if (utf8FilenameRegex.test(disposition)) {
+                fileName = decodeURIComponent(utf8FilenameRegex.exec(disposition)[1]);
+            } else {
+                const matches = asciiFilenameRegex.exec(disposition);
+                if (matches != null && matches[2]) {
+                    fileName = matches[2];
+                }
+            }
+            return fileName;
+        }
+        function onDownloadFileSpec(value) {
+            const url = value;
+            const filename = getFileName(value);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            toastr["info"](`@_localizer["Файл загружен"]`);
+        }
+        function onDownloadQualityDoc(value) {
+            var data = {
+                name: value
+
+            }
+            var headers = {
+                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+            }
+            axios.post('@Url.Page("/QualityDocs/Index")?handler=Download',
+                data,
+                {
+                    headers: headers
+
+                }
+               )
+                .then(response => {
+                    if (response.data)
+                        onDownloadFileSpec(response.data);
+                    else
+                        toastr["error"]('Файл не найден!');
+                })
+        }
+
+        function createColumnsComOffer() {
+
+            var InitColumns =
+                [
+
+                   // { field: 'ck', checkbox: true },
+                    {
+                        field: '_action',
+                        title: `${window.translations.Command} `,
+                        width: 70,
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return `<div class="btn-group" role="group">
+								  <button id="commandbtngroup" type="button" onclick="onEdit(${index})"  @(_canEdit.Succeeded ? "" : "disabled")  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="${window.translations.IconPrefix} fa-edit"></i>
+								 </button>
+
+							  </div>`;
+                        }
+                    },
+
+                    { field: 'StatusStr', title: '@_localizer["Статус КП"]', sortable: true, width: 130 },
+                    {
+                        field: 'LastStatusStr', title: '@_localizer["Статус поставщика"]', sortable: true, width: 130, formatter: function (val, rec) {
+                            //WinnerDetermined = 4,
+                            if (rec.Status == 4) {
+                                if (val == "Подтверждение")
+                                    return "Победитель";
+                                else if (val == "Отмена" || val =="Отказ")
+                                    return "Проигрыш";
+                            }
+                            return val;
+                        }
+                    },
+                { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
+                { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
+
+
+                { field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 150 },
+                { field: 'TermBegin', title: '@_localizer["Term from"]', sortable: true, width: 90, formatter: dateformatter  },
+                { field: 'TermEnd', title: '@_localizer["Term to"]', sortable: true, width: 90, formatter: dateformatter  },
+
+                { field: 'ManagerName', title: '@_localizer["Manager"]', sortable: true, width: 150 },
+
+
+                { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 60 },
+                { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 70, formatter: checkboxformatter },
+                { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter },
+
+                {
+                    field: 'DeadlineDate', title: '@_localizer["Срок ответа до"]', sortable: true, width: 90, formatter: function (val, rec,index) {
+                        // WinnerDetermined = 4 ||
+                        if (rec.Status != 4 && rec.Status != 5)
+                            return dateformatter(val, rec, index);
+                        else
+                            return "";
+                    }
+
+                },
+                { field: 'DateBegin', title: '@_localizer["Date open"]', sortable: true, width: 90, formatter: dateformatter  },
+                { field: 'DateEnd', title: '@_localizer["Date close"]', sortable: true, width: 90, formatter: dateformatter  },
+
+                ];
+
+            return InitColumns;
+        };
+        let tblFilters = [
+            {
+                field: 'DeadlineDate',
+                type: 'datebox',
+                options: DateFilterOptions,
+                op: 'equal'
+            },
+            {
+                field: 'TermBegin',
+                type: 'datebox',
+                options: DateFilterOptions,
+                op: 'equal'
+            },
+            {
+                field: 'TermEnd',
+                type: 'datebox',
+                options: DateFilterOptions,
+                op: 'equal'
+            },
+            {
+                field: 'DateBegin',
+                type: 'datebox',
+                options: DateFilterOptions,
+                op: 'equal'
+            },
+            {
+                field: 'DateEnd',
+                type: 'datebox',
+                options: DateFilterOptions,
+                op: 'equal'
+            },
+
+                {
+                    field: 'IsBankDaysStr',
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        valueField: 'id',
+                        textField: 'text',
+                        data: YesNotList,
+                        onChange: function (newValue, oldValue) {
+                            console.log(newValue);
+                            $dg.datagrid('addFilterRule', {
+                                field: 'IsBankDays',
+                                op: 'equal',
+                                value: newValue
+                            });
+
+                        }
+
+                    }
+
+                },
+                {
+                    field: 'IsDeliveryInPriceStr',
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        valueField: 'id',
+                        textField: 'text',
+                        data: YesNotList,
+                        onChange: function (newValue, oldValue) {
+                            console.log(newValue);
+                            $dg.datagrid('addFilterRule', {
+                                field: 'IsDeliveryInPrice',
+                                op: 'equal',
+                                value: newValue
+                            });
+
+                        }
+
+                    }
+
+                },
+                {
+                    field: 'StatusStr',
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        data: [{
+                            value: null,
+                            text:'Все'
+                        },
+                            @foreach(var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ComOfferStatus)))
+                {
+                    <text>
+                            {
+                                value: '@val',
+                                text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ComOfferStatus)val).ToDescriptionString()))'
+                            },
+                            </text>
+                }
+                        ],
+                        onChange: function (newValue, oldValue) {
+                            console.log('Sttus change ' + newValue);
+                            $dg.datagrid('addFilterRule', {
+                                field: 'Status',
+                                op: 'equal',
+                                value: newValue
+                            });
+                        }
+                    }
+
+            }, {
+                    field: 'LastStatusStr',
+                type: 'combobox',
+                options: {
+                    panelHeight: 'auto',
+                    data: ParticipantStatus,
+                    onChange: function (newValue, oldValue) {
+
+                        $dg.datagrid('addFilterRule', {
+                            field: 'LastStatus',
+                            op: 'equal',
+                            value: newValue
+                        });
+                    }
+                }
+
+            }
+        ]
+        let tblColumnsComPosition = [
+            { field: 'ParticipantStatusStr', title: '@_localizer["Статус участия"]', sortable: true, width: 130 },
+           {
+
+               field: 'CategoryName', title: '@_localizer["Category"]', sortable: true, width: 130 },
+                {
+                    field: 'NomName', title: '@_localizer["Nomenclature"]', sortable: true, width: 150
+                },
+           {
+               field: 'Stage', title: '@_localizerStage["Stage"]', sortable: true, width: 80
+                },
+
+                {
+                    field: 'AreaNames', title: '@_localizer["Arias"]', sortable: true, width: 150
+                },
+                {
+                    field: 'UnitOfName', title: '@_localizer["UnitOf"]', sortable: true, width: 80,
+                },
+                { field: 'DeliveryCount', title: '@_localizer["Delivery count"]', sortable: true, width: 130},
+           { field: 'RequestPrice', title: '@_localizer["Запрос цены"]', sortable: true, align: 'center', width: 80, formatter: checkboxformatter },
+           { field: 'InputPrice', title: '@_localizer["Price"]', sortable: true, width: 80, align: 'right', formatter: formatPrice,   editor: { type: 'numberbox', options: { precision: 2 } } },
+
+           { field: 'NomStavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
+                { field: 'Volume', title: '@_localizer["Volume"]', sortable: true, width: 80 },
+                { field: 'QualityDocsNames', title: '@_localizer["Quality documents"]', sortable: true, width: 150 },
+                { field: 'NomSpecification', title: '@_localizer["Specification"]', sortable: true, width: 150}
+
+
+            ];
+        var editIndex = undefined;
+        var $dgCP = {};
+        var initdatagridCP = () => {
+            $dgCP = $('#compostion_dg').datagrid({
+                height: (window.innerHeight /2),
+                method: 'GET',
+                rownumbers: false,
+                singleSelect: true,
+                selectOnCheck: false,
+                checkOnSelect: false,
+                pagination: true,
+                clientPaging: false,
+                remoteFilter: true,
+
+                sortName: 'Id',
+                sortOrder: 'asc',
+                pageSize: 15,
+                pageList: [5, 10, 30, 50, 100, 1000],
+
+                columns: [tblColumnsComPosition],
+
+                onLoadSuccess: function (res) {
+                    $dgCP.datagrid("gotoCell", {
+                        index: 0,
+                        field: "InputPrice"
+                    })
+                    let StageType = $('input[name="GetStageType"]:checked').val();
+
+                    if (StageType === '1') {
+                        $dgCP.datagrid('hideColumn', 'Stage');
+                        if (res.rows && res.rows.length > 0) {
+
+                            $('#StageNumber').html(res.rows[0].Stage);
+                            $('#StageId').val(res.rows[0].StageId);
+                            $('#StageStatus').val(res.rows[0].ParticipantStatus);
+                        }
+                        ActionButtonAccess(false);
+                    } else {
+
+                        $dgCP.datagrid('showColumn', 'Stage');
+                        $('#StageNumber').html("");
+                        $('#StageId').val(0);
+
+                        $('#StageStatus').val(res.rows[res.rows.length-1].ParticipantStatus);
+                        //$('#StageStatus').val(null);
+                        ActionButtonAccess(true);
+                    }
+                    showWinnerText();
+
+                },
+                onClickCell: onClickRow,
+                //onEndEdit: function (index, row) {
+                //    var ed = $(this).datagrid('getEditor', {
+                //        index: index,
+                //        field: 'Id'
+                //    });
+                //    row.InputPrict = $(ed.target).combobox('getText');
+                //},
+                onBeforeEdit: function (index, row) {
+                    var colInputPrice = $(this).datagrid('getColumnOption', 'InputPrice');
+                    if (row.RequestPrice) {
+                        colInputPrice.editor = { type: 'numberbox', options: { precision: 2 } };
+                    } else {
+
+                        colInputPrice.editor = null;
+                    }
+                   // $dgCP.datagrid('refreshrow', index);
+                },
+                onCellEdit: function (index, field) {
+                    var dg = $(this);
+                    var input = dg.datagrid('input', { index: index, field: field });
+                    input.bind('keydown', function (e) {
+                        if (e.keyCode == 38 && index > 0) {	// up
+                            dg.datagrid('endEdit', index);
+                            let prevIndex = GetPrevEditRow(index);
+                            if (prevIndex != index)
+                            dg.datagrid('editCell', {
+                                index: prevIndex,
+                                field: field
+                            });
+                        } else if (e.keyCode == 40  && index < dg.datagrid('getRows').length - 1) {	// down
+                            dg.datagrid('endEdit', index);
+                            let nextIindex = GetNextEditRow(index);
+                            if (nextIindex != index)
+                            dg.datagrid('editCell', {
+                                index: nextIindex,// index + 1,
+                                field: field
+                            });
+
+
+                        }
+                        else if (e.keyCode == 13 || e.keyCode==9) {
+                            dg.datagrid('endEdit', index);
+                            let nextIindex = GetNextEditRow(index);
+
+                            if (nextIindex != index) {
+                                dg.datagrid('editCell', {
+                                    index: nextIindex,// index + 1,
+                                    field: field
+                                });
+                            } else {
+                                setFocus($('#confirm'));
+                            }
+                        }
+
+                    })
+                },
+
+                //onAfterEdit: function (index, row) {
+                //    row.editing = false;
+                //    $(this).datagrid('refreshRow', index);
+                //},
+                //onCancelEdit: function (index, row) {
+                //    row.editing = false;
+                //    $(this).datagrid('refreshRow', index);
+                //},
+                onLoadError: function (error) {
+                    if (error.responseJSON.Errors) {
+                        const errors = error.responseJSON.Errors;
+					errors.forEach(item => {
+						toastr["error"](item);
+					});
+				} else {
+                        toastr["error"](`@_localizer["Load fail"],${error.responseJSON}`);
+				}
+                }
+            }).datagrid('enableCellEditing')
+                .datagrid('enableFilter', [
+                 {
+                    field: 'ParticipantStatusStr',
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        data: ParticipantStatus,
+                        onChange: function (newValue, oldValue) {
+
+                            $dgCP.datagrid('addFilterRule', {
+                                field: 'ParticipantStatus',
+                                op: 'equal',
+                                value: newValue
+                            });
+                        }
+                    }
+
+                }
+            ]);
+            //if (GetStageType() == 1)
+            //$dgCP.datagrid('enableCellEditing').datagrid('gotoCell', {
+            //    index: 0,
+            //    field: 'Id'
+            //});
+
+        }
+        function getComOfferRequestCount() {
+            axios.get('@Url.Page("/ComOffers/Participant")?handler=RequestCount')
+                .then(res => {
+                    console.log(res);
+                    //ContragentOnRegistrationCount
+                    $('*[id*=ComOfferRequestCount]:visible').each(function () {
+                        if (res.data <= 0) {
+                            $(this).hide();
+                        } else
+                            $(this).text(res.data);
+                    });
+                })
+                .catch((error) => {
+                    if (error.response.data.Errors) {
+                        const errors = error.response.data.Errors;
+                        errors.forEach(item => {
+                            toastr["error"](item);
+                        });
+                    } else {
+                        toastr["error"](`Получение количество КП ,${error.response.data}`);
+                    }
+                });
+        }
+
+        function GetNextEditRow(startIndex) {
+            let indexNext = startIndex + 1;
+            if (indexNext >= $dgCP.datagrid('getRows').length)
+                return startIndex;
+
+            while (indexNext <= $dgCP.datagrid('getRows').length) {
+                var row = $dgCP.datagrid('getRows')[indexNext];
+                if (row && row.RequestPrice) {
+                    return indexNext;
+                }
+                indexNext++;
+            }
+            return startIndex; //setFocus($('#confirm'));
+
+        }
+        function setFocus(element) {
+            $(element).focus();
+        }
+        function GetPrevEditRow(startIndex) {
+            let indexNext = startIndex -1;
+            if (indexNext <0)
+                return startIndex;
+
+            while (indexNext >=0) {
+                var row = $dgCP.datagrid('getRows')[indexNext];
+                if (row && row.RequestPrice) {
+                    return indexNext;
+                }
+                indexNext--;
+            }
+            return startIndex;
+
+        }
+        function showWinnerText() {
+
+            let stageStatus = $('#StageStatus').val();
+
+            //[Display(Name ="Определение победителя")]
+            //WinnerDetermining = 3,
+
+            if (currentEditRow.Status == 3 && stageStatus == 1) {
+                let rows = $dgCP.datagrid('getRows');
+                if (rows && rows.length > 0) {
+                    let deadlinedate = rows[rows.length - 1].DeadlineDate;
+                    let date = new Date(deadlinedate);
+                    $('#yourWinner').html("Вы объявлены победителем. Подтвердите спецификацию до " + moment(date).format("DD.MM.YYYY"));
+                } else
+                    $('#yourWinner').html("");
+                $('#yourWinner').removeAttr("hidden")
+            } else {
+
+
+                $('#yourWinner').attr("hidden", true);
+            }
+        }
+        function onClickRow(index, field, value) {
+            if (editIndex != index) {
+                if (endEditing()) {
+                    $dgCP.datagrid('selectRow', index)
+                        .datagrid('beginEdit', index);
+                    editIndex = index;
+                } else {
+
+                    $dgCP.datagrid('selectRow', editIndex);
+                }
+            }
+            if (field == "NomSpecification") {
+                let row = $dgCP.datagrid('getRows')[index];
+                ShowFileDownloadrDialog(value, row.NomenclatureId);
+            } else if (field == "QualityDocsNames") {
+                ShowFileDownloadrDialog(value);
+            }
+        }
+        function endEditing() {
+
+            if (editIndex == undefined) { return true }
+            $dgCP.datagrid('endEdit', editIndex);
+            return true;
+            //if ($dgCP.datagrid('validateRow', editIndex)) {
+            //    var ed = $dgCP.datagrid('getEditor', { index: editIndex, field: 'InputPrice' });
+            //    //if (ed.target) {
+            //    //    var productname = $(ed.target).val();
+            //    //    $dgCP.datagrid('getRows')[editIndex]['InputPrice'] = productname;
+            //    //}
+            //    $dgCP.datagrid('endEdit', editIndex);
+            //    editIndex = undefined;
+            //    return true;
+            //} else {
+            //    return false;
+            //}
+        }
+        function accept() {
+            if (endEditing()) {
+                $dgCP.datagrid('acceptChanges');
+            }
+        }
+        function reject() {
+            $dgCP.datagrid('rejectChanges');
+            editIndex = undefined;
+        }
+        function getChanges() {
+            var rowEx = $dgCP.datagrid('getRows');
+            if (rowEx) {
+
+                var checkRows = rowEx.filter(x => x.RequestPrice == true);
+                return checkRows;
+
+            }
+            var rows = $dgCP.datagrid('getChanges');
+            return rows
+
+            //alert(rows.length + ' rows are changed!');
+        }
+        function GetStageType() {
+            return  $('input[name="GetStageType"]:checked').val();
+        }
+        function reloadDataCP() {
+            let StageType = $('input[name="GetStageType"]:checked').val();
+            $('#compostion_dg').datagrid('load', "/ComOffers/Participant?handler=DataPos&ComOfferId=" + currentEditRow.Id + "&IsLastStage=" + StageType);
+
+        }
+        $('#participant_modal').on('shown.bs.modal', function () {
+            reloadDataCP();
+
+            $dgCP.datagrid('resize');
+
+                })
+        var $dg = {};
+
+        var initdatagrid = () => {
+            $dg = $('#main_dg').datagrid({
+                height: (window.innerHeight - 250),
+                method: 'GET',
+                rownumbers: false,
+                singleSelect: true,
+                selectOnCheck: false,
+                checkOnSelect: false,
+                pagination: true,
+                clientPaging: false,
+                remoteFilter: true,
+                sortName: 'Id',
+                sortOrder: 'desc',
+                pageSize: 15,
+                pageList: [10, 15, 30, 50, 100, 1000],
+                onBeforeLoad: function () {
+
+                },
+                onCheckAll: function (rows) {
+                    const checked = $(this).datagrid('getChecked').length > 0;
+
+
+                },
+                onUncheckAll: function () {
+
+                },
+                onCheck: function () {
+
+
+                },
+                onUncheck: function () {
+                    const checked = $(this).datagrid('getChecked').length > 0;
+
+                },
+                onClickCell: function (index, field, value) {
+                    if (field != "_action")
+                        onEdit(index);
+                    //}
+                },
+                columns: [createColumnsComOffer()]
+                ,
+                onLoadSuccess: function (res) {
+                    console.log($('.datagrid-row .btn-group'));
+                    console.log($('.datagrid-row .btn-group').length);
+                },
+                rowStyler: function (index, row) {
+                    let style = 'cursor: pointer;';
+                    if (row["Status"] == 3 && row["LastStatusStr"] == "Ожидание") {
+                        style += 'background-color:rgb(255,199,206);color:rgb(156,0,0);';
+                    } else if (row["Status"] == 4 && row["LastStatusStr"] == "Подтверждение") //"Победитель определён"
+                        style += 'background-color:rgb(198,239,206);color:rgb(0,97,0);';
+
+                    return style;
+                }
+
+            })
+
+                .datagrid('enableFilter', tblFilters);
+            reloadData();
+            //$dg.datagrid('load', `/ComOffers/Participant?handler=Data`);
+
+        }
+
+
+		$(() => {
+            getComOfferRequestCount();
+            $("#filterForComOffer").val(3);
+            initdatagrid();
+            initdatagridCP();
+            })
+
+        function reloadData()   {
+            let comOfferFilterFor = $("#filterForComOffer").val();
+            $dg.datagrid('load', '@Url.Page("/ComOffers/Participant")?handler=Data&comOfferFilterFor=' + comOfferFilterFor);
+        }
+        function checkEmptyPrices() {
+            var rows = $dgCP.datagrid('getRows');
+            let hasEmpty = false;
+            rows.forEach(r => {
+                if (r.RequestPrice == true && (r.InputPrice == null || r.InputPrice==0)) {
+                    hasEmpty = true;
+
+                }
+            });
+            return hasEmpty;
+
+
+
+        }
+
+        function SendPost(url, param,callback) {
+            var headers = {
+                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+            }
+
+            axios.post(url, param, {
+                headers: headers
+            }).then(res => {
+                toastr["info"]('@_localizer["Save Success."]');
+                $('#participant_modal').modal('toggle');
+                reloadData();
+                if (callback)
+                    callback(res.data.Data);
+            });
+                @*.catch((error) => {
+				if (error.response.data.Errors) {
+					const errors = error.response.data.Errors;
+					errors.forEach(item => {
+						toastr["error"](item);
+					});
+				} else {
+					toastr["error"](`@_localizer["Save fail"],${error.response.data}`);
+				}
+			});*@
+        }
+        $('#participant_form :submit').click(function (e) {
+		const form = document.querySelector('#participant_form');
+		if ($(form).valid() === false) {
+			form.classList.add('was-validated');
+        } else {
+            endEditing();
+            if (checkEmptyPrices())
+                bootbox.alert("Есть не введеные цены, прошу запольнить цены или откажитесь от участие!");
+            else {
+                submit();
+
+            }
+		}
+		event.preventDefault();
+		event.stopPropagation();
+        })
+        $('#failure').click(function (e) {
+            bootbox.dialog({
+                title: "Вы уверены отказаться от участие?",
+                message: '<div class="row">  ' +
+                    '<div class="col-md-12"> ' +
+                    '<label class="form-label" for="name">Комментарий</label> ' +
+                    '<input id="description"  type="textarea" placeholder="Причина отказа от участий" class="form-control"> ' +
+                    '</div>  </div>',
+                buttons: {
+                    success: {
+                        label: "Ok",
+                        className: "btn-success",
+                        callback: function () {
+                            endEditing();
+                            var name = $('#description').val();
+                            var UpdatedRows = getChanges().map(x => x);
+                                                                                          //  { inputPrices: UpdatedRows, Description: message, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id }
+                            SendPost('@Url.Page("/ComOffers/Participant")?handler=Failure', { inputPrices: UpdatedRows, Description: name, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id }
+                                , function (res) {
+                                    openEditpanel(res);
+                                });
+                        }
+                        },
+                    cancel: {
+                        label: "Отмена",
+                        className: "btn-danger",
+                        callback: function () {
+
+                        }
+                    }
+                    }
+                }
+
+            );
+
+
+        })
+         function submit(message="") {
+
+            //const request = $('#participant_form').serialize();
+            var UpdatedRows = getChanges().map(x => x);
+
+             SendPost('@Url.Page("/ComOffers/Participant")?handler=Prices', { inputPrices: UpdatedRows, Description: message, StageId: $('#StageId').val(), ComOfferId: currentEditRow.Id }
+                 , function (arg) {
+                     openEditpanel(arg);
+                     getComOfferRequestCount();
+                 });
+
+        }
+        function ActionButtonAccess(access) {
+
+            let status = $('#StageStatus').val();
+            $("#failure").hide();
+            $("#confirm").hide();
+            if (status == 1 && !access) {
+                $("#failure").show();
+                $("#confirm").show();
+            }
+            //$("#failure").prop("disabled", access || status!=1);
+            //$("#confirm").prop("disabled", access || status != 1);
+        }
+        var popupmodal = (participant) => {
+		$('#participant_modal').modal('toggle');
+		$('#participant_modal .modal-title').html('@_localizer["Add Direction"]');
+		$('#participant_form').clearForm();
+            $('#participant_form')[0].reset();
+            ActionButtonAccess(false);
+
+        if (participant) {
+                currentEditRow = participant;
+			$('#participant_modal .modal-title').html('@_localizer["Edit"]');
+			$('#participant_form').jsonToForm(participant, {
+                IsDeliveryInPrice: function (value) {
+                    if (value == true) {
+                        $('#participant_form [name*="IsDeliveryInPrice"]').prop('checked', true);
+                    } else {
+                        $('#participant_form [name*="IsDeliveryInPrice"]').prop('checked', false);
+                    }
+                },
+                IsBankDays: function (value) {
+                    if (value == true) {
+                        $('#participant_form [name*="IsBankDays"]').prop('checked', true);
+                    } else {
+                        $('#participant_form [name*="IsBankDays"]').prop('checked', false);
+                    }
+                },
+                TermBegin: function (value) {
+                    var dateFormat = "YYYY-MM-DD";
+
+                    var date = moment(value).format(dateFormat);
+                    $('#participant_form [name*="TermBegin"]').val(date);
+                },
+                TermEnd: function (value) {
+                    var dateFormat = "YYYY-MM-DD";
+
+                    var date = moment(value).format(dateFormat);
+                    $('#Input_TermEnd').val(date);
+                },
+                Name: function (value) {
+                    $('#Input_Name').val(value);
+                }
+
+            })
+            //reloadDataCP();
+            //$('#compostion_dg').datagrid('resize');
+
+		} else {
+			$('#participant_form #Input_Id').val(0)
+
+		}
+	}
+        var onEdit = (index) => {
+            var participant = $dg.datagrid('getRows')[index];
+            //popupmodal(participant);
+            openEditpanel(participant);
+        }
+        $("#edit_panel").on("ShowEdit", function (event) {
+            reloadDataCP();
+
+            $dgCP.datagrid('resize');
+
+        })
+        function openEditpanel(row, stage) {
+            currentEditRow = row;
+            $('#table-page-content').hide();
+            $('#edit_panel').show();
+            $("#edit_panel").trigger("ShowEdit");
+            $('#edit_panel .panel-title').html('@_localizer["Add"]');
+
+            $('#participant_form').clearForm();
+            $('#participant_form')[0].reset();
+            ActionButtonAccess(false);
+            if (row) {
+                $('#edit_panel .panel-title').html('@_localizer["Edit"]');
+                $('#participant_form').jsonToForm(row, {
+                    IsDeliveryInPrice: function (value) {
+                        if (value == true) {
+                            $('#participant_form [name*="IsDeliveryInPrice"]').prop('checked', true);
+                        } else {
+                            $('#participant_form [name*="IsDeliveryInPrice"]').prop('checked', false);
+                        }
+                    },
+                    IsBankDays: function (value) {
+                        if (value == true) {
+                            $('#participant_form [name*="IsBankDays"]').prop('checked', true);
+                        } else {
+                            $('#participant_form [name*="IsBankDays"]').prop('checked', false);
+                        }
+                    },
+                    TermBegin: function (value) {
+                        var dateFormat = "YYYY-MM-DD";
+
+                        var date = moment(value).format(dateFormat);
+                        $('#participant_form [name*="TermBegin"]').val(date);
+                    },
+                    TermEnd: function (value) {
+                        var dateFormat = "YYYY-MM-DD";
+
+                        var date = moment(value).format(dateFormat);
+                        $('#Input_TermEnd').val(date);
+                    },
+                    Name: function (value) {
+                        $('#Input_Name').val(value);
+                    }
+
+                })
+
+
+            } else {
+                $('#participant_form #Input_Id').val(0)
+            }
+        }
+        function closePanel() {
+            $('#table-page-content').show();
+            $dg.datagrid('resize');
+            $('#edit_panel').hide();
+
+        }
+
+        $(document).ready(function () {
+            $(window).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
+
+    </script>
+}

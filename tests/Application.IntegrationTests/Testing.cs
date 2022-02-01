@@ -1,5 +1,13 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Infrastructure.Identity;
+using CleanArchitecture.Razor.Domain.Identity;
+using CleanArchitecture.Razor.Infrastructure.Extensions;
 using CleanArchitecture.Razor.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -11,10 +19,6 @@ using Moq;
 using NUnit.Framework;
 using Respawn;
 using SmartAdmin.WebUI;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 [SetUpFixture]
 public class Testing
@@ -40,7 +44,7 @@ public class Testing
 
         services.AddSingleton(Mock.Of<IWebHostEnvironment>(w =>
             w.EnvironmentName == "Development" &&
-            w.ApplicationName == "CleanArchitecture.WebUI"));
+            w.ApplicationName == "SmartAdmin.WebUI"));
 
         services.AddLogging();
 

@@ -1,19 +1,29 @@
-using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Domain.Common;
-using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Entities.Audit;
-using CleanArchitecture.Razor.Domain.Entities.Log;
-using CleanArchitecture.Razor.Domain.Entities.Worflow;
-using CleanArchitecture.Razor.Domain.Enums;
-using CleanArchitecture.Razor.Infrastructure.Identity;
-using CleanArchitecture.Razor.Infrastructure.Persistence.Extensions;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Domain.Common;
+using CleanArchitecture.Razor.Domain.Entities;
+using CleanArchitecture.Razor.Domain.Entities.Audit;
+using CleanArchitecture.Razor.Domain.Entities.Karavay;
+using CleanArchitecture.Razor.Domain.Entities.Log;
+using CleanArchitecture.Razor.Domain.Enums;
+using CleanArchitecture.Razor.Domain.Identity;
+using CleanArchitecture.Razor.Infrastructure.Persistence.Extensions;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Razor.Application.Common.Extensions;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.Data.SqlClient;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Common;
+using System.Data;
+using System;
 
 namespace CleanArchitecture.Razor.Infrastructure.Persistence
 {
@@ -26,28 +36,55 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         private readonly IDateTime _dateTime;
         private readonly IDomainEventService _domainEventService;
 
+        public ApplicationDbContext() : base()
+        {
+        }
         public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options,
             ICurrentUserService currentUserService,
             IDomainEventService domainEventService,
-            IDateTime dateTime) : base(options)
+            IDateTime dateTime
+            ) : base(options)
         {
             _currentUserService = currentUserService;
             _domainEventService = domainEventService;
             _dateTime = dateTime;
         }
-        public DbSet<Serilog> Serilogs { get; set; }
+        public DbSet<Logger> Loggers { get; set; }
         public DbSet<AuditTrail> AuditTrails { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<DocumentType> DocumentTypes { get; set; }
-        public DbSet<Document> Documents { get; set; }
+        public DbSet<Product> Products { get; set; }
+        //public DbSet<DocumentType> DocumentTypes { get; set; }
+        //public DbSet<Document> Documents { get; set; }
 
         public DbSet<KeyValue> KeyValues { get; set; }
-        public DbSet<ApprovalData> ApprovalDatas { get; set; }
+        //  public DbSet<ApprovalData> ApprovalDatas { get; set; }
 
+
+        public DbSet<Direction> Directions { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Contragent> Contragents { get; set; }
+        public DbSet<ContragentCategory> ContragentCategories { get; set; }
+        public DbSet<StatusLog> StatusLogs { get; set; }
+        public DbSet<UnitOf> UnitOfs { get; set; }
+        public DbSet<Vat> Vats { get; set; }
+        public DbSet<QualityDoc> QualityDocs { get; set; }
+        public DbSet<Nomenclature> Nomenclatures { get; set; }
+        public DbSet<NomenclatureQualityDoc> NomenclatureQualityDocs { get; set; }
+
+        public DbSet<Area> Areas { get; set; }
+
+        public DbSet<ComOffer> ComOffers { get; set; }
+        public DbSet<ComParticipant> ComParticipants {get;set;}
+        public DbSet<ComStage> ComStages { get; set; }
+        public DbSet<ComPosition>  ComPositions { get; set; }
+        public DbSet<StageComposition> StageCompositions { get; set; }
+        public DbSet<AreaComPosition> AreaComPositions { get; set; }
+        public DbSet<StageParticipant> StageParticipants { get; set; }
+      
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            var auditEntries = OnBeforeSaveChanges(_currentUserService.UserId);
+
 
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
             {
@@ -78,7 +115,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
                     .SelectMany(x => x)
                     .Where(domainEvent => !domainEvent.IsPublished)
                     .ToArray();
-
+            var auditEntries = OnBeforeSaveChanges(_currentUserService.UserId);
             var result = await base.SaveChangesAsync(cancellationToken);
             await DispatchEvents(events);
             await OnAfterSaveChanges(auditEntries, cancellationToken);
@@ -88,13 +125,20 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            foreach (var property in builder.Model.GetEntityTypes()
+            .SelectMany(t => t.GetProperties())
+            .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?)))
+            {
+                property.SetColumnType("decimal(18,2)");
+            }
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
         }
-        
+
         private async Task DispatchEvents(DomainEvent[] events)
         {
-            foreach (var @event in events) {
+            foreach (var @event in events)
+            {
                 @event.IsPublished = true;
                 await _domainEventService.Publish(@event);
             }
@@ -189,5 +233,17 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
             }
             return SaveChangesAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Executes raw query with parameters and maps returned values to column property names of Model provided.
+        /// Not all properties are required to be present in model (if not present - null)
+        /// </summary>
+        public List<T> ExecuteSqlRawExt1<T, P>( string query, Func<DbDataReader, T> map, IEnumerable<P> queryParameters = null)
+            
+        {
+            var result = this.ExecuteSqlRawExt<T,P>(query, map, queryParameters);
+            return result;
+        }
+
     }
 }

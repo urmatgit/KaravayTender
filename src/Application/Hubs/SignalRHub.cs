@@ -31,6 +31,10 @@ namespace CleanArchitecture.Razor.Application.Hubs
             _identityService = identityService;
 
         }
+        public async Task SendMessageToAll(string message)
+        {
+             await Clients.All.SendAsync(SignalR.ReceiveMessage, message);
+        }
         public override async Task OnConnectedAsync()
         {
             var userId = _currentUserService.UserId;
@@ -42,7 +46,7 @@ namespace CleanArchitecture.Razor.Application.Hubs
                     if (result != string.Empty)
                     {
 
-                        await Clients.All.SendAsync(SignalR.ConnectUser, new { userId, displayName=result });
+                        await Clients.All.SendAsync(SignalR.ConnectUser, new { userId, displayName = result });
                     }
 
                 }
@@ -70,7 +74,7 @@ namespace CleanArchitecture.Razor.Application.Hubs
                     if (result != string.Empty)
                     {
 
-                        await Clients.All.SendAsync(SignalR.DisconnectUser, new { userId, displayName= result });
+                        await Clients.All.SendAsync(SignalR.DisconnectUser, new { userId, displayName = result });
                     }
                 }
 

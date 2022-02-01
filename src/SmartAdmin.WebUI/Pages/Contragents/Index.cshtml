@@ -1,0 +1,801 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using  CleanArchitecture.Razor.Application.Common.Extensions
+@using CleanArchitecture.Razor.Application.Constants.Permission
+
+@model SmartAdmin.WebUI.Pages.Contragents.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    ViewData["Title"] = _localizer["Contragents"].Value;
+    ViewData["PageName"] = "contragents_index";
+    ViewData["Category1"] = _localizer["Master Data"].Value;
+    ViewData["Heading"] = _localizer["Contragents"].Value;
+    ViewData["PageDescription"] = _localizer["See all available options"].Value;
+    ViewData["PreemptiveClass"] = "Default";
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Create);
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Search);
+    
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Export);
+    var _canAcceditation = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.Acceditation);
+    var _canDeleteFile = await _authorizationService.AuthorizeAsync(User, null, Permissions.Contragents.DeleteFile);
+}
+@section HeadBlock {
+
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+    <style>
+
+        .contragent_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+    </style>
+}
+<div id="js-page-content-demopanels" class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <h4 class="m-0">
+            @_localizer["Contragents"]
+            <small>@_localizer["See all available options"]</small>
+        </h4>
+        <div class="ml-auto">
+            @if (_canCreate.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-primary " id="addbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
+                    @_localizer["Add"]
+                </button>
+            }
+            @if (_canDelete.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-danger" disabled id="deletebutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
+                    @_localizer["Delete"]
+                </button>
+            }
+            @if (_canSearch.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-primary " id="searchbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                    @_localizer["Search"]
+                </button>
+            }
+            @*@if (_canImport.Succeeded)
+            {
+                <div class="btn-group" role="group">
+                    <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
+                        <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="importbutton">
+                        <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
+                    </div>
+                </div>
+            }*@
+            @if (_canExport.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-primary " id="exportbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-download mr-1"></span>
+                    @_localizer["Export Excel"]
+                </button>
+            }
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="contragent_dg">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="contragent_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Main-modal-title">Modal title1</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
+                </button>
+            </div>
+            <partial name="../Contragents/Index/ContragentForm" />
+
+        </div>
+    </div>
+</div>
+<partial name="../Contragents/Index/RejectDialog" />
+<partial name="../Contragents/Index/StatusLogDialog" />
+@await Component.InvokeAsync("ImportExcel", new
+{
+    importUri = Url.Page("/Contragents/Index") + "?handler=Import",
+    getTemplateUri = @Url.Page("/Contragents/Index") + "?handler=CreateTemplate",
+    onImportedSucceeded = "reloadData()"
+})
+@section ScriptsBlock {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.js"></script>
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
+
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+    <script src="~/js/formplugins/inputmask/inputmask.bundle.js"></script>
+    <script src="~/js/Karavay/Files.js" type="text/javascript"></script>
+    <script src="~/js/Karavay/Contragents.js" type="text/javascript"></script>
+    <script src="~/js/Karavay/StatusLog.js" type="text/javascript"></script>
+    <script src="~/js/Karavay/GeneratePass.js" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        
+        var Statuses = [{
+            id: '',
+            text: 'Все'
+
+        }]
+        $(document).ready(function () {
+            jQuery.validator.addMethod("HasOneChecked", function (value, element) {
+                return getCheckedCategories();
+            }, "* Не одного категория не выбрана");
+			$(":input").inputmask();
+            $("#contragent_form").data("validator").settings.ignore = "";
+                @foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
+                {
+
+                    @:Statuses.push({ id:'@val',text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'});
+                }
+
+                });
+        var pagelink = '@Url.Page("/Contragents/Index")';
+		var translations = {
+            FileSizeToBig: '@_localizer["File too big!"]',
+            GetCategoriesFail: '@_localizer["Get categories fail"]',
+            IconPrefix: '@(Settings.Theme.IconPrefix)',
+            Download_Success: '@_localizer["Download Success"]',
+            Manager: '@_localizer["Manager"]',
+            Name:'@_localizer["Name"]',
+            Status: '@_localizer["Status"]',
+            Date: '@_localizer["Date"]',
+            loadfail: '@_localizer["load fail"]',
+            Description: '@_localizer["Description"]',
+            DeleteFileDialog: '@_localizer["Are you sure delete this file?"]',
+            Yes: '@_localizer["Yes"]',
+            No: '@_localizer["No"]',
+            DeleteSuccess: '@_localizer["Delete Success"]',
+            DeleteFail: '@_localizer["Delete fail"]'
+        }
+
+        var _canDeleteFile =  @(_canDeleteFile.Succeeded ? "true" : "false" );
+        var YesNotList = [
+			{
+				id: '',
+                text: 'Все'
+
+            },
+			{
+            id: 'true',
+            text: 'Да'
+			},
+            {
+                id: 'false',
+                text: 'Нет'
+            }
+
+		]
+		var currentEditRow = "";
+                function GetManagerPhone(val) {
+                    axios.get('/Contragents/Index?handler=Manager&id=' + val)
+                        .then(res => {
+                            console.log(res);
+                    $('#contragent_form #UserFormModel_ManagerPhone').val(res.data.ManagerPhone);
+                        })
+                        .catch((error) => {
+                        if (error.response.data.Errors) {
+                            const errors = error.response.data.Errors;
+                            errors.forEach(item => {
+                                toastr["error"](item);
+                            });
+                        } else {
+                            toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
+                    }
+                });
+        }
+        $("#saveButton").click(function (event) {
+                    getCheckedCategories();
+
+
+        });
+        $('#GeneratePass').click(function () {
+
+            let pass = generatePassword();
+            console.log(pass);
+            $('#UserFormModel_Password').val(pass);
+            $('#UserFormModel_ConfirmPassword').val(pass);
+        });
+	$('#searchbutton').click(function () {
+                    reloadData();
+                });
+	$('#addbutton').click(function () {
+                    popupmodal(null);
+                });
+	$('#deletebutton').click(function () {
+                    onDeleteChecked();
+                });
+	$('#exportbutton').click(function () {
+                    onExport();
+                });
+	$('#importbutton').click(function () {
+                    showImportModal();
+                });
+	$('#gettemplatebutton').click(function () {
+                    onGetTemplate();
+                });
+		$('#rejectButton ').click(function (e) {
+
+
+
+                    var data = {
+                            Description: `${$('#RejectModel_Description').val()}`,
+							Id: currentEditRow.Id
+
+
+                        }
+                console.log(data)
+
+                        var headers = {
+                            "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+						}
+						axios.post('@Url.Page("/Contragents/Index")?handler=Reject',
+                            data,
+
+                            {
+                headers: headers
+
+                            })
+							.then(response => {
+                                 toastr["info"]('@_localizer["Acceditation reject"]');
+                                $('#contragent_modal').modal('toggle');
+                                $('#RejectModal').modal('toggle');
+                                 reloadData();
+                             }).catch(error => {
+                    if (error.response.data.errors) {
+                        const errors = error.response.data.errors;
+                        for (let [key, value] of Object.entries(errors)) {
+                            toastr["error"](`${key}: ${value.toString()}`);
+                    }
+                } else {
+                    toastr["error"](`@_localizer["Reject fail"],${error.response.data}`);
+                }
+                })
+
+		})
+        $('#contragent_form  :submit').click(function (e) {
+            const form = document.querySelector('#contragent_form');
+            $(form).validate().settings.ignore = ".ignore";
+            let hasOneChecked= getCheckedCategories();
+            if ($(form).valid() === false ) {
+                        form.classList.add('was-validated');
+                    } else {
+
+                        UpdateFiles();
+                        //const request = $('#contragent_form').serialize();
+
+                        //         for (var i = 0; i != uploadfileinputs.files.length; i++) {
+                        //             request.append("files", files[i]);
+                        //}
+                        //         var headers = {
+                        //             "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+                        //}
+                        //request.append(headers, headers);
+                        var data = new FormData();
+
+                        var form_data = $('#contragent_form').serializeArray();
+                        $.each(form_data, function (key, input) {
+                             data.append(input.name, input.value);
+                        });
+
+                        //File data
+                        //var file_data = $('input[name="my_images"]')[0].files;
+                        //for (var i = 0; i < file_data.length; i++) {
+                        //    data.append("my_images[]", file_data[i]);
+                        //}
+                        AppendFilesToFormData(data);
+                        //var uploadfileinputs = document.getElementById("Files");
+                        //for (var i = 0; i != uploadfileinputs.files.length; i++) {
+                        //    data.append("files[]", uploadfileinputs.files[i]);
+                        //}
+
+                        axios.post('@Url.Page("/Contragents/Index")', data).then(res => {
+                            toastr["info"]('@_localizer["Save Success."]');
+				$('#contragent_modal').modal('toggle');
+                            var uploadfilename = document.querySelector("#uploadfilename");
+                            uploadfilename.innerHTML = "";
+                            reloadData();
+                        }).catch(error => {
+                            if (error.response.data.errors) {
+                                const errors = error.response.data.errors;
+                                for (let [key, value] of Object.entries(errors)) {
+                                    toastr["error"](`${key}: ${value.toString()}`);
+                            }
+
+                        } else {
+                            toastr["error"](`@_localizer["Save fail"],${error.response.data}`);
+                        }
+                        });
+                    }
+		event.preventDefault();
+		event.stopPropagation();
+                })
+	var $dg={};
+                var initdatagrid = () => {
+		$dg = $('#contragent_dg').datagrid({
+                height: (window.innerHeight - 320),
+			method: 'GET',
+			rownumbers: false,
+			singleSelect: true,
+			selectOnCheck: false,
+			checkOnSelect: false,
+			pagination: true,
+			clientPaging: false,
+			remoteFilter: true,
+			sortName: 'Id',
+			sortOrder: 'desc',
+			pageSize: 15,
+			pageList: [10, 15, 30, 50, 100, 1000],
+			onLoadError: function (XMLHttpRequest, textStatus, errorThrown) {
+                        toastr["error"](`@_localizer["load fail"],${errorThrown}`);
+			},
+			onBeforeLoad: function () {
+				$('#deletebutton').prop('disabled', true);
+                },
+			onCheckAll: function (rows) {
+                    const checked = $(this).datagrid('getChecked').length > 0;
+				$('#deletebutton').prop('disabled', !checked);
+                    },
+			onUncheckAll: function () {
+				$('#deletebutton').prop('disabled', true);
+                    },
+			onCheck: function () {
+				$('#deletebutton').prop('disabled', false);
+                    },
+			onUncheck: function () {
+                        const checked = $(this).datagrid('getChecked').length > 0;
+				$('#deletebutton').prop('disabled', !checked);
+                        },
+			columns: [[
+
+                { field: 'ck', checkbox: true },
+				{
+                        field: '_action',
+					title: '@_localizer["Command"]',
+					width: 80,
+					align: 'center',
+					formatter: function (value, row, index) {
+                                return `<div class="btn-group" role="group">
+
+                                          <button id="commandbtngroup" type="button" @(_canEdit.Succeeded? "":"disabled")  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                                            <i class="@(Settings.Theme.IconPrefix) fa-edit"></i>
+
+                                         </button>
+
+                                         <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
+
+                                           <button class="dropdown-item" onclick="onEdit(${index})" @(_canEdit.Succeeded? "":"disabled")><i class="fal fa-edit mr-1"></i> @_localizer["Edit"]</button>
+
+                                           <button class="dropdown-item" onclick="onDelete('${row.Id}')" @(_canDelete.Succeeded? "":"disabled") ><i class="fal fa-trash-alt mr-1"></i> @_localizer["Delete"]</button>
+
+                                           <button class="dropdown-item" onclick="onShowStatusLog('${row.Id}')" @(_canAcceditation.Succeeded? "":"disabled") ><i class="fal fa-clipboard-list-check mr-1"></i> @_localizer["Status log"]</button>
+
+                                         </div>
+
+                                      </div>`;
+					}
+				},
+
+				{ field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 140 },
+				{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 100 },
+				{ field: 'FullName', title: '@_localizer["Full name"]', sortable: true, width: 180 },
+                {
+                    field: 'Direction.Name', title: '@_localizer["Direction"]', sortable: true, width: 180, formatter: function (val, rec) {
+                        return rec.Direction.Name;
+                    }
+                },
+				{
+                field: 'IsServiceStr', title: '@_localizer["Service"]', align: 'center', sortable: true, width: 80, formatter: checkboxformatter
+
+
+                },
+				{ field: 'INN', title: '@_localizer["INN"]', sortable: true, width: 120 },
+				{ field: 'KPP', title: '@_localizer["KPP"]', sortable: true, width: 120 },
+                { field: 'ManagerName', title: '@_localizer["Manager"]', sortable: true, width: 140 },
+				{ field: 'Phone', title: '@_localizer["Phone"]', sortable: true, width: 180 },
+				{ field: 'ContactPerson', title: '@_localizer["Contact person"]', sortable: true, width: 180 },
+				{ field: 'ContactPhone', title: '@_localizer["Contact person phone"]', sortable: true, width: 180 },
+				{ field: 'Email', title: 'Email', sortable: true, width: 130 }
+
+
+
+            ]]
+            ,
+            rowStyler: function (index, row) {
+                if (row.Status == 1) {
+                    return 'background-color:rgb(255,199,206);color:rgb(156,0,0);'
+                }
+            }, onClickCell: function (index, field, value) {
+                //if (field == 'Number' || field == 'Name') {
+                if (field != "_action")
+                onEdit(index);
+                //}
+            }
+		})
+			.datagrid('enableFilter', [
+
+                {
+                field: 'StatusStr',
+					type: 'combobox',
+					options: {
+                    panelHeight: 'auto',
+						data: [
+
+                            {
+                        value: null,
+								text: 'Все'
+
+                            },
+								@foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
+
+                                {
+
+                                    <text>
+
+                            {
+                            value: '@val',
+								text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'
+
+                            },
+
+                                    </text>
+
+                                }
+						]
+						,
+
+						onChange: function (newValue, oldValue) {
+
+							$dg.datagrid('addFilterRule', {
+                            field: 'Status',
+								op: 'equal',
+								value: newValue
+
+                            });
+
+                            console.log(newValue);
+
+                        }
+                    }
+                },
+
+				{
+                field: 'IsServiceStr',
+					type: 'combobox',
+					options: {
+                    panelHeight: 'auto',
+						valueField: 'id',
+						textField:'text',
+						data: YesNotList,
+                        onChange: function (newValue, oldValue) {
+                            console.log(newValue);
+                            $dg.datagrid('addFilterRule', {
+                            field: 'IsService',
+                                op: 'equal',
+                                value: newValue
+                            });
+
+                        }
+
+                    }
+
+                }
+			])
+			.datagrid('load', '@Url.Page("/Contragents/Index")?handler=Data');
+
+	}
+        InitComboFilter = function (dg, field, data, url, valueField, textField) {
+                    var comboOption;
+
+                    comboOption = {
+                    panelHeight: 'auto',
+                    data: data,
+                    valueField: valueField,
+                    textField: textField,
+                    panelMaxHeight: 200,
+                    onChange: function (value) {
+                            DoComboFilter($dg, data, field, value );
+                        }
+                    };
+
+                    var filter = {
+                field: field,
+                type: 'combobox',
+                options: comboOption,
+            }
+                //$(".datagrid-filter-row td[field='" + field + "']").find("input").height(22);
+                //console.log($(".datagrid-filter-row").html());
+                return filter;
+		};
+                function DoComboFilter($dg, data, field, value ) {
+                    if (value == "") {
+                $dg.datagrid('removeFilterRule', field);
+                $dg.datagrid('doFilter');
+                        return;
+                    }
+            // if (Common.CommonHelper.lslnArray(data, value, checkFiled)) {
+            $dg.datagrid('addFilterRule', {
+                    field: field,
+                op: 'equal',
+                value: 1
+            });
+            //$dg.datagrid('doFilter');
+            // }
+		}
+		$('#contragent_modal').on('shown.bs.modal', function () {
+                    var IsAddClick = $('#contragent_form #Input_Id').val();
+            if (!IsAddClick || IsAddClick == 0) return;
+            clienUploadfilename(false);
+            $('#contragent_form #UserFormModel_ManagerPhone').val(currentEditRow.ManagerPhone);
+                    if (currentEditRow && currentEditRow.ContragentCategories && currentEditRow.ContragentCategories.length > 0) {
+                        var categories = $('#contragent_form [name*="category.Name"]');//  document.getElementsByName("category.Name");
+                        let values = currentEditRow.ContragentCategories;
+                        for (var checkbox of categories) {
+
+                            //$(checkbox).prop('checked', true);
+                            let finded = values.find(o => o.CategoryId == checkbox.id);
+                            if (finded)
+                        $(checkbox).prop('checked', true);
+
+
+                        }
+                    }
+                    console.log('shown.bs.modal');
+                })
+        $('#RejectModal').on('shown.bs.modal', function () {
+            $('#RejectModel_Description').val("");
+                    i
+        })
+	var reloadData = () => {
+		$dg.datagrid('load', '@Url.Page("/Contragents/Index")?handler=Data');
+        getConragentStatusCount();
+    }
+
+		$(() => {
+			$("#contragent_form").data("validator").settings.ignore = "";
+                    initdatagrid();
+                    initdatagridSL();
+                })
+	var popupmodal = (contragent) => {
+		$('#contragent_modal').modal('toggle');
+        $('#contragent_modal #Main-modal-title').html('@_localizer["Add Contragent"]');
+		$('#contragent_form').clearForm();
+		$('#contragent_form')[0].reset();
+
+    if (contragent) {
+        currentEditRow = contragent;
+        console.log(contragent);
+        $('#file').val("");
+        $('#Input_Files').val("");
+            $('#contragent_modal #Main-modal-title').html('@_localizer["Edit Contragent"]');
+			$('#contragent_form').jsonToForm(contragent, {
+        IsService: function (value) {
+                if (value == true) {
+						$('#contragent_form [name*="IsService"]').prop('checked', true);
+                } else {
+						$('#contragent_form [name*="IsService"]').prop('checked', false);
+                }
+                },
+
+                Files: function (value) {
+                    $('#Input_Files').val("");
+                    
+                },
+                Status: function (value) {
+                    //"На регистрации"
+                    //OnRegistration = 1,
+                    if (value != 1) {
+                        $('#btnReject').hide();
+                        console.log("Status");
+                        console.log(value);
+                    } else {
+                        $('#btnReject').show();
+                    }
+                }
+
+
+            });
+        $('#Input_DirectionId').val(contragent.DirectionId);
+			$('#contragent_form #Input_ApplicationUserId').val(contragent.ApplicationUserId);
+			$('#contragent_form #UserFormModel_ManagerPhone').val(contragent.ManagerPhone);
+            $('#contragent_form #RejectModel_Status').val(3);
+    } else
+    {
+			$('#contragent_form #Input_Id').val(0)
+			$('#UserFormModel_ManagerPhone').val("");
+                    var files_table = document.querySelector("#files_panel");
+
+                    files_table.innerHTML = "";
+                    files_table = document.querySelector("#categories");
+                    files_table.innerHTML = "";
+            $('#contragent_form #UserFormModel_ManagerPhone').val('');
+
+                }
+	}
+		var CurrentContragentId = 0;
+		$('#StatusLogModal').on('shown.bs.modal', function () {
+            $dgStatusLog.datagrid('load', '@Url.Page("/Contragents/Index")?handler=StatusLogs&ContragentId='+ CurrentContragentId);
+
+			$dgStatusLog.datagrid('resize');
+
+                })
+		var onShowStatusLog = (id) => {
+            CurrentContragentId = id;
+            $('#StatusLogModal').modal('toggle');
+        }
+	var onEdit = (index) => {
+                    var contragent = $dg.datagrid('getRows')[index];
+                    getCategoriesByDirectionId(contragent.DirectionId, contragent.Id);
+                    if (contragent.ApplicationUserId) {
+			$('#UserFormModel_Password').required = "";
+
+                        var user = getConragentUserById(contragent.ApplicationUserId, function (res) {
+                            if (res) {
+					$('#contragent_form').jsonToForm(res.data, {
+                                Active: function (value) {
+                                        if (value == true) {
+								$('#contragent_form [name*="Active"]').prop('checked', true);
+                                        } else {
+								$('#contragent_form [name*="Active"]').prop('checked', false);
+                                        }
+                                    }
+
+
+                                });
+                            }
+                        });
+                    }
+                    getFiles('/Contragents/Index?handler=FilesList&id=' + contragent.Id);
+                    popupmodal(contragent);
+
+                }
+
+                var onDelete = (id) => {
+                bootbox.confirm({
+                message: "@_localizer["Are you sure delete a row?"]",
+			buttons: {
+                    confirm: {
+                        label: '@_localizer["Yes"]',
+					className: 'btn-success'
+
+                },
+				cancel: {
+                        label: '@_localizer["No"]',
+					className: 'btn-danger'
+
+                }
+                    },
+			callback: function (result) {
+                        if (result) {
+                            axios.get('@Url.Page("/Contragents/Index")?handler=Delete&id=' + id).then(res => {
+                                toastr["info"]('@_localizer["Delete Success"]');
+                                reloadData();
+                            })
+                                .catch(error => {
+                                if (error.response.data.errors) {
+                                    const errors = error.response.data.errors;
+                                    for (let [key, value] of Object.entries(errors)) {
+                                        toastr["error"](`${key}: ${value.toString()}`);
+                                }
+
+                            } else {
+                    toastr["error"](`@_localizer["Delete fail"],${error.response.data}`);
+                }
+						});
+				}
+			}
+		})
+	}
+	var onDeleteChecked = () => {
+    var checkedId = $dg.datagrid('getChecked').map(x => x.Id);
+    if (checkedId.length > 0) {
+        bootbox.confirm({
+        message: "@_localizer["Are you sure delete checked rows?"]",
+				buttons: {
+            confirm: {
+                label: '@_localizer["Yes"]',
+						className: 'btn-success'
+
+                    },
+					cancel: {
+                label: '@_localizer["No"]',
+						className: 'btn-danger'
+
+                    }
+            },
+				callback: function (result) {
+                if (result) {
+                    var paras = new URLSearchParams(checkedId.map(s => ['id', s]));
+                    console.log(paras.toString())
+
+                        axios.get('@Url.Page("/Contragents/Index")?handler=DeleteChecked&' + paras.toString()).then(res => {
+                            toastr["info"](`@_localizer["Delete ${checkedId.length} Success"]`);
+                            reloadData();
+                        })
+                            .catch(error => {
+                        if (error.response.data.errors) {
+                            const errors = error.response.data.errors;
+                            for (let [key, value] of Object.entries(errors)) {
+                                toastr["error"](`${key}: ${value.toString()}`);
+									}
+
+								} else {
+                    toastr["error"](`@_localizer["Delete fail"],${error.response.data}`);
+                }
+							});
+					}
+				}
+			});
+
+		}
+	}
+	var onExport = () => {
+        var options = $dg.datagrid('options');
+        var data = {
+            filterRules: JSON.stringify(options.filterRules),
+			sort: options.sortName,
+			order: options.sortOrder,
+		}
+		console.log(options,data)
+
+        var headers = {
+            "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+		}
+		axios.post('@Url.Page("/Contragents/Index")?handler=Export',
+            data,
+
+            {
+                headers: headers,
+				responseType: "blob"
+
+            })
+			.then(response => {
+                 const filename = getFileName(response.headers['content-disposition']);
+                 const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' }));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', filename);
+                document.body.appendChild(link);
+                link.click();
+			}).catch(error => {
+                    if (error.response.data.errors) {
+                        const errors = error.response.data.errors;
+                        for (let [key, value] of Object.entries(errors)) {
+                            toastr["error"](`${key}: ${value.toString()}`);
+                    }
+                } else {
+                    toastr["error"](`@_localizer["Export fail"],${error.response.data}`);
+                }
+                })
+
+
+	}
+
+
+    </script>
+}

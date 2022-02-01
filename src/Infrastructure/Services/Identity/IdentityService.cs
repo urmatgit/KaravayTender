@@ -1,18 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
-using CleanArchitecture.Razor.Application.Common.Models;
-using CleanArchitecture.Razor.Application.Settings;
-using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
-using CleanArchitecture.Razor.Infrastructure.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,6 +9,20 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
+using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.Settings;
+using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
+using CleanArchitecture.Razor.Infrastructure.Extensions;
+using CleanArchitecture.Razor.Domain.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+
 
 namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
 {
@@ -71,14 +73,14 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
 
         public async Task<bool> IsInRoleAsync(string userId, string role)
         {
-            var user =await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
             return await _userManager.IsInRoleAsync(user, role);
         }
 
         public async Task<bool> AuthorizeAsync(string userId, string policyName)
         {
-            var user =await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
             var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
 
@@ -89,7 +91,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
 
         public async Task<Result> DeleteUserAsync(string userId)
         {
-            var user =await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
             if (user != null)
             {
@@ -108,19 +110,20 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
 
         public async Task<IDictionary<string, string>> FetchUsers(string roleName)
         {
-           var result = await _userManager.Users
-                .Where(x => x.UserRoles.Where(y => y.Role.Name == roleName).Any())
-                .Include(x=>x.UserRoles)
-                .ToDictionaryAsync(x => x.UserName, y => y.DisplayName);
+            var result = await _userManager.Users
+                 .Where(x => x.UserRoles.Where(y => y.Role.Name == roleName).Any())
+                 .Include(x => x.UserRoles)
+                 .ToDictionaryAsync(x => x.UserName, y => y.DisplayName);
             return result;
         }
+
 
         public async Task<Result<TokenResponseDto>> LoginAsync(TokenRequestDto request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
             if (user == null)
             {
-                return await Result<TokenResponseDto>.FailureAsync(new string[] { _localizer["User Not Found."]});
+                return await Result<TokenResponseDto>.FailureAsync(new string[] { _localizer["User Not Found."] });
             }
             if (!user.IsActive)
             {
@@ -138,7 +141,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
 
             user.RefreshToken = GenerateRefreshToken();
             var TokenExpiryTime = DateTime.Now.AddDays(7);
-            
+
             if (request.RememberMe)
             {
                 TokenExpiryTime = DateTime.Now.AddYears(1);
@@ -147,7 +150,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
             await _userManager.UpdateAsync(user);
 
             var token = await GenerateJwtAsync(user);
-            var response = new TokenResponseDto { Token = token, RefreshTokenExpiryTime= TokenExpiryTime, RefreshToken = user.RefreshToken, ProfilePictureDataUrl = user.ProfilePictureDataUrl };
+            var response = new TokenResponseDto { Token = token, RefreshTokenExpiryTime = TokenExpiryTime, RefreshToken = user.RefreshToken, ProfilePictureDataUrl = user.ProfilePictureDataUrl };
             return await Result<TokenResponseDto>.SuccessAsync(response);
         }
 
@@ -161,7 +164,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
             var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
             var user = await _userManager.FindByEmailAsync(userEmail);
             if (user == null)
-                return await Result<TokenResponseDto>.FailureAsync(new string[] {_localizer["User Not Found."]});
+                return await Result<TokenResponseDto>.FailureAsync(new string[] { _localizer["User Not Found."] });
             if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
                 return await Result<TokenResponseDto>.FailureAsync(new string[] { _localizer["Invalid Client Token."] });
             var token = GenerateEncryptedToken(GetSigningCredentials(), await GetClaimsAsync(user));
@@ -200,7 +203,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
 
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Locality, user.Site),
+              //  new(ClaimTypes.Locality, user.Site),
                 new(ClaimTypes.NameIdentifier, user.Id),
                 new(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl),
                 new(ClaimTypes.Email, user.Email),
@@ -259,6 +262,33 @@ namespace CleanArchitecture.Razor.Infrastructure.Services.Identity
             user.IsLive = true;
             await _userManager.UpdateAsync(user);
             return user.DisplayName;
+        }
+        public async Task<Result> DisableUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null) return Result.Success();
+            user.IsActive = false;
+            await _userManager.UpdateAsync(user);
+            return Result.Success();
+        }
+        public async Task<List<IApplicationUser>> FetchUsersEx(string roleName)
+        {
+            if (string.IsNullOrEmpty(roleName))
+            {
+                var result = await _userManager.Users
+                    .Where(x => x.IsActive)
+                    .Include(x => x.UserRoles)
+                    .ToListAsync();  //ToDictionaryAsync(x => x.UserName, y => y.DisplayName);
+                return result.Cast<IApplicationUser>().ToList();
+            }
+            else
+            {
+                var result = await _userManager.Users
+                    .Where(x => x.UserRoles.Where(y => y.Role.Name == roleName).Any())
+                    .Include(x => x.UserRoles)
+                    .ToListAsync();  //ToDictionaryAsync(x => x.UserName, y => y.DisplayName);
+                return result.Cast<IApplicationUser>().ToList();
+            }
         }
     }
 }

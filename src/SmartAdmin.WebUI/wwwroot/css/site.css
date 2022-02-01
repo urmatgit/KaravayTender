@@ -1,4 +1,4 @@
-﻿/* Bootstrap Validation Summary Override */
+/* Bootstrap Validation Summary Override */
 /* Bootstrap Validation Summary Override */
 .validation-summary-valid {
     display: none;
@@ -119,3 +119,66 @@ pre.prettyprint {
     }
 
 /* Enter custom CSS rules for your application here */
+.form-group {
+    margin-bottom: 1rem;
+}
+.datagrid-header-row .datagrid-cell  {
+    line-height: normal;
+    height: auto;
+    white-space: normal;
+    text-align: center;
+}
+/*@media (max-width: 992px) {
+    .datagrid-header{
+        height: 121px;
+    }
+}
+*/
+/*.select2-close-mask {
+    z-index: 2099;
+}
+
+.select2-dropdown {
+    z-index: 3051;
+}
+*/
+.ColTopHeader{
+    width: 198px;
+}
+.page-content {
+    padding: 0.5rem;
+}
+.page-header {
+    height: 3rem;
+}
+
+.header-icon:not(.btn)[data-toggle="dropdown"] + .dropdown-menu {
+    top: 3.0625rem !important;
+}
+.align_right{
+    text-align: right;
+}
+.panel-hdr > :last-child {
+    margin-right: 0;
+    margin-left: auto;
+}
+.AddTextToPanelCaption {
+    flex: auto;
+}
+td {
+    border-width: 0px 1px 1px 0px !important;
+}
+.clHead {
+    background-color: rgb(221,235,247)
+}
+.datagrid-header-row{
+    background-color: lightgrey;
+}
+.datagrid-header .datagrid-cell {
+    height: auto;
+    padding: 8px 8px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-evenly;
+    position: relative;
+}

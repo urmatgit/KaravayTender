@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -7,9 +7,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Persistence\Configurations\ApprovalDataConfiguration.cs" />
+    <Compile Remove="Persistence\Configurations\DocumentConfiguration.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.95.4" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
     <PackageReference Include="Hangfire.Core" Version="1.7.25" />
     <PackageReference Include="MailKit" Version="2.15.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.11" />
+    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+    <PackageReference Include="Serilog.Expressions" Version="3.2.1" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    
+    
+    <PackageReference Include="WorkflowCore.Persistence.Sqlite" Version="3.5.4" />
+    
+    
+    
+    
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.11" />
+    
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="5.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.11" />
@@ -23,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence\Migrations\" />
+    <Folder Include="Identity\" />
   </ItemGroup>
 
 </Project>

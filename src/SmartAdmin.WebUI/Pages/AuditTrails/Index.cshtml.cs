@@ -1,14 +1,15 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading.Tasks;
+using CleanArchitecture.Razor.Application.AuditTrails.Queries.PaginationQuery;
+using CleanArchitecture.Razor.Application.Features.AuditTrails.Queries.Export;
+using CleanArchitecture.Razor.Application.Constants.Permission;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Localization;
-using Microsoft.AspNetCore.Authorization;
-using CleanArchitecture.Razor.Application.Features.ApprovalDatas.Queries.Pagination;
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
-using CleanArchitecture.Razor.Application.Features.ApprovalDatas.Queries.Export;
-using CleanArchitecture.Razor.Application.AuditTrails.Queries.PaginationQuery;
-using CleanArchitecture.Razor.Application.Features.AuditTrails.Queries.Export;
 
 namespace SmartAdmin.WebUI.Pages.AuditTrails
 {
@@ -25,7 +26,7 @@ namespace SmartAdmin.WebUI.Pages.AuditTrails
             _mediator = mediator;
             _localizer = localizer;
         }
-        public  Task OnGetAsync()
+        public Task OnGetAsync()
         {
             return Task.CompletedTask;
         }

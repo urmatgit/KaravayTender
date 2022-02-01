@@ -1,0 +1,86 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using CleanArchitecture.Razor.Application.Constants.Permission
+@using  CleanArchitecture.Razor.Application.Common.Extensions
+@model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.Contragents.IndexModel> _localizerContr
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComParticipants.IndexModel> _localizerPart
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Create);
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Search);
+
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Export);
+    
+
+}
+@section HeadBlock {
+
+    
+
+     
+}
+<div  class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+      
+        <div class="ml-auto">
+            @if (_canCreate.Succeeded)
+            {
+                <a role="button" class="btn btn-sm btn-outline-primary editable" id="participant_addbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
+                    @_localizerPart["Add"]
+                </a>
+
+            }
+            @if (_canDelete.Succeeded)
+            {
+                <a role="button" class="btn btn-sm btn-outline-danger editable" disabled id="participant_deletebutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
+                    @_localizerPart["Delete"]
+                </a>
+            }
+            @if (_canSearch.Succeeded)
+            {
+                <a role="button" class="btn btn-sm btn-outline-primary " id="participant_searchbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                    @_localizerPart["Search"]
+                </a>
+            }
+            
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="participant_dg">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<partial name="AddOrEditParticipants" />
+ 
+@section ScriptsBlock {
+    
+    <script type="text/javascript">
+        @*let clsparticipant = null;
+        var pagelink = '@Url.Page("/ComParticipants/Index")';
+   
+                        ]
+	 
+        
+
+
+        $(() => {
+
+            InitParticipantTable();
+        })*@
+
+
+    </script>
+}

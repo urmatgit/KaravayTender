@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DocumentTypes\**" />
+    <EmbeddedResource Remove="DocumentTypes\**" />
+    <None Remove="DocumentTypes\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="appsettings.json" />
   </ItemGroup>
 

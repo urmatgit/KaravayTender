@@ -1,0 +1,42 @@
+﻿@page
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SendedRegisterModel>  _localizer
+@model SmartAdmin.WebUI.Pages.Contragents.SendedRegisterModel
+@{
+    ViewData["PageName"] = "SendedRegister";
+    ViewData["Title"] = _localizer["Sended to register"].Value;
+
+
+    //ViewData["Heading"] = _localizer["Торговая площадка- Заявка на регистрацию"].Value;
+
+}
+@section HeadBlock {
+
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+    @*<link rel="stylesheet" media="screen, print" href="~/css/formplugins/dropzone/dropzone.css">*@
+    <style>
+
+        .customer_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+    </style>
+}
+@if (!User.Identity.IsAuthenticated)
+{
+    @section PageHeading {
+        <div class="col-xl-12">
+            <h2 class="fs-xxl fw-500 text-white text-left">
+                @_localizer["Заявка на регистрацию отправлена"]
+                <small class="h3 fw-300 mt-3 mb-5 text-black ">
+                    @*@_localizer["Доп. инфо..."]*@
+                    <a href="https://www.karavay.spb.ru" class="text-white">@_localizer["Вернутся на главный сайт"]</a>
+                </small>
+            </h2>
+        </div>
+    }
+}else
+            {
+
+            }

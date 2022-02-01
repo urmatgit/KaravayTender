@@ -121,7 +121,7 @@
     <value>Авторизация</value>
   </data>
   <data name="Change Password" xml:space="preserve">
-    <value>Измени пароль</value>
+    <value>Изменить пароль</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Закрывать</value>
@@ -145,7 +145,7 @@
     <value>Новый пароль</value>
   </data>
   <data name="Old password" xml:space="preserve">
-    <value>Прежний пароль</value>
+    <value>Старый пароль</value>
   </data>
   <data name="Phone Number" xml:space="preserve">
     <value>Номер телефона</value>
@@ -157,13 +157,13 @@
     <value>информация профиля</value>
   </data>
   <data name="Update" xml:space="preserve">
-    <value>Обновлять</value>
+    <value>Обновить</value>
   </data>
   <data name="Update password" xml:space="preserve">
     <value>Обновить пароль</value>
   </data>
   <data name="Update Profile Information" xml:space="preserve">
-    <value>Обновить информацию профиля</value>
+    <value>Обновить информацию</value>
   </data>
   <data name="User Name" xml:space="preserve">
     <value>Имя пользователя</value>

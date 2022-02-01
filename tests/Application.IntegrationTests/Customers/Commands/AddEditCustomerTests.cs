@@ -1,10 +1,13 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
+using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Exceptions;
 using CleanArchitecture.Razor.Application.Customers.Commands.AddEdit;
 using CleanArchitecture.Razor.Domain.Entities;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 
 namespace CleanArchitecture.Application.IntegrationTests.Customers.Commands
 {
@@ -43,7 +46,7 @@ namespace CleanArchitecture.Application.IntegrationTests.Customers.Commands
             item.Id.Should().Be(result.Data);
             item.Name.Should().Be(command.Name);
             item.CreatedBy.Should().Be(userId);
-            item.Created.Should().BeCloseTo(DateTime.Now,new TimeSpan(0,0,10));
+            item.Created.Should().BeCloseTo(DateTime.Now, new TimeSpan(0, 0, 10));
             item.LastModifiedBy.Should().BeNull();
             item.LastModified.Should().BeNull();
         }

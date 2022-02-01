@@ -1,13 +1,13 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
-using FluentAssertions;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using CleanArchitecture.Razor.Application.KeyValues.Commands.Delete;
 using CleanArchitecture.Razor.Application.Common.Exceptions;
 using CleanArchitecture.Razor.Application.KeyValues.Commands.AddEdit;
-using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Application.KeyValues.Commands.AddEdit;
 using CleanArchitecture.Razor.Application.KeyValues.Commands.Delete;
+using CleanArchitecture.Razor.Domain.Entities;
+using FluentAssertions;
+using NUnit.Framework;
 
 namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
 {
@@ -30,12 +30,12 @@ namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
             var addcommand = new AddEditKeyValueCommand()
             {
                 Name = "Word",
-                Text= "Word",
+                Text = "Word",
                 Value = "Word",
                 Description = "For Test"
             };
-           var result= await SendAsync(addcommand);
-             
+            var result = await SendAsync(addcommand);
+
             await SendAsync(new DeleteKeyValueCommand
             {
                 Id = result.Data
@@ -45,6 +45,6 @@ namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
 
             item.Should().BeNull();
         }
-         
+
     }
 }

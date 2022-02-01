@@ -1,29 +1,32 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Infrastructure.Identity;
+using CleanArchitecture.Razor.Application.Common.Mappings;
+using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
+using CleanArchitecture.Razor.Application.Constants.Permission;
+using CleanArchitecture.Razor.Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Localization;
-using System.Linq.Dynamic.Core;
-using CleanArchitecture.Razor.Application.Common.Mappings;
-using System.ComponentModel.DataAnnotations;
-using CleanArchitecture.Razor.Application.Common.Models;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
-using Microsoft.AspNetCore.Http;
-using System.Data;
-using System;
-using System.Net;
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
-using System.ComponentModel;
-using System.Reflection;
-using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
+using Microsoft.Extensions.Localization;
+using CleanArchitecture.Razor.Infrastructure.Extensions;
 
 namespace SmartAdmin.WebUI.Areas.Authorization.Pages
 {
@@ -43,7 +46,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         [BindProperty]
         public string RoleId { get; set; }
         [BindProperty]
-        public Dictionary<string, IEnumerable<PermissionModel>> GroupedPermissions { get; set; }=new ();
+        public Dictionary<string, IEnumerable<PermissionModel>> GroupedPermissions { get; set; } = new();
         [BindProperty]
         public IFormFile UploadedFile { get; set; }
 
@@ -59,10 +62,10 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             _excelService = excelService;
             _localizer = localizer;
         }
-        public  Task OnGetAsync()
+        public Task OnGetAsync()
         {
             var allPermissions = GetAllPermissions();
-            foreach(var group in allPermissions.GroupBy(x => x.Group))
+            foreach (var group in allPermissions.GroupBy(x => x.Group))
             {
                 GroupedPermissions.Add(group.Key, group.ToArray());
             }
@@ -73,15 +76,15 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             var jsonText = System.IO.File.ReadAllText("nav.json");
             return Content(jsonText);
         }
-        public async  Task<IActionResult> OnPostUpdateNavgitationAsync()
+        public async Task<IActionResult> OnPostUpdateNavgitationAsync()
         {
             try
             {
-                //using (var sw = new StreamWriter(@"nav.json", false))
-                //{
-                //  await sw.WriteAsync(this.NavJsonStr);
-                //  await  sw.FlushAsync();
-                //}
+                using (var sw = new StreamWriter(@"nav.json", false))
+                {
+                    await sw.WriteAsync(this.NavJsonStr);
+                    await sw.FlushAsync();
+                }
                 await Task.CompletedTask;
             }
             catch
@@ -96,10 +99,10 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             {
                 if (Input.Id == string.Empty)
                 {
-                    var role=await _roleManager.FindByIdAsync(Input.Id);
-                    role.Name=Input.Name;
-                    role.Description=Input.Description;
-                    var result= await _roleManager.UpdateAsync(role);
+                    var role = await _roleManager.FindByIdAsync(Input.Id);
+                    role.Name = Input.Name;
+                    role.Description = Input.Description;
+                    var result = await _roleManager.UpdateAsync(role);
                     return new JsonResult(result.ToApplicationResult());
                 }
                 else
@@ -110,7 +113,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
                     var result = await _roleManager.CreateAsync(role);
                     return new JsonResult(result.ToApplicationResult());
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -189,8 +192,8 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
                     {
                         var role = new ApplicationRole
                         {
-                            Description= item.Description,
-                            Name= item.Name
+                            Description = item.Description,
+                            Name = item.Name
                         };
                         if (!(await _roleManager.RoleExistsAsync(role.Name)))
                         {
@@ -214,7 +217,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         {
             var role = await _roleManager.FindByIdAsync(id);
             var claims = await _roleManager.GetClaimsAsync(role);
-            return new JsonResult(claims.Select(x=>x.Value));
+            return new JsonResult(claims.Select(x => x.Value));
         }
         public async Task<IActionResult> OnPostAssignPermissionsAsync()
         {
@@ -222,13 +225,13 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             var claims = await _roleManager.GetClaimsAsync(role);
             foreach (var claim in claims)
             {
-               await  _roleManager.RemoveClaimAsync(role, claim);
+                await _roleManager.RemoveClaimAsync(role, claim);
             }
-            foreach(var name in AssignedPermissions)
+            foreach (var name in AssignedPermissions)
             {
                 await _roleManager.AddClaimAsync(role, new System.Security.Claims.Claim(ApplicationClaimTypes.Permission, name));
             }
-           
+
             return new JsonResult(Result.Success());
         }
 
@@ -272,7 +275,8 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             [Display(Name = "Description")]
             public string Description { get; set; }
         }
-        public class PermissionModel {
+        public class PermissionModel
+        {
             public string Description { get; set; }
             public string Group { get; set; }
             public string ClaimType { get; set; }

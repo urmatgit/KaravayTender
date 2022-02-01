@@ -2,19 +2,15 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CleanArchitecture.Razor.Domain.Common;
 
 namespace CleanArchitecture.Razor.Domain.Entities.Worflow
 {
-   public  class ApprovalData:AuditableEntity
+    public class ApprovalData : AuditableEntity
     {
         public string WorkflowId { get; set; }
         public string WorkflowName { get; set; }
-      
+
         public string Status { get; set; }
         public string DocumentName { get; set; }
         public int DocumentId { get; set; }

@@ -1,0 +1,227 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using CleanArchitecture.Razor.Application.Constants.Permission
+@using  CleanArchitecture.Razor.Application.Common.Extensions
+@model SmartAdmin.WebUI.Pages.ComParticipants.IndexModel
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.Contragents.IndexModel> _localizerContr
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComParticipants.IndexModel> _localizerPart
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    ViewData["Title"] = _localizerPart["ComParticipants"].Value;
+    ViewData["PageName"] = "comparticipants_index";
+    ViewData["Category1"] = _localizerPart["References"].Value;
+    ViewData["Heading"] = _localizerPart["ComParticipants"].Value;
+    ViewData["PageDescription"] = _localizerPart["Managing supplier referral parameters"].Value;
+    ViewData["PreemptiveClass"] = "Default";
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Create);
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Search);
+
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Export);
+    var _canDeleteFile = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.DeleteFile);
+
+}
+@section HeadBlock {
+
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+
+    <style>
+
+        .participant_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+    </style>
+}
+<div id="js-page-content-participant" class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <h4 class="m-0">
+            @_localizerPart["ComParticipants"]
+            <small>@_localizerPart["See all available options"]</small>
+        </h4>
+        <div class="ml-auto">
+            @if (_canCreate.Succeeded)
+            {
+                <a role="button" class="btn btn-sm btn-outline-primary" id="participant_addbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
+                    @_localizerPart["Add"]
+                </a>
+
+            }
+            @if (_canDelete.Succeeded)
+            {
+                <a role="button" class="btn btn-sm btn-outline-danger" disabled id="participant_deletebutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
+                    @_localizerPart["Delete"]
+                </a>
+            }
+            @if (_canSearch.Succeeded)
+            {
+                <a role="button" class="btn btn-sm btn-outline-primary " id="participant_searchbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                    @_localizerPart["Search"]
+                </a>
+            }
+            @*@if (_canImport.Succeeded)
+                {
+                <div class="btn-group" role="group">
+                    <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
+                        <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizerPart["Import Excel"]
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="importbutton">
+                        <button id="gettemplatebutton" class="dropdown-item">@_localizerPart["Download Template"]</button>
+                    </div>
+                </div>
+                }*@
+
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="participant_dg">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<partial name="AddOrEditParticipants" />
+@await Component.InvokeAsync("ImportExcel", new
+{
+    importUri = Url.Page("/ComParticipants/Index") + "?handler=Import",
+getTemplateUri = @Url.Page("/ComParticipants/Index") + "?handler=CreateTemplate",
+onImportedSucceeded = "reloadData()"
+})
+@section ScriptsBlock {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
+
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/TableBaseClass.js"></script>
+    <script src="~/js/TableComParticipant.js"></script>
+
+    <script type="text/javascript">
+        let clsparticipant = null;
+        var pagelink = '@Url.Page("/ComParticipants/Index")';
+        var translations = {
+            SaveSuccess: '@_localizerPart["Save Success."]',
+            AddSuccess: '@_localizerPart["Add Success."]',
+            SaveFail: '@_localizerPart["Save fail"]',
+            IconPrefix: '@(Settings.Theme.IconPrefix)',
+            Command: '@_localizerPart["Command"]',
+            Edit: '@_localizerPart["Edit"]',
+            Delete: '@_localizerPart["Delete"]',
+            AddCaption: '@_localizerPart["Add participant"]',
+            EditCaption: '@_localizerPart["Edit participant"]',
+            DeleteRowDialog: '@_localizerPart["Are you sure delete a row?"]',
+			Yes: '@_localizerPart["Yes"]',
+			No: '@_localizerPart["No"]',
+            DeleteSuccess: '@_localizerPart["Delete Success"]',
+            DeleteFail: '@_localizerPart["Delete fail"]',
+			DeleteRowsDialog: '@_localizerPart["Are you sure delete checked rows?"]',
+            Success: '@_localizerPart["Success"]',
+            ExportFail: '@_localizerPart["Export fail"]',
+            Name: '@_localizerPart["Name"]',
+            VAT: '@_localizerPart["VAT,%"]',
+            Category: '@_localizerPart["Category"]',
+            Direction: '@_localizerPart["Direction"]',
+            UnitOf: '@_localizerPart["UnitOf"]',
+            Volume: '@_localizerPart["Volume"]',
+            ChooseQualityDoc: '@_localizerPart["Choose quality documents"]',
+            ChooseCategory: '@_localizerPart["Choose a category"]',
+            Download_Success: '@_localizerPart["Download Success"]',
+            Archiv: '@_localizerPart["Archive"]',
+            AddFail: '@_localizerPart["Adding fail"]',
+            DeleteFileDialog: '@_localizerPart["Are you sure delete this file?"]',
+
+            Status: '@_localizerContr["Status"]',
+            FullName: '@_localizerContr["Full name"]',
+            INN: '@_localizerContr["INN"]',
+            Direction: '@_localizerContr["Direction"]',
+            Service: '@_localizerContr["Service"]',
+            KPP: '@_localizerContr["KPP"]',
+            Manager: '@_localizerContr["Manager"]',
+            Phone: '@_localizerContr["Phone"]',
+            ContactPerson: '@_localizerContr["Contact person"]',
+            ContactPhone: '@_localizerContr["Contact person phone"]',
+            LoadFail: '@_localizerPart["load fail"]',
+
+            Participant: '@_localizerPart["Participant"]',
+            StepFailure: '@_localizerPart["Step failure"]',
+            NoParticipantsSel: '@_localizerPart["No participants selected"]'
+
+        }
+        var YesNotList = [
+            {
+                id: '',
+                text: 'Все'
+
+            },
+            {
+                id: 'true',
+                text: 'Да'
+            },
+            {
+                id: 'false',
+                text: 'Нет'
+            }
+
+        ]
+        var ContragentStatuses=[
+                                 {
+                                     value: null,
+                                     text: 'Все'
+                                 },
+								@foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
+                                {
+                                    <text>
+                                 {
+                                     value: '@val',
+                                     text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'
+                                 },
+
+                                    </text>
+
+                                }
+        ]
+        var ParticipantStatus = [{
+                    value: null,
+                    text: 'Все'
+                },
+                            @foreach(var val in Enum.GetValues(typeof (CleanArchitecture.Razor.Domain.Enums.ParticipantStatus)))
+    {
+        <text>
+            {
+                value: '@val',
+            text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ParticipantStatus)val).ToDescriptionString()))'
+                            },
+        </text>
+    }
+                        ]
+		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
+        var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
+        var _canDeleteFile =  @(_canDeleteFile.Succeeded ? "true" : "false" );
+
+
+        $(() => {
+
+            InitParticipantTable();
+        })
+
+
+    </script>
+}

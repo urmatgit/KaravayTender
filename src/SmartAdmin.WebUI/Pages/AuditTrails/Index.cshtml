@@ -1,5 +1,5 @@
 ﻿@page
-@using CleanArchitecture.Razor.Infrastructure.Constants.Permission
+@using CleanArchitecture.Razor.Application.Constants.Permission
 @model SmartAdmin.WebUI.Pages.AuditTrails.IndexModel
 @inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
 @inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
@@ -62,11 +62,13 @@
 
 @section ScriptsBlock {
     <script src="~/js/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.js"></script>
-    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
-<script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>
-    
- 
+    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/easyui/locale/easyui-lang-ru.js" asp-append-version="true"></script>*@
+
+
     <script src="~/lib/easyui/plugins/datagrid-detailview.js"></script>
     <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
     <script src="~/lib/axios/dist/axios.js"></script>
@@ -129,19 +131,22 @@
 				.datagrid('enableFilter', [
 					{
 						field: 'DateTime',
-						type: 'dateRange',
-                        op: 'between',
+						type: 'dateRange'
+                        
+
 					},
 					{
 						field: 'AuditType',
 						type: 'combobox',
-                        op: 'equal',
+
 						options: {
 							panelHeight: 'auto',
-							data: [{
-								     value: null,
-								     text: 'ALL'
-							      },
+							data: [
+
+                                {
+                                    value: 'null',
+                                    text: 'Все'
+                                },
 							@foreach (var val in Enum.GetNames(typeof(CleanArchitecture.Razor.Domain.Enums.AuditType)))
 			                {
 				               <text>

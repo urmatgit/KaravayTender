@@ -239,3 +239,7 @@ _Pvt_Extensions
 src/SmartAdmin.WebUI/logs/*
 **/logs/*
 src/SmartAdmin.WebUI/KaravayTender.db
+*.db
+src/SmartAdmin.WebUI/KaravayTender.db-shm
+*.db-wal
+*.db-shm

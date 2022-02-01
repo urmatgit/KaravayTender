@@ -1,32 +1,27 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Common.Models;
-using CleanArchitecture.Razor.Application.Models;
-using CleanArchitecture.Razor.Domain.Entities;
-using System.Linq.Dynamic.Core;
-using MediatR;
 using CleanArchitecture.Razor.Application.Common.Mappings;
-using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Razor.Application.Common.Specification;
+using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.AuditTrails.DTOs;
+using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Domain.Entities.Audit;
+using MediatR;
 
 namespace CleanArchitecture.Razor.Application.AuditTrails.Queries.PaginationQuery
 {
     public class AuditTrailsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<AuditTrailDto>>
     {
-       
-        
+
+
     }
     public class AuditTrailsQueryHandler : IRequestHandler<AuditTrailsWithPaginationQuery, PaginatedData<AuditTrailDto>>
     {
@@ -47,7 +42,7 @@ namespace CleanArchitecture.Razor.Application.AuditTrails.Queries.PaginationQuer
         public async Task<PaginatedData<AuditTrailDto>> Handle(AuditTrailsWithPaginationQuery request, CancellationToken cancellationToken)
         {
             var filters = PredicateBuilder.FromFilter<AuditTrail>(request.FilterRules);
-  
+
             var data = await _context.AuditTrails
                 .Where(filters)
                 .OrderBy($"{request.Sort} {request.Order}")
@@ -57,6 +52,6 @@ namespace CleanArchitecture.Razor.Application.AuditTrails.Queries.PaginationQuer
             return data;
         }
 
-       
+
     }
 }

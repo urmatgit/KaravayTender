@@ -2,11 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CleanArchitecture.Razor.Application.Common.Extensions
 {
@@ -14,6 +10,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
     {
         public static string ToDescriptionString(this Enum val)
         {
+            if (val == null) return "";
             var attributes = (DescriptionAttribute[])val.GetType().GetField(val.ToString())?.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             return attributes?.Length > 0

@@ -1,11 +1,13 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
-using FluentAssertions;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using CleanArchitecture.Razor.Application.Customers.Commands.Delete;
 using CleanArchitecture.Razor.Application.Common.Exceptions;
 using CleanArchitecture.Razor.Application.Customers.Commands.AddEdit;
+using CleanArchitecture.Razor.Application.Customers.Commands.Delete;
 using CleanArchitecture.Razor.Domain.Entities;
+using FluentAssertions;
+using NUnit.Framework;
 
 namespace CleanArchitecture.Application.IntegrationTests.Customers.Commands
 {
@@ -13,6 +15,21 @@ namespace CleanArchitecture.Application.IntegrationTests.Customers.Commands
 
     public class DeleteCustomerTests : TestBase
     {
+        [Test]
+        public void ShouldRequireCustomerId() {
+            var command = new DeleteCustomerCommand();
+
+            FluentActions.Invoking(() =>
+                SendAsync(command)).Should().ThrowAsync<ValidationException>();
+        }
+        [Test]
+        public void ShouldRequireCustomerIdNotEmpty()
+        {
+            var command = new DeleteCheckedCustomersCommand();
+
+            FluentActions.Invoking(() =>
+                SendAsync(command)).Should().ThrowAsync<ValidationException>();
+        }
         [Test]
         public void ShouldRequireValidCustomerId()
         {
@@ -69,7 +86,7 @@ namespace CleanArchitecture.Application.IntegrationTests.Customers.Commands
             });
             await SendAsync(new DeleteCheckedCustomersCommand
             {
-                Id = new int[] {result1.Data,result2.Data }
+                Id = new int[] { result1.Data, result2.Data }
             });
 
             var item = await FindAsync<Customer>(result1.Data);

@@ -1,0 +1,247 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using CleanArchitecture.Razor.Application.Constants.Permission
+@model SmartAdmin.WebUI.Pages.ComStages.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComOffers.IndexModel> _localizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComStages.IndexModel> _localizerStage
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    ViewData["Title"] = _localizer["ComStages"].Value;
+    ViewData["PageName"] = "compositions_index";
+    ViewData["Category1"] = _localizer["References"].Value;
+    ViewData["Heading"] = _localizer["ComStages"].Value;
+    ViewData["PageDescription"] = _localizer["Managing supplier referral parameters"].Value;
+    ViewData["PreemptiveClass"] = "Default";
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Create);
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Search);
+
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Export);
+    var _canDeleteFile = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.DeleteFile);
+
+}
+@section HeadBlock {
+
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+
+    <style>
+
+        .comstage_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+    </style>
+}
+<div id="js-page-content-demopanels" class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <div class="col-md-3">
+            <h5>@_localizerStage["Stage"] 1</h5>
+        </div>
+        <div class="col-md-6">
+            <div class="custom-control custom-radio-rounded custom-control-inline">
+                <input type="radio" class="custom-control-input" id="lastOffer" name="GetStageType" checked="" value="1">
+                <label class="custom-control-label" for="lastOffer">@_localizerStage["Last offer"]</label>
+            </div>
+            <div class="custom-control custom-radio-rounded custom-control-inline">
+                <input type="radio" class="custom-control-input" id="StepbyStepOffer" name="GetStageType" value="0">
+                <label class="custom-control-label" for="StepbyStepOffer">@_localizerStage["Step-by-Step offer"]</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="ml-auto">
+
+                @if (_canSearch.Succeeded)
+                {
+                <a role="button" class="btn btn-sm btn-outline-primary" id="participant_searchbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                    @_localizer["Search"]
+                </a>
+                }
+
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="comstage_dg">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@*<partial name="AddOrEditPosition" />*@
+@await Component.InvokeAsync("ImportExcel", new
+{
+    importUri = Url.Page("/ComStages/Index") + "?handler=Import",
+getTemplateUri = @Url.Page("/ComStages/Index") + "?handler=CreateTemplate",
+onImportedSucceeded = "reloadData()"
+})
+@section ScriptsBlock {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
+
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/ComStageTable.js"></script>
+    <script src="~/js/TableBaseClass.js"></script>
+
+    <script type="text/javascript">
+        var pagelink = '@Url.Page("/ComStages/Index")';
+        var translations = {
+            SaveSuccess: '@_localizer["Save Success."]',
+            SaveFail: '@_localizer["Save fail"]',
+            IconPrefix: '@(Settings.Theme.IconPrefix)',
+            Command: '@_localizer["Command"]',
+            Edit: '@_localizer["Edit"]',
+            Delete: '@_localizer["Delete"]',
+            AddCaption: '@_localizer["Add nomenclature"]',
+            EditCaption: '@_localizer["Edit nomenclature"]',
+            DeleteRowDialog: '@_localizer["Are you sure delete a row?"]',
+			Yes: '@_localizer["Yes"]',
+			No: '@_localizer["No"]',
+            DeleteSuccess: '@_localizer["Delete Success"]',
+            DeleteFail: '@_localizer["Delete fail"]',
+			DeleteRowsDialog: '@_localizer["Are you sure delete checked rows?"]',
+            Success: '@_localizer["Success"]',
+            ExportFail: '@_localizer["Export fail"]',
+            Name: '@_localizer["Name"]',
+            VAT: '@_localizer["VAT,%"]',
+            Category: '@_localizer["Category"]',
+            Direction: '@_localizer["Direction"]',
+            UnitOf: '@_localizer["UnitOf"]',
+            Volume: '@_localizer["Volume"]',
+            ChooseQualityDoc: '@_localizer["Choose quality documents"]',
+            ChooseCategory: '@_localizer["Choose a category"]',
+            Download_Success: '@_localizer["Download Success"]',
+            Archiv: '@_localizer["Archive"]',
+            DeleteFileDialog: '@_localizer["Are you sure delete this file?"]',
+        }
+        var YesNotList = [
+            {
+                id: '',
+                text: 'Все'
+
+            },
+            {
+                id: 'true',
+                text: 'Да'
+            },
+            {
+                id: 'false',
+                text: 'Нет'
+            }
+
+        ]
+     
+
+
+        var cdata = [[
+            { field: "StageNumber", title: "Этап", rowspan: 2 ,width:100},
+            { field: "NomName", title: "Номерклатура", rowspan: 2, width: 100},
+            { field: "ContName_2", title: "name2 (Участвует)", colspan: 2},
+
+            { field: "ContName_3", title: "name3 (Участвует)", colspan: 2},
+
+
+
+            {
+                field: "ContName_4", title: "name13 (Участвует)", colspan: 2},
+
+
+
+            ],
+            [
+                { field: "ContName_2_price", title: "Прайс2", width: 100 },
+                { field: "ContName_2_status", title: "Статус2", checkbox: true, width: 100 },
+                { field: "ContName_3_price", title: "Прайс3", width: 100},
+                { field: "ContName_3_status", title: "Статус3", formatter: checkboxformatter, width: 100 },
+                { field: "ContName_4_price", title: "Прайс4", width: 100 },
+                { field: "ContName_4_status", title: "Статус4", formatter: checkboxformatter, width: 100},
+            ],
+
+            ];
+        var data = [
+            {
+                StageNumber: 1,
+                NomName: "Product1",
+                ContName_2: 2,
+                ContName_2_price: 0,
+                ContName_2_status: true,
+                ContName_3: 3,
+                ContName_3_price: 0,
+                ContName_3_status: true,
+                ContName_4: 4,
+                ContName_4_price: 0,
+                ContName_4_status: true,
+            },
+            {
+                StageNumber: 1,
+                NomName: "NUm2",
+                ContName_2: 2,
+                ContName_2_price: 0,
+                ContName_2_status: true,
+                ContName_3: 3,
+                ContName_3_price: 0,
+                ContName_3_status: true,
+                ContName_4: 4,
+                ContName_4_price: 0,
+                ContName_4_status: true,
+            },
+        ]
+        //var dgcomstage = {};
+        //initdatagrid1=() =>{
+        //    dgcomstage = $(`#comstage_dg`).datagrid({
+        //        height: (window.innerHeight / 3),
+        //        method: 'GET',
+        //        rownumbers: true,
+        //        singleSelect: true,
+        //        selectOnCheck: false,
+        //        checkOnSelect: false,
+        //        pagination: true,
+        //        border: true,
+        //        clientPaging: false,
+        //        remoteFilter: true,
+        //        sortName: this._defaultSortName,
+        //        sortOrder: 'desc',
+        //        pageSize: 15,
+        //        pageList: [10, 15, 30, 50, 100, 1000],
+        //        onLoadSuccess: function (data) {
+        //            var panel = $(this).datagrid("getPanel");
+        //            var myheaderCol = panel.find("div.datagrid-header td");
+        //            // here is to add the css style
+        //            //myheaderCol.css("border-", "1px solid #000");
+        //        },
+        //        columns: tblStageColumns
+        //        //data: data
+
+        //    });
+
+        //    //.datagrid('load', `${this._pageLink}?handler=Data`);
+
+        //}
+        $("input[name=GetStageType]:radio").change(function () {
+            LoadComState(1);
+        });
+
+        $(() => {
+
+            //initdatagridComStage(tblStageColumns);
+            //$(`#comstage_dg`).datagrid('resize');
+            LoadComState(1);
+
+        })
+
+
+    </script>
+}

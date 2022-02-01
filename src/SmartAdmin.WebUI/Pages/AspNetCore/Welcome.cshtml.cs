@@ -1,6 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Extensions;
@@ -24,7 +24,7 @@ namespace SmartAdmin.WebUI.Pages.AspNetCore
         {
             _logger = logger;
             _diagnosticContext = diagnosticContext;
-            
+
         }
 
         public void OnGet()
@@ -37,16 +37,16 @@ namespace SmartAdmin.WebUI.Pages.AspNetCore
             _logger.LogDebug("Debug");
             _logger.LogCritical("Critical");
             _logger.LogTrace("Trace");
-            
+
             _diagnosticContext.Set("IndexCallCount", Interlocked.Increment(ref _callCount));
         }
-    public  Task<JsonResult> OnGetFilter(string input)
-    {
-      return  Task.FromResult(new JsonResult(input));
-    }
-    public  Task<JsonResult> OnPost(string input)
-    {
-      return Task.FromResult(new JsonResult(string.Empty));
+        public Task<JsonResult> OnGetFilter(string input)
+        {
+            return Task.FromResult(new JsonResult(input));
         }
-  }
+        public Task<JsonResult> OnPost(string input)
+        {
+            return Task.FromResult(new JsonResult(string.Empty));
+        }
+    }
 }

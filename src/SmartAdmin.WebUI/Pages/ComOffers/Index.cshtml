@@ -1,0 +1,731 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using  CleanArchitecture.Razor.Application.Common.Extensions
+@using CleanArchitecture.Razor.Application.Constants.Permission
+@model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.Contragents.IndexModel> _localizerContr
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComParticipants.IndexModel> _localizerPart
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    ViewData["Title"] = _localizer["Сommercial offer"].Value;
+    ViewData["PageName"] = "comoffers_index";
+    ViewData["Category1"] = _localizer["References"].Value;
+    ViewData["Heading"] = _localizer["Сommercial offer"].Value;
+    ViewData["PageDescription"] = _localizer["Managing supplier referral parameters"].Value;
+    ViewData["PreemptiveClass"] = "Default";
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Create);
+    var _canStart = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Start);
+
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Search);
+
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Export);
+
+}
+@section HeadBlock {
+
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/select2/select2.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/ForOffer.css">
+    <style>
+
+        .main_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+
+        .composition_dg_datagrid-cell-c2-_action {
+            overflow: visible !important
+        }
+
+        .participant_dg_datagrid-cell-c3-_action {
+            overflow: visible !important
+        }
+    </style>
+}
+<div id="table-page-content" class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <h4 class="m-0">
+            @_localizer["Commercial offer"]
+            <small>@_localizer["See all available options"]</small>
+        </h4>
+        <div class="ml-auto">
+            @*@if (_canStart.Succeeded)
+            {
+            <button class="btn btn-sm btn-outline-primary " id="startbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-bolt mr-1"></span>
+                @_localizer["Start"]
+            </button>
+            }*@
+
+            @if (_canCreate.Succeeded)
+            {
+            <button class="btn btn-sm btn-outline-primary " id="addbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
+                @_localizer["Add"]
+            </button>
+            }
+            @*@if (_canDelete.Succeeded)
+            {
+            <button class="btn btn-sm btn-outline-danger" disabled id="deletebutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
+                @_localizer["Delete"]
+            </button>
+            }*@
+            @if (_canSearch.Succeeded)
+            {
+            <button class="btn btn-sm btn-outline-primary " id="searchbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                @_localizer["Search"]
+            </button>
+            }
+            @*@if (_canImport.Succeeded)
+                {
+                <div class="btn-group" role="group">
+                    <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
+                        <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="importbutton">
+                        <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
+                    </div>
+                </div>
+                }*@
+            @*@if (_canExport.Succeeded)
+            {
+            <button class="btn btn-sm btn-outline-primary " id="exportbutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-download mr-1"></span>
+                @_localizer["Export Excel"]
+            </button>
+            }*@
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row mb-2">
+
+            <div class="col-md-2  mat my-auto" style="text-align:right">
+                <label class="form-label">@_localizer["Фильтр КП"]  </label>
+            </div>
+            <div class="col-md-3">
+                <select type="text" id="filterForComOffer" onchange="reloadData()" asp-items="Html.GetEnumSelectList<ComOfferFilterForParticipant>()" class="custom-select" placeholder="@_localizer["Фильтр"]" value="3">
+                </select>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="main_dg">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="AddOrEditCard" />
+
+@await Component.InvokeAsync("ImportExcel", new
+{
+    importUri = Url.Page("/ComOffers/Index") + "?handler=Import",
+getTemplateUri = @Url.Page("/ComOffers/Index") + "?handler=CreateTemplate",
+onImportedSucceeded = "reloadData()"
+})
+@section ScriptsBlock {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
+    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-detailview.js" ></script>
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    @*<script src="~/lib/axios/dist/axios.js"></script>*@
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+    <script src="~/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/js/ComStageTable.js"></script>
+    <script src="~/js/TableBaseComOffer.js" ></script>
+    <script src="~/js/TableBaseClass.js"></script>
+    <script src="~/js/TableComParticipant.js"></script>
+    <script src="/js/SelectWinnerDialog.js"></script>
+    <script type="text/javascript">
+        let clscomposition = null;
+        var currentEditRow = "";
+
+        var pagelink = '@Url.Page("/ComOffers/Index")';
+        var translations = {
+            SaveSuccess: '@_localizer["Save Success."]',
+            CopiesSuccess: '@_localizer["A copy has been created"]',
+            SaveFail: '@_localizer["Save fail"]',
+            IconPrefix: '@(Settings.Theme.IconPrefix)',
+            Command: '@_localizer["Command"]',
+            Edit: '@_localizer["Edit"]',
+            Delete: '@_localizer["Delete"]',
+            AddCaption: '@_localizer["Add commercial offer"]',
+            EditCaption: '@_localizer["Edit commercial offer"]',
+            DeleteRowDialog: '@_localizer["Are you sure delete a row?"]',
+			Yes: '@_localizer["Yes"]',
+			No: '@_localizer["No"]',
+            DeleteSuccess: '@_localizer["Delete Success"]',
+            DeleteFail: '@_localizer["Delete fail"]',
+			DeleteRowsDialog: '@_localizer["Are you sure delete checked rows?"]',
+            Success: '@_localizer["Success"]',
+            ExportFail: '@_localizer["Export fail"]',
+            Name: '@_localizer["Name"]',
+
+             Status: '@_localizerContr["Status"]',
+            FullName: '@_localizerContr["Full name"]',
+            INN: '@_localizerContr["INN"]',
+            Direction: '@_localizerContr["Direction"]',
+            Service: '@_localizerContr["Service"]',
+            KPP: '@_localizerContr["KPP"]',
+            Manager: '@_localizerContr["Manager"]',
+            Phone: '@_localizerContr["Phone"]',
+            ContactPerson: '@_localizerContr["Contact person"]',
+            ContactPhone: '@_localizerContr["Contact person phone"]',
+            LoadFail: '@_localizerPart["load fail"]',
+
+            Participant: '@_localizerPart["Participant"]',
+            StepFailure: '@_localizerPart["Step failure"]',
+            NoParticipantsSel: '@_localizerPart["No participants selected"]',
+            AddSuccess: '@_localizerPart["Participants  is added"]',
+            AddFail: '@_localizerPart["Adding fail"]',
+            AddParticipants: '@_localizerPart["Add participant"]',
+            Cancel: '@_localizer["Cancel"]',
+            Ok: '@_localizer["Ok"]'
+
+		}
+		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
+        var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
+
+        var YesNotList = [
+            {
+                id: '',
+                text: 'Все'
+
+            },
+            {
+                id: 'true',
+                text: 'Да'
+            },
+            {
+                id: 'false',
+                text: 'Нет'
+            }
+
+        ]
+         var ContragentStatuses=[
+                                 {
+                                     value: null,
+                                     text: 'Все'
+                                 },
+								@foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
+                                {
+                                    <text>
+                                 {
+                                     value: '@val',
+                                     text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ContragentStatus)val).ToDescriptionString()))'
+                                 },
+
+                                    </text>
+
+                                }
+        ]
+        var ParticipantStatus = [{
+                    value: null,
+                    text: 'Все'
+                },
+                            @foreach(var val in Enum.GetValues(typeof (CleanArchitecture.Razor.Domain.Enums.ParticipantStatus)))
+    {
+        <text>
+            {
+                value: '@val',
+            text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ParticipantStatus)val).ToDescriptionString()))'
+                            },
+        </text>
+    }]
+        var Categories = undefined;
+        document.addEventListener("rowCheck", function (event) { // (1)
+            console.log(event.detail.check);
+            $('#startbutton').prop('disabled', event.detail.check);
+        });
+
+        $('#startbutton').click(function () {
+            alert("Start");
+        });
+        $("input[name=GetStageType]:radio").change(function () {
+            LoadComState(currentEditRow.Id);
+        });
+        $("#composition_modal").on("shown.bs.modal", function (event) {
+            var directionId = $("#Input_DirectionId").val();
+            var modelDropDown = $('#InputPos_NomenclatureId');
+            modelDropDown.empty();
+             modelDropDown.append(
+                        $('<option>', {
+                            value: ''
+                        }).text( '@Html.Raw(@_localizer["Choose a nomenclature"])')
+            );
+            getCategoriesByDirectionId(directionId, function (res) {
+                Categories = res;
+                if (clscomposition.currentEditRow) {
+                    $('#InputPos_CategoryId').val(clscomposition.currentEditRow.CategoryId);
+                    $('#InputPos_CategoryId').trigger('change');
+                    
+                    
+                }
+            });
+
+        });
+        $("#edit_panel").on("ShowEdit", function (event) {
+            let comofferid = 0;
+            if (currentEditRow) {
+                comofferid = currentEditRow.Id;
+
+            }
+
+
+            clscomposition.reloadData('@Url.Page("/ComOffers/Index")?handler=DataPos' + `&ComOfferId=${comofferid}`);
+            clscomposition.ResizeGrid();
+            clsparticipant.reloadData('@Url.Page("/ComParticipants/Index")?handler=Data' + `&ComOfferId=${comofferid}`);
+            clsparticipant.ResizeGrid();
+            clscomposition.HideAction();
+            clsparticipant.HideAction();
+            if (currentEditRow && currentEditRow.Status == 0) {
+                clscomposition.ShowAction();
+                clsparticipant.ShowAction();
+
+            }
+            if (currentEditRow) {
+                LoadComState(comofferid);
+            }
+
+        })
+        function getCategoriesByDirectionId(id, callback) {
+            console.log(id);
+            axios.get('/ComOffers/Index?handler=Categories&directionid=' + id)
+                .then(res => {
+                    
+
+                    var modelDropDown = $('#InputPos_CategoryId');
+                    modelDropDown.empty();
+                    modelDropDown.append(
+                        $('<option>', {
+                            value: ''
+                        }).text( '@Html.Raw(@_localizer["Choose a category"])')
+                    );
+
+                    $.each(res.data, function (index, model) {
+                        modelDropDown.append(
+                            $('<option>', {
+                                value: model.Id
+                            }).text(model.Name)
+                        );
+                        //if (currentEditRow && currentEditRow.CategoryId == model.Id && currentEditRow.CategoryName) {
+                        //    modelDropDown.val(currentEditRow.CategoryId);
+                        //}
+
+                    });
+                    if (callback)
+                        callback(res.data);
+                })
+                .catch((error) => {
+                    if (error.response.data.Errors) {
+                        const errors = error.response.data.Errors;
+                        errors.forEach(item => {
+                            toastr["error"](item);
+                        });
+                    } else {
+                        toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
+                    }
+                });
+        }
+        $('#InputPos_NomenclatureId').change(function () {
+            var nomenId = $(this).val();
+            console.log(nomenId);
+            axios.get('/Nomenclatures/Index?handler=ById&id=' + nomenId)
+                .then(res => {
+                    console.log(res);
+                    $('#InputPos_Nomenclature_Category_Name').val(res.data.Category.Name);
+                    $('#InputPos_UnitOfName').val(res.data.UnitOf.Name);
+                    $('#InputPos_NomVolume').val(res.data.Volume);
+                    $('#InputPos_QualityDocsNames').val(res.data.QualityDocsNames);
+                    $('#InputPos_NomSpecification').val(res.data.Specifications);
+                    $('#InputPos_Requirement').val(res.data.Requirement);
+                })
+                .catch((error) => {
+                    if (error.response.data.Errors) {
+                        const errors = error.response.data.Errors;
+                        errors.forEach(item => {
+                            toastr["error"](item);
+                        });
+                    } else {
+                        toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
+                    }
+                });
+        })
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr("href");
+            switch (target) {
+                case '#ComParticipant':
+                    clsparticipant.ResizeGrid(); break;
+                case '#ComPosition':
+                    clscomposition.ResizeGrid(); break;
+                case '#ComState':
+
+                    $(`#comstage_dg`).datagrid('resize');
+                    break;
+            }
+            //if ((target == '#ComParticipant')) {
+            //    clsparticipant.ResizeGrid();
+
+            //} else {
+            //    clscomposition.ResizeGrid();
+            //}
+
+
+        });
+
+
+            //.datagrid('load', `${this._pageLink}?handler=Data`);
+        function createColumnsComOffer() {
+
+            var InitColumns =
+                [
+                  //  { field: 'ck', checkbox: true },
+                    {
+                        field: '_action',
+                        title: `${window.translations.Command} `,
+                        width: 80,
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            let delAction = `@Html.Raw(_canDelete.Succeeded ? "<button class='dropdown-item' onclick='onDelete(${row.Id})' ><i class='fal fa-trash-alt mr-1'></i> ${translations.Delete}</button>" : "")`;
+                            if (row['Status'] != 0)
+                                delAction = "";
+                            
+                            return `<div class="btn-group" role="group">
+								  <button id="commandbtngroup" type="button" @(_canEdit.Succeeded ? "" : "disabled")  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="${window.translations.IconPrefix} fa-edit"></i>
+								 </button>
+								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
+								   <button class="dropdown-item" onclick="onEdit(${index})" @(_canEdit.Succeeded ? "" : "disabled")><i class="fal fa-edit mr-1"></i> ${translations.Edit}</button>
+								   <button class="dropdown-item" onclick="onCopy(${index})" @(_canEdit.Succeeded ? "" : "disabled")><i class="fal fa-edit mr-1"></i> @_localizer["Copy"]</button> 
+                                   ${delAction}
+								 </div>
+							  </div>`;
+                        }
+                    }
+
+
+
+
+                ];
+            if (tblColumns.length > 0) {
+                return InitColumns.concat(tblColumns);
+            }
+            return InitColumns;
+        };
+
+
+        $(() => {
+
+            $("#filterForComOffer").val(3); // фильтр  в работе
+            clscomposition = new clsBaseTable("composition","clscomposition",'@Url.Page("/ComPositions/Index")');
+            tblColumns = [
+                { field: 'StatusStr', title: '@_localizer["Статус КП"]', sortable: true, width: 130 },
+
+                { field: 'Number', title: '@_localizer["Number"]', sortable: true, width: 100 },
+                { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
+                {
+                    field: 'DeadlineDate', title: '@_localizer["Срок ответа до"]', sortable: true, width: 90, formatter: function (val, rec,index) {
+                        // WinnerDetermined = 4 || 
+                        if (rec.Status != 4 && rec.Status != 5)
+                            return dateformatter(val, rec, index);
+                        else
+                            return "";
+                    }
+                       
+                },
+
+                { field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 150 },
+                { field: 'TermBegin', title: '@_localizer["Term from"]', sortable: true, width: 90, formatter: dateformatter  },
+                { field: 'TermEnd', title: '@_localizer["Term to"]', sortable: true, width: 90, formatter: dateformatter  },
+
+                { field: 'ManagerName', title: '@_localizer["Manager"]', sortable: true, width: 150 },
+                { field: 'WinnerName', title: '@_localizer["Winner"]', sortable: true, width: 150 },
+
+                { field: 'DelayDay', title: '@_localizer["Delay day"]', sortable: true, width: 60 },
+                { field: 'IsBankDaysStr', title: '@_localizer["Bank days"]', sortable: true, width: 70, formatter: checkboxformatter },
+                { field: 'IsDeliveryInPriceStr', title: '@_localizer["Price include delivery"]', sortable: true, width: 80, formatter: checkboxformatter },
+                { field: 'DateBegin', title: '@_localizer["Date open"]', sortable: true, width: 90, formatter: dateformatter  },
+                { field: 'DateEnd', title: '@_localizer["Date close"]', sortable: true, width: 90, formatter: dateformatter  },
+
+            ];
+
+            tblFilters = [
+                {
+                    field: 'DeadlineDate',
+                    type: 'datebox',
+                    options: DateFilterOptions,
+                    op: 'equal'
+                },
+                {
+                    field: 'TermBegin',
+                    type: 'datebox',
+                    options: DateFilterOptions,
+                    op: 'equal'
+                },
+                {
+                    field: 'TermEnd',
+                    type: 'datebox',
+                    options: DateFilterOptions,
+                    op: 'equal'
+                },
+                {
+                    field: 'DateBegin',
+                    type: 'datebox',
+                    options: DateFilterOptions,
+                    op: 'equal'
+                },
+                {
+                    field: 'DateEnd',
+                    type: 'datebox',
+                    options: DateFilterOptions,
+                    op: 'equal'
+                },
+                {
+                    field: 'IsBankDaysStr',
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        valueField: 'id',
+                        textField: 'text',
+                        data: YesNotList,
+                        onChange: function (newValue, oldValue) {
+                            console.log(newValue);
+                            $dg.datagrid('addFilterRule', {
+                                field: 'IsBankDays',
+                                op: 'equal',
+                                value: newValue
+                            });
+
+                        }
+
+                    }
+
+                },
+                {
+                    field: 'IsDeliveryInPriceStr',
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        valueField: 'id',
+                        textField: 'text',
+                        data: YesNotList,
+                        onChange: function (newValue, oldValue) {
+                            console.log(newValue);
+                            $dg.datagrid('addFilterRule', {
+                                field: 'IsDeliveryInPrice',
+                                op: 'equal',
+                                value: newValue
+                            });
+
+                        }
+
+                    }
+
+                },
+                {
+                    field: 'StatusStr',
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        data: [{
+                            value: null,
+                            text:'Все'
+                        },
+                            @foreach(var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ComOfferStatus)))
+                {
+                    <text>
+                            {
+                                value: '@val',
+                                text: '@Html.Raw((((CleanArchitecture.Razor.Domain.Enums.ComOfferStatus)val).ToDescriptionString()))'
+                            },
+                            </text>
+                }
+                        ],
+                        onChange: function (newValue, oldValue) {
+                            console.log('Sttus change ' + newValue);
+                            $dg.datagrid('addFilterRule', {
+                                field: 'Status',
+                                op: 'equal',
+                                value: newValue
+                            });
+                        }
+                    }
+
+                }
+            ]
+            initdatagrid();
+
+            clscomposition.tblColumns = [
+                {
+                    field: 'Category', title: '@_localizer["Category"]', sortable: true, width: 130, formatter: function (val, rec) {
+                        return rec.Category == null ? "" : rec.Category.Name;
+                    }
+                },
+                {
+                    field: 'Nomenclature.Name', title: '@_localizer["Nomenclature"]', sortable: true, width: 200 , formatter: function (val, rec) {
+                        return rec.Nomenclature.Name;
+                    }
+                },
+
+
+                {
+                    field: 'AreaNames', title: '@_localizer["Arias"]', sortable: true, width: 150, formatter: function (val, rec) {
+                        return rec.AreaNames;
+                    }
+                },
+                {
+                    field: 'Nomenclature.UnitOf.Name', title: '@_localizer["UnitOf"]', sortable: true, width: 80, formatter: function (val, rec) {
+                        return rec.Nomenclature.UnitOf.Name;
+                    }
+                },
+                { field: 'DeliveryCount', title: '@_localizer["Delivery count"]', sortable: true, width: 130},
+
+                {
+                    field: 'Price', title: '@_localizer["Price"]', sortable: true, width: 80, align: 'right', formatter: function (value, row) {
+
+                        return formatPrice(value);
+                    }
+                },
+
+                { field: 'Nomenclature.Vat.Stavka', title: '@_localizer["VAT,%"]', sortable: true, width: 80 },
+                { field: 'Volume', title: '@_localizer["Volume"]', sortable: true, width: 80 },
+                { field: 'QualityDocsNames', title: '@_localizer["Quality documents"]', sortable: true, width: 150 },
+                { field: 'NomSpecification', title: '@_localizer["Specification"]', sortable: true, width: 150},
+                { field: 'Summa', title: '@_localizer["Summa"]', sortable: true, width: 80 }
+
+            ];
+            clscomposition.jsonToFormCallBack = {
+                ComOfferId: function (value) {
+                    var parentID = $('#edit_form_panel #Input_Id').val();
+                    $('#InputPos_ComOfferId').val(parentID);
+                },
+                AreaIds: function (value) {
+                    $('#AreaIds').val(value);
+                    $('#AreaIds').trigger('change');
+                },
+                CategoryId: function (value) {
+                    $('#InputPos_CategoryId').val(value);
+                }
+            }
+            clscomposition.OnNewRow = () => {
+                var parentID = $('#edit_form_panel #Input_Id').val();
+                $('#InputPos_ComOfferId').val(parentID);
+                $('#AreaIds').val(0);
+                $('#AreaIds').trigger('change');
+            };
+
+            clscomposition._editCaption = '@_localizer["Add position"]';
+            clscomposition._addCaption = '@_localizer["Edit position"]';
+            clscomposition.Init();
+            $('#AreaIds').select2({
+                placeholder: '@Html.Raw(@_localizer["Choose areas"])',
+
+                allowClear: true,
+                dropdownParent: $('#composition_edit_form')
+            });
+            @*$('#InputPos_CategoryId').select2({
+
+                placeholder: '@Html.Raw(@_localizer["Choose a category"])',
+                allowClear: true,
+                dropdownParent: $('#composition_edit_form')
+            });*@
+            //$('.summernote').summernote({
+            //    focus: true,
+            //    height: (window.innerHeight / 2),
+            //    toolbar: [
+            //        ['style', ['bold', 'italic', 'underline', 'clear']],
+            //        ['fontsize', ['fontsize']],
+            //        ['color', ['color']],
+            //        ['para', ['ul', 'ol', 'paragraph']],
+            //        ["view", ["fullscreen", "codeview"]]
+            //    ]
+            //});
+
+            InitParticipantTable();
+
+
+            })
+        function closePanel() {
+            $('#table-page-content').show();
+            $dg.datagrid('resize');
+            $('#edit_panel').hide();
+
+        }
+        $("#InputPos_CategoryId").change(function () {
+
+
+            var id = $(this).val();
+            console.log(id);
+            let currentCate = Categories.find(x => x.Id == id);
+            $('#InputPos_AddRequirement').val(currentCate.Description);
+
+            axios.get('/ComPositions/Index?handler=Nomenclatures&categoryid=' + id)
+                .then(res => {
+                    console.log(res);
+
+                    $('#InputPos_Nomenclature_Category_Name').val("");
+                    $('#InputPos_UnitOfName').val("");
+                    $('#InputPos_NomVolume').val("");
+                    $('#InputPos_QualityDocsNames').val("");
+                    $('#InputPos_NomSpecification').val("");
+                    
+                   
+                    var modelDropDown = $('#InputPos_NomenclatureId');
+                    modelDropDown.empty();
+                    modelDropDown.append(
+                        $('<option>', {
+                            value: ''
+                        }).text( '@Html.Raw(@_localizer["Choose a nomenclature"])')
+                    );
+                    $.each(res.data, function (index, model) {
+                        modelDropDown.append(
+                            $('<option>', {
+                                value: model.Id
+                            }).text(model.Name)
+                        );
+                        if (clscomposition.currentEditRow && clscomposition.currentEditRow.NomenclatureId == model.Id) {
+                            modelDropDown.val(clscomposition.currentEditRow.NomenclatureId);
+                            $('#InputPos_NomenclatureId').trigger('change');
+                        }
+
+                    });
+                    //if (clscomposition.currentEditRow) {
+                    //    $('#InputPos_NomenclatureId').val(clscomposition.currentEditRow.nommo);
+                        
+                    //}
+                })
+                .catch((error) => {
+                    if (error.response.data.Errors) {
+                        const errors = error.response.data.Errors;
+                        errors.forEach(item => {
+                            toastr["error"](item);
+                        });
+                    } else {
+                        toastr["error"](`${windows.translations.GetCategoriesFail},${error.response.data}`);
+                    }
+                });
+        });
+        //Comstage
+        function CuncatateField(val, rec) {
+
+        }
+
+
+
+    </script>
+}

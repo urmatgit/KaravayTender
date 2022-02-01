@@ -1,0 +1,84 @@
+﻿@using CleanArchitecture.Razor.Infrastructure.Constants.Permission
+@model SmartAdmin.WebUI.Pages.DemoMasterDetail.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Create);
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Search);
+    var _canImport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Import);
+    var _canExport =  await _authorizationService.AuthorizeAsync(User, null, Permissions.Products.Export);
+
+}
+
+<div id="js-page-content" class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <h4 class="m-0">
+            @_localizer["Products"]
+            <small>@_localizer["See all available options"]</small>
+        </h4>
+        <div class="ml-auto">
+            @if (_canCreate.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-primary " id="addbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
+                    @_localizer["Add"]
+                </button>
+            }
+            @if (_canDelete.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-danger" disabled id="deletebutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
+                    @_localizer["Delete"]
+                </button>
+            }
+            @if (_canSearch.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-primary " id="searchbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                    @_localizer["Search"]
+                </button>
+            }
+            @if (_canImport.Succeeded)
+            {
+                <div class="btn-group" role="group">
+                    <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
+                        <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="importbutton">
+                        <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
+                    </div>
+                </div>
+            }
+            @if (_canExport.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-primary " id="exportbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-download mr-1"></span>
+                    @_localizer["Export Excel"]
+                </button>
+            }
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="product_dg"  >
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<partial name="AddOrEditProduct" />
+@await Component.InvokeAsync("ImportExcel", new
+{
+    importUri = Url.Page("/Products/Index") + "?handler=Import",
+    getTemplateUri = @Url.Page("/Products/Index") + "?handler=CreateTemplate",
+    onImportedSucceeded = "reloadP()"
+})
+
+    

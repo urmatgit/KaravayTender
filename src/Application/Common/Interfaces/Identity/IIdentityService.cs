@@ -1,10 +1,11 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
-using CleanArchitecture.Razor.Application.Common.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
+using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Domain.Identity;
 
 namespace CleanArchitecture.Razor.Application.Common.Interfaces.Identity
 {
@@ -17,7 +18,10 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces.Identity
         Task<bool> AuthorizeAsync(string userId, string policyName);
         Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
         Task<Result> DeleteUserAsync(string userId);
+        Task<Result> DisableUserAsync(string userId);
         Task<IDictionary<string, string>> FetchUsers(string roleName);
+        Task<List<IApplicationUser>> FetchUsersEx(string roleName);
         Task<string> UpdateLiveStatus(string userId, bool isLive);
     }
 }
+

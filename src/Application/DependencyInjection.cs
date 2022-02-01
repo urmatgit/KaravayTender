@@ -1,17 +1,13 @@
-using AutoMapper;
-using CleanArchitecture.Razor.Application.Common.Behaviours;
-using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Customers.Commands.AddEdit;
-using CleanArchitecture.Razor.Application.Workflow.Approval.Steps;
-using FluentValidation;
-using MediatR;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Linq;
 using System.Reflection;
-using WorkflowCore.Interface;
-using WorkflowCore.Models;
+using CleanArchitecture.Razor.Application.Common.Behaviours;
+using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Razor.Application
 {
@@ -29,6 +25,7 @@ namespace CleanArchitecture.Razor.Application
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
             services.AddLazyCache();
+            // services.AddWorkflowSteps(w => w.Name.EndsWith("Step"), Assembly.GetExecutingAssembly());
             return services;
         }
         public static IServiceCollection AddWorkflowSteps(this IServiceCollection services, Func<Type, bool> predicate, params Assembly[] assemblies)

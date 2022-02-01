@@ -1,0 +1,22 @@
+.form-control {
+    height: calc(1.47em + 0.8rem + 0px);
+    padding: 0.5rem 0.875rem;
+}
+.custom-select {
+    height: calc(1.47em + 0.8rem + 0px);
+    padding: 0.3rem 1.8rem 0.5rem 0.875rem;
+}
+.card-header {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+.card-body {
+    padding: 0.5rem;
+}
+.mt-4, .my-4 {
+    margin-top: 0.5rem !important;
+}
+
+.panel-content {
+    padding: 0.5rem 0.5rem;
+}

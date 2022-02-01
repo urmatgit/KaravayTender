@@ -2746,14 +2746,16 @@ html {
   text-decoration: none !important; }
 
 .breadcrumb > li.breadcrumb-item {
-  max-width: 130px;
+  max-width: 150px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   display: block; }
   .breadcrumb > li.breadcrumb-item:hover {
     max-width: 200px !important;
-    cursor: default; }
+    cursor: default;
+    font-weight: bold;
+  }
 
 [data-breadcrumb-seperator] + [data-breadcrumb-seperator]:before {
   content: attr(data-breadcrumb-seperator); }
@@ -4501,7 +4503,7 @@ th {
   margin: 1.5rem; }
 
 .mb-g {
-  margin-bottom: 1.5rem !important; }
+  margin-bottom: 0rem !important; }
 
 .mb-gb {
   margin-bottom: 3rem; }
@@ -5699,9 +5701,9 @@ $grid-breakpoints: (
   .page-header {
     padding: 0 2rem; }
   .page-content {
-    padding: 1.5rem 2rem; }
+    padding: 1rem 1rem; }
     .page-content .panel {
-      margin-bottom: 1.5rem; } }
+      margin-bottom: 1rem; } }
 
 /*@include media-breakpoint-up(xl) {
 	.page-header {

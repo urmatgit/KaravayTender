@@ -8,17 +8,20 @@
 	<a href="#" class="menu-item btn" data-toggle="tooltip" data-placement="left" title="Scroll Top">
 		<i class="@(Settings.Theme.IconPrefix) fa-arrow-up"></i>
 	</a>
-	<a href="/page/login" class="menu-item btn" data-toggle="tooltip" data-placement="left" title="Logout">
+	@if (User.Identity.IsAuthenticated)
+    {
+	<a href="/Identity/Account/logout" class="menu-item btn" data-toggle="tooltip" data-placement="left" title="Logout">
 		<i class="@(Settings.Theme.IconPrefix) fa-sign-out"></i>
 	</a>
+    }
 	<a href="#" class="menu-item btn" data-action="app-fullscreen" data-toggle="tooltip" data-placement="left" title="Full Screen">
 		<i class="@(Settings.Theme.IconPrefix) fa-expand"></i>
 	</a>
 	<a href="#" class="menu-item btn" data-action="app-print" data-toggle="tooltip" data-placement="left" title="Print page">
 		<i class="@(Settings.Theme.IconPrefix) fa-print"></i>
 	</a>
-	<a href="#" class="menu-item btn" data-action="app-voice" data-toggle="tooltip" data-placement="left" title="Voice command">
+	@*<a href="#" class="menu-item btn" data-action="app-voice" data-toggle="tooltip" data-placement="left" title="Voice command">
 		<i class="@(Settings.Theme.IconPrefix) fa-microphone"></i>
-	</a>
+	</a>*@
 </nav>
 }

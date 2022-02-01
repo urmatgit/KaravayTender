@@ -1,0 +1,6 @@
+﻿@model ComponentModel
+
+
+<label class="form-label" for="@Model.Name">"@Model.Label" <span class="text-danger">*</span></label>
+<input type="text" asp-for="@Model.InputCustomer.Name" class="form-control" placeholder="@Model.PlaceHolder" />
+<span class="invalid-feedback" asp-validation-for="@Model.InputCustomer.Name"></span>

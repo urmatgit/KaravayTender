@@ -12,7 +12,6 @@ using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.KeyValues.Commands.AddEdit;
 using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Domain.Enums;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +27,7 @@ namespace CleanArchitecture.Razor.Application.KeyValues.Commands.Import
     public class CreateKeyValueTemplateCommand : IRequest<byte[]>
     {
         public IEnumerable<string> Fields { get; set; }
-        public string SheetName  { get;set; }
+        public string SheetName { get; set; }
     }
     public class ImportKeyValuesCommandHandler :
         IRequestHandler<CreateKeyValueTemplateCommand, byte[]>,
@@ -74,7 +73,7 @@ namespace CleanArchitecture.Razor.Application.KeyValues.Commands.Import
                     var validationResult = await _addValidator.ValidateAsync(_mapper.Map<AddEditKeyValueCommand>(item), cancellationToken);
                     if (validationResult.IsValid)
                     {
-                        var exist = await _context.KeyValues.AnyAsync(x => x.Name==item.Name && x.Value==item.Value,cancellationToken);
+                        var exist = await _context.KeyValues.AnyAsync(x => x.Name == item.Name && x.Value == item.Value, cancellationToken);
                         if (!exist)
                         {
                             await _context.KeyValues.AddAsync(item, cancellationToken);

@@ -2,29 +2,28 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
+using CleanArchitecture.Razor.Application.Common.Mappings;
+using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.Common.Specification;
+using CleanArchitecture.Razor.Application.Customers.Caching;
+using CleanArchitecture.Razor.Application.Customers.DTOs;
 using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Domain.Entities;
-using System.Linq.Dynamic.Core;
 using MediatR;
-using CleanArchitecture.Razor.Application.Common.Mappings;
-using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Razor.Application.Customers.DTOs;
-using System;
-using System.Collections.Generic;
-using CleanArchitecture.Razor.Application.Common.Specification;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using CleanArchitecture.Razor.Application.Customers.Caching;
 
 namespace CleanArchitecture.Razor.Application.Customers.Queries.PaginationQuery
 {
-    public class CustomersByMeQueryQuery : PaginationRequest,IRequest<PaginatedData<CustomerDto>>, ICacheable
+    public class CustomersByMeQueryQuery : PaginationRequest, IRequest<PaginatedData<CustomerDto>>, ICacheable
     {
         public string UserId { get; set; }
 
@@ -40,12 +39,12 @@ namespace CleanArchitecture.Razor.Application.Customers.Queries.PaginationQuery
         private readonly IMapper _mapper;
 
         public ByMeCustomersQueryHandler(
-        
+
             IApplicationDbContext context,
             IMapper mapper
             )
         {
-    
+
             _context = context;
             _mapper = mapper;
         }
@@ -68,7 +67,7 @@ namespace CleanArchitecture.Razor.Application.Customers.Queries.PaginationQuery
                 Criteria = p => p.CreatedBy == userId;
             }
 
-         
+
         }
     }
 }

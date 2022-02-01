@@ -28,7 +28,7 @@ namespace CleanArchitecture.Razor.Application.Customers.Commands.AddEdit
             RuleFor(v => v.RegionSalesDirector)
                 .MaximumLength(256)
                 .NotEmpty();
-            RuleFor(v=>v.PartnerType)
+            RuleFor(v => v.PartnerType)
                 .MaximumLength(128)
                 .NotEmpty();
         }

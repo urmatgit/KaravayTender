@@ -1,18 +1,21 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using System.Linq.Dynamic.Core;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper.QueryableExtensions;
-using Microsoft.Extensions.Localization;
 using CleanArchitecture.Razor.Application.Features.Logs.DTOs;
 using CleanArchitecture.Razor.Domain.Entities.Log;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.Logs.Queries.Export
 {
@@ -46,8 +49,8 @@ namespace CleanArchitecture.Razor.Application.Features.Logs.Queries.Export
 
         public async Task<byte[]> Handle(ExportLogsQuery request, CancellationToken cancellationToken)
         {
-            var filters = PredicateBuilder.FromFilter<Serilog>(request.filterRules);
-            var data = await _context.Serilogs
+            var filters = PredicateBuilder.FromFilter<Logger>(request.filterRules);
+            var data = await _context.Loggers
                 .Where(filters)
                 .OrderBy($"{request.sort} {request.order}")
                 .ProjectTo<LogDto>(_mapper.ConfigurationProvider)

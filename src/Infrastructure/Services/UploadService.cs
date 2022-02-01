@@ -1,16 +1,58 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Models;
+using CleanArchitecture.Razor.Application.Common.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Razor.Infrastructure.Services
 {
     public class UploadService : IUploadService
     {
+        private readonly ILogger<IUploadService> _logger;
+        private readonly ICurrentUserService _currentUserService;
+        public UploadService(ILogger<IUploadService> logger, ICurrentUserService currentUserService)
+        {
+            _logger = logger;
+            _currentUserService = currentUserService;
+        }
+        public async Task<string> UploadAsync(UploadRequest request, string subFolder)
+        {
+            if (request.Data == null) return string.Empty;
+            var streamData = new MemoryStream(request.Data);
+            if (streamData.Length > 0)
+            {
+                //var folder = request.UploadType.ToDescriptionString();
+                var folderName = Path.Combine("Files", subFolder);
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                bool exists = Directory.Exists(pathToSave);
+                if (!exists) Directory.CreateDirectory(pathToSave);
+                
+                var fileName = request.FileName.Trim('"');
+                var fullPath = Path.Combine(pathToSave, fileName);
+                var dbPath = Path.Combine(folderName, fileName);
+                if (File.Exists(dbPath))
+                {
+                    dbPath = NextAvailableFilename(dbPath);
+                    fullPath = NextAvailableFilename(fullPath);
+                }
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await streamData.CopyToAsync(stream);
+                }
+                return dbPath;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
         public async Task<string> UploadAsync(UploadRequest request)
         {
             if (request.Data == null) return string.Empty;
@@ -32,7 +74,7 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
                 }
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
-                   await streamData.CopyToAsync(stream);
+                    await streamData.CopyToAsync(stream);
                 }
                 return dbPath;
             }
@@ -86,5 +128,79 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
 
             return string.Format(pattern, max);
         }
+
+        public async Task<IResult> UploadFileAsync(int Id, string subfolder, List<IFormFile> files)
+        {
+
+            try
+            {
+                var folder = Id.ToString();// request.UploadType.ToDescriptionString();
+                var folderName = Path.Combine("Files", subfolder, folder);
+                if (!Directory.Exists(folderName))
+                {
+                    Directory.CreateDirectory(folderName);
+                }
+
+                foreach (IFormFile file in files)
+                {
+                    string fileName = Path.GetFileName(file.FileName);
+                    using (FileStream stream = new FileStream(Path.Combine(folderName, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                }
+            }
+            catch (Exception er)
+            {
+                return await Result.FailureAsync(new string[] { er.Message });
+            }
+            return await Result.SuccessAsync();
+
+        }
+        public async Task<IResult<List<string>>> LoadFilesAsync(int Id, string subfolder)
+        {
+            List<string> Result = new List<string>();
+            try
+            {
+                var folder = Id.ToString();// request.UploadType.ToDescriptionString();
+                var folderName = Path.Combine("Files", subfolder, folder);
+                if (Directory.Exists(folderName))
+                {
+                    foreach (string file in Directory.GetFiles(folderName))
+                    {
+
+                        Result.Add(Path.Combine(folderName, Path.GetFileName(file)));
+                    }
+                }
+            }
+            catch (Exception er)
+            {
+                return await Result<List<string>>.FailureAsync(new string[] { er.Message });
+            }
+            return await Result<List<string>>.SuccessAsync(Result);
+        }
+
+        public async Task<IResult> RemoveFileAsync(int Id, string name, string subfolder)
+        {
+            var folder = Id.ToString();// request.UploadType.ToDescriptionString();
+            var folderName = Path.Combine("Files", subfolder, folder, name);
+            if (File.Exists(folderName))
+            {
+                try
+                {
+                    File.Delete(folderName);
+                    _logger.LogInformation($"File deleted ({folderName})");
+
+                }
+                catch (Exception er)
+                {
+                    _logger.LogError($"File delete error ({folderName})",er);
+                    return await Result.FailureAsync(new string[] { er.Message });
+                }
+
+            }
+            return await Result.SuccessAsync();
+        }
+
     }
 }

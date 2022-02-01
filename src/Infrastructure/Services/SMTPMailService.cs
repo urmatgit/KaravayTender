@@ -1,11 +1,12 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Settings;
-using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using System.Threading.Tasks;
 
 namespace CleanArchitecture.Razor.Infrastructure.Services
 {
@@ -31,11 +32,13 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
                 var builder = new BodyBuilder();
                 builder.HtmlBody = request.Body;
                 email.Body = builder.ToMessageBody();
-                using var smtp = new SmtpClient();
-                 smtp.Connect(_mailSettings.Host, _mailSettings.Port, true);
-                smtp.Authenticate(_mailSettings.UserName, _mailSettings.Password);
-                await smtp.SendAsync(email);
-                smtp.Disconnect(true);
+                //TODO email send
+                //using var smtp = new SmtpClient();
+                // smtp.Connect(_mailSettings.Host, _mailSettings.Port, true);
+                //smtp.Authenticate(_mailSettings.UserName, _mailSettings.Password);
+                //await smtp.SendAsync(email);
+                //smtp.Disconnect(true);
+                _logger.LogInformation($"Email send to {request.To}", builder.HtmlBody);
             }
             catch (System.Exception ex)
             {

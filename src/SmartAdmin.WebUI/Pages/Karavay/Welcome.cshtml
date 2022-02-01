@@ -1,0 +1,62 @@
+﻿@page
+@inject Microsoft.Extensions.Localization.IStringLocalizer<WelcomeModel> _localizer
+@model WelcomeModel
+@{
+    ViewData["Title"] = _localizer["Welcome"].Value;
+    ViewData["Category1"] = "Welcome";
+    ViewData["PageName"] = "karavay_welcome";
+    ViewData["Heading"] = "<i class='fal fa-graduation-cap'></i> Welcome: <span class='fw-300'>Каравай тендер</span>";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Инструкция @Settings.App  @Settings.AppFlavor
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <p>
+                        Инфо 1
+                        
+                    </p>
+                    <h3>
+                        Инструкция 1
+                    </h3>
+                    <p>
+                        Текст
+                    </p>
+                     
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*<div class="row">
+        <div class="col-xl-12">
+            <div class="alert alert-success">
+                <h5 class="mb-0">@Settings.App for @Settings.AppFlavor is based on @Settings.App HTML <strong>v@(Settings.Theme.ThemeVersion)</strong>.</h5>
+            </div>
+        </div>
+    </div>*@
+@Html.AntiForgeryToken()
+@section ScriptsBlock{
+    <script>
+    $.get('@Url.Page("/Karavay/Welcome")?handler=Filter&input=HellWord').done(res=>{
+      console.log(res);
+        });
+        $.ajax({
+    type: "POST",
+    url: "@Url.Page("/Karavay/Welcome")",
+    data: { input: "bar" },
+    headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+    success: function (response) {
+        }
+        });
+
+    </script>
+}

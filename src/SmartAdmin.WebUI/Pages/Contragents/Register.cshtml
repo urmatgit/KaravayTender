@@ -1,0 +1,231 @@
+﻿@page
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegisterModel>  _localizer
+@model RegisterModel
+@{
+    ViewData["PageName"] = "register";
+    ViewData["Title"] = _localizer["Register"].Value;
+    ViewData["ReturnUrl"] = Model.ReturnUrl;
+    ViewData["Directions"] = Model.Directions ?? null;
+    if (User.Identity.IsAuthenticated)
+    ViewData["Heading"] = _localizer["Торговая площадка- Заявка на регистрацию"].Value;
+
+}
+@section HeadBlock {
+
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+    @*<link rel="stylesheet" media="screen, print" href="~/css/formplugins/dropzone/dropzone.css">*@
+    <style>
+
+        .customer_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+    </style>
+}
+@if (!User.Identity.IsAuthenticated)
+{
+    @section PageHeading {
+        <div class="col-xl-12">
+            <h2 class="fs-xxl fw-500 text-white text-left">
+                @_localizer["Заявка на регистрацию"]
+                @*<small class="h3 fw-300 mt-3 mb-5 text-white opacity-60 hidden-sm-down">
+                    @_localizer["Доп. инфо..."]
+
+                </small>*@
+            </h2>
+        </div>
+    }
+}
+<div class="col-xl-12 ml-auto mr-auto panel">
+    <div class="panel-toolbar ml-auto mr-0">
+
+        <button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"><i class="@(Settings.Theme.IconPrefix) fa-expand"></i></button>
+
+    </div>
+    <div class="card p-4 rounded-plus bg-faded">
+        <partial name="../Contragents/Register/ContragentForm" />
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+@section ScriptsBlock{
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
+    @*<script type="text/javascript" src="~/js/formplugins/dropzone/dropzone.js" asp-append-version="true"></script>*@
+    
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+
+    <script src="~/js/formplugins/inputmask/inputmask.bundle.js"></script>
+    <script src="~/js/Karavay/Files.js" type="text/javascript"></script>
+   <script src="~/js/Karavay/Contragents.js"></script>
+   <script>
+        $(document).ready(function () {
+            $(":input").inputmask();
+            $("#js-login").data("validator").settings.ignore = "";
+            //$('#categories').innerHTML = '';
+            //$('#Input_DirectionId').val('');
+            getCategoriesByDirectionId($('#Input_DirectionId').val());
+           
+        });
+        
+        var translations = {
+            FileSizeToBig: '@_localizer["File too big!"]',
+            GetCategoriesFail: '@_localizer["Get categories fail"]',
+            IconPrefix:  '@(Settings.Theme.IconPrefix)'
+        }
+        //--
+        $("#js-login-btn").click(function (event) {
+            // Fetch form to apply custom Bootstrap validation
+            let hasonecheck= getCheckedCategories();
+            var form = $("#js-login");
+
+            if (form[0].valid() === false) {
+                form.addClass('was-validated');
+                
+            }
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Perform ajax submit here...
+
+
+        });
+
+        @*var selectedCategories = new Array();
+        getCheckedCategories = () => {
+            var categories = document.getElementsByName("category.Name");
+            var categoryIds = document.getElementById("CategoryIds");
+            var result = new Object();
+            var resJson = "";
+            for (var checkbox of categories) {
+                console.log(`${checkbox.id}:${checkbox.checked}`);
+               // result += `${checkbox.id}:${checkbox.checked},`
+                result.Id = checkbox.id;
+                result.IsCheck = checkbox.checked
+                resJson += `${JSON.stringify(result)},`;
+
+            }
+            categoryIds.value =`[${resJson.slice(0, -1)}]`;
+           // console.log(`[${resJson.slice(0, -1)}]`);
+        }
+        // upload
+        var maxFileSize = 5242880; // 5MB -> 5 * 1024 * 1024
+        var maxFilesSize = 52428800; // 50MB -> 50 * 1024 * 1024
+        var uploadbutton = document.querySelector("button[name='uploadbutton']");
+        var uploadfileinputs = document.getElementById("Files");
+        var uploadfileinput = document.getElementById("file");
+        uploadbutton.addEventListener('click', (e) => {
+            uploadfileinput.click();
+        })
+        let uploadFiles = {};
+        uploadfileinput.onchange = (e) => {
+            //const files = uploadfileinput.taget.files;
+            console.log(e);
+
+            console.log(e.target.files);
+
+            Array.from(e.target.files).forEach(file => {
+                console.log(file.name);
+                let isBigFile = "";
+                let UnderLineText = "";
+                if (IsBigFile(file)) {
+                    isBigFile ="@_localizer["File too big!"]";
+                    UnderLineText = 'style="text-decoration: line-through"';
+                }
+                if (file.name in uploadFiles) {
+
+                }
+                else {
+                    fileName = file.name;//uploadfileinput.value.split('\\').pop();
+                    uploadfilename.innerHTML += `
+              <div class="alert ${isBigFile == "" ? "alert-info":"alert-danger"  }   alert-dismissible fadeup show mb-2 mt-2" role="alert" id="${fileName}">
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                         <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
+                      </button>
+                      <div class="d-flex align-items-center">
+							<div class="alert-icon">
+									<i class="@(Settings.Theme.IconPrefix) fa-upload fs-xl"></i>
+							</div>
+							<div class="flex-1">
+	    						 <span ${UnderLineText}>${fileName}  (${(file.size / 1024 / 1024).toFixed(3)} Mb)</span> ${isBigFile}
+							</div>
+					</div>
+             </div>
+        `
+                }
+                if (isBigFile==="")
+                    uploadFiles[file.name] = file;
+
+            });
+            UpdateFiles();
+               $('#uploadfilename .alert').on('closed.bs.alert', (e) => {
+                   console.log(e);
+                   delete uploadFiles[e.currentTarget.id];
+                   UpdateFiles();
+                uploadfileinput.value = null;
+
+            })
+        };
+        function IsBigFile(file) {
+
+            if (file.size > maxFileSize) {
+                return true;
+            }
+            return false;
+        }
+        UpdateFiles=function(){
+            const dT = new DataTransfer();
+
+            $.map(uploadFiles, function (value, key) {
+                dT.items.add(value);
+            });
+            uploadfileinputs.files = dT.files;
+            console.log(uploadfileinputs.files);
+        }
+
+        //axios.get('@Url.Page("/Customers/Index")?handler=Delete&id=' + id)
+        $("#Input_DirectionId").change(function () {
+
+
+            var id = $(this).val();
+            console.log(id);
+            axios.get('@Url.Page("/Contragents/Register")?handler=Categories&directionid='+id )
+                .then(res => {
+                    console.log(res);
+
+                    $("#categories").html(res.data)
+
+                })
+                 .catch((error) => {
+							if (error.response.data.Errors) {
+								const errors = error.response.data.Errors;
+								errors.forEach(item => {
+									toastr["error"](item);
+								});
+							} else {
+								toastr["error"](`@_localizer["Get categories fail"],${error.response.data}`);
+							}
+						});
+            //$.ajax({
+            //    type: "Get",
+            //    url: ,  //remember change the controller to your owns.
+            //    success: function (data) {
+            //        $("#categories").html("");
+            //        $("#categories").html(data);
+            //    },
+            //    error: function (response) {
+            //        console.log(response.responseText);
+            //    }
+            //});
+        });*@
+   </script>
+}
+

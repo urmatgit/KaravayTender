@@ -1,0 +1,62 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using CleanArchitecture.Razor.Application.Constants.Permission
+@using  CleanArchitecture.Razor.Application.Common.Extensions
+@model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.Contragents.IndexModel> _localizerContr
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComParticipants.IndexModel> _localizerPart
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComStages.IndexModel> _localizerStage
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Create);
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Search);
+
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Export);
+
+
+}
+
+<div class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <div class="col-md-3 row">
+            <h5>@_localizerStage["Stage"] </h5> <h5 class="ml-2" id="StageNumber"></h5>
+                                                <input type="hidden" id="StageId" />
+        </div>
+        <div class="col-md-5">
+            <div class="custom-control custom-radio-rounded custom-control-inline">
+                <input type="radio" class="custom-control-input" id="lastOffer" name="GetStageType" checked="" value="1">
+                <label class="custom-control-label" for="lastOffer">@_localizerStage["Last offer"]</label>
+            </div>
+            <div class="custom-control custom-radio-rounded custom-control-inline">
+                <input type="radio" class="custom-control-input" id="StepbyStepOffer" name="GetStageType" value="0">
+                <label class="custom-control-label" for="StepbyStepOffer">@_localizerStage["Step-by-Step offer"]</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <a role="button" class="btn btn-sm btn-outline-primary " id="comstage_updatebutton">
+                <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                @_localizerPart["Обновить"]
+            </a>
+        </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="comstage_dg">
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+
+

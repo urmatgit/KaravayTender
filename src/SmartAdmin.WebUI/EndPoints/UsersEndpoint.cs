@@ -1,7 +1,11 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CleanArchitecture.Razor.Infrastructure.Identity;
+using CleanArchitecture.Razor.Infrastructure.Configurations;
+using CleanArchitecture.Razor.Domain.Identity;
 using CleanArchitecture.Razor.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -37,14 +41,14 @@ namespace SmartAdmin.WebUI.EndPoints
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApplicationUser>> Get([FromRoute]string id) => Ok(await _manager.FindByIdAsync(id));
+        public async Task<ActionResult<ApplicationUser>> Get([FromRoute] string id) => Ok(await _manager.FindByIdAsync(id));
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Create([FromForm]ApplicationUser model)
+        public async Task<IActionResult> Create([FromForm] ApplicationUser model)
         {
             model.Id = Guid.NewGuid().ToString();
-            model.UserName = model.UserName??model.Email.Split('@')[0];
+            model.UserName = model.UserName ?? model.Email.Split('@')[0];
 
             var result = await _manager.CreateAsync(model);
 
@@ -65,17 +69,17 @@ namespace SmartAdmin.WebUI.EndPoints
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> Update([FromForm]ApplicationUser model)
+        public async Task<IActionResult> Update([FromForm] ApplicationUser model)
         {
-            var user =await this._manager.FindByIdAsync(model.Id);
+            var user = await this._manager.FindByIdAsync(model.Id);
             if (user != null)
             {
-                user.Site = model.Site;
+                // user.Site = model.Site;
                 user.UserName = model.UserName;
                 user.Email = model.Email;
                 user.DisplayName = model.DisplayName;
                 user.EmailConfirmed = model.EmailConfirmed;
-                user.PhoneNumber=model.PhoneNumber;
+                user.PhoneNumber = model.PhoneNumber;
                 user.LockoutEnabled = model.LockoutEnabled;
                 var result = await this._manager.UpdateAsync(user);
                 if (result.Succeeded)
@@ -86,16 +90,16 @@ namespace SmartAdmin.WebUI.EndPoints
                 {
                     return BadRequest(result);
                 }
-               
+
             }
-            
+
 
             return BadRequest(IdentityResult.Failed());
         }
 
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> Delete([FromForm]ApplicationUser model)
+        public async Task<IActionResult> Delete([FromForm] ApplicationUser model)
         {
             // HACK: The code below is just for demonstration purposes!
             // Please use a different method of preventing the currently logged in user from being removed

@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<partial name="_CopyrightHeader"/>
+<html lang="en">
+	<head>
+		<partial name="_Head"/>
+		@RenderSection("HeadBlock", required: false)
+	</head>
+	<body class="mod-bg-1 mod-nav-link mod-nav-link  nav-function-hidden ">
+		@*<partial name="_ScriptsLoadingSaving"/>*@
+		<div class="page-wrapper">
+			<div class="page-inner bg-brand-gradient">
+                <partial name="_LeftPanel" />
+                <div class="page-content-wrapper bg-transparent m-0">
+                    <div>
+                        <partial name="_PageHeader" />
+                    </div>
+                    <div class="flex-1" style="background: url('/img/svg/pattern-1.svg') no-repeat center bottom fixed; background-size: cover;">
+                        <div class="container py-2 my-lg-2 px-2 px-sm-0">
+                            <div class="row ">
+                                @RenderSection("PageHeading", required: false)
+                                
+                                <div class="subheader ">
+                                    <partial name="_PageHeading" />
+                                    @RenderSection("Subheaderblock", required: false)
+                                </div>
+                                
+                                @RenderBody()
+                            </div>
+                        </div>
+                        @*<partial name="_PageFooter" />*@
+                        @*<partial name="_ColorProfileReference" />*@
+                    </div>
+                    <partial name="_PageContentOverlay" />
+                    <partial name="_PageFooter" />
+                    <partial name="_ShortcutModal" />
+                    <partial name="_ColorProfileReference" />
+                </div>
+			</div>
+		</div>
+		<partial name="_ShortcutMenu"/>
+		<partial name="_ShortcutMessenger"/>
+		<partial name="_PageSettings"/>
+		<partial name="_GoogleAnalytics"/>
+		<partial name="_ScriptsBasePlugins"/>
+		@RenderSection("ScriptsBlock", required: false)
+	</body>
+</html>

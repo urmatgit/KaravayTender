@@ -1,25 +1,30 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Extensions;
-using CleanArchitecture.Razor.Infrastructure.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Localization;
-using System.Linq.Dynamic.Core;
-using CleanArchitecture.Razor.Application.Common.Mappings;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using CleanArchitecture.Razor.Application.Common.Models;
-using Microsoft.EntityFrameworkCore;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using System.Collections.Generic;
+using CleanArchitecture.Razor.Application.Common.Mappings;
+using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.Constants.Permission;
+using CleanArchitecture.Razor.Domain.Identity;
+using CleanArchitecture.Razor.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using System.IO;
-using System;
-using System.Data;
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
 
 namespace SmartAdmin.WebUI.Areas.Authorization.Pages
 {
@@ -63,27 +68,45 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
 
         public async Task OnGetAsync()
         {
-           Roles = await _roleManager.Roles.Select(x => x.Name).ToArrayAsync();
+            Roles = await _roleManager.Roles.Select(x => x.Name).ToArrayAsync();
         }
-        public async Task<IActionResult> OnGetDataAsync(int page=1,int rows=15,string sort="UserName",string order="asc",string filterRules="") {
+        public async Task<IActionResult> OnGetDataAsync([FromQuery(Name = "roles")] string roles, int page = 1, int rows = 15, string sort = "UserName", string order = "asc", string filterRules = "")
+        {
+
             var filters = PredicateBuilder.FromFilter<ApplicationUser>(filterRules);
-            var data=await _userManager.Users.Where(filters)
+            if (!string.IsNullOrEmpty(roles))
+            {
+                List<string> array = JsonConvert.DeserializeObject<List<string>>(roles);
+                if (array.Count > 0)
+                {
+                    filters = filters.And(f => f.UserRoles.Where(r => array.Contains(r.Role.Name)).Any());
+                }
+            }
+            var data = await _userManager.Users.Where(filters)
+                   .Include(ur => ur.UserRoles)
+
                    .OrderBy($"{sort} {order}")
                    .PaginatedDataAsync(page, rows);
+            //var result= new JsonResult(data, new System.Text.Json.JsonSerializerOptions ()
+            //{
+            //    ReferenceHandler =
+
+            //});
             return new JsonResult(data);
         }
 
         public async Task<IActionResult> OnPostRegisterAsync()
         {
-            var user = new ApplicationUser {
+            var user = new ApplicationUser
+            {
                 EmailConfirmed = true,
                 IsActive = false,
-                Site = RegisterFormModel.Site,
+                //Site = RegisterFormModel.Site,
                 DisplayName = RegisterFormModel.DisplayName,
                 UserName = RegisterFormModel.UserName,
                 Email = RegisterFormModel.Email,
                 PhoneNumber = RegisterFormModel.PhoneNumber,
-                ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ RegisterFormModel.Email.ToMD5() }?s=120&d=retro"
+                ProfilePictureDataUrl = $"https://www.gravatar.com/avatar/{ RegisterFormModel.Email.ToMD5() }?s=120&d=mp"
             };
             var result = await _userManager.CreateAsync(user, RegisterFormModel.Password);
             return new JsonResult(result.ToApplicationResult());
@@ -91,20 +114,20 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         public async Task<IActionResult> OnPostEditAsync()
         {
             var user = await _userManager.FindByIdAsync(EditFormModel.Id);
-            user.DisplayName=EditFormModel.DisplayName;
-            user.PhoneNumber=EditFormModel.PhoneNumber;
-            user.Email=EditFormModel.Email;
-            user.Site=EditFormModel.Site;
+            user.DisplayName = EditFormModel.DisplayName;
+            user.PhoneNumber = EditFormModel.PhoneNumber;
+            user.Email = EditFormModel.Email;
+            //user.Site=EditFormModel.Site;
             var result = await _userManager.UpdateAsync(user);
             return new JsonResult(result.ToApplicationResult());
         }
         public async Task<IActionResult> OnPostResetPasswordAsync()
         {
-           
+
             var user = await _userManager.FindByIdAsync(ResetFormModel.Id);
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, code, ResetFormModel.Password);
-            
+
             return new JsonResult(result.ToApplicationResult());
         }
         public async Task<IActionResult> OnGetLockAsync(string id)
@@ -141,7 +164,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         }
         public async Task<IActionResult> OnGetDeleteCheckedAsync([FromQuery] string[] id)
         {
-            foreach(var key in id)
+            foreach (var key in id)
             {
                 var user = await _userManager.FindByIdAsync(key);
                 if (user.UserName == "administrator")
@@ -160,7 +183,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
                    .ToListAsync();
             var result = await _excelService.ExportAsync(data, new Dictionary<string, System.Func<ApplicationUser, object>>()
             {
-                { _localizer["Site"], item => item.Site },
+             //   { _localizer["Site"], item => item.Site },
                 { _localizer["User Name"], item => item.UserName },
                 { _localizer["Display Name"], item => item.DisplayName },
                 { _localizer["Phone Number"], item => item.PhoneNumber },
@@ -168,10 +191,10 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             }, _localizer["ApplicationUsers"]);
             return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", _localizer["ApplicationUsers"] + ".xlsx");
         }
-        public async  Task<FileResult> OnGetCreateTemplate()
+        public async Task<FileResult> OnGetCreateTemplate()
         {
             var fields = new string[] {
-                _localizer["Site"],
+              //  _localizer["Site"],
                 _localizer["User Name"],
                 _localizer["Display Name"],
                 _localizer["Phone Number"],
@@ -190,7 +213,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
                 var data = stream.ToArray();
                 var result = await _excelService.ImportAsync(data, mappers: new Dictionary<string, Func<DataRow, RegisterModel, object>>
             {
-                { _localizer["Site"], (row,item) => item.Site = row[_localizer["Site"]]?.ToString() },
+               // { _localizer["Site"], (row,item) => item.Site = row[_localizer["Site"]]?.ToString() },
                 { _localizer["User Name"], (row,item) => item.UserName = row[_localizer["User Name"]]?.ToString() },
                 { _localizer["Display Name"], (row,item) => item.DisplayName =  row[_localizer["Display Name"]]?.ToString() },
                 { _localizer["Phone Number"], (row,item) => item.PhoneNumber =  row[_localizer["Phone Number"]]?.ToString() },
@@ -206,7 +229,7 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
                         {
                             EmailConfirmed = true,
                             IsActive = false,
-                            Site = item.Site,
+                            // Site = item.Site,
                             DisplayName = item.DisplayName,
                             UserName = item.UserName,
                             Email = item.Email,
@@ -233,8 +256,8 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
 
         public async Task<IActionResult> OnGetAssignedRolesAsync(string id)
         {
-            var user=await _userManager.FindByIdAsync(id);
-            var roles=await _userManager.GetRolesAsync(user);
+            var user = await _userManager.FindByIdAsync(id);
+            var roles = await _userManager.GetRolesAsync(user);
             return new JsonResult(roles);
         }
         public async Task<IActionResult> OnPostAssignRolesAsync()
@@ -247,9 +270,9 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
         }
         public class RegisterModel
         {
-            [Display(Name = "Site")]
-            [Required]
-            public string Site { get; set; }
+            //[Display(Name = "Site")]
+            //[Required]
+            //public string Site { get; set; }
             [Display(Name = "User Name")]
             [Required]
             public string UserName { get; set; }
@@ -275,14 +298,14 @@ namespace SmartAdmin.WebUI.Areas.Authorization.Pages
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-         
+
         }
         public class EditUserModel
         {
             public string Id { get; set; }
-            [Display(Name = "Site")]
-            [Required]
-            public string Site { get; set; }
+            //[Display(Name = "Site")]
+            //[Required]
+            //public string Site { get; set; }
             [Display(Name = "User Name")]
             [Required]
             public string UserName { get; set; }

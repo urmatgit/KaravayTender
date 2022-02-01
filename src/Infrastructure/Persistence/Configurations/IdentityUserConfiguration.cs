@@ -1,5 +1,7 @@
-using CleanArchitecture.Razor.Domain.Entities;
-using CleanArchitecture.Razor.Infrastructure.Identity;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using CleanArchitecture.Razor.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -32,6 +34,10 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
                 .WithOne()
                 .HasForeignKey(ur => ur.UserId)
                 .IsRequired();
+            builder.HasOne(e => e.Contragent)
+                .WithOne(u => u.ApplicationUser)
+                .HasForeignKey<ApplicationUser>(u => u.ContragentId);
+                
         }
     }
     public class ApplicationRoleClaimConfiguration : IEntityTypeConfiguration<ApplicationRoleClaim>
@@ -66,7 +72,7 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
                   .WithMany(p => p.Claims)
                   .HasForeignKey(d => d.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
-            
+
         }
     }
     public class ApplicationUserLoginConfiguration : IEntityTypeConfiguration<ApplicationUserLogin>

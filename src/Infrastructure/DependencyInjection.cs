@@ -1,16 +1,19 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Linq;
 using System.Reflection;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Razor.Application.Settings;
-using CleanArchitecture.Razor.Application.Workflow.Approval;
-using CleanArchitecture.Razor.Domain.Entities.Worflow;
+using CleanArchitecture.Razor.Infrastructure.Configurations;
 using CleanArchitecture.Razor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Razor.Infrastructure.Constants.Localization;
-using CleanArchitecture.Razor.Infrastructure.Constants.Permission;
-using CleanArchitecture.Razor.Infrastructure.Identity;
+using CleanArchitecture.Razor.Application.Constants.Permission;
+using CleanArchitecture.Razor.Domain.Identity;
 using CleanArchitecture.Razor.Infrastructure.Localization;
+using CleanArchitecture.Razor.Infrastructure.Middlewares;
 using CleanArchitecture.Razor.Infrastructure.Persistence;
 using CleanArchitecture.Razor.Infrastructure.Services;
 using CleanArchitecture.Razor.Infrastructure.Services.Identity;
@@ -19,7 +22,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WorkflowCore.Interface;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
+using FluentValidation.AspNetCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace CleanArchitecture.Razor.Infrastructure
 {
@@ -31,7 +38,16 @@ namespace CleanArchitecture.Razor.Infrastructure
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseInMemoryDatabase("CleanArchitecture.RazorDb")
-                    ); ;
+                    ); 
+            }
+            else if (configuration.GetValue<bool>("UseSqliteDatabase"))
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlite(
+                        configuration.GetConnectionString("DefaultConnectionSqlite"),
+                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
+
+                    );
             }
             else
             {
@@ -39,17 +55,28 @@ namespace CleanArchitecture.Razor.Infrastructure
                     options.UseSqlServer(
                         configuration.GetConnectionString("DefaultConnection"),
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
-                    
+
                     );
+                    services.AddDatabaseDeveloperPageExceptionFilter();
             }
+            services.Configure<CookiePolicyOptions>(options =>
+        {
+            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+            options.CheckConsentNeeded = context => true;
+            options.MinimumSameSitePolicy = SameSiteMode.None;
+        });
+            
+            services.Configure<SmartSettings>(configuration.GetSection(SmartSettings.SectionName));
+            services.AddSingleton(s => s.GetRequiredService<IOptions<SmartSettings>>().Value);
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
             services.AddScoped<IDomainEventService, DomainEventService>();
-           
+
 
             services
                 .AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<ApplicationRole>()
+                .AddErrorDescriber<CustomIdentityErrorDescriber>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -67,6 +94,8 @@ namespace CleanArchitecture.Razor.Infrastructure
                 // Default SignIn settings.
                 options.SignIn.RequireConfirmedEmail = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
+                //options.User.RequireUniqueEmail = true;
+
                 // Default Lockout settings.
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
@@ -90,34 +119,42 @@ namespace CleanArchitecture.Razor.Infrastructure
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationClaimsIdentityFactory>();
             // Localization
             services.AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
-            services.AddScoped<RequestLocalizationCookiesMiddleware>();
+            services.AddScoped<LocalizationCookiesMiddleware>();
+             services.AddScoped<ExceptionMiddleware>();
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
                 options.FallBackToParentUICultures = true;
             });
+             services.AddControllers();
+        services.AddSignalR();
+        services.AddRazorPages(options =>
+                 {
+                     options.Conventions.AddPageRoute("/Karavay/Welcome", "");
+                 })
+                .AddFluentValidation(fv =>
+                 {
+                     fv.DisableDataAnnotationsValidation = true;
+                     fv.ImplicitlyValidateChildProperties = true;
+                     fv.ImplicitlyValidateRootCollectionElements = true;
+                 })
+                 .AddViewLocalization()
+                 .AddNewtonsoftJson(options =>
+                 {
+                     
+                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                     var resolver = options.SerializerSettings.ContractResolver as DefaultContractResolver;
+                     resolver.NamingStrategy = null;
 
+                 }).AddRazorRuntimeCompilation();
+           services.ConfigureApplicationCookie(options => {
+            options.LoginPath = "/Identity/Account/Login";
+            options.LogoutPath = "/Identity/Account/Logout";
+            options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+        });
             return services;
         }
 
-        public static IServiceCollection AddWorkflow(this IServiceCollection services, IConfiguration configuration)
-        {
-            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-            {
-                services.AddWorkflow();
-            }
-            else
-            {
-                services.AddWorkflow(x => x.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), true, true));
-            }
-            return services;
-        }
-        public static IApplicationBuilder UseWorkflow(this IApplicationBuilder app)
-        {
-            var host = app.ApplicationServices.GetService<IWorkflowHost>();
-            host.RegisterWorkflow<DocmentApprovalWorkflow, ApprovalData>();
-            host.Start();
-            return app;
-        }
+
     }
 }

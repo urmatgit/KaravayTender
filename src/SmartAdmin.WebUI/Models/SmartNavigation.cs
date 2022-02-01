@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -44,6 +47,18 @@ namespace SmartAdmin.WebUI.Models
         }
 
         public string Version { get; set; }
+        public Dictionary<string, string> SpanValues = new Dictionary<string, string>();
+        public string FindInSpanValues(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return key;
+
+            if (SpanValues.ContainsKey(key))
+                return SpanValues[key];
+            else
+                return
+                    key.StartsWith('[') && key.EndsWith(']') ? "" : key;
+
+        }
         public List<ListItem> Lists { get; set; } = new List<ListItem>();
     }
 
@@ -71,7 +86,7 @@ namespace SmartAdmin.WebUI.Models
         public string Position { get; set; }
         public string Class { get; set; }
         public string Text { get; set; }
-
+        public string id { get; set; }
         public bool HasValue() => (Position?.Length ?? 0) + (Class?.Length ?? 0) + (Text?.Length ?? 0) > 0;
     }
 

@@ -1,0 +1,197 @@
+﻿@page
+@using CleanArchitecture.Razor.Domain.Enums
+@using CleanArchitecture.Razor.Application.Constants.Permission
+@model SmartAdmin.WebUI.Pages.Vats.IndexModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    ViewData["Title"] = _localizer["Vats"].Value;
+    ViewData["PageName"] = "vats_index";
+    ViewData["Category1"] = _localizer["References"].Value;
+    ViewData["Heading"] = _localizer["Vats"].Value;
+    ViewData["PageDescription"] = _localizer["Managing supplier referral parameters"].Value;
+    ViewData["PreemptiveClass"] = "Default";
+    var _canCreate = await _authorizationService.AuthorizeAsync(User, null, Permissions.Vats.Create);
+    var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.Vats.Edit);
+    var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.Vats.Delete);
+    var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.Vats.Search);
+    
+    var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Vats.Export);
+
+}
+@section HeadBlock {
+
+    <link rel="stylesheet" media="screen, print" href="~/css/formplugins/bootstrap-daterangepicker/bootstrap-daterangepicker.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/fa-solid.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/theme-demo.css">
+    <link rel="stylesheet" media="screen,print" href="~/lib/easyui/themes/insdep/easyui.css">
+    <style>
+
+        .main_dg_datagrid-cell-c1-_action {
+            overflow: visible !important
+        }
+    </style>
+}
+<div id="js-page-content-demopanels" class="card mb-g">
+    <div class="card-header bg-white d-flex align-items-center">
+        <h4 class="m-0">
+            @_localizer["Vats"]
+            <small>@_localizer["See all available options"]</small>
+        </h4>
+        <div class="ml-auto">
+            @if (_canCreate.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-primary " id="addbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-plus mr-1"></span>
+                    @_localizer["Add"]
+                </button>
+            }
+            @if (_canDelete.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-danger" disabled id="deletebutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-trash-alt mr-1"></span>
+                    @_localizer["Delete"]
+                </button>
+            }
+            @if (_canSearch.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-primary " id="searchbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-search mr-1"></span>
+                    @_localizer["Search"]
+                </button>
+            }
+            @*@if (_canImport.Succeeded)
+                {
+                <div class="btn-group" role="group">
+                    <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
+                        <span class="@(Settings.Theme.IconPrefix) fa-upload mr-1"></span>   @_localizer["Import Excel"]
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="importbutton">
+                        <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
+                    </div>
+                </div>
+                }*@
+            @if (_canExport.Succeeded)
+            {
+                <button class="btn btn-sm btn-outline-primary " id="exportbutton">
+                    <span class="@(Settings.Theme.IconPrefix) fa-download mr-1"></span>
+                    @_localizer["Export Excel"]
+                </button>
+            }
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="main_dg">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
+                </button>
+            </div>
+            <form id="edit_form" class="needs-validation" novalidate="novalidate">
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Input.Id" />
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label class="form-label" for="name">@_localizer["Name"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="Input.Name" class="form-control" placeholder='@_localizer["Name"]' />
+                            <span class="invalid-feedback" asp-validation-for="Input.Name"></span>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label" for="Comments">@_localizer["VAT,%"] <span class="text-danger">*</span></label>
+                            <input type="number" asp-for="Input.Stavka_str" class="form-control" placeholder='@_localizer["%"]' step=".01" />
+                            <span class="invalid-feedback" asp-validation-for="Input.Stavka_str"></span>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label" for="Comments">@_localizer["Description"] </label>
+                            <textarea asp-for="Input.Description" class="form-control" placeholder="Comments"></textarea>
+                            <span class="invalid-feedback" asp-validation-for="Input.Description"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
+                    <button type="submit" class="btn btn-primary">@_localizer["Save"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@await Component.InvokeAsync("ImportExcel", new
+{
+    importUri = Url.Page("/Vats/Index") + "?handler=Import",
+getTemplateUri = @Url.Page("/Vats/Index") + "?handler=CreateTemplate",
+onImportedSucceeded = "reloadData()"
+})
+@section ScriptsBlock {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_EasyUIScriptsPartial" />
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+        <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>*@
+
+    <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
+    <script src="~/lib/axios/dist/axios.js"></script>
+    <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
+
+    
+    <script src="~/js/TableBase.js"></script>
+    <script type="text/javascript">
+        var pagelink = '@Url.Page("/Vats/Index")';
+        var translations = {
+            SaveSuccess: '@_localizer["Save Success."]',
+            SaveFail: '@_localizer["Save fail"]',
+            IconPrefix: '@(Settings.Theme.IconPrefix)',
+            Command: '@_localizer["Command"]',
+            Edit: '@_localizer["Edit"]',
+            Delete: '@_localizer["Delete"]',
+            AddCaption: '@_localizer["Add vat"]',
+            EditCaption: '@_localizer["Edit vat"]',
+            DeleteRowDialog: '@_localizer["Are you sure delete a row?"]',
+			Yes: '@_localizer["Yes"]',
+			No: '@_localizer["No"]',
+            DeleteSuccess: '@_localizer["Delete Success"]',
+            DeleteFail: '@_localizer["Delete fail"]',
+			DeleteRowsDialog: '@_localizer["Are you sure delete checked rows?"]',
+            Success: '@_localizer["Success"]',
+            ExportFail: '@_localizer["Export fail"]',
+            Name: '@_localizer["Name"]',
+		}
+		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
+		var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
+		$(() => {
+			
+            tblColumns = [
+             { field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
+                { field: 'Stavka_str', title: '@_localizer["VAT,%"]', sortable: true, width: 100 },
+                { field: 'Description', title: '@_localizer["Description"]', sortable: true, width: 300 }
+            ];
+			initdatagrid();
+            //$('.summernote').summernote({
+            //    focus: true,
+            //    height: (window.innerHeight / 2),
+            //    toolbar: [
+            //        ['style', ['bold', 'italic', 'underline', 'clear']],
+            //        ['fontsize', ['fontsize']],
+            //        ['color', ['color']],
+            //        ['para', ['ul', 'ol', 'paragraph']],
+            //        ["view", ["fullscreen", "codeview"]]
+            //    ]
+            //});
+		})
+    </script>
+}

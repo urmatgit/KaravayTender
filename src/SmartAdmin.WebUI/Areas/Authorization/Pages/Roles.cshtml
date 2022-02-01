@@ -1,6 +1,6 @@
 ﻿@page
 @model RoleModel
-@using CleanArchitecture.Razor.Infrastructure.Constants.Permission
+@using CleanArchitecture.Razor.Application.Constants.Permission
 @inject Microsoft.Extensions.Localization.IStringLocalizer<RoleModel> _localizer
 @inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
 @{
@@ -14,7 +14,7 @@
     var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Edit);
     var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Delete);
     var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Search);
-    var _canImport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Import);
+    
     var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Export);
     var _canManagePermissions = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.ManagePermissions);
     var _canManageNavigation = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.ManageNavigation);
@@ -70,7 +70,7 @@
                     @_localizer["Search"]
                 </button>
             }
-            @if (_canImport.Succeeded)
+            @*@if (_canImport.Succeeded)
             {
                 <div class="btn-group" role="group">
                     <button id="importbutton" type="button" class="btn btn-sm  btn-outline-primary waves-effect waves-themed">
@@ -83,7 +83,7 @@
                         <button id="gettemplatebutton" class="dropdown-item">@_localizer["Download Template"]</button>
                     </div>
                 </div>
-            }
+            }*@
             @if (_canExport.Succeeded)
             {
                 <button class="btn btn-sm btn-outline-primary " id="exportbutton">
@@ -190,7 +190,7 @@
                     <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
                 </button>
             </div>
-            <form id="managenavigation_form" method="post" action="/authorization/roles?handler=UpdateNavgitation"  class="needs-validation" novalidate="novalidate">
+            <form id="managenavigation_form" method="post" action="/authorization/roles?handler=UpdateNavgitation" class="needs-validation" novalidate="novalidate">
                 <input type="hidden" asp-for="NavJsonStr" />
                 @Html.AntiForgeryToken()
                 <div class="modal-body">
@@ -221,11 +221,11 @@
 })
 @section ScriptsBlock {
     <partial name="_ValidationScriptsPartial" />
+    <partial name="_EasyUIScriptsPartial" />
 
-
-    <script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
+    @*<script type="text/javascript" src="~/lib/easyui/jquery.easyui.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/lib/easyui/jquery.easyui.component.js" asp-append-version="true"></script>
-    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/easyui/plugins/datagrid-filter.js" asp-append-version="true"></script>*@
     <script>jQuery.fn.tooltip = bootstrapTooltip;</script>
     <script src="~/lib/axios/dist/axios.js"></script>
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
@@ -242,8 +242,8 @@
             axios.get('/authorization/roles?handler=Navgitation').then(res => {
                 $('#NavJsonStr').val(JSON.stringify(res.data));
                 editor = monaco.editor.create(document.getElementById('editor-container'), {
-                    autoSize:true,
-                    value: JSON.stringify(res.data,null,2),
+                    autoSize: true,
+                    value: JSON.stringify(res.data, null, 2),
                     language: 'json',
                     theme: 'vs-light',
                 });
@@ -258,7 +258,7 @@
                     //console.log(owner,markers)
                     let decorations = editor.getModel().getAllDecorations();
                     let error = decorations.filter(isError).map(e => e);
-               
+
                     if (error) {
                         var str = editor.getValue();
                         if (IsValidJSONString(str)) {
@@ -268,20 +268,20 @@
                         else {
                             $('#managenavigation_form :submit').prop('disabled', true);
                         }
-                        
+
                     } else {
                         $('#managenavigation_form :submit').prop('disabled', true);
                     }
                 });
             })
-            
+
         });
-        
+
         $('#managenavigation_modal').on('shown.bs.modal', function () {
             editor.layout()
         });
 
-        var  IsValidJSONString=(str)=> {
+        var IsValidJSONString = (str) => {
             try {
                 JSON.parse(str);
             } catch (e) {
@@ -290,7 +290,7 @@
             return true;
         }
         var isError = (decorations) => {
-         
+
             return decorations.options.className === "redsquiggly";
         }
     </script>

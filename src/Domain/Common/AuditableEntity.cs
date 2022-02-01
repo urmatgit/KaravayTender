@@ -1,11 +1,15 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 
 namespace CleanArchitecture.Razor.Domain.Common
 {
-    public interface IEntity {
-       
-     }
-    public abstract class AuditableEntity:IEntity
+    public interface IEntity
+    {
+
+    }
+    public abstract class AuditableEntity : IEntity
     {
         public DateTime Created { get; set; }
 
@@ -21,10 +25,10 @@ namespace CleanArchitecture.Razor.Domain.Common
         DateTime? Deleted { get; set; }
         string DeletedBy { get; set; }
     }
-    public abstract class AuditableSoftDeleteEntity : AuditableEntity,  ISoftDelete
+    public abstract class AuditableSoftDeleteEntity : AuditableEntity, ISoftDelete
     {
-        public DateTime? Deleted { get;set; }
+        public DateTime? Deleted { get; set; }
         public string DeletedBy { get; set; }
-        
+
     }
 }

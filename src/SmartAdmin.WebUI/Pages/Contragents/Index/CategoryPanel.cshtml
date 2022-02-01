@@ -1,0 +1,58 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel>  _localizer
+@model IndexModel
+@{
+   // SelectList DirectionList = @ViewData["Directions"] as SelectList;
+}
+<div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
+<div class="form-group row">
+
+    <div class="col-md-2 mat my-auto">
+        <label class="form-label" for="IsService">@_localizer["Service"]</label>
+
+    </div>
+    <div class="col-md-10">
+        
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" asp-for="Input.IsService" class="custom-control-input" value="true">
+            <label class="custom-control-label" for="Input_IsService"></label>
+        </div>
+
+        <span class="invalid-feedback" asp-validation-for="Input.IsService"></span>
+    </div>
+</div>
+
+<div class="form-group row">
+
+    <div class="col-md-2 mat my-auto">
+        <label class="form-label" for="name">@_localizer["Direction"] <span class="text-danger">*</span></label>
+
+    </div>
+    <div class="col-md-10">
+
+        <select type="text" asp-for="Input.DirectionId" asp-items="Model.Directions" class="custom-select" placeholder="@_localizer["Direction"]" data-val-required= "Не выбрано 'Направление'">
+            <option value="">@_localizer["Choose direction"]</option>
+        </select>
+
+        <span class="invalid-feedback" asp-validation-for="Input.DirectionId"></span>
+    </div>
+
+</div>
+<div class="form-group row">
+    <div class="col-md-2 mat">
+        <label class="form-label" for="name">@_localizer["Categories"] <span class="text-danger">*</span></label>
+
+    </div>
+    <div class="col-md-10">
+        <div id="categories">
+            <partial name="_CategoriesListPartial" model="Model.Categories" />
+            @*@foreach (var catetory in Model.Categories)
+        {
+            <div class="custom-control custom-checkbox my-2">
+                <input type="checkbox" class="custom-control-input" value="@catetory.IsCheck" name="AssignedPermissions" id="@catetory.Id">
+                <label class="custom-control-label" for="@catetory.Id">@catetory.Name</label>
+            </div>
+        }*@
+            
+        </div>
+    </div>
+</div>
