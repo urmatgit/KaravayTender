@@ -244,52 +244,9 @@
             //    });
         });
 
-        var getFileName = (disposition) => {
-            const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\.]+)(?:; ?|$)/;
-            const asciiFilenameRegex = /filename=(["']?)(.*?[^\\])\1(?:; ?|$)/;
-            let fileName = '';
-            if (utf8FilenameRegex.test(disposition)) {
-                fileName = decodeURIComponent(utf8FilenameRegex.exec(disposition)[1]);
-            } else {
-                const matches = asciiFilenameRegex.exec(disposition);
-                if (matches != null && matches[2]) {
-                    fileName = matches[2];
-                }
-            }
-            return fileName;
-        }
-        function onDownloadFileSpec(value) {
-            const url = value;
-            const filename = getFileName(value);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', filename);
-            document.body.appendChild(link);
-            link.click();
-            toastr["info"](`@_localizer["Файл загружен"]`);
-        }
-        function onDownloadQualityDoc(value) {
-            var data = {
-                name: value
-
-            }
-            var headers = {
-                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
-            }
-            axios.post('@Url.Page("/QualityDocs/Index")?handler=Download',
-                data,
-                {
-                    headers: headers
-
-                }
-               )
-                .then(response => {
-                    if (response.data)
-                        onDownloadFileSpec(response.data);
-                    else
-                        toastr["error"]('Файл не найден!');
-                })
-        }
+       
+         
+       
 
         function createColumnsComOffer() {
 
