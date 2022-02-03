@@ -16,6 +16,7 @@ class clsBaseTable {
 
     jsonToFormCallBack;
     OnNewRow;
+    clickRow;
     //Update grid param;
     reloadParam;
     _editCaption;
@@ -181,6 +182,12 @@ class clsBaseTable {
 
             },
             columns: [this.createColumns()]
+            , onClickCell: this.clickRow,
+                //function (index, field, value) {
+                //if (this.clickRow) {
+                //    this.clickRow(index, field, value)
+                //}
+           // }
         })
             .datagrid('enableFilter', this.tblFilters);
         //.datagrid('load', `${this._pageLink}?handler=Data`);
