@@ -151,6 +151,7 @@ onImportedSucceeded = "reloadData()"
     <script src="~/js/TableBaseClass.js"></script>
     <script src="~/js/TableComParticipant.js"></script>
     <script src="/js/SelectWinnerDialog.js"></script>
+    <script src="/js/FilesDownloadDialog.js"></script>
     <script type="text/javascript">
         let clscomposition = null;
         var currentEditRow = "";
@@ -628,7 +629,14 @@ onImportedSucceeded = "reloadData()"
                 $('#AreaIds').val(0);
                 $('#AreaIds').trigger('change');
             };
-
+            clscomposition.clickRow = (index, field, value) => {
+                if (field == "NomSpecification") {
+                    let row = clscomposition.dg.datagrid('getRows')[index];
+                    ShowFileDownloadrDialog(value, row.NomenclatureId);
+                } else if (field == "QualityDocsNames") {
+                    ShowFileDownloadrDialog(value);
+                }
+            };
             clscomposition._editCaption = '@_localizer["Add position"]';
             clscomposition._addCaption = '@_localizer["Edit position"]';
             clscomposition.Init();
