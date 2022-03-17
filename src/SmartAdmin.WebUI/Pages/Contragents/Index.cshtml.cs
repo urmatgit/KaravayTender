@@ -69,7 +69,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public RejectFormModel RejectModel { get; set; }
 
         [BindProperty]
-        [Required(ErrorMessage ="file empty")]
+        //[Required(ErrorMessage ="file empty")]
         public List<IFormFile> Files { get; set; }
         [BindProperty]
         public string CategoryIds { get; set; }
@@ -104,8 +104,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         public async Task OnGetAsync()
         {
             //var result = await _identityService.FetchUsers("Admin");
-            var result = await _mediator.Send(new GetAllCategoriesQuery());
-            Categories = (List<CategoryDto>)result;
+           // var result = await _mediator.Send(new GetAllCategoriesQuery());
+            Categories = new List<CategoryDto>();//  (List<CategoryDto>)result;
             //string description = Enum.GetName(typeof(CleanArchitecture.Razor.Domain.Enums.RequestStatus), -1);
             await LoadDirection();
             await LoadManagers();
@@ -233,6 +233,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                     //create app user
                     var userApp = await CheckUser(Input.ApplicationUserId);
 
+                    ApplicationUser applicationUser = null;
                     if (!userApp.Item2)
                     {
                         if (string.IsNullOrEmpty(UserFormModel.Password))
@@ -248,18 +249,21 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                         }
                         else
                         {
-                            Input.ApplicationUserId = user.Item2;
+                            applicationUser = user.Item2;
+                                
+                            Input.ApplicationUserId = user.Item2.Id;
 
                         }
                     }
                     else
                     {
                         var user = await UpdateUser(userApp.Item1, UserFormModel, Input.Email, Input.Phone);
-                        if (!user.Succeeded)
+                        if (!user.Item1.Succeeded)
                         {
-                            var errors = user.Errors.Select(x => $"{ string.Join(",", x.Description) }");
+                            var errors = user.Item1.Errors.Select(x => $"{ string.Join(",", x.Description) }");
                             return BadRequest(errors);
                         }
+                        applicationUser = user.Item2;
                     }
                     if (UserFormModel.Active)
                         Input.Status = ContragentStatus.Registered;
@@ -270,6 +274,9 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                     var result = await _mediator.Send(Input);
                     if (result.Succeeded)
                     {
+                        userApp.Item1.ContragentId = result.Data;
+                         await _userManager.UpdateAsync(userApp.Item1);
+
                         var ContragetnCategory = new AddOrDelContragentCategorysCommand()
                         {
                             ContragentId = result.Data,
@@ -297,6 +304,8 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                             {
                                 var files= await _uploadService.LoadFilesAsync(result.Data, PathConstants.DocumentsPath);
                                 if (files.Succeeded) {
+                                    if (Input.Id == 0)
+                                        Input.Id = result.Data;
                                     Input.Files = string.Join(PathConstants.FilesStringSeperator, files.Data.Select(f => Path.GetFileName(f)));
                                     result = await _mediator.Send(Input);
                                 }
@@ -368,16 +377,16 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             }
             return (user, IsExist);
         }
-        private async Task<IdentityResult> UpdateUser(ApplicationUser user, UserModel userModel, string email, string phone)
+        private async Task<(IdentityResult,ApplicationUser)> UpdateUser(ApplicationUser user, UserModel userModel, string email, string phone)
         {
 
             var checkEmail = await _userManager.FindByEmailAsync(email);
             if (checkEmail != null && checkEmail.UserName != userModel.Login)
             {
-                return IdentityResult.Failed(new IdentityError
+                return (IdentityResult.Failed(new IdentityError
                 {
                     Description = $"{email} уже используется!"
-                });
+                }),null);
             }
             user.UserName = userModel.Login;
             user.PhoneNumber = phone;
@@ -394,9 +403,9 @@ namespace SmartAdmin.WebUI.Pages.Contragents
             }
 
             var result = await _userManager.UpdateAsync(user);
-            return result;
+            return (result,user);
         }
-        private async Task<(IdentityResult, string)> CreateUser(ApplicationUser user)
+        private async Task<(IdentityResult, ApplicationUser)> CreateUser(ApplicationUser user)
         {
 
             var result = await _userManager.CreateAsync(user, UserFormModel.Password);
@@ -410,7 +419,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
                 _logger.LogError($"User created error.({UserFormModel.Login} {Input.Name})", result.Errors);
 
             }
-            return (result, user.Id);
+            return (result, user);
         }
 
         public async Task<IActionResult> OnGetDeleteCheckedAsync([FromQuery] int[] id)
@@ -504,7 +513,7 @@ namespace SmartAdmin.WebUI.Pages.Contragents
         }
         private async Task LoadDirection()
         {
-            var request = new GetAllDirectionsQuery();
+            var request = new GetAllDirectionsQuery() { HideService = true };
             var directionsDtos = (List<DirectionDto>)await _mediator.Send(request);
             //Debug.WriteLine(JsonConvert.SerializeObject(directionsDtos));
             //Input.Directions = directionsDtos;

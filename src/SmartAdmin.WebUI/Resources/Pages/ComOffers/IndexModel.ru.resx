@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="A copy has been created" xml:space="preserve">
+    <value>Копия создана</value>
+  </data>
   <data name="Add" xml:space="preserve">
     <value>Добавить</value>
   </data>
@@ -127,7 +130,7 @@
     <value>Добавление позиции</value>
   </data>
   <data name="Additional requirement" xml:space="preserve">
-    <value>Доп. требования</value>
+    <value>Общее требование к поставке</value>
   </data>
   <data name="Are you sure delete a row?" xml:space="preserve">
     <value>Вы уверены, удалить эту строку?</value>
@@ -179,6 +182,9 @@
   </data>
   <data name="Commercial offer" xml:space="preserve">
     <value>Коммерческое предложения</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Создать копию</value>
   </data>
   <data name="Count" xml:space="preserve">
     <value>Количество</value>
@@ -319,7 +325,7 @@
     <value>НДС,%</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Объем</value>
+    <value>Средний объем потребления в мес.</value>
   </data>
   <data name="Volume delivery  in term" xml:space="preserve">
     <value>Объем поставки на контракт</value>

@@ -1,0 +1,178 @@
+﻿@using CleanArchitecture.Razor.Domain.Enums
+@model SmartAdmin.WebUI.Pages.ComOffers.ParticipantModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ComOffers.IndexModel> _localizer
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SmartAdmin.WebUI.Pages.ComStages.IndexModel> _localizerStage
+
+<div class="panel" id="edit_panel" style="display:none">
+
+
+    <div class="panel-hdr text-primary">
+        <h2 class="panel-title  " style="flex:0.5">@_localizer["Panel title"]</h2>
+        <h8 style="color:red" hidden id="yourWinner" ></h8>
+        <div class="panel-toolbar">
+            <button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"><i class="@(Settings.Theme.IconPrefix) fa-window-minimize"></i></button>
+            <button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"><i class="@(Settings.Theme.IconPrefix) fa-expand"></i></button>
+            <button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" onclick="closePanel()" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></button>
+        </div>
+    </div>
+
+    <div class="panel-container ">
+        <div class="panel-content">
+
+            <form id="participant_form" class="needs-validation" novalidate="novalidate">
+                
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Input.Id" />
+                    <input type="hidden" asp-for="Input.Status" />
+                    <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <label class="form-label" for="Number">@_localizer["Number"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="Input.Number" class="form-control" placeholder="@_localizer["Number"]" readonly />
+                            <span class="invalid-feedback" asp-validation-for="Input.Number"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="name">@_localizer["Direction"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="Input.DirectionName" class="form-control" placeholder="@_localizer["Direction"]" readonly />
+
+
+                            <span class="invalid-feedback" asp-validation-for="Input.DirectionName"></span>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="Volume">@_localizer["Delay day"] <span class="text-danger">*</span></label>
+                            <input type="number" asp-for="Input.DelayDay" class="form-control" placeholder="@_localizer["Days"]" readonly />
+                            <span class="invalid-feedback" asp-validation-for="Input.DelayDay"></span>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="IsBankDays">@_localizer["Bank days"] </label>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" asp-for="Input.IsBankDays" class="custom-control-input" disabled />
+                                <label class="custom-control-label" for="Input_IsBankDays"></label>
+
+                            </div>
+                            <span class="invalid-feedback" asp-validation-for="Input.IsBankDays"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label class="form-label" for="name">@_localizer["Name"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="Input.Name" class="form-control" placeholder="@_localizer["Name"]" readonly />
+                            <span class="invalid-feedback" asp-validation-for="Input.Name"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="VatId">@_localizer["Status"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="Input.StatusStr" class="form-control readonly" placeholder="@_localizer["Status"]" readonly />
+                            @*<select type="text" asp-for="Input.Status" asp-items="Html.GetEnumSelectList<ComOfferStatus>()" class="custom-select" placeholder="@_localizer["Status"]" data-val-required="Не выбрано 'Статус'">
+                            <option value="">@_localizer["Choose a status"]</option>
+                        </select>*@
+
+                            <span class="invalid-feedback" asp-validation-for="Input.StatusStr"></span>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" for="IsBankDays">@_localizer["Price include delivery"] </label>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" asp-for="Input.IsDeliveryInPrice" class="custom-control-input" disabled />
+                                <label class="custom-control-label" for="Input_IsDeliveryInPrice"></label>
+
+                            </div>
+                            <span class="invalid-feedback" asp-validation-for="Input.IsDeliveryInPrice"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <label class="form-label">@_localizer["Term from"] <span class="text-danger">*</span></label>
+                            <input class="form-control" asp-for="Input.TermBegin" type="date" readonly>
+                            <span class="invalid-feedback" asp-validation-for="Input.TermBegin"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">@_localizer["Term to"] <span class="text-danger">*</span></label>
+                            <input class="form-control" asp-for="Input.TermEnd" type="date" readonly>
+                            <span class="invalid-feedback" asp-validation-for="Input.TermEnd"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">@_localizer["Manager"] <span class="text-danger">*</span></label>
+                            <input type="text" asp-for="Input.ManagerName" class="form-control" placeholder="@_localizer["Direction"]" readonly />
+
+                            <span class="invalid-feedback" asp-validation-for="Input.ManagerName">Не выбрано 'Менеджер'</span>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row mt-2">
+                        <div class="card col-md-12">
+                            <div class="card-header bg-white d-flex align-items-center">
+                                <div class="col-md-3 row">
+                                    <h5>@_localizerStage["Stage"] </h5> <h5 class="ml-2" id="StageNumber"></h5>
+                                    <input type="hidden" id="StageId" />
+                                    <input type="hidden" id="StageStatus" />
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="custom-control custom-radio-rounded custom-control-inline">
+                                        <input type="radio" class="custom-control-input" id="lastOffer" name="GetStageType" checked="" value="1">
+                                        <label class="custom-control-label" for="lastOffer">@_localizerStage["Last offer"]</label>
+                                    </div>
+                                    <div class="custom-control custom-radio-rounded custom-control-inline">
+                                        <input type="radio" class="custom-control-input" id="StepbyStepOffer" name="GetStageType" value="0">
+                                        <label class="custom-control-label" for="StepbyStepOffer">@_localizerStage["Step-by-Step offer"]</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="compostion_dg">
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closePanel()"  >@_localizer["Close"]</button>
+                    <button type="button" id="failure" class="btn btn-danger">@_localizer["Отказаться от участие"]</button>
+                    <button type="submit" id="confirm" class="btn btn-primary">@_localizer["Подтвердить"]</button>
+                </div>
+            </form>
+
+
+
+
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<!--<div class="modal fade " id="participant_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog  modal-xl " role="document">
+        <div class="modal-content  ">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <div class="panel-toolbar">-->
+@*<button class="btn btn-panel bg-transparent fs-xl w-auto h-auto rounded-0" onclick="TogleFullScreen()"><i class="@(Settings.Theme.IconPrefix) fa-expand"></i></button>*@
+
+<!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
+                    </button>
+                </div>
+            </div>
+
+
+
+
+
+    </div>
+
+</div>
+</div>-->

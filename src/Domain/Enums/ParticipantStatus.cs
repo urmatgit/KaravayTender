@@ -16,11 +16,36 @@ namespace CleanArchitecture.Razor.Domain.Enums
     /// </summary>
     public enum ParticipantStatus:short
     {
-        [Description(@"Не участвует")]
-        [Display(Name = "Не участвует")]
-        Participates = 0,
-        [Description(@"Участвует")]
-        [Display(Name = "Участвует")]
-        NotParticipate = 1
+        /// <summary>
+        /// Победитель
+        /// </summary>
+        //[Description(@"Победитель")]
+        //[Display(Name = "Победитель")]
+        //Winner = 0,
+        /// <summary>
+        /// Ожидание
+        /// </summary>
+        [Description(@"Ожидание")]
+        [Display(Name = "Ожидание")]
+        Request = 1,
+        /// <summary>
+        /// Подтверждение
+        /// </summary>
+        [Description(@"Подтверждение")]
+        [Display(Name = "Подтверждение")]
+        Confirmed = 2,
+        /// <summary>
+        /// Отказ
+        /// </summary>
+        [Description(@"Отказ")]
+        [Display(Name = "Отказ")]
+        FailureParitipate = 3,
+        /// <summary>
+        /// Отмена
+        /// </summary>
+        [Description(@"Отмена")]
+        [Display(Name = "Отмена")]
+        Cancel = 4
+
     }
 }

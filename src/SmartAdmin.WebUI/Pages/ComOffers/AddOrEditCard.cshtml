@@ -1,7 +1,13 @@
 ﻿@using CleanArchitecture.Razor.Domain.Enums
+@using CleanArchitecture.Razor.Application.Constants.Permission
 @model SmartAdmin.WebUI.Pages.ComOffers.IndexModel
 @inject Microsoft.Extensions.Localization.IStringLocalizer<IndexModel> _localizer
-<div class="panel" id="edit_panel" style="display:none"  >
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService _authorizationService
+@{
+    var _canStart = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Start);
+var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.ComOffers.Edit);
+}
+<div class="panel" id="edit_panel" style="display:none">
 
 
     <div class="panel-hdr text-primary">
@@ -24,7 +30,7 @@
                 <div class="form-row">
                     <div class="col-md-4">
                         <label class="form-label" for="Number">@_localizer["Number"] <span class="text-danger">*</span></label>
-                        <input type="text" asp-for="Input.Number" class="form-control" placeholder="@_localizer["Number"]" />
+                        <input type="text" asp-for="Input.Number" class="form-control readonly" placeholder="@_localizer["Number"]" readonly />
                         <span class="invalid-feedback" asp-validation-for="Input.Number"></span>
                     </div>
                     <div class="col-md-4">
@@ -59,10 +65,10 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label" for="VatId">@_localizer["Status"] <span class="text-danger">*</span></label>
-                        <input type="text" asp-for="Input.StatusStr" class="form-control" placeholder="@_localizer["Status"]" readonly />
+                        <input type="text" asp-for="Input.StatusStr" class="form-control readonly" placeholder="@_localizer["Status"]" readonly />
                         @*<select type="text" asp-for="Input.Status" asp-items="Html.GetEnumSelectList<ComOfferStatus>()" class="custom-select" placeholder="@_localizer["Status"]" data-val-required="Не выбрано 'Статус'">
-                    <option value="">@_localizer["Choose a status"]</option>
-                </select>*@
+                                <option value="">@_localizer["Choose a status"]</option>
+                            </select>*@
 
                         <span class="invalid-feedback" asp-validation-for="Input.StatusStr"></span>
                     </div>
@@ -97,7 +103,7 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label" for="WinnerName">@_localizer["Winner"] <span class="text-danger">*</span></label>
-                        <input type="text" asp-for="Input.WinnerName" class="form-control" placeholder="@_localizer["Winner"]" readonly />
+                        <input type="text" asp-for="Input.WinnerName" class="form-control readonly" placeholder="@_localizer["Winner"]" readonly />
                         <span class="invalid-feedback" asp-validation-for="Input.WinnerName"></span>
                     </div>
                 </div>
@@ -114,32 +120,51 @@
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#ComParticipant" role="tab"><i class="@(Settings.Theme.IconPrefix) fa-users mr-1"></i> @_localizer["Participants"]</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#ComState" role="tab"><i class="@(Settings.Theme.IconPrefix) fa-sort-numeric-up-alt mr-1"></i> @_localizer["Stages"]</a>
+        
+        
+                <li class="nav-item" id="ComStageTab">
+                    <a class="nav-link" data-toggle="tab" href="#ComStage" role="tab"><i class="@(Settings.Theme.IconPrefix) fa-sort-numeric-up-alt mr-1"></i> @_localizer["Stages"]</a>
                 </li>
-
+        
             </ul>
             <div class="tab-content border border-top-0 p-1">
-                <div class="tab-pane fade show p-2 active" id="ComPosition" role="tabpanel">
+                <div class="tab-pane fade  p-2 active" id="ComPosition" role="tabpanel">
                     <partial name="ComPosition" />
                 </div>
-                <div class="tab-pane fade show p-2" id="ComParticipant" role="tabpanel">
+                <div class="tab-pane fade  p-2" id="ComParticipant" role="tabpanel">
                     <partial name="ComParticipant" />
                 </div>
-                <div class="tab-pane fade show p-2" id="ComState" role="tabpanel">
-                   <partial name="ComStage"/>
+        
+        
+                    <div class="tab-pane fade  p-2" id="ComStage" role="tabpanel">
+                        <partial name="ComStage" />
+                    </div>
+        
                 </div>
-            </div>
             <div class="panel-footer p-2  " style="text-align:right">
-                <button type="button" class="btn btn-danger mr-5" id="startStage">@_localizer["Run"]</button>
+                @if (_canStart.Succeeded)
+                {
+                    <button type="button" class="btn btn-primary mr-5" id="btnStartStage">@_localizer["Запуск"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnSendStage">@_localizer["Отправить запрос"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnEndStage">@_localizer["Завершить этап"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnChangeDeadline">@_localizer["Изменить срок ответа до"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnCancelStage">@_localizer["Отмена проведения"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnSelectWinnerStage">@_localizer["Объявить победителя"]</button>
+                    <button type="button" class="btn btn-primary mr-5" id="btnReturnToEvaluation">@_localizer["Вернуть на Оценку КП"]</button>
+                }
+
+                @if (_canEdit.Succeeded)
+                {
+                    <button type="submit" id="save" class="btn btn-primary  ">@_localizer["Save"]</button>
+                }
+
                 <button type="button" class="btn btn-secondary mr-3" onclick="closePanel()">@_localizer["Close"]</button>
-                <button type="submit" id="save" class="btn btn-primary  ">@_localizer["Save"]</button>
             </div>
 
-            
 
-            </div>
+
         </div>
-
-
     </div>
+
+
+</div>

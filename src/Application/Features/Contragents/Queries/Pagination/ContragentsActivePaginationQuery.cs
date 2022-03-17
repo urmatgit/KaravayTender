@@ -25,7 +25,7 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
 {
     public class ContragentsActivePaginationQuery : PaginationRequest, IRequest<PaginatedData<ContragentDto>>
     {
-
+        public int ComOfferId { get; set; }
     }
 
     public class ContragentsActivePaginationQueryHandler :
@@ -50,10 +50,38 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
 
         public async Task<PaginatedData<ContragentDto>> Handle(ContragentsActivePaginationQuery request, CancellationToken cancellationToken)
         {
+            //var comOfferContrs = from a in _context.Directions
+            //                     join b in _context.ComOffers on a.Id equals b.DirectionId
+            //                     join c in _context.Categories on a.Id equals c.DirectionId into cg
+            //                     from c1 in cg.DefaultIfEmpty()
+            //                     where b.Id == request.ComOfferId
+            //                     select new
+            //                     {
+            //                         DirectionId = a.Id,
+            //                         CategoryId = c1.Id
+            //                     };
+
+            //var query1=from a in  _context.Contragents
+            //           join b in _context.ContragentCategories on a.Id equals b.ContragentId
+            //           join d in comOfferContrs on b.CategoryId equals d.CategoryId 
+
 
             var filters = PredicateBuilder.FromFilter<Contragent>(request.FilterRules);
+            var direction = _context.Directions
+                            .Where(x => x.ComOffers.Any(z=>z.Id==request.ComOfferId))
+                            .SingleOrDefault();
+            var AddedPosition = _context.ComPositions.Where(x => x.ComOfferId == request.ComOfferId);
+            var categories = (from a in _context.ContragentCategories
+                              join b in AddedPosition on a.CategoryId equals b.CategoryId
+                              select a.CategoryId).Distinct();
 
-            var data = await _context.Contragents.Where(filters)
+            var IsService = direction.IsService;
+            var data = await _context.Contragents
+                .Where(filters)
+                .Where(x => !_context.ComParticipants.Where(p => p.ComOfferId == request.ComOfferId).Select(z => z.ContragentId).Contains(x.Id))
+                .Where(x => (IsService ? x.IsService : direction.Id == x.DirectionId))
+                .Where(x =>  AddedPosition.All(y=>x.ContragentCategories.Where(z=>z.CategoryId==y.CategoryId).Any()))
+                //.Where(x=>x.Direction.IsService==x.IsService)
                 .Specify(new ContragentActiveQuerySpec())
                 .Include(i => i.Direction)
                 .Include(u=>u.Manager)

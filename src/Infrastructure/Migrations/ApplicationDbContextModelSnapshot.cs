@@ -171,6 +171,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique();
+
                     b.HasIndex("DirectionId");
 
                     b.HasIndex("ManagerId");
@@ -290,6 +293,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsService")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("TEXT");
@@ -419,9 +425,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Number")
+                        .HasColumnType("INTEGER");
 
                     b.Property<short>("Status")
                         .HasColumnType("INTEGER");
@@ -465,12 +470,6 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("TEXT");
-
-                    b.Property<short>("Status")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("StepFailure")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("ComOfferId", "ContragentId");
 
@@ -616,6 +615,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Requirement")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Specifications")
                         .HasColumnType("TEXT");
 
@@ -664,6 +666,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("URL")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("QualityDocs");
@@ -698,10 +703,10 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<bool>("Status")
+                    b.Property<bool>("RequestPrice")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ComStageId", "ContragentId", "ComPositionId");
@@ -711,6 +716,50 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.HasIndex("ContragentId");
 
                     b.ToTable("StageCompositions");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.StageParticipant", b =>
+                {
+                    b.Property<int>("ComStageId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ContragentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ComOfferId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("Deleted")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<short>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ComStageId", "ContragentId", "ComOfferId");
+
+                    b.HasIndex("ComOfferId");
+
+                    b.HasIndex("ContragentId");
+
+                    b.ToTable("StageParticipants");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.StatusLog", b =>
@@ -1020,6 +1069,9 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("ContragentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("DisplayName")
                         .HasColumnType("TEXT");
 
@@ -1186,6 +1238,10 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Contragent", b =>
                 {
+                    b.HasOne("CleanArchitecture.Razor.Domain.Identity.ApplicationUser", "ApplicationUser")
+                        .WithOne("Contragent")
+                        .HasForeignKey("CleanArchitecture.Razor.Domain.Entities.Contragent", "ApplicationUserId");
+
                     b.HasOne("CleanArchitecture.Razor.Domain.Entities.Direction", "Direction")
                         .WithMany()
                         .HasForeignKey("DirectionId")
@@ -1193,8 +1249,10 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("CleanArchitecture.Razor.Domain.Identity.ApplicationUser", "Manager")
-                        .WithMany("Contragents")
+                        .WithMany("MyContragents")
                         .HasForeignKey("ManagerId");
+
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Direction");
 
@@ -1392,6 +1450,33 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Navigation("Contragent");
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.StageParticipant", b =>
+                {
+                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Karavay.ComOffer", "ComOffer")
+                        .WithMany("StageParticipants")
+                        .HasForeignKey("ComOfferId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Karavay.ComStage", "ComStage")
+                        .WithMany("StageParticipants")
+                        .HasForeignKey("ComStageId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.Contragent", "Contragent")
+                        .WithMany("StageParticipants")
+                        .HasForeignKey("ContragentId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("ComOffer");
+
+                    b.Navigation("ComStage");
+
+                    b.Navigation("Contragent");
+                });
+
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.StatusLog", b =>
                 {
                     b.HasOne("CleanArchitecture.Razor.Domain.Entities.Contragent", "Contragent")
@@ -1502,6 +1587,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
 
                     b.Navigation("StageCompositions");
 
+                    b.Navigation("StageParticipants");
+
                     b.Navigation("StatusLogs");
                 });
 
@@ -1526,6 +1613,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                     b.Navigation("ComPositions");
 
                     b.Navigation("ComStages");
+
+                    b.Navigation("StageParticipants");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.ComPosition", b =>
@@ -1538,6 +1627,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.ComStage", b =>
                 {
                     b.Navigation("StageCompositions");
+
+                    b.Navigation("StageParticipants");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Karavay.Nomenclature", b =>
@@ -1578,9 +1669,11 @@ namespace CleanArchitecture.Razor.Infrastructure.Migrations
                 {
                     b.Navigation("Claims");
 
-                    b.Navigation("Contragents");
+                    b.Navigation("Contragent");
 
                     b.Navigation("Logins");
+
+                    b.Navigation("MyContragents");
 
                     b.Navigation("Tokens");
 

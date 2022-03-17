@@ -4,6 +4,13 @@
 //_canEdit
 //_catDelete
 
+$('#comstage_updatebutton').click(function () {
+    
+    LoadComState(currentEditRow.Id);
+    clsparticipant.reloadData();
+
+
+});
 $('#searchbutton').click(function () {
     reloadData();
 });
@@ -22,8 +29,211 @@ $('#importbutton').click(function () {
 $('#gettemplatebutton').click(function () {
     onGetTemplate();
 });
-$('#startStage').click(function (e) {
+$('#btnCancelStage').click(function (e) {
+    bootbox.confirm({
+        title: "Вы уверены, что хотите отменить проведение КП?",
+        message: "Всем участникам со статусом 'Ожидание' и 'Подтверждение' будет присвоен статус 'Отмена'",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> Отмена',
+                className: 'btn-danger'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Подтвердить',
+                className: 'btn-success'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                CancelComOffer();
+            }
+
+        }
+    });
+})
+function CancelComOffer() {
+    SubmitForm("?handler=CancelComOffer", function (res) {
+        
+        openEditpanel(res.Data, true);
+
+        //LoadComState(currentEditRow.Id);
+    });
+}
+$('#btnSelectWinnerStage').click(function (e) {
+    let particicpants = clsparticipant.dg.datagrid('getRows');
+    console.log(particicpants);
+    ShowSelectWinnerDialog(particicpants, function (id, date, message) {
+        
+        var headers = {
+            "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+        }
+
+        axios.post(`${pagelink}?handler=SelectWinner`, { "ComOfferId": currentEditRow.Id, DeadlineDate: date, ContragentId: id, Message: message }, {
+            headers: headers
+        }).then(res => {
+            toastr["info"](`${translations.SaveSuccess} `);
+            openEditpanel(res.data.Data, true);
+            reloadData();
+        })
+    });
+
+    
+});
+
+$('#btnSendStage').click(function (e) {
+    let stageid = $('#StageId').val();
+    if (!stageid || stageid == "0") {
+        bootbox.alert('"Для совершения действия выберите представление "Последнее предложение"');
+        return;
+    }
+    var rows = dgcomstage.datagrid('getRows');
+    console.log(rows);
+    
+    let ContrPrice = new Array();
+    let hasRequestPrice = false;
+    $('input.editable:checkbox').each(function () {
+        let id = $(this).attr('id').split("_");
+        const value = $(this).prop("checked");
+        hasRequestPrice = hasRequestPrice || value;
+        tmpCP = {
+            "ContrId": parseInt(id[1]),
+              "ComPositionId": parseInt(id[0]),
+              "RequestPrice": value
+            }
+        console.log($(this).attr('id'));
+        ContrPrice.push(tmpCP);
+        //var sThisVal = $(this).val();
+    });
+    if (!ContrPrice || ContrPrice.length == 0 || !hasRequestPrice) {
+        bootbox.alert("Не выбрана ни одна позиция для запроса цены.");
+        return;
+    }
+
+    DeadLinePrompt(function (result) {
+
+
+        let tmpOjb = {
+            "ComOfferId": currentEditRow.Id, 
+            "StageId": parseInt(stageid),
+            "ContrPrices": ContrPrice,
+
+        }
+        console.log(tmpOjb);
+
+
+        var headers = {
+            "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+        }
+
+        axios.post(`${pagelink}?handler=SendPrice`, { stageComRequest: tmpOjb, Deadline: result }, {
+            headers: headers
+        }).then(res => {
+            toastr["info"](`${translations.SaveSuccess} `);
+            openEditpanel(res.data.Data, true);
+            reloadData();
+        })
+        //    SetReadOnlyForm();
+        //    openEditpanel(currentEditRow, true);
+        //    //LoadComState(currentEditRow.Id);
+    });
+});
+
+$('#btnEndStage').click(function (e) {
+    let stageid = $('#StageId').val();
+    if (!stageid || stageid == "0") {
+        bootbox.alert("завершить этап, можно только на 'Последней предложение'");
+        return;
+    }
+
+    
+        bootbox.confirm({
+            title: "Вы уверены, что хотите завершить этап?",
+            message: (checkEmptyPrices() ?  "Имеются не заполненные цены, поставщики с не заполненными ценами будут исключены из торгов":" "),
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Отмена',
+                    className: 'btn-danger'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Подтвердить',
+                    className: 'btn-success'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    endStage();
+                }
+
+            }
+        });
+    
+    //check empty prices
+   
+
+})
+function endStage() {
+
+    let stageid = $('#StageId').val();
+    SubmitForm("?handler=EndStage&stageid=" + stageid, function (res) {
+        SetReadOnlyForm();
+        openEditpanel(res.Data, true);
+
+        //LoadComState(currentEditRow.Id);
+    });
+}
+function checkEmptyPrices() {
+    
+    let hasEmpty = false;
+    console.log($('span.stageprice').length);
+    $('span.stageprice').each(function () {
+        console.log($(this).html());
+        if (!$.trim($(this).html()))
+            hasEmpty = true;
+        //var sThisVal = $(this).val();
+    });
+    return hasEmpty;
+
+
+
+}
+$('#btnChangeDeadline').click(function (e) {
     //
+    bootbox.prompt({
+        //title: `На портале ОАО "КАРАВАЙ" по работе с поставщиками появилась возможность \n предоставить ценовое предложение по лоту № ${currentEditRow.Number}.
+        //          Просим предоставить Ваши предложения пройдя по ссылке ___` ,
+        title: 'Изменить срок ответа до',
+        inputType: 'date',
+        buttons: {
+            confirm: {
+                label: `${translations.Ok}`, //'@_localizer["Yes"]',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: `${translations.Cancel}`, //'@_localizer["No"]',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+
+            if (result) {
+
+                let stageid = $('#StageId').val();
+                SubmitForm("?handler=Deadline&deadline=" + result + "&stageid=" + stageid, function (res) {
+                    SetReadOnlyForm();
+                    openEditpanel(currentEditRow, true);
+                    //LoadComState(currentEditRow.Id);
+                } );
+            }
+
+        }
+
+    });
+
+
+
+});
+
+function DeadLinePrompt(callback) {
     bootbox.prompt({
         //title: `На портале ОАО "КАРАВАЙ" по работе с поставщиками появилась возможность \n предоставить ценовое предложение по лоту № ${currentEditRow.Number}.
         //          Просим предоставить Ваши предложения пройдя по ссылке ___` ,
@@ -41,16 +251,85 @@ $('#startStage').click(function (e) {
         },
         callback: function (result) {
 
-            console.log(result);
+            if (callback && result)
+                callback(result);
 
-            SubmitForm("?handler=Run&deadline=" + result, function (res) {
-                SetReadOnlyForm();
-                LoadComState(currentEditRow.Id);
-            });
-            
         }
-    
+
     });
+}
+$('#btnStartStage').click(function (e) {
+
+    const form = document.querySelector('#edit_form_panel');
+    if ($(form).valid() === false) {
+
+        form.classList.add('was-validated');
+
+    } else {
+        DeadLinePrompt(function (result) {
+            if (result) {
+                console.log(result);
+                var dialogWait = bootbox.dialog({
+                    message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста подождите, запускаем первый этап...</p>',
+                    centerVertical: true,
+                    closeButton: true
+                });
+                dialogWait.init(function () {
+                    setTimeout(function () {
+                        dialogWait.modal('hide');
+                    }, 2000);
+                });
+                SubmitForm("?handler=Run&deadline=" + result, function (res) {
+
+                    dialogWait.modal('hide');
+                    SetReadOnlyForm();
+                    openEditpanel(res.Data, true);
+                    //LoadComState(currentEditRow.Id);
+                }, function (error) {
+                    dialogWait.modal('hide');
+                });
+                dialogWait.modal('hide');
+            }
+        });
+    }
+    ////
+    //bootbox.prompt({
+    //    //title: `На портале ОАО "КАРАВАЙ" по работе с поставщиками появилась возможность \n предоставить ценовое предложение по лоту № ${currentEditRow.Number}.
+    //    //          Просим предоставить Ваши предложения пройдя по ссылке ___` ,
+    //    title: 'Срок предоставления до',
+    //    inputType: 'date',
+    //    buttons: {
+    //        confirm: {
+    //            label: `${translations.Ok}`, //'@_localizer["Yes"]',
+    //            className: 'btn-success'
+    //        },
+    //        cancel: {
+    //            label: `${translations.Cancel}`, //'@_localizer["No"]',
+    //            className: 'btn-danger'
+    //        }
+    //    },
+    //    callback: function (result) {
+
+    //        console.log(result);
+    //        var dialog = bootbox.dialog({
+    //            message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста подождите, запускаем первый этап...</p>',
+    //            centerVertical: true,
+    //            closeButton: false
+    //        });
+
+    //        SubmitForm("?handler=Run&deadline=" + result, function (res) {
+
+    //            dialog.modal('hide');
+    //            SetReadOnlyForm();
+    //            openEditpanel(res.Data,true);
+    //            //LoadComState(currentEditRow.Id);
+    //        }, function (error) {
+    //            dialog.modal('hide');
+    //        });
+            
+    //    }
+    
+    //});
 
     
 
@@ -61,18 +340,20 @@ function SetReadOnlyForm() {
     for (var i = 0, fLen = form.length; i < fLen; i++) {
         form.elements[i].readOnly = true;
     }
-    $('.custom-select').prop('disabled', true);
+    $('#edit_form_panel .custom-select').prop('disabled', true);
     $('.custom-control-input[type=checkbox]').prop('disabled', true);
     SetEnableToRoleButton(false);
     
     
-    $('#save').prop('disabled', true);
-    $('#startStage').prop('disabled', true);
+    //$('#save').prop('disabled', true);
+    //$('#btnStartStage').prop('disabled', true);
 }
-function SubmitForm(addParam,callback) {
+function SubmitForm(addParam,callback,onerror) {
     const form = document.querySelector('#edit_form_panel');
     if ($(form).valid() === false) {
+        
         form.classList.add('was-validated');
+        
     } else {
         let request = $('#edit_form_panel').serialize();
         if (typeof UpdateFiles == 'function')
@@ -81,7 +362,7 @@ function SubmitForm(addParam,callback) {
         //if (AppendFilesToFormData) {
         //    AppendFilesToFormData(request);
         //}
-        axios.post(`${pagelink}${addParam ? addParam: ''}`, request).then(res => {
+        axios.post(`${pagelink}${addParam ? addParam : ''}`, request).then(res => {
             toastr["info"](`${translations.SaveSuccess} `);
 
             //$('#table-page-content').show();
@@ -91,14 +372,8 @@ function SubmitForm(addParam,callback) {
                 callback(res.data);
             }
         }).catch((error) => {
-            if (error.response.data.Errors) {
-                const errors = error.response.data.Errors;
-                errors.forEach(item => {
-                    toastr["error"](item);
-                });
-            } else {
-                toastr["error"](`${translations.SaveFail},${error.response.data}`);
-            }
+            if (onerror)
+                onerror(error)
         });
     }
     event.preventDefault();
@@ -106,8 +381,9 @@ function SubmitForm(addParam,callback) {
 }
 $('#save').click(function (e) {
     SubmitForm("", function (res) {
-        SetEnableToRoleButton(true);
+        
         openEditpanel(res.Data);
+        
     });
 });
 function SetEnableToRoleButton(enable) {
@@ -118,7 +394,7 @@ function SetEnableToRoleButton(enable) {
             $(this).show();// prop('disabled', false).removeClass('ui-disabled');
     })
 }
-function openEditpanel(row) {
+function openEditpanel(row,stage) {
 
     currentEditRow = row;
     $('#table-page-content').hide();
@@ -170,53 +446,129 @@ function openEditpanel(row) {
 
             });
 
-        if (row.Status != 0) {
+        if (row.Status > 0) {
+            
+            $('#ComStageTab').show();
+            $('#ComStage').show();
             SetReadOnlyForm();
+            //SetEnableToRoleButton(true);
+            $('a[href="#ComStage"]').click();
+
+            
+        } else {
+            SetEditable();
+            SetEnableToRoleButton(true);
+            
+            $('#ComStage').hide();
+            $('#ComStageTab').hide();
+            $('a[href="#ComPosition"]').click();
         }
+        showHideButtons(row.Status);
      
     }
     else {
+        //ADd
         $('#edit_form_panel #Input_Id').val(0)
+        axios.get(`${pagelink}?handler=NextNumber`).then(res => {
+            
+            $('#edit_form_panel #Input_Number').val(res.data);
+        })
+        //let total = $dg.datagrid('getData').total;
+        //$('#edit_form_panel #Input_Number').val(total+1)
         
+        SetEditable();
         if (typeof OnNewRow == 'function')
             OnNewRow();
         SetEnableToRoleButton(false);
+        $('#ComStage').hide();
+        $('#ComStageTab').hide();
+        $('a[href="#ComPosition"]').click();
+        showHideButtons(-1);
     }
+    
+
+}
+function showHideButtons(Status) {
+    $('#save').hide();
+    $('#btnStartStage').hide();
+    $('#btnSendStage').hide();
+    $('#btnEndStage').hide();
+    $('#btnChangeDeadline').hide();
+    $('#btnCancelStage').hide();
+    $('#btnSelectWinnerStage').hide();
+    $('#btnReturnToEvaluation').hide();
+    
+    switch (Status) {
+        case -1:
+            $('#save').show();
+            break;
+        case 0://Подготовка
+            $('#save').show();
+            $('#btnStartStage').show();
+            
+            
+            break;
+        case 1: //Ожидание КП
+            if (currentStage === undefined) 
+                currentStage = false;
+            
+            let now = new Date();
+            //let deadlineDate = new Date(currentStage.DeadlineDate);
+            //moment(value) > moment().utc()
+            if (CheckPriceConfirmed() || (currentStage && moment(currentStage.DeadlineDate).format("DD.MM.YYYY") < moment().utc().format("DD.MM.YYYY")))
+            //if (CheckPriceConfirmed() || (currentStage && Date.parse(moment(now).format("DD.MM.YYYY")) > Date.parse(moment(new Date(currentStage.DeadlineDate)).format("DD.MM.YYYY"))))
+                $('#btnEndStage').show();
+            $('#btnChangeDeadline').show();
+            $('#btnCancelStage').show();
+            break;
+        case 2:   //Оценка КП
+            //$('input.editable:checkbox').removeAttr('disabled');
+            let StageType = $('input[name="GetStageType"]:checked').val();
+
+            $('input.editable:checkbox').each(function () {
+
+                let id = $(this)[0].id;
+                if (StageType == 1) {
+                    $(`#${id}`).removeAttr("disabled");
+                }
+                else
+                    $(`#${id}`).attr("disabled");
+                //$(this).prop('disabled', false);
+                console.log($(`#${id}`));
+                //var sThisVal = $(this).val();
+            });
+
+            $('#btnSendStage').show();
+            $('#btnCancelStage').show();
+            $('#btnSelectWinnerStage').show();
+            
+            
+
+            break;
+        case 3: //"Определение победителя"
+            let now1 = new Date();
+            if (currentStage === undefined)
+            currentStage = false;
+            if (currentStage && Date.parse(now1) > Date.parse(currentStage.DeadlineDate))
+                $('#btnReturnToEvaluation').show();
+            break;
+
+
+
+    }
+}
+function SetEditable() {
+    const form = document.querySelector('#edit_form_panel');
+    for (var i = 0, fLen = form.length; i < fLen; i++) {
+        if (!form.elements[i].classList.contains("readonly"))
+            form.elements[i].readOnly = false;
+    }
+    $('.custom-select').prop('disabled', false);
+    $('.custom-control-input[type=checkbox]').prop('disabled', false);
 }
 tblFilters = [{}];
 
 tblColumns = [];
-function createColumns() {
-    var InitColumns=
-     [
-        { field: 'ck', checkbox: true },
-        {
-            field: '_action',
-            title: `${window.translations.Command} `,
-            width: 100,
-            align: 'center',
-            formatter: function (value, row, index) {
-                return `<div class="btn-group" role="group">
-								  <button id="commandbtngroup" type="button" ${(_canEdit ? "" : "disabled")}  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="${window.translations.IconPrefix} fa-edit"></i>
-								 </button>
-								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
-								   <button class="dropdown-item" onclick="onEdit(${index})" ${(_canEdit ? "" : "disabled")}><i class="fal fa-edit mr-1"></i> ${translations.Edit}</button>
-								   <button class="dropdown-item" onclick="onDelete('${row.Id}')" ${(_canDelete ? "" : "disabled")} ><i class="fal fa-trash-alt mr-1"></i> ${translations.Delete}</button>
-								 </div>
-							  </div>`;
-            }
-        }
-         
-
-
-
-        ];
-    if (tblColumns.length > 0) {
-        return InitColumns.concat(tblColumns);
-    }
-    return InitColumns;
-};
 var checkRowEvent = new CustomEvent("rowCheck", {
     detail: {
         check: true
@@ -230,7 +582,7 @@ var $dg = {};
 
 var initdatagrid = () => {
     $dg = $('#main_dg').datagrid({
-        height: (window.innerHeight - 320),
+        height: (window.innerHeight - 250),
         method: 'GET',
         rownumbers: false,
         singleSelect: true,
@@ -253,7 +605,7 @@ var initdatagrid = () => {
             $('#deletebutton').prop('disabled', !checked);
             checkRowEvent.detail.check = !checked;
             this.dispatchEvent(checkRowEvent);
-           
+
         },
         onUncheckAll: function () {
             $('#deletebutton').prop('disabled', true);
@@ -264,7 +616,7 @@ var initdatagrid = () => {
             $('#deletebutton').prop('disabled', false);
             checkRowEvent.detail.check = false;
             this.dispatchEvent(checkRowEvent);
-            
+
         },
         onUncheck: function () {
             const checked = $(this).datagrid('getChecked').length > 0;
@@ -272,15 +624,35 @@ var initdatagrid = () => {
             checkRowEvent.detail.check = !checked;
             this.dispatchEvent(checkRowEvent);
         },
-        columns: [createColumns()]
+        onClickCell: function (index, field, value) {
+                
+            console.log(value);
+            if (field !="_action")
+                onEdit(index);
+            
+        },
+        
+        columns: [createColumnsComOffer()]
+        ,
+        rowStyler: function (index, row) {
+            let style = 'cursor: pointer;';
+            if (row["Status"] == 4 && row["WinnerName"]) {//"Победитель определён"
+                style += 'background-color:rgb(198,239,206);color:rgb(0,97,0);';
+            }
+             
+            return style;
+        }
+    
     })
+    
         .datagrid('enableFilter', this.tblFilters)
         .datagrid('load', `${pagelink}?handler=Data`);
 
 	}
 
-	var reloadData = () => {
-        $dg.datagrid('load', `${pagelink}?handler=Data`);
+function reloadData()  {
+       let comOfferFilterFor = $("#filterForComOffer").val();
+    $dg.datagrid('load', `${pagelink}?handler=Data&comOfferFilterFor=` + comOfferFilterFor);
 }
 
 //$(() => {
@@ -315,7 +687,18 @@ var popupmodal = (nomenclature) => {
             OnNewRow();
     }
 }
+var onCopy = (index) => {
+    var nomenclature = $dg.datagrid('getRows')[index];
+    
+    axios.post(`${pagelink}?handler=Copy&id=` + nomenclature.Id).then(res => {
+        toastr["info"](`${translations.SaveSuccess} `);
 
+        //$('#table-page-content').show();
+        //$('#edit_panel').hide();
+        reloadData();
+        openEditpanel(res.data.Data);
+    })
+}
 var onEdit = (index) => {
     var nomenclature = $dg.datagrid('getRows')[index];
     openEditpanel(nomenclature);

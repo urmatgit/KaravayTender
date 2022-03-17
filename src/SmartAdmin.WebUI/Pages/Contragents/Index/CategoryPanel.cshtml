@@ -44,14 +44,15 @@
     </div>
     <div class="col-md-10">
         <div id="categories">
-            <partial name="_CategoriesListPartial" model="Model.Categories"/>
+            <partial name="_CategoriesListPartial" model="Model.Categories" />
             @*@foreach (var catetory in Model.Categories)
-                {
-                    <div class="custom-control custom-checkbox my-2">
-                        <input type="checkbox" class="custom-control-input" value="@catetory.IsCheck" name="AssignedPermissions" id="@catetory.Id">
-                        <label class="custom-control-label" for="@catetory.Id">@catetory.Name</label>
-                    </div>
-                }*@
+        {
+            <div class="custom-control custom-checkbox my-2">
+                <input type="checkbox" class="custom-control-input" value="@catetory.IsCheck" name="AssignedPermissions" id="@catetory.Id">
+                <label class="custom-control-label" for="@catetory.Id">@catetory.Name</label>
+            </div>
+        }*@
+            
         </div>
     </div>
 </div>

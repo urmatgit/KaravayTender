@@ -18,6 +18,11 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
     /// </summary>
     public class ComStage : AuditableSoftDeleteEntity, IAuditTrial, IHasDomainEvent
     {
+        public ComStage()
+        {
+
+            
+        }
         public int Id { get; set; }
         /// <summary>
         /// Порядковый номер
@@ -32,8 +37,9 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public DateTime DeadlineDate { get; set; }
         public int  ComOfferId { get; set; }
         public  virtual ComOffer ComOffer { get; set; }
-        
+
         public virtual ICollection<StageComposition> StageCompositions { get; set; }
+        public virtual ICollection<StageParticipant> StageParticipants { get; set; }
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new();
     }

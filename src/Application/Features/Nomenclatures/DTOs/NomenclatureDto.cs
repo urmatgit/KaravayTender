@@ -60,6 +60,7 @@ namespace CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs
         public int VatId { get; set; }
         public string VatName => $"{Vat?.Name} ({Vat?.Stavka}%)";
         public virtual VatDto Vat { get; set; }
+        public string Requirement { get; set; }
         [Required(ErrorMessage = "'Требования к документам по качеству' не выбрано ")]
         public virtual int[] QualityDocsIds { get; set; }
         public  string QualityDocsNames { get; set; }

@@ -15,6 +15,7 @@ namespace CleanArchitecture.Razor.Domain.Constants
         public static string CurrentDirectory { get; set; }
         public const string FilesPath = "Files";
         public const string DocumentsPath= "Documents";
+        public const string QualityDocPath = "QualityDocs";
         public const string SpecificationsPath = "Specifications";
         public static string GetSpecificationsPath => Path.Combine(CurrentDirectory, FilesPath, SpecificationsPath);
         public static string GetDocumentsPath => Path.Combine(CurrentDirectory, FilesPath, DocumentsPath);

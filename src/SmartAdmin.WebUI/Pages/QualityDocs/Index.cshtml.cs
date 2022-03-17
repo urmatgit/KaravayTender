@@ -68,7 +68,16 @@ namespace SmartAdmin.WebUI.Pages.QualityDocs
         {
             try
             {
-               
+                if (UploadedFile != null)
+                {
+                    Input.UploadRequest = new UploadRequest();
+                    Input.UploadRequest.FileName = UploadedFile.FileName;
+                    Input.UploadRequest.UploadType = CleanArchitecture.Razor.Domain.Enums.UploadType.Document;
+                    var stream = new MemoryStream();
+                    UploadedFile.CopyTo(stream);
+                    Input.UploadRequest.Data = stream.ToArray();
+                }
+
                 var result = await _mediator.Send(Input);
                 return new JsonResult(result);
             }
@@ -99,6 +108,11 @@ namespace SmartAdmin.WebUI.Pages.QualityDocs
         {
             var result = await _mediator.Send(command);
             return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", _localizer["QualityDocs"] + ".xlsx");
+        }
+        public async Task<IActionResult> OnPostDownloadAsync([FromBody] DownloadQualityDocsQuery command)
+        {
+            var result = await _mediator.Send(command);
+            return new JsonResult(result);
         }
         public async Task<FileResult> OnGetCreateTemplate()
         {

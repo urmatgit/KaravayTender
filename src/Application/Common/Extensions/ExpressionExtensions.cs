@@ -16,7 +16,43 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
 {
     public static class PredicateBuilder
     {
-        public static Expression<Func<T, bool>> FromFilter<T>(string filters)
+        
+        public static bool CheckProperty<T>(string fieldName)
+        {
+            var props = TypeDescriptor.GetProperties(typeof(T));
+            
+            if (!fieldName.Contains('.'))
+            {
+                return props.Find(fieldName, true)!=null ;
+            }
+            PropertyDescriptor result = null;
+            var fieldNameProperty = fieldName.Split('.');
+            if (fieldNameProperty.Length < 3)
+            {
+                result= props.Find(fieldNameProperty[0], true).GetChildProperties().Find(fieldNameProperty[1], true);
+            }
+            else
+                result= props.Find(fieldNameProperty[0], true).GetChildProperties().Find(fieldNameProperty[1], true).GetChildProperties().Find(fieldNameProperty[2], true);
+
+            return result != null;
+        }
+        public static FilterRule[] GetFilgerRules(string filters)
+        {
+            if (!string.IsNullOrEmpty(filters))
+            {
+                var opts = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+                opts.Converters.Add(new AutoNumberToStringConverter());
+                var filterRules = JsonSerializer.Deserialize<FilterRule[]>(filters, opts);
+
+                return filterRules;
+            }
+            return Array.Empty<FilterRule>();
+        }
+             
+        public static Expression<Func<T, bool>> FromFilter<T>(string filters,List<string> Excludes=null )
         {
             Expression<Func<T, bool>> any = x => true;
             if (!string.IsNullOrEmpty(filters))
@@ -30,6 +66,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
 
                 foreach (var filter in filterRules)
                 {
+                    if (Excludes!=null &&  Excludes.Contains(filter.field)) continue;
                     if (Enum.TryParse(filter.op, out OperationExpression op) && !string.IsNullOrEmpty(filter.value))
                     {
                         var expression = GetCriteriaWhere<T>(filter.field, op, filter.value);
@@ -75,6 +112,10 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
                     {
                         return x => false;
                     }
+                }
+                if (prop.PropertyType == typeof(int?) && selectedOperator==OperationExpression.contains)
+                {
+                    selectedOperator = OperationExpression.equal;
                 }
                 switch (selectedOperator)
                 {
@@ -303,7 +344,11 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
             }
 
             var fieldNameProperty = fieldName.Split('.');
-            return props.Find(fieldNameProperty[0], ignoreCase).GetChildProperties().Find(fieldNameProperty[1], ignoreCase);
+            if (fieldNameProperty.Length < 3)
+            {
+                return props.Find(fieldNameProperty[0], ignoreCase).GetChildProperties().Find(fieldNameProperty[1], ignoreCase);
+            }else
+                return props.Find(fieldNameProperty[0], ignoreCase).GetChildProperties().Find(fieldNameProperty[1], ignoreCase).GetChildProperties().Find(fieldNameProperty[2], ignoreCase);
 
         }
         #endregion

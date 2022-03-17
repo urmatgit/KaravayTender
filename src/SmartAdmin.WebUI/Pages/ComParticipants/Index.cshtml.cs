@@ -93,6 +93,12 @@ namespace SmartAdmin.WebUI.Pages.ComParticipants
             var result = await _mediator.Send(command);
             return new JsonResult(result);
         }
+        public async Task<IActionResult> OnGetActiveParticipantsAsync([FromQuery] GetParticipantsLastWithQuery command)
+        {
+            // throw new Exception("Test log error 222 !!!!!!");
+            var result = await _mediator.Send(command);
+            return new JsonResult(result);
+        }
         public async Task<IActionResult> OnPostAsync()
         {
             try

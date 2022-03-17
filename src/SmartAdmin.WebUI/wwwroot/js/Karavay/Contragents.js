@@ -78,21 +78,26 @@ function getCategoriesByDirectionId(id, contragentid) {
     //    categoryIds.value = `[${resJson.slice(0, -1)}]`;
     //})
     
+
     
 getCheckedCategories = () => {
     var categories = document.getElementsByName("category.Name");
     var categoryIds = document.getElementById("CategoryIds");
     var result = new Object();
     var resJson = "";
+    let HasOneTrue = false;
     for (var checkbox of categories) {
         console.log(`${checkbox.id}:${checkbox.checked}`);
         // result += `${checkbox.id}:${checkbox.checked},`
         result.Id = checkbox.id;
         result.IsCheck = checkbox.checked
+        if (result.IsCheck)
+            HasOneTrue = true;
         resJson += `${JSON.stringify(result)},`;
 
     }
     categoryIds.value = `[${resJson.slice(0, -1)}]`;
+    return HasOneTrue;
     // console.log(`[${resJson.slice(0, -1)}]`);
 }
 

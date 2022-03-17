@@ -13,9 +13,9 @@
 @section PageHeading {
     <div class="col col-md-6 col-lg-7 hidden-sm-down">
         <h2 class="fs-xxl fw-500 text-white">
-            Razor page application &amp; Clean Architecture
+              Информация...
             <small class="h3 fw-200 mt-3 mb-5 text-white opacity-60">
-                Clean Architecture is a formal architecture which is relatively "modern" in that it is less than ten years old. It evolved over time from several other architectures including Hexagonal Architecture, Ports and Adapters, and Onion Architecture
+                Описание...
             </small>
             
         </h2>
@@ -33,14 +33,14 @@
             <div asp-validation-summary="All" class="alert alert-primary text-dark"></div>
             <div class="form-group">
                 <label class="form-label" asp-for="Input.UserName">@_localizer["User name"]</label>
-                <input type="text" asp-for="Input.UserName" class="form-control" placeholder="User Name for verification" value="administrator" required="required" />
-                <span class="invalid-feedback" asp-validation-for="Input.UserName">Sorry, you missed this one.</span>
+                <input type="text" asp-for="Input.UserName" class="form-control" placeholder="Имя пользователя для проверки" value="administrator" required="required" />
+                <span class="invalid-feedback" asp-validation-for="Input.UserName"></span>
                 @*<div class="help-block">@_localizer["The user name you registered with"]</div>*@
             </div>
             <div class="form-group">
                 <label class="form-label" asp-for="Input.Password">@_localizer["Password"]</label>
-                <input type="password" asp-for="Input.Password" class="form-control" placeholder="Your password (minimum 6 characters)" value="Password123!" required="required" />
-                <span class="invalid-feedback" asp-validation-for="Input.Password">Sorry, you missed this one.</span>
+                <input type="password" asp-for="Input.Password" class="form-control" placeholder="Ваш пароль (минимум 6 символов)" value="Password123!" required="required" />
+                <span class="invalid-feedback" asp-validation-for="Input.Password"></span>
                 @*<div class="help-block">@_localizer["The password you specified during registration"]</div>*@
             </div>
             <div class="form-group text-left">

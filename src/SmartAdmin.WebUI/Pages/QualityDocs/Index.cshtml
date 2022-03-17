@@ -121,7 +121,25 @@
 						</div>*@
 
 					</div>
-				</div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <label class="form-label" for=""> <span class="text-danger">*</span></label>
+                            <input type="file" asp-for="UploadedFile" style="display:none" required />
+                            <div class="">
+                                <button name="uploadbutton" type="button" class="btn btn-primary btn-icon waves-effect waves-themed mr-2">
+                                    <i class="fal fa-paperclip"></i>
+                                </button><span class="text-danger">*</span>
+                                <div id="uploadfilename">
+                                    <div class="alert alert-danger mt-2 mb-2" role="alert">
+                                        <i class="fal fa-exclamation-triangle mr-2"></i>   @_localizer["Please upload a file"].
+                                    </div>
+                                </div>
+
+                            </div>
+                            <span class="invalid-feedback" asp-validation-for="UploadedFile">Загрузите файл!</span>
+							</div>
+                        </div>
+                    </div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
 					<button type="submit" class="btn btn-primary">@_localizer["Save"]</button>
@@ -148,6 +166,7 @@ onImportedSucceeded = "reloadData()"
 	<script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
 	@*<script src="~/js/formplugins/summernote/summernote.js"></script>*@
 	<script src="~/js/TableBase.js"></script>
+  
     <script type="text/javascript">
         var pagelink = '@Url.Page("/QualityDocs/Index")';
         var translations = {
@@ -171,6 +190,127 @@ onImportedSucceeded = "reloadData()"
 		}
 		var _canEdit = @(_canEdit.Succeeded ? "true":"false" );
 		var _canDelete =  @(_canDelete.Succeeded ? "true" : "false" );
+		 var uploadfilename = document.querySelector("#uploadfilename");
+        var uploadbutton = document.querySelector("button[name='uploadbutton']");
+        var uploadfileinput = document.getElementById("UploadedFile");
+        var savebutton = document.querySelector("button[name='savebutton']");
+        uploadbutton.addEventListener('click', (e) => {
+            uploadfileinput.click();
+        })
+        uploadfileinput.onchange = () => {
+            fileName = uploadfileinput.value.split('\\').pop();
+            uploadfilename.innerHTML = `
+              <div class="alert alert-info alert-dismissible fadeup show mb-2 mt-2" role="alert">
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                         <span aria-hidden="true"><i class="@(Settings.Theme.IconPrefix) fa-times"></i></span>
+                      </button>
+                      <div class="d-flex align-items-center">
+							<div class="alert-icon">
+									<i class="@(Settings.Theme.IconPrefix) fa-upload fs-xl"></i>
+							</div>
+							<div class="flex-1">
+	    							${fileName}
+							</div>
+					</div>
+             </div>
+        `
+            savebutton.disabled = false;
+            $('#uploadfilename .alert').on('closed.bs.alert', (e) => {
+                uploadfileinput.value = null;
+                savebutton.disabled = true;
+            })
+		};
+         popupmodal = (nomenclature) => {
+            $('#edit_modal').modal('toggle');
+            $('#edit_modal .modal-title').html(`${translations.AddCaption}`);
+            $('#edit_form').clearForm();
+            $('#edit_form')[0].reset();
+            currentEditRow = nomenclature;
+			 if (nomenclature) {
+				 uploadbutton.disabled = false;
+                uploadfileinput.required = true;
+				 let url = nomenclature.URL ? nomenclature.URL.replaceAll('\\', '/') : '';
+                uploadfilename.innerHTML = `
+                  <div class="alert alert-info alert-dismissible fadeup show mb-2 mt-2" role="alert">
+                         <div class="d-flex align-items-center">
+<button type="button" name="download_files" title="Загрузить файл" class="btn btn-sm btn-outline-primary" onclick="onDownload('${url}')" >
+                            <i class="${window.translations.IconPrefix} fa-download" ></i>
+							</button>
+							
+						
+							<div class="flex-1" style="margin-left:12px">
+	    							${nomenclature.URL}
+							</div>
+					</div>
+                </div>
+                `
+                $('#edit_modal .modal-title').html(`${translations.EditCaption}`);
+                if (typeof jsonToFormCallBack !== 'undefined')
+                    $('#edit_form').jsonToForm(nomenclature, jsonToFormCallBack);
+                else
+                    $('#edit_form').jsonToForm(nomenclature);
+            } else {
+                $('#edit_form #Input_Id').val(0)
+                if (typeof clienUploadfilename == 'function')
+                    clienUploadfilename();
+                if (typeof OnNewRow == 'function')
+					 OnNewRow();
+				  uploadbutton.disabled = false;
+                uploadfileinput.required = true;
+
+                uploadfilename.innerHTML =`<div class="alert alert-danger mt-2 mb-2" role="alert">
+                                        <i class="fal fa-exclamation-triangle mr-2"></i>   @_localizer["Please upload a file"].
+                             </div>`
+            }
+		}
+		var onDownload = (index) => {
+			let url = "";
+			if (typeof index == "string")
+				url = index;
+			else {
+				const item = $dg.datagrid('getRows')[index];
+				url = item.URL;
+			}
+            const filename = getFileName(url);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            toastr["info"](`@_localizer["Файл загружен"]`);
+		}
+        function createColumns() {
+            var InitColumns =
+                [
+                    { field: 'ck', checkbox: true },
+                    {
+                        field: '_action',
+                        title: `${window.translations.Command} `,
+                        width: 100,
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return `<div class="btn-group" role="group">
+								  <button id="commandbtngroup" type="button" ${(_canEdit ? "" : "disabled")}  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<i class="${window.translations.IconPrefix} fa-edit"></i>
+								 </button>
+								 <div class="dropdown-menu dropdown-menu-animated" aria-labelledby="commandbtngroup">
+								   <button class="dropdown-item" onclick="onEdit(${index})" ${(_canEdit ? "" : "disabled")}><i class="fal fa-edit mr-1"></i> ${translations.Edit}</button>
+								  <button class="dropdown-item" onclick="onDownload(${index})"><i class="fal fa-download mr-1"></i> @_localizer["Download"]</button>
+								   <button class="dropdown-item" onclick="onDelete('${row.Id}')" ${(_canDelete ? "" : "disabled")} ><i class="fal fa-trash-alt mr-1"></i> ${translations.Delete}</button>
+								 </div>
+							  </div>`;
+                        }
+                    }
+
+
+
+
+                ];
+            if (tblColumns.length > 0) {
+                return InitColumns.concat(tblColumns);
+            }
+            return InitColumns;
+        };
 		$(() => {
 			//columns.push([{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 }]);
 			tblColumns = [{ field: 'Name', title: `${window.translations.Name} `, sortable: true, width: 300 }];

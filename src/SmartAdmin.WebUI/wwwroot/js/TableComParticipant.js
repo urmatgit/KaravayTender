@@ -105,12 +105,26 @@ class TableComParticipant extends clsBaseTable {
 
 
 }
+function CheckPriceConfirmed() {
+    let rows = clsparticipant.dg.datagrid('getRows');
+    let result = true;
+    for (let i = 0; i < rows.length; i++) {
+        //[Display(Name = "Цена предоставлена")]
+        //PriceConfirmed = 2,
+        //"Отказ поставщика" =3
+        if (rows[i].Status != 3 && rows[i].Status == 1) {
+            result = false;
+            break;
+        }
+    }
+    return result;
+}
 let clsparticipant = null;
 var $dgContr = {};
 
 var initdatagridContr = () => {
     $dgContr = $('#contragent_dg').datagrid({
-        height: (window.innerHeight / 3),
+        height: (window.innerHeight / 2),
         method: 'GET',
         rownumbers: false,
         singleSelect: true,
@@ -145,8 +159,8 @@ var initdatagridContr = () => {
         },
         columns: [[
 
+            
             { field: 'ck', checkbox: true },
-
 
             { field: 'StatusStr', title: translations.Status, sortable: true, width: 140 },
             { field: 'Name', title: translations.Name, sortable: true, width: 100 },
@@ -219,7 +233,7 @@ var initdatagridContr = () => {
 
 }
 var reloadDataContragent = () => {
-    $dgContr.datagrid('load', '/Contragents/Index?handler=DataActive');
+    $dgContr.datagrid('load', '/Contragents/Index?handler=DataActive&ComOfferId=' + currentEditRow.Id);
 
 }
 $('#participant_modal').on('shown.bs.modal', function () {
@@ -229,11 +243,13 @@ function InitParticipantTable() {
     clsparticipant = new TableComParticipant("participant", "clsparticipant", '/ComParticipants/Index');
 
     clsparticipant.tblColumns = [
+
         { field: 'ContragentName', title: translations.Participant, sortable: true, width: 130 },
-        { field: 'StatusStr', title: translations.Status, sortable: true, width: 100 },
+        { field: 'StatusStr', title: translations.Status, sortable: true, width: 150 },
 
 
-        { field: 'StepFailure', title: translations.StepFailure, sortable: true, width: 150 }
+        { field: 'StepFailure', title: translations.StepFailure, sortable: true, width: 150 },
+        { field: 'Description', title: "Комментарий", sortable: true, width: 250 }
 
 
     ];

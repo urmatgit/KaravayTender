@@ -13,14 +13,30 @@
       "roles": [
         "Admin",
         "Manager",
-        "Super"
+        "Super",
+        "Supplier"
       ],
       "items": [
         {
           "title": "Коммерческие предложения",
           "icon": "fal fa-comments-alt-dollar",
           "href": "comoffers_index.html",
-          "roles": []
+          "roles": [
+            "Admin",
+            "Manager",
+            "Super"
+          ]
+        },
+        {
+          "title": "Коммерческие предложения",
+          "icon": "fal fa-comments-alt-dollar",
+          "span": {
+            "class": "dl-ref bg-danger-500 hidden-nav-function-minify hidden-nav-function-top",
+            "text": "[ComOfferRequestCount]",
+            "id": "ComOfferRequestCount"
+          },
+          "href": "comoffers_participant.html",
+          "roles": [  "Supplier" ]
         }
         
       ]

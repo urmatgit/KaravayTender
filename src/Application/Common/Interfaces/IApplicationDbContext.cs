@@ -1,13 +1,17 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Audit;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Entities.Log;
-
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Razor.Application.Common.Interfaces
@@ -41,6 +45,12 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
         public DbSet<ComPosition> ComPositions { get; set; }
         public DbSet<StageComposition> StageCompositions { get; set; }
         public DbSet<AreaComPosition> AreaComPositions { get; set; }
+        public DbSet<StageParticipant> StageParticipants { get; set; }
+
+        List<T> ExecuteSqlRawExt1<T,P>(string query, Func<DbDataReader, T> map, IEnumerable<P> queryParameters = null);
+
+
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

@@ -111,7 +111,20 @@
                                 <input type="text" asp-for="Input.Name" class="form-control" placeholder="Direction Name" />
                                 <span class="invalid-feedback" asp-validation-for="Input.Name"></span>
                             </div>
-                            
+
+
+
+
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="IsService">@_localizer["Service"]</label>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" asp-for="Input.IsService" class="custom-control-input" value="true">
+                                    <label class="custom-control-label" for="Input_IsService"></label>
+                                </div>
+                                <span class="invalid-feedback" asp-validation-for="Input.IsService"></span>
+                            </div>
+
                             <div class="col-md-12">
                                 <label class="form-label" for="Comments">@_localizer["Description"] </label>
                                 <input type="text" asp-for="Input.Description" class="form-control" placeholder="Comments" />
@@ -142,6 +155,22 @@
     <script src="~/lib/jquery-form/jquery.jsonToForm.js"></script>
 
     <script type="text/javascript">
+        var YesNotList = [
+            {
+                id: '',
+                text: 'Все'
+
+            },
+            {
+                id: 'true',
+                text: 'Да'
+            },
+            {
+                id: 'false',
+                text: 'Нет'
+            }
+
+        ]
 	$('#searchbutton').click(function () {
 		reloadData();
 	});
@@ -237,12 +266,40 @@
 					}
 				},
 				{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 180 },
-				 
+				{ field: 'IsServiceStr', title: '@_localizer["Service"]', align: 'center', sortable: true, width: 80, formatter: checkboxformatter },
                 { field: 'Description', title: '@_localizer["Description"]', sortable: true, width: 180 }
 
-			]]
+			]],
+            onClickCell: function (index, field, value) {
+                //if (field == 'Number' || field == 'Name') {
+                if (field != "_action")
+                    onEdit(index);
+                //}
+            }
 		})
-			.datagrid('enableFilter', {})
+			.datagrid('enableFilter', [
+                {
+                    field: 'IsServiceStr',
+                    type: 'combobox',
+                    options: {
+                        panelHeight: 'auto',
+                        valueField: 'id',
+                        textField: 'text',
+                        data: YesNotList,
+                        onChange: function (newValue, oldValue) {
+                            console.log(newValue);
+                            $dg.datagrid('addFilterRule', {
+                                field: 'IsService',
+                                op: 'equal',
+                                value: newValue
+                            });
+
+                        }
+
+                    }
+
+                }
+			])
 			.datagrid('load', '@Url.Page("/Directions/Index")?handler=Data');
 
 	}
@@ -262,13 +319,13 @@
 		if (direction) {
 			$('#direction_modal .modal-title').html('@_localizer["Edit Direction"]');
 			$('#direction_form').jsonToForm(direction, {
-				PartnerType: function (value) {
-					if (value == 'TP') {
-						$('#direction_form [name*="PartnerType"]').val(0);
-					} else {
-						$('#direction_form [name*="PartnerType"]').val(1);
-					}
-				}
+                IsService: function (value) {
+                    if (value == true) {
+                        $('#direction_form [name*="IsService"]').prop('checked', true);
+                    } else {
+                        $('#direction_form [name*="IsService"]').prop('checked', false);
+                    }
+                }
 			})
 		} else {
 			$('#direction_form #Input_Id').val(0)

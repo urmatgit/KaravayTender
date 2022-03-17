@@ -49,8 +49,7 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
             //TODO:Implementing ComPositionsWithPaginationQueryHandler method 
            var filters = PredicateBuilder.FromFilter<ComPosition>(request.FilterRules);
             
-            try
-            {
+           
                 var data = await _context.ComPositions
                     .Specify(new FilterByComOfferQuerySpec(request.ComOfferId))
                      .Where(filters)
@@ -65,17 +64,17 @@ namespace CleanArchitecture.Razor.Application.Features.ComPositions.Queries.Pagi
                     .Include(n => n.Nomenclature)
                     .ThenInclude(n => n.NomenclatureQualityDocs)
                     .ThenInclude(d=>d.QualityDoc)
-                    .OrderBy($"{request.Sort} {request.Order}")
-                    
-                    .PaginatedDataAsync(request.Page, request.Rows);
+                    //.OrderBy($"{request.Sort} {request.Order}")
+                    . OrderByWithCheck(request.Sort,request.Order)
+                    .PaginatedDataLazySortAsync(request.Page, request.Rows,request.Sort,request.Order);
                   //.ProjectTo<ComPositionDto>(_mapper.ConfigurationProvider)
                   var datDto = _mapper.Map<IEnumerable<ComPositionDto>>(data.rows);
-                return new PaginatedData<ComPositionDto>(datDto, data.total); ;
-            }catch(Exception er)
-            {
+            return PaginatedData<ComPositionDto>.CreateWithCheckSort(datDto,data.total,data.IsSorted, request.Sort, request.Order);
+                 //if (data.IsSorted)
+                 //   return  new PaginatedData<ComPositionDto>(datDto, data.total); 
+                 //else
+                 //   return new PaginatedData<ComPositionDto>(datDto, data.total, request.Sort, request.Order); 
 
-                return null;
-            }
         }
         public class FilterByComOfferQuerySpec : Specification<ComPosition>
         {

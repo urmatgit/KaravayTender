@@ -16,6 +16,7 @@ class clsBaseTable {
 
     jsonToFormCallBack;
     OnNewRow;
+    clickRow;
     //Update grid param;
     reloadParam;
     _editCaption;
@@ -100,6 +101,9 @@ class clsBaseTable {
     HideAction() {
         this.dg.datagrid('hideColumn', '_action');
     }
+    ShowAction() {
+        this.dg.datagrid('showColumn', '_action');
+    }
     CreateActionColumn(self, row, index) {
         return `<div class="btn-group" role="group">
 								  <button id="commandbtngroup1" type="button" ${(_canEdit ? "" : "disabled")}  class="btn btn-outline-primary btn-sm dropdown-toggle waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -139,7 +143,7 @@ class clsBaseTable {
 
     initdatagrid1() {
         this.dg = $(`#${this._name}_dg`).datagrid({
-            height: (window.innerHeight / 3),
+            height: (window.innerHeight / 2-50),
             method: 'GET',
             rownumbers: false,
             singleSelect: true,
@@ -178,6 +182,12 @@ class clsBaseTable {
 
             },
             columns: [this.createColumns()]
+            , onClickCell: this.clickRow,
+                //function (index, field, value) {
+                //if (this.clickRow) {
+                //    this.clickRow(index, field, value)
+                //}
+           // }
         })
             .datagrid('enableFilter', this.tblFilters);
         //.datagrid('load', `${this._pageLink}?handler=Data`);

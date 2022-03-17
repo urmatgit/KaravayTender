@@ -84,7 +84,7 @@
         //--
         $("#js-login-btn").click(function (event) {
             // Fetch form to apply custom Bootstrap validation
-            getCheckedCategories();
+            let hasonecheck= getCheckedCategories();
             var form = $("#js-login");
 
             if (form[0].valid() === false) {

@@ -51,12 +51,15 @@ namespace CleanArchitecture.Razor.Application.Features.Contragents.Queries.Pagin
         {
             //TODO:Implementing ContragentsWithPaginationQueryHandler method 
             var filters = PredicateBuilder.FromFilter<Contragent>(request.FilterRules);
+            if (request.Sort == "StatusStr")
+                request.Sort = "Status";
            // var managers = await _identityService.FetchUsersEx("Manager");
             //Debug.WriteLine(managers.Count);
             var data = await _context.Contragents.Where(filters)
                 .Include(i => i.Direction)
                 .Include(u=>u.Manager)
-                .OrderBy($"{request.Sort} {request.Order}")
+                //.OrderBy($"{request.Sort} {request.Order}")
+                .OrderByWithCheck(request.Sort,request.Order)
                 .ProjectTo<ContragentDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
 

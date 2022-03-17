@@ -36,10 +36,13 @@ using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.AddE
 using CleanArchitecture.Razor.Application.Features.ComParticipants.Commands.Import;
 using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Create;
 using CleanArchitecture.Razor.Application.Features.ComOffers.Commands.Update;
+using CleanArchitecture.Razor.Application.Features.ComStages.Commands.Update;
+using CleanArchitecture.Razor.Application.Features.StageCompositions.Commands.Update;
+using CleanArchitecture.Razor.Application.Features.ComOffers.Queries.GetAll;
 
 namespace SmartAdmin.WebUI.Pages.ComOffers
 {
-    [Authorize(policy: Permissions.ComOffers.View)]
+    [Authorize(policy: Permissions.ComOffers.Manage)]
     public class IndexModel : PageModel
     {
         [BindProperty]
@@ -58,7 +61,7 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
         public SelectList Categories { get; set; }
         public SelectList Managers { get; set; }
         public SelectList Areas { get; set; }
-        public List<NomenclatureDto> Nomenclatures {get;private set;}
+        public List<NomenclatureDto> Nomenclatures { get; private set; } = new List<NomenclatureDto>();
 
         private readonly IIdentityService _identityService;
         private readonly IAuthorizationService _authorizationService;
@@ -91,10 +94,10 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             Directions = await _mediator.LoadDirection();
             var fistelement = Directions.FirstOrDefault();
             
-                Categories = await _mediator.LoadCategory(0);
+              //  Categories = await _mediator.LoadCategory(0);
             
-            var nomenclaturies = new  GetAllNomenclaturesQuery();
-            Nomenclatures = (List<NomenclatureDto>)await  _mediator.Send(nomenclaturies);
+            //var nomenclaturies = new  GetAllNomenclaturesQuery();
+            //Nomenclatures = (List<NomenclatureDto>)await  _mediator.Send(nomenclaturies);
             Areas = await _mediator.LoadAreas();
             await LoadManagers();
 
@@ -103,6 +106,11 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
         {
             var managers = await _userManager.GetUsersInRoleAsync("Manager");
             Managers = new SelectList(managers.Select(u => new { Id = u.Id, Name = string.IsNullOrEmpty(u.DisplayName) ? u.UserName : u.DisplayName }), "Id", "Name");
+        }
+        public async Task<IActionResult> OnGetNextNumberAsync()
+        {
+            var result =await  _mediator.Send(new GetNextNumberCommand());
+            return new JsonResult(result);
         }
         public async Task<IActionResult> OnGetDataAsync([FromQuery] ComOffersWithPaginationQuery command)
         {
@@ -114,6 +122,24 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
             // throw new Exception("Test log error 222 !!!!!!");
             var result = await _mediator.Send(command);
             return new JsonResult(result);
+        }
+        public async Task<IActionResult> OnPostCopyAsync([FromQuery]  int id)
+        {
+            try
+            {
+                
+                var result = await _mediator.Send(new CopyComOfferCommand {Id=id });
+                return new JsonResult(result);
+            }
+            catch (ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
         }
         public async Task<IActionResult> OnPostAsync()
         {
@@ -134,25 +160,145 @@ namespace SmartAdmin.WebUI.Pages.ComOffers
                 return BadRequest(Result.Failure(new string[] { ex.Message }));
             }
         }
+        public async Task<IActionResult> OnPostCancelComOfferAsync()
+        {
+            try
+            {
+                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation)
+                    return BadRequest(Result.Failure(new string[] { "Статус не соответствует для этой операции!" }));
+                
+                var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Cancelled });
+                return new JsonResult(resultComOffer);
+
+            }
+            catch (ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
+        public async Task<IActionResult> OnPostSelectWinnerAsync([FromBody] NextComStageWinnerCommand command)
+        {
+            try
+            {
+                //if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation)
+                //    return BadRequest(Result.Failure(new string[] { "Статус не соответствует для этой операции!" }));
+                
+
+                var result = await _mediator.Send(command);
+                if (!result.Succeeded)
+                    return BadRequest(result.Errors);
+                //return new JsonResult("");
+                var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = command.ComOfferId, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.WinnerDetermining });
+                return new JsonResult(resultComOffer);
+
+            }
+            catch (ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
+        public async Task<IActionResult> OnPostEndStageAsync([FromQuery] int stageid)
+        {
+            try
+            {
+                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting)
+                    return BadRequest(Result.Failure(new string[] { "Статус не соответствует для этой операции!" }));
+                var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation });
+                //TODO снят галочки у запроса цен
+                var uncheck = await _mediator.Send(new UncheckPriceRequesStageCompositionCommand() { ComOfferId = Input.Id });
+                if (!uncheck.Succeeded)
+                    return BadRequest(uncheck); 
+
+                return new JsonResult(resultComOffer);
+                
+            }
+            catch (ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
+        public async Task<IActionResult> OnPostSendPriceAsync([FromBody] UpdateStageCompositionPricesManagerCommand command)
+        {
+            try
+            {
+                //if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Evaluation)
+                //    return BadRequest(Result.Failure(new string[] { "Статус КП не соответствует для отправки запроса!" })) ;
+                var result = await _mediator.Send(command);
+                if (result.Succeeded)
+                {
+                    var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = command.stageComRequest.ComOfferId, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting });
+                    return new JsonResult(resultComOffer);
+                }
+                else
+                    return BadRequest(result);
+            }
+            catch (ValidationException ex)
+            {
+                var errors = ex.Errors.Select(x => $"{ string.Join(",", x.Value) }");
+                return BadRequest(Result.Failure(errors));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(Result.Failure(new string[] { ex.Message }));
+            }
+        }
+        public async Task<IActionResult> OnPostDeadlineAsync([FromQuery] DateTime deadline, int stageId)
+        {
+            if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting)
+                return BadRequest("Изменение  'срок ответа до' можно только в статусе 'Ожидание КП' ");
+            var result = await _mediator.Send(new UpdateDeadlineComStageCommand() { Id = stageId, DeadLine = deadline });
+
+            if (result.Succeeded)
+            {
+                return new JsonResult("");
+            }else
+            {
+                return BadRequest(result);
+            }
+        }
         public async Task<IActionResult> OnPostRunAsync([FromQuery] DateTime deadline)
         {
             try
             {
-                //if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
-                //    return BadRequest("Коммерческое предложения уже запущена!!! ");
+                if (Input.Status != CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Preparation)
+                    return BadRequest("Коммерческое предложения уже запущена!!! ");
+                var resultInput = await _mediator.Send(Input);
+                if (resultInput.Succeeded)
+                {
 
-                var CreateState1 = new CreateComStageCommand()
-                {
-                    ComOfferId = Input.Id,
-                    Number = 1,
-                    DeadlineDate =  deadline
-                };
-                 var result = await _mediator.Send(CreateState1);
-                if (result.Succeeded)
-                {
-                    result = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting });
+                    var CreateState1 = new CreateComStageCommand()
+                    {
+                        ComOfferId = Input.Id,
+                        Number = 1,
+                        DeadlineDate = deadline,
+
+                    };
+                    var result = await _mediator.Send(CreateState1);
+                    if (!result.Succeeded)
+                    {
+                        return BadRequest(Result.Failure(result.Errors));
+
+                    }
+                    var resultComOffer = await _mediator.Send(new UpdateStatusComOfferCommand() { Id = Input.Id, Status = CleanArchitecture.Razor.Domain.Enums.ComOfferStatus.Waiting });
+                    return new JsonResult(resultComOffer);
                 }
-                return new JsonResult(result);
+                else
+                    return BadRequest(resultInput.Errors);
                 //return new JsonResult("OK");
             }
             catch (ValidationException ex)

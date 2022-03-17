@@ -11,6 +11,7 @@ namespace CleanArchitecture.Razor.Application.Common.Interfaces
     public interface IUploadService
     {
         Task<string> UploadAsync(UploadRequest request);
+        Task<string> UploadAsync(UploadRequest request,string subFolder);
         Task<IResult> UploadFileAsync(int Id,string subfolder, List<IFormFile> files);
         Task<IResult<List<string>>> LoadFilesAsync(int Id, string subfolder);
         Task<IResult> RemoveFileAsync(int Id, string name, string subfolder);

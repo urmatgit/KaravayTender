@@ -93,58 +93,65 @@ namespace SmartAdmin.WebUI.Pages.ComStages
             //var result = await _identityService.FetchUsers("Admin");
             
         }
-        public async Task<IActionResult> OnGetById([FromQuery] int stage, [FromQuery] int comid)
-        {
-            // throw new Exception("Test log error 222 !!!!!!");
+        //public async Task<IActionResult> OnGetById([FromQuery] int stage, [FromQuery] int comid)
+        //{
+        //    // throw new Exception("Test log error 222 !!!!!!");
 
-            var result = await _mediator.Send(new GetByStageQuery { Stage = 1, ComOfferId = 1 });
-            var Nomenclatures = result.StageCompositions.GroupBy(c => c.ComPosition).Select(c => new
-            {
-                ComPosition = c.Key,
-                participients = c.ToList(),
+        //    var result = await _mediator.Send(new GetByStageQuery { Stage = 1, ComOfferId = 1 });
+        //    var Nomenclatures = result.StageCompositions.GroupBy(c => c.ComPosition).Select(c => new
+        //    {
+        //        ComPosition = c.Key,
+        //        participients = c.ToList(),
 
-            });
-            //var NomenclaturesDic = result.StageCompositions.GroupBy(c => c.ComPosition).Select(c => new
-            //{
-            //    ComPosition = c.Key,
+        //    });
+        //    //var NomenclaturesDic = result.StageCompositions.GroupBy(c => c.ComPosition).Select(c => new
+        //    //{
+        //    //    ComPosition = c.Key,
 
-            //    participients = c.ToDictionary(c => c.Contragent, c => c)
+        //    //    participients = c.ToDictionary(c => c.Contragent, c => c)
 
-            //});
+        //    //});
 
-            //var setting = new JsonSerializerSettings()
-            //{
-            //    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            //};
-            //var json = JsonConvert.SerializeObject(NomenclaturesDic, setting);
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (var nomenclature in Nomenclatures)
-            {
-                stringBuilder.Append('{');
-                stringBuilder.Append($"StageNumber:{stage},");
-                stringBuilder.Append($"ComPositionId:{nomenclature.ComPosition.Id},");
-                stringBuilder.Append($"NomName:'{nomenclature.ComPosition.Nomenclature.Name}',");
-                 StringBuilder stringBuilderPart = new StringBuilder();
-                foreach (var part in nomenclature.participients)
-                {
-                    stringBuilderPart.Append($"'{part.Contragent.Name} ({part.ComPosition.ComOffer.ComParticipants.FirstOrDefault(p=>p.ContragentId==part.ContragentId)?.Status.ToDescriptionString()})':{part.Contragent.Id},");
-                    stringBuilderPart.Append($"'ContName_{part.Contragent.Id}_Status':'{part.Status}',");
-                    stringBuilderPart.Append($"'ContName_{part.Contragent.Id}_Price':'{part.Price}',");
+        //    //var setting = new JsonSerializerSettings()
+        //    //{
+        //    //    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        //    //};
+        //    //var json = JsonConvert.SerializeObject(NomenclaturesDic, setting);
+        //    //StringBuilder stringBuilder = new StringBuilder();
+        //    //foreach (var nomenclature in Nomenclatures)
+        //    //{
+        //    //    stringBuilder.Append('{');
+        //    //    stringBuilder.Append($"StageNumber:{stage},");
+        //    //    stringBuilder.Append($"ComPositionId:{nomenclature.ComPosition.Id},");
+        //    //    stringBuilder.Append($"NomName:'{nomenclature.ComPosition.Nomenclature.Name}',");
+        //    //     StringBuilder stringBuilderPart = new StringBuilder();
+        //    //    foreach (var part in nomenclature.participients)
+        //    //    {
+        //    //        stringBuilderPart.Append($"'{part.Contragent.Name} ({part.ComPosition.ComOffer.ComParticipants.FirstOrDefault(p=>p.ContragentId==part.ContragentId)?.Status.ToDescriptionString()})':{part.Contragent.Id},");
+        //    //        stringBuilderPart.Append($"'ContName_{part.Contragent.Id}_Status':'{part.RequestPrice}',");
+        //    //        stringBuilderPart.Append($"'ContName_{part.Contragent.Id}_Price':'{part.Price}',");
                     
-                }
-                stringBuilder.Append(stringBuilderPart.ToString().TrimEnd(','));
-                stringBuilderPart.Clear();
-                stringBuilder.Append("},");
-            }
-            // (setting.ContractResolver as DefaultContractResolver).NamingStrategy = null;
+        //    //    }
+        //    //    stringBuilder.Append(stringBuilderPart.ToString().TrimEnd(','));
+        //    //    stringBuilderPart.Clear();
+        //    //    stringBuilder.Append("},");
+        //    //}
+        //    // (setting.ContractResolver as DefaultContractResolver).NamingStrategy = null;
 
 
 
 
-            return new JsonResult($"[{stringBuilder.ToString().TrimEnd(',')}]");
-        }
+        //    return new JsonResult($"[{stringBuilder.ToString().TrimEnd(',')}]");
+        //}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stage">1=last number,0-all</param>
+        /// <param name="comofferid"></param>
+        /// <returns></returns>
         public async Task<IActionResult> OnGetDataAsync([FromQuery] int stage = 1, int comofferid = 1)
         {
+            
             var result = await _mediator.Send(new GetComOfferCrossStages { Stage = stage, ComOfferId = comofferid });
             if (!result.Succeeded)
             {
@@ -240,95 +247,95 @@ namespace SmartAdmin.WebUI.Pages.ComStages
             stringBuilderPart.Clear();
             return  "\"header\": [" + stringBuilderHeader.ToString() + "]";
         }
-        public async Task<IActionResult> OnGetDataAsyncOld([FromQuery] int stage=1,int comofferid=1)
-        {
-            // throw new Exception("Test log error 222 !!!!!!");
+        //public async Task<IActionResult> OnGetDataAsyncOld([FromQuery] int stage=1,int comofferid=1)
+        //{
+        //    // throw new Exception("Test log error 222 !!!!!!");
 
-            var result = await _mediator.Send(new GetByStageQuery { Stage = stage, ComOfferId = comofferid });
-            if (result is null)
-            {
-                return new JsonResult("");
-            }
-            var Nomenclatures = result.StageCompositions.GroupBy(c => new { c.ComPosition, c.ComStage } ).Select(c => new
-            {
-                ComPosition = c.Key.ComPosition,
-                comStage=c.Key.ComStage,
-                stageNumber=result.Number,
-                participients = c.ToList(),
+        //    var result = await _mediator.Send(new GetByStageQuery { Stage = stage, ComOfferId = comofferid });
+        //    if (result is null)
+        //    {
+        //        return new JsonResult("");
+        //    }
+        //    var Nomenclatures = result.StageCompositions.GroupBy(c => new { c.ComPosition, c.ComStage } ).Select(c => new
+        //    {
+        //        ComPosition = c.Key.ComPosition,
+        //        comStage=c.Key.ComStage,
+        //        stageNumber=result.Number,
+        //        participients = c.ToList(),
 
-            });
+        //    });
             
-            StringBuilder stringBuilderHeader = new StringBuilder();
+        //    StringBuilder stringBuilderHeader = new StringBuilder();
             
-                stringBuilderHeader.Append('{');
-                stringBuilderHeader.Append($"\"field\":\"StageNumber\",");
-            stringBuilderHeader.Append("\"width\":100,");
-            stringBuilderHeader.Append("\"title\":\"Этап\"},");
-                stringBuilderHeader.Append("{\"field\":\"NomName\",");
-            stringBuilderHeader.Append("\"width\":180,");
-            stringBuilderHeader.Append("\"sortable\":true,");
+        //        stringBuilderHeader.Append('{');
+        //        stringBuilderHeader.Append($"\"field\":\"StageNumber\",");
+        //    stringBuilderHeader.Append("\"width\":100,");
+        //    stringBuilderHeader.Append("\"title\":\"Этап\"},");
+        //        stringBuilderHeader.Append("{\"field\":\"NomName\",");
+        //    stringBuilderHeader.Append("\"width\":180,");
+        //    stringBuilderHeader.Append("\"sortable\":true,");
         
-            stringBuilderHeader.Append("\"title\":\"Номерклатура\"},");
+        //    stringBuilderHeader.Append("\"title\":\"Номерклатура\"},");
             
-            StringBuilder stringBuilderPart = new StringBuilder();
-            var nomenclature = Nomenclatures.FirstOrDefault();
-                foreach (var part in nomenclature.participients)
-                {
-                var status = nomenclature.ComPosition.ComOffer.ComParticipants.FirstOrDefault(p => p.ContragentId == part.ContragentId && p.ComOfferId==comofferid)?.Status.ToDescriptionString();
-                    stringBuilderPart.AppendFormat("{0}\"field\":\"ContName_{1}\",", "{", part.Contragent.Id);
-                stringBuilderPart.Append("\"width\":100,");
-                stringBuilderPart.AppendFormat("\"title\":\"{0} ({1})\",", part.Contragent.Name, status);
-                var priceColname = string.Format("ContName_{0}_price", part.Contragent.Id);
-                var priceColstatus = string.Format("ContName_{0}_status", part.Contragent.Id);
-                stringBuilderPart.AppendFormat("\"formatter\": \"/Function((one,two)=>{3} return (two.{0}==0 ? ' ': two.{0}) +' '+ (two.{1} ? 'да': 'нет') ;{2})/\"{2},", priceColname, priceColstatus, "}","{");
+        //    StringBuilder stringBuilderPart = new StringBuilder();
+        //    var nomenclature = Nomenclatures.FirstOrDefault();
+        //        foreach (var part in nomenclature.participients)
+        //        {
+        //        var status = nomenclature.ComPosition.ComOffer.ComParticipants.FirstOrDefault(p => p.ContragentId == part.ContragentId && p.ComOfferId==comofferid)?.Status.ToDescriptionString();
+        //            stringBuilderPart.AppendFormat("{0}\"field\":\"ContName_{1}\",", "{", part.Contragent.Id);
+        //        stringBuilderPart.Append("\"width\":100,");
+        //        stringBuilderPart.AppendFormat("\"title\":\"{0} ({1})\",", part.Contragent.Name, status);
+        //        var priceColname = string.Format("ContName_{0}_price", part.Contragent.Id);
+        //        var priceColstatus = string.Format("ContName_{0}_status", part.Contragent.Id);
+        //        stringBuilderPart.AppendFormat("\"formatter\": \"/Function((one,two)=>{3} return (two.{0}==0 ? ' ': two.{0}) +' '+ (two.{1} ? 'да': 'нет') ;{2})/\"{2},", priceColname, priceColstatus, "}","{");
 
-                //stringBuilderPart.AppendFormat("{0}field:'ContName_{1}_price',","{", part.Contragent.Id);
-                //stringBuilderPart.Append("title:'Цена'},");
-                //stringBuilderPart.AppendFormat("{0}field:'ContName_{1}_status',","{", part.Contragent.Id);
-                //stringBuilderPart.Append("title:'Статус'},");
+        //        //stringBuilderPart.AppendFormat("{0}field:'ContName_{1}_price',","{", part.Contragent.Id);
+        //        //stringBuilderPart.Append("title:'Цена'},");
+        //        //stringBuilderPart.AppendFormat("{0}field:'ContName_{1}_status',","{", part.Contragent.Id);
+        //        //stringBuilderPart.Append("title:'Статус'},");
 
-            }
-                stringBuilderHeader.Append(stringBuilderPart.ToString().TrimEnd(','));
+        //    }
+        //        stringBuilderHeader.Append(stringBuilderPart.ToString().TrimEnd(','));
             
-            stringBuilderPart.Clear();
+        //    stringBuilderPart.Clear();
                 
 
-            string resultSjong = "{" +
-                $"\"stage\" : {(stage==1 ? "1": "")},"+
-                $"\"deadline\" : {result.Deadline}," +
-                "\"header\": [" + stringBuilderHeader.ToString()+"]," ;
-            stringBuilderHeader.Clear();
-            //var result = await _mediator.Send(command);
-            foreach (var nomenclatured in Nomenclatures)
-            {
-                stringBuilderHeader.Append('{');
-                stringBuilderHeader.Append($"\"StageNumber\":{nomenclatured.stageNumber},");
+        //    string resultSjong = "{" +
+        //        $"\"stage\" : {(stage==1 ? "1": "")},"+
+        //        $"\"deadline\" : {result.Deadline}," +
+        //        "\"header\": [" + stringBuilderHeader.ToString()+"]," ;
+        //    stringBuilderHeader.Clear();
+        //    //var result = await _mediator.Send(command);
+        //    foreach (var nomenclatured in Nomenclatures)
+        //    {
+        //        stringBuilderHeader.Append('{');
+        //        stringBuilderHeader.Append($"\"StageNumber\":{nomenclatured.stageNumber},");
                 
-                stringBuilderHeader.Append($"\"NomName\":\"{nomenclatured.ComPosition.Nomenclature.Name}\",");
-               // StringBuilder stringBuilderPart = new StringBuilder();
-                foreach (var part in nomenclatured.participients)
-                {
-                    var status = nomenclatured.ComPosition.ComOffer.ComParticipants.FirstOrDefault(p => p.ContragentId == part.ContragentId)?.Status;
-                    stringBuilderPart.AppendFormat("\"ContName_{0}\":{1},", part.Contragent.Id,part.ContragentId);
-                    stringBuilderPart.AppendFormat("\"ContName_{0}_price\":{1},", part.Contragent.Id,part.Price);
-                    stringBuilderPart.AppendFormat("\"ContName_{0}_status\":{1},", part.Contragent.Id,part.Status?"true":"false");
-                }
-                stringBuilderHeader.Append(stringBuilderPart.ToString().TrimEnd(','));
-                stringBuilderPart.Clear();
-                stringBuilderHeader.Append("},");
-            }
+        //        stringBuilderHeader.Append($"\"NomName\":\"{nomenclatured.ComPosition.Nomenclature.Name}\",");
+        //       // StringBuilder stringBuilderPart = new StringBuilder();
+        //        foreach (var part in nomenclatured.participients)
+        //        {
+        //            var status = nomenclatured.ComPosition.ComOffer.ComParticipants.FirstOrDefault(p => p.ContragentId == part.ContragentId)?.Status;
+        //            stringBuilderPart.AppendFormat("\"ContName_{0}\":{1},", part.Contragent.Id,part.ContragentId);
+        //            stringBuilderPart.AppendFormat("\"ContName_{0}_price\":{1},", part.Contragent.Id,part.Price);
+        //            stringBuilderPart.AppendFormat("\"ContName_{0}_status\":{1},", part.Contragent.Id,part.RequestPrice ? "true":"false");
+        //        }
+        //        stringBuilderHeader.Append(stringBuilderPart.ToString().TrimEnd(','));
+        //        stringBuilderPart.Clear();
+        //        stringBuilderHeader.Append("},");
+        //    }
 
-            resultSjong+=" \"dataRows\": [" + stringBuilderHeader.ToString().TrimEnd(',') + "]}";
+        //    resultSjong+=" \"dataRows\": [" + stringBuilderHeader.ToString().TrimEnd(',') + "]}";
 
 
             
             
-            return new JsonResult(resultSjong); ;
+        //    return new JsonResult(resultSjong); ;
 
         
 
         
-        }
+        //}
         public async Task<IActionResult> OnPostAsync()
         {
             try

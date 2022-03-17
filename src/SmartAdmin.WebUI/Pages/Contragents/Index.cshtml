@@ -135,13 +135,16 @@
     <script src="~/js/Karavay/GeneratePass.js" type="text/javascript"></script>
     
     <script type="text/javascript">
-
+        
         var Statuses = [{
             id: '',
             text: 'Все'
 
         }]
         $(document).ready(function () {
+            jQuery.validator.addMethod("HasOneChecked", function (value, element) {
+                return getCheckedCategories();
+            }, "* Не одного категория не выбрана");
 			$(":input").inputmask();
             $("#contragent_form").data("validator").settings.ignore = "";
                 @foreach (var val in Enum.GetValues(typeof(CleanArchitecture.Razor.Domain.Enums.ContragentStatus)))
@@ -277,8 +280,8 @@
         $('#contragent_form  :submit').click(function (e) {
             const form = document.querySelector('#contragent_form');
             $(form).validate().settings.ignore = ".ignore";
-                
-                    if ($(form).valid() === false) {
+            let hasOneChecked= getCheckedCategories();
+            if ($(form).valid() === false ) {
                         form.classList.add('was-validated');
                     } else {
 
@@ -401,7 +404,11 @@
 				{ field: 'StatusStr', title: '@_localizer["Status"]', sortable: true, width: 140 },
 				{ field: 'Name', title: '@_localizer["Name"]', sortable: true, width: 100 },
 				{ field: 'FullName', title: '@_localizer["Full name"]', sortable: true, width: 180 },
-				{ field: 'DirectionName', title: '@_localizer["Direction"]', sortable: true, width: 180 },
+                {
+                    field: 'Direction.Name', title: '@_localizer["Direction"]', sortable: true, width: 180, formatter: function (val, rec) {
+                        return rec.Direction.Name;
+                    }
+                },
 				{
                 field: 'IsServiceStr', title: '@_localizer["Service"]', align: 'center', sortable: true, width: 80, formatter: checkboxformatter
 
@@ -421,8 +428,13 @@
             ,
             rowStyler: function (index, row) {
                 if (row.Status == 1) {
-                    return 'background-color:pink;color:blue;font-weight:bold;'
+                    return 'background-color:rgb(255,199,206);color:rgb(156,0,0);'
                 }
+            }, onClickCell: function (index, field, value) {
+                //if (field == 'Number' || field == 'Name') {
+                if (field != "_action")
+                onEdit(index);
+                //}
             }
 		})
 			.datagrid('enableFilter', [
@@ -578,6 +590,8 @@
     if (contragent) {
         currentEditRow = contragent;
         console.log(contragent);
+        $('#file').val("");
+        $('#Input_Files').val("");
             $('#contragent_modal #Main-modal-title').html('@_localizer["Edit Contragent"]');
 			$('#contragent_form').jsonToForm(contragent, {
         IsService: function (value) {
@@ -586,6 +600,11 @@
                 } else {
 						$('#contragent_form [name*="IsService"]').prop('checked', false);
                 }
+                },
+
+                Files: function (value) {
+                    $('#Input_Files').val("");
+                    
                 },
                 Status: function (value) {
                     //"На регистрации"
@@ -600,7 +619,8 @@
                 }
 
 
-        });
+            });
+        $('#Input_DirectionId').val(contragent.DirectionId);
 			$('#contragent_form #Input_ApplicationUserId').val(contragent.ApplicationUserId);
 			$('#contragent_form #UserFormModel_ManagerPhone').val(contragent.ManagerPhone);
             $('#contragent_form #RejectModel_Status').val(3);

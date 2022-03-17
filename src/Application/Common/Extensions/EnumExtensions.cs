@@ -10,6 +10,7 @@ namespace CleanArchitecture.Razor.Application.Common.Extensions
     {
         public static string ToDescriptionString(this Enum val)
         {
+            if (val == null) return "";
             var attributes = (DescriptionAttribute[])val.GetType().GetField(val.ToString())?.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             return attributes?.Length > 0

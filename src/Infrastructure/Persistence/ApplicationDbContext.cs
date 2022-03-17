@@ -17,6 +17,13 @@ using CleanArchitecture.Razor.Domain.Identity;
 using CleanArchitecture.Razor.Infrastructure.Persistence.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Razor.Application.Common.Extensions;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.Data.SqlClient;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Common;
+using System.Data;
+using System;
 
 namespace CleanArchitecture.Razor.Infrastructure.Persistence
 {
@@ -73,6 +80,8 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
         public DbSet<ComPosition>  ComPositions { get; set; }
         public DbSet<StageComposition> StageCompositions { get; set; }
         public DbSet<AreaComPosition> AreaComPositions { get; set; }
+        public DbSet<StageParticipant> StageParticipants { get; set; }
+      
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
 
@@ -224,5 +233,17 @@ namespace CleanArchitecture.Razor.Infrastructure.Persistence
             }
             return SaveChangesAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Executes raw query with parameters and maps returned values to column property names of Model provided.
+        /// Not all properties are required to be present in model (if not present - null)
+        /// </summary>
+        public List<T> ExecuteSqlRawExt1<T, P>( string query, Func<DbDataReader, T> map, IEnumerable<P> queryParameters = null)
+            
+        {
+            var result = this.ExecuteSqlRawExt<T,P>(query, map, queryParameters);
+            return result;
+        }
+
     }
 }

@@ -29,7 +29,7 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         /// Номер лота
         /// </summary>
         [Required]
-        public string Number { get; set; }
+        public int Number { get; set; }
         
         [Required]
         public DateTime DateBegin { get; set; }
@@ -67,7 +67,8 @@ namespace CleanArchitecture.Razor.Domain.Entities.Karavay
         public virtual ICollection<ComParticipant> ComParticipants { get; set; }
         public virtual ICollection<ComStage> ComStages { get; set; }
         public virtual ICollection<ComPosition> ComPositions { get; set; }
-        
+        public virtual ICollection<StageParticipant> StageParticipants { get; set; }
+
         [NotMapped]
         public List<DomainEvent> DomainEvents { get; set; } = new();
 

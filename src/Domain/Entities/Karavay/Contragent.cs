@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using CleanArchitecture.Razor.Domain.Common;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
 using CleanArchitecture.Razor.Domain.Enums;
@@ -17,7 +18,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
 
         //[ForeignKey("ApplicationUserId")]
         public string ApplicationUserId { get; set; }
-
+        public virtual ApplicationUser ApplicationUser { get; set; }
 
 
         [Required]
@@ -53,6 +54,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
         /// Услуга
         /// </summary>
         public bool IsService { get; set; }
+        
         public string ManagerId { get; set; }
         public virtual ApplicationUser Manager { get; set; }
 
@@ -70,7 +72,7 @@ namespace CleanArchitecture.Razor.Domain.Entities
         public virtual ICollection<ComOffer> ComOffers { get; set; }
         public virtual ICollection<ComParticipant> ComParticipants { get; set; }
         public virtual ICollection<StageComposition> StageCompositions { get; set; }
-
+        public virtual ICollection<StageParticipant> StageParticipants { get; set; }
         public List<DomainEvent> DomainEvents { get; set; } = new();
     }
 }

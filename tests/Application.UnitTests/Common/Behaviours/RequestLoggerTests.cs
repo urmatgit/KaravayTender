@@ -33,7 +33,7 @@ namespace CleanArchitecture.Application.UnitTests.Common.Behaviours
         public async Task ShouldCallGetUserNameAsyncOnceIfAuthenticated()
         {
             _currentUserService.Setup(x => x.UserId).Returns("Administrator");
-
+            _logger.Object.LogError("error error");
             var requestLogger = new LoggingBehaviour<AddEditCustomerCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);
 
             await requestLogger.Process(new AddEditCustomerCommand { Id = 1, Name = "New Customer" }, new CancellationToken());

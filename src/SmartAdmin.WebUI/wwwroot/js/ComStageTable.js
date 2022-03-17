@@ -1,9 +1,17 @@
+const OddCol1 = 'background-color: rgb(234, 243, 255)';
+const OddCol2 = 'background-color: rgb(235, 241, 222)';
 const tblStageColumns = [[
-    { field: 'NomName', title: 'Позиция', sortable: true, width: 130, rowspan: 2, align: 'center'},
+    {
+        field: 'NomName', title: 'Позиция', sortable: true, width: 180, rowspan: 2, align: 'center'
+        
+        },
     { field: 'Stage', title: 'Этап', sortable: true, width: 100, rowspan: 2 },
-    { field: "ContName1", title: "name1", colspan: 2,},
-    { field: "ContName2", title: "name2", colspan: 2, },
-    { field: "ContName3", title: "name3", colspan: 2 },
+    {
+        field: 'StageDeadline', title: 'Срок ответа до', sortable: true, width: 90, rowspan: 2, formatter: dateformatter
+    },
+    { field: "ContName1", title: "name1", colspan: 2, styler: function (value, row, index) { return  OddCol1; } },
+    { field: "ContName2", title: "name2", colspan: 2, styler: function (value, row, index) { return { class: 'clHead' }; }},
+    { field: "ContName3", title: "name3", colspan: 2, styler: function (value, row, index) { return { class: 'clHead' }; } },
     { field: "ContName4", title: "name4", colspan: 2 },
     { field: "ContName5", title: "name5", colspan: 2 },
     { field: "ContName6", title: "name6", colspan: 2 },
@@ -22,68 +30,188 @@ const tblStageColumns = [[
     { field: "ContName19", title: "name19", colspan: 2 },
     { field: "ContName20", title: "name20", colspan: 2 },
 ], [
-    
-    { field: 'ContrPrice1', title: 'Прайс1',   width: 100 },
+    //1
     {
-        field: 'ContrStatus1', title: 'Статус', width: 100, formatter: checkboxformatterEdit
+        field: 'ContrPrice1', title: 'Цена', width: 100, formatter: function (value, row) {
+            return formatPriceStage(value, row, 1);
+            
+        },
+        styler: function (value, row, index) { return OddCol1; }
+    },
+    {
+        field: 'RequestPrice1', title: 'Запрос цены', width: 100,
+        formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 1); }
+        , styler: function (value, row, index) { return OddCol1; }
     },
     
-    { field: 'ContrPrice2', title: 'Прайс',   width: 100 },
-    { field: 'ContrStatus2', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice2', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 2); },
+        styler: function (value, row, index) { return OddCol2; }
+    },
+    {
+        field: 'RequestPrice2', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 2); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
     
-    { field: 'ContrPrice3', title: 'Прайс',   width: 100 },
-    { field: 'ContrStatus3', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice3', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 3); }
+        , styler: function (value, row, index) { return OddCol1; }    },
+    {
+        field: 'RequestPrice3', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 3); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
     
-    { field: 'ContrPrice4', title: 'Прайс',   width: 100 },
-    { field: 'ContrStatus4', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice4', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 4); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
+    {
+        field: 'RequestPrice4', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 4); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
     
-    { field: 'ContrPrice5', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus5', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice5', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 5); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
+    {
+        field: 'RequestPrice5', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 5); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
     
-    { field: 'ContrPrice6', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus6', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice6', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 6); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
+    {
+        field: 'RequestPrice6', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 6); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
     
-    { field: 'ContrPrice7', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus7', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice7', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 7); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
+    {
+        field: 'RequestPrice7', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 7); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
     
-    { field: 'ContrPrice8', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus8', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice8', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 8); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
+    {
+        field: 'RequestPrice8', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 8); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
     
-    { field: 'ContrPrice9', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus9', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice9', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 9); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
+    {
+        field: 'RequestPrice9', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 9); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
     
-    { field: 'ContrPrice10', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus10', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice10', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 10); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
+    {
+        field: 'RequestPrice10', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 10); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
     
-    { field: 'ContrPrice11', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus11', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice11', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 11); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
+    {
+        field: 'RequestPrice11', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 11); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
     
-    { field: 'ContrPrice12', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus12', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice12', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 12); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
+    {
+        field: 'RequestPrice12', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 12); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
     
-    { field: 'ContrPrice13', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus13', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice13', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 13); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
+    {
+        field: 'RequestPrice13', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 13); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
     
-    { field: 'ContrPrice14', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus14', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice14', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 14); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
+    {
+        field: 'RequestPrice14', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 14); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
     
-    { field: 'ContrPrice15', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus15', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice15', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 15); }
+        , styler: function (value, row, index) { return OddCol1; }    },
+    {
+        field: 'RequestPrice15', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 15); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
     
-    { field: 'ContrPrice16', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus16', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice16', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 16); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
+    {
+        field: 'RequestPrice16', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 16); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
     
-    { field: 'ContrPrice17', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus17', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice17', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 17); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
+    {
+        field: 'RequestPrice17', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 17); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
     
-    { field: 'ContrPrice18', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus18', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice18', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 18); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
+    {
+        field: 'RequestPrice18', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 18); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
 
-    { field: 'ContrPrice19', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus19', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice19', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 19); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
+    {
+        field: 'RequestPrice19', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 19); }
+        , styler: function (value, row, index) { return OddCol1; }
+    },
     
-    { field: 'ContrPrice20', title: 'Прайс1',   width: 100 },
-    { field: 'ContrStatus20', title: 'Статус',   width: 100, formatter: checkboxformatterEdit },
+    {
+        field: 'ContrPrice20', title: 'Цена', width: 100, formatter: function (value, row) { return formatPriceStage(value, row, 20); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
+    {
+        field: 'RequestPrice20', title: 'Запрос цены', width: 100, formatter: function (value, row, index) { return checkboxformatterEdit(value, row, index, 20); }
+        , styler: function (value, row, index) { return OddCol2; }
+    },
     ]
     
 
@@ -91,7 +219,7 @@ const tblStageColumns = [[
 var dgcomstage = {};
 initdatagridComStage = (cdata, dataComStages) => {
     dgcomstage = $(`#comstage_dg`).datagrid({
-        height: (window.innerHeight / 3),
+        height: (window.innerHeight / 2 - 50),
         method: 'GET',
         rownumbers: true,
         singleSelect: true,
@@ -109,16 +237,28 @@ initdatagridComStage = (cdata, dataComStages) => {
         data: dataComStages,
         onLoadSuccess: function (data) {
             var panel = $(this).datagrid("getPanel");
-            var myheaderCol = panel.find("div.datagrid-header td");
-            // here is to add the css style
-            //myheaderCol.css("border-", "1px solid #000");
-            $('table.datagrid-htable').find('.datagrid-cell').css("text-align", 'center');
-            //$(".editable[type='checkbox']").bind('click', function (e) {
-            //    $(this).prop('checked', false);
-            //});
+            //for (let i = 1; i < 20; i += 2) {
+            //    let myheaderCol = panel.find(`div.datagrid-header td[field="ContName${i}"]`);
+            //    myheaderCol.css("background-color", "rgb(234, 243, 255)");
+            //    let myheaderColp = panel.find(`div.datagrid-header td[field="ContrPrice${i}"]`);
+            //    myheaderColp.css("background-color", "rgb(234, 243, 255)");
+            //    let myheaderColr = panel.find(`div.datagrid-header td[field="RequestPrice${i}"]`);
+            //    myheaderColr.css("background-color", "rgb(234, 243, 255)");
+            //}
+            
+            showHideButtons(currentEditRow.Status);
+            //comstage_dg_datagrid-cell-c5-ContName1
+
+            let contrNames = document.querySelectorAll('[class*=ContName]')
+            if (contrNames && contrNames.length > 0) {
+                contrNames.forEach(function (name) {
+                    if (!$(name).hasClass('ColTopHeader'))
+                        $(name).addClass("ColTopHeader");
+                })
+            }
         },
         onCellEdit: function (index, field, value) {
-            //if (field == 'ContrStatus1') {
+            //if (field == 'RequestPrice1') {
             //    var ck = $(this).datagrid('getEditor', { index: index, field: field });
             //    $(ck.target).bind('change', function (e) {
             //        this.value = false;
@@ -128,40 +268,46 @@ initdatagridComStage = (cdata, dataComStages) => {
 
     });
 }
-function checkboxformatterEdit(value, row, index) {
+ 
 
-     if (istrue(value)) {
+function checkboxformatterEdit(value, row, index,colIndex) {
 
-        const checked = `<div >
-                       <input type="checkbox" class="editable"  checked="checked" >
+    // if (istrue(value)) {
+
+    //     const checked = `<div >
+    //                   <input type="checkbox" class="editable"  checked="checked"  id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}>
                        
-                   </div>`;
-        return checked;
-    } else {
-        var unchecked = `<div >
-                       <input type="checkbox" class="editable"  >
-                   </div>`;
-
-        return unchecked;
-    }
-    //if (istrue(value)) {
-
-    //    const checked = `<div class="custom-control custom-checkbox">
-    //                   <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}" checked="checked" >
-    //                   <label class="custom-control-label" for="defaultCheckedDisabledEditable${index}"></label>
     //               </div>`;
     //    return checked;
     //} else {
-    //    var unchecked = `<div class="custom-control custom-checkbox">
-    //                   <input type="checkbox" class="custom-control-input editable" name="defaultCheckedDisabledEditable${index}"  >
-    //                   <label class="custom-control-label" for="defaultCheckedDisabledEditable${index}"></label>
+    //    var unchecked = `<div >
+    //                   <input type="checkbox" class="editable" id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]} >
     //               </div>`;
 
     //    return unchecked;
     //}
+    let editable = "editable";
+    if (row["ContrStatus" + colIndex] != 1 && row["ContrStatus" + colIndex] != 2)
+        editable = "";
+    if (istrue(value)) {
+
+        const checked = `<div class="custom-control custom-checkbox">
+                       <input type="checkbox" class="custom-control-input ${editable}" name="defaultCheckedDisabledEditable${index}" checked="checked"  id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}  disabled>
+                       <label class="custom-control-label" for=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}></label>
+                   </div>`;
+        return checked;
+    } else {
+        var unchecked = `<div class="custom-control custom-checkbox">
+                       <input type="checkbox" class="custom-control-input ${editable}" name="defaultCheckedDisabledEditable${index}"  id=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]} disabled>
+                       <label class="custom-control-label" for=${row["ComPositionId" + colIndex]}_${row["ContrId" + colIndex]}></label>
+                   </div>`;
+
+        return unchecked;
+    }
 
 
 }
+var currentStage = false;
 function LoadComState(comofferid) {
     
     let StageType = $('input[name="GetStageType"]:checked').val();
@@ -176,9 +322,9 @@ function LoadComState(comofferid) {
                 
 
                 res.data.Header.forEach(function (val, index) {
-                    tblHeader[0][2 + index].title = val;
+                    tblHeader[0][3 + index].title = val;
                 })
-                tblHeader[0].splice(2 + res.data.Header.length)
+                tblHeader[0].splice(3 + res.data.Header.length)
                 tblHeader[1].splice(res.data.Header.length * 2)
                 initdatagridComStage(tblHeader, res.data.Body);
                 $(`#comstage_dg`).datagrid('resize');
@@ -188,12 +334,15 @@ function LoadComState(comofferid) {
                 initdatagridComStage(tblHeader,[[]]);
             }
             $('#StageNumber').html(res.data.CurrentStage);
+            $('#StageId').val(res.data.CurrentStageId);
+            currentStage = res.data;
             if (StageType === '1') {
                 $(`#comstage_dg`).datagrid('hideColumn', 'Stage');
             } else {
                 $(`#comstage_dg`).datagrid('showColumn', 'Stage');
+                $('#StageId').val(0);
             }
-            
+            showHideButtons(currentEditRow.Status)
             
         })
         .catch((error) => {

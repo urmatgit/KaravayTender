@@ -17,24 +17,42 @@ namespace CleanArchitecture.Razor.Domain.Enums
     /// </summary>
     public enum ComOfferStatus : short
     {
+        /// <summary>
+        /// Подготовка
+        /// </summary>
         [Description(@"Подготовка")]
         [Display(Name= "Подготовка")]
         Preparation = 0,
+        /// <summary>
+        /// Ожидание КП
+        /// </summary>
         [Display(Name = "Ожидание КП")]
         [Description(@"Ожидание КП")]
         Waiting = 1,
-        [Description(@"Оценка")]
-        [Display(Name = "Оценка")]
+        /// <summary>
+        /// Оценка КП
+        /// </summary>
+        [Description(@"Оценка КП")]
+        [Display(Name = "Оценка КП")]
         Evaluation = 2,
+        /// <summary>
+        /// Определение победителя
+        /// </summary>
         [Description(@"Определение победителя")]
         [Display(Name ="Определение победителя")]
         WinnerDetermining = 3,
+        /// <summary>
+        /// Победитель определён
+        /// </summary>
         [Description(@"Победитель определён")]
         [Display(Name = "Победитель определён")]
         WinnerDetermined = 4,
+        /// <summary>
+        /// Отменено
+        /// </summary>
         [Description(@"Отменено")]
         [Display(Name = "Отменено")]
-        Cancelled = -1
+        Cancelled = 5
 
     }
 }

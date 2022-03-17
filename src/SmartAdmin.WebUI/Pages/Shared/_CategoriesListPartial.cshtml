@@ -1,7 +1,7 @@
 ﻿@using CleanArchitecture.Razor.Application.Features.Categories.DTOs
 @model List<CategoryDto>
     
-        <input type="text" id="CategoryIds" name="CategoryIds" hidden  />
+        <input type="text" id="CategoryIds" name="CategoryIds" hidden required  data-rule-HasOneChecked="true" data-msg-oneormorechecked="Выберите один или несколько!"/>
         @foreach (var catetory in Model)
         {
             <div class="custom-control custom-checkbox my-2" name="category">
@@ -9,5 +9,6 @@
                 <label class="custom-control-label" for="@catetory.Id">@catetory.Name</label>
             </div>
         }
+<span class="invalid-feedback" id="CategoryIds">Категория не выбрана!</span>
 
     

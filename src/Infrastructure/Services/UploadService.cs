@@ -22,6 +22,37 @@ namespace CleanArchitecture.Razor.Infrastructure.Services
             _logger = logger;
             _currentUserService = currentUserService;
         }
+        public async Task<string> UploadAsync(UploadRequest request, string subFolder)
+        {
+            if (request.Data == null) return string.Empty;
+            var streamData = new MemoryStream(request.Data);
+            if (streamData.Length > 0)
+            {
+                //var folder = request.UploadType.ToDescriptionString();
+                var folderName = Path.Combine("Files", subFolder);
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                bool exists = Directory.Exists(pathToSave);
+                if (!exists) Directory.CreateDirectory(pathToSave);
+                
+                var fileName = request.FileName.Trim('"');
+                var fullPath = Path.Combine(pathToSave, fileName);
+                var dbPath = Path.Combine(folderName, fileName);
+                if (File.Exists(dbPath))
+                {
+                    dbPath = NextAvailableFilename(dbPath);
+                    fullPath = NextAvailableFilename(fullPath);
+                }
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await streamData.CopyToAsync(stream);
+                }
+                return dbPath;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
         public async Task<string> UploadAsync(UploadRequest request)
         {
             if (request.Data == null) return string.Empty;

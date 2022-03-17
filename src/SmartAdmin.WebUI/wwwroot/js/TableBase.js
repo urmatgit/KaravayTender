@@ -303,7 +303,7 @@ var onExport = () => {
 
 $(document).ready(function () {
 
-   // $("#edit_form").data("validator").settings.ignore = "";
+    $("#edit_form").data("validator").settings.ignore = "";
 
 
 });
