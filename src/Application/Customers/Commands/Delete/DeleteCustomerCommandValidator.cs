@@ -3,8 +3,9 @@
 
 using FluentValidation;
 
-namespace CleanArchitecture.Razor.Application.Customers.Commands.Delete
+namespace CleanArchitecture.Razor.Application.Features.Customers.Commands.Delete
 {
+
     public class DeleteCustomerCommandValidator : AbstractValidator<DeleteCustomerCommand>
     {
         public DeleteCustomerCommandValidator()

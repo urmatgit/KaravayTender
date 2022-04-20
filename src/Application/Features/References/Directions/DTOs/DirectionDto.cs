@@ -4,8 +4,9 @@
 using System.Collections.Generic;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
-using CleanArchitecture.Razor.Application.Customers.DTOs;
+
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
+using CleanArchitecture.Razor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 
 namespace CleanArchitecture.Razor.Application.Features.Directions.DTOs

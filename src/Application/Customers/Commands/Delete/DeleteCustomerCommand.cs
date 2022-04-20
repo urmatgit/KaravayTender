@@ -7,25 +7,26 @@ using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
 using CleanArchitecture.Razor.Application.Common.Models;
-using CleanArchitecture.Razor.Application.Customers.Caching;
+using CleanArchitecture.Razor.Application.Features.Customers.Caching;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CleanArchitecture.Razor.Application.Customers.Commands.Delete
+namespace CleanArchitecture.Razor.Application.Features.Customers.Commands.Delete
 {
+
     public class DeleteCustomerCommand : IRequest<Result>, ICacheInvalidator
     {
         public int Id { get; set; }
         public string CacheKey => CustomerCacheKey.GetAllCacheKey;
 
-        public CancellationTokenSource ResetCacheToken => CustomerCacheTokenSource.ResetCacheToken;
+        public CancellationTokenSource ResetCacheToken => CustomerCacheKey.ResetCacheToken;
     }
     public class DeleteCheckedCustomersCommand : IRequest<Result>, ICacheInvalidator
     {
         public int[] Id { get; set; }
         public string CacheKey => CustomerCacheKey.GetAllCacheKey;
 
-        public CancellationTokenSource ResetCacheToken => CustomerCacheTokenSource.ResetCacheToken;
+        public CancellationTokenSource ResetCacheToken => CustomerCacheKey.ResetCacheToken;
     }
 
     public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Result>,

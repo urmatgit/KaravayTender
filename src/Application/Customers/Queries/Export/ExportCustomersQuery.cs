@@ -4,21 +4,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Razor.Application.Common.Extensions;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Customers.DTOs;
+using CleanArchitecture.Razor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
-namespace CleanArchitecture.Razor.Application.Customers.Queries.Export
+namespace CleanArchitecture.Razor.Application.Features.Customers.Queries.Export
 {
+
     public class ExportCustomersQuery : IRequest<byte[]>
     {
         public string filterRules { get; set; }
@@ -50,7 +50,7 @@ namespace CleanArchitecture.Razor.Application.Customers.Queries.Export
         {
             var filters = PredicateBuilder.FromFilter<Customer>(request.filterRules);
             var data = await _context.Customers.Where(filters)
-                .OrderBy($"{request.sort} {request.order}")
+              //  .OrderBy($"{request.sort} {request.order}")
                 .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,

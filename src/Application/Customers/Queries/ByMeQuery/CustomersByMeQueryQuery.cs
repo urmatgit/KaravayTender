@@ -1,37 +1,38 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Razor.Application.Common.Extensions;
-using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
-using CleanArchitecture.Razor.Application.Common.Mappings;
-using CleanArchitecture.Razor.Application.Common.Models;
+using CleanArchitecture.Razor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Razor.Application.Common.Specification;
-using CleanArchitecture.Razor.Application.Customers.Caching;
-using CleanArchitecture.Razor.Application.Customers.DTOs;
-using CleanArchitecture.Razor.Application.Models;
-using CleanArchitecture.Razor.Domain.Entities;
-using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using CleanArchitecture.Razor.Application.Features.Customers.Caching;
+using CleanArchitecture.Razor.Domain.Entities;
+using CleanArchitecture.Razor.Application.Models;
+using System.Threading.Tasks;
+using System.Threading;
+using CleanArchitecture.Razor.Application.Common.Extensions;
+using CleanArchitecture.Razor.Application.Common.Interfaces;
+using AutoMapper;
+using MediatR;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
+using CleanArchitecture.Razor.Application.Common.Models;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Razor.Application.Common.Mappings;
 
-namespace CleanArchitecture.Razor.Application.Customers.Queries.PaginationQuery
+namespace CleanArchitecture.Razor.Application.Features.Customers.Queries.PaginationQuery
 {
+
     public class CustomersByMeQueryQuery : PaginationRequest, IRequest<PaginatedData<CustomerDto>>, ICacheable
     {
         public string UserId { get; set; }
 
 
-        public string CacheKey => $"CustomersByMeQueryQuery,userid:{UserId},{this.ToString()}";
+        public string CacheKey => $"{nameof(CustomersByMeQueryQuery)},userid:{UserId},{this.ToString()}";
 
-        public MemoryCacheEntryOptions Options => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(CustomerCacheTokenSource.ResetCacheToken.Token));
+        public MemoryCacheEntryOptions Options => CustomerCacheKey.MemoryCacheEntryOptions;
     }
+
     public class ByMeCustomersQueryHandler : IRequestHandler<CustomersByMeQueryQuery, PaginatedData<CustomerDto>>
     {
 
@@ -53,7 +54,7 @@ namespace CleanArchitecture.Razor.Application.Customers.Queries.PaginationQuery
             var filters = PredicateBuilder.FromFilter<Customer>(request.FilterRules);
             var data = await _context.Customers.Specify(new CustomerByMeQuerySpec(request.UserId))
                 .Where(filters)
-                .OrderBy($"{request.Sort} {request.Order}")
+                //.OrderBy($"{request.Sort} {request.Order}")
                 .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.Page, request.Rows);
 

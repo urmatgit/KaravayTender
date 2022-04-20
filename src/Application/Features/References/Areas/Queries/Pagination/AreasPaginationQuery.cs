@@ -17,12 +17,17 @@ using CleanArchitecture.Razor.Application.Models;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Domain.Entities.Karavay;
+using CleanArchitecture.Razor.Application.Features.References.Areas.Caching;
+using Microsoft.Extensions.Caching.Memory;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
 
 namespace CleanArchitecture.Razor.Application.Features.References.Areas.Queries.Pagination
 {
-    public class AreasWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<AreaDto>>
+    public class AreasWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<AreaDto>>//, ICacheable
     {
-       
+        public string CacheKey => AreaCacheKey.GetPagtionCacheKey(this.ToString());
+
+        public MemoryCacheEntryOptions Options => AreaCacheKey.MemoryCacheEntryOptions;
     }
     
     public class AreasWithPaginationQueryHandler :

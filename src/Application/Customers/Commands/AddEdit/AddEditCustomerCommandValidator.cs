@@ -3,8 +3,9 @@
 
 using FluentValidation;
 
-namespace CleanArchitecture.Razor.Application.Customers.Commands.AddEdit
+namespace CleanArchitecture.Razor.Application.Features.Customers.Commands.AddEdit
 {
+
     public class AddEditCustomerCommandValidator : AbstractValidator<AddEditCustomerCommand>
     {
         public AddEditCustomerCommandValidator()

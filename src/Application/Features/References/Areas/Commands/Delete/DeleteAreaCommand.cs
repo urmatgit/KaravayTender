@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.References.Areas.Caching;
@@ -15,7 +16,7 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.References.Areas.Commands.Delete
 {
-    public class DeleteAreaCommand: IRequest<Result>
+    public class DeleteAreaCommand: IRequest<Result>//, ICacheInvalidator
     {
       public int Id {  get; set; }
        public string CacheKey => AreaCacheKey.GetAllCacheKey;

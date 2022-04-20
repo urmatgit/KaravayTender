@@ -2,11 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Razor.Application.Common.Mappings;
-using CleanArchitecture.Razor.Application.Products.DTOs;
 using CleanArchitecture.Razor.Domain.Entities;
 
-namespace CleanArchitecture.Razor.Application.Customers.DTOs
+namespace CleanArchitecture.Razor.Application.Features.Customers.DTOs
 {
+
     public partial class CustomerDto : IMapFrom<Customer>
     {
 
@@ -25,8 +25,5 @@ namespace CleanArchitecture.Razor.Application.Customers.DTOs
         public string PhoneNumber { get; set; }
         public string Fax { get; set; }
         public string Comments { get; set; }
-        public int? ProductId { get; set; }
-        public virtual ProductDto Product { get; set; }
-
     }
 }

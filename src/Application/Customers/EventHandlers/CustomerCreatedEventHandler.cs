@@ -8,8 +8,9 @@ using CleanArchitecture.Razor.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace CleanArchitecture.Razor.Application.Customers.EventHandlers
+namespace CleanArchitecture.Razor.Application.Features.Customers.EventHandlers
 {
+
     public class CustomerCreatedEventHandler : INotificationHandler<DomainEventNotification<CustomerCreatedEvent>>
     {
         private readonly ILogger<CustomerCreatedEventHandler> _logger;

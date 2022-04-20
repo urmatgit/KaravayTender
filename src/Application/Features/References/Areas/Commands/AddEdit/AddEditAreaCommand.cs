@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
 using CleanArchitecture.Razor.Application.Common.Mappings;
 using CleanArchitecture.Razor.Application.Common.Models;
 using CleanArchitecture.Razor.Application.Features.References.Areas.Caching;
@@ -14,7 +15,7 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Razor.Application.Features.References.Areas.Commands.AddEdit
 {
-    public class AddEditAreaCommand: AreaDto,IRequest<Result<int>>, IMapFrom<Area>
+    public class AddEditAreaCommand: AreaDto,IRequest<Result<int>>, IMapFrom<Area>//, ICacheInvalidator
     {
         public string CacheKey => AreaCacheKey.GetAllCacheKey;
 

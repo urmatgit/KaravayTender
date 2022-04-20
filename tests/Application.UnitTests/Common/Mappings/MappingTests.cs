@@ -5,10 +5,11 @@ using System;
 using System.Runtime.Serialization;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Mappings;
-using CleanArchitecture.Razor.Application.Customers.DTOs;
+
 using CleanArchitecture.Razor.Application.Features.Categories.DTOs;
 using CleanArchitecture.Razor.Application.Features.ComPositions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Contragents.DTOs;
+using CleanArchitecture.Razor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Razor.Application.Features.Directions.DTOs;
 using CleanArchitecture.Razor.Application.Features.Nomenclatures.DTOs;
 using CleanArchitecture.Razor.Application.Features.References.QualityDocs.DTOs;

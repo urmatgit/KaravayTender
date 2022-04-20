@@ -3,8 +3,9 @@
 
 using FluentValidation;
 
-namespace CleanArchitecture.Razor.Application.Customers.Commands.Import
+namespace CleanArchitecture.Razor.Application.Features.Customers.Commands.Import
 {
+
     public class ImportCustomersCommandValidator : AbstractValidator<ImportCustomersCommand>
     {
         public ImportCustomersCommandValidator()
@@ -12,5 +13,4 @@ namespace CleanArchitecture.Razor.Application.Customers.Commands.Import
             RuleFor(x => x.Data).NotNull().NotEmpty();
         }
     }
-
 }

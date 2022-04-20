@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CleanArchitecture.Razor.Application.Common.Behaviours;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Razor.Application.Customers.Commands.AddEdit;
+using CleanArchitecture.Razor.Application.Features.Customers.Commands.AddEdit;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;

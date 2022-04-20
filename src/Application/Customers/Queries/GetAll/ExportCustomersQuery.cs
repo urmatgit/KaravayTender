@@ -1,27 +1,28 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Razor.Application.Features.Customers.DTOs;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
+using CleanArchitecture.Razor.Application.Features.Customers.Caching;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 using AutoMapper;
 using CleanArchitecture.Razor.Application.Common.Interfaces;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
-using CleanArchitecture.Razor.Application.Customers.Caching;
-using CleanArchitecture.Razor.Application.Customers.DTOs;
 using MediatR;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Primitives;
+using CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
+using System.Threading;
 
-namespace CleanArchitecture.Razor.Application.Customers.Queries.GetAll
+namespace CleanArchitecture.Razor.Application.Features.Customers.Queries.GetAll
 {
+
     public class GetAllCustomersQuery : IRequest<IEnumerable<CustomerDto>>, ICacheable
     {
         public string CacheKey => CustomerCacheKey.GetAllCacheKey;
 
-        public MemoryCacheEntryOptions Options => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(CustomerCacheTokenSource.ResetCacheToken.Token));
+        public MemoryCacheEntryOptions Options => CustomerCacheKey.MemoryCacheEntryOptions;
     }
 
     public class GetAllCustomersQueryQueryHandler :
