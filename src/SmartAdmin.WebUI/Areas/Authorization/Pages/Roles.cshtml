@@ -14,7 +14,7 @@
     var _canEdit = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Edit);
     var _canDelete = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Delete);
     var _canSearch = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Search);
-    
+
     var _canExport = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.Export);
     var _canManagePermissions = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.ManagePermissions);
     var _canManageNavigation = await _authorizationService.AuthorizeAsync(User, null, Permissions.Roles.ManageNavigation);
@@ -138,8 +138,8 @@
 </div>
 
 <!--Manage Permissions-->
-<div class="modal fade" id="managepermissions_modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-right">
+<div class="modal fade " id="managepermissions_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title h4">@_localizer["Manage Permissions"]</h5>
@@ -150,32 +150,67 @@
             <form id="managepermissions_form" class="needs-validation" novalidate="novalidate">
                 <input type="hidden" asp-for="RoleId" />
                 @Html.AntiForgeryToken()
-                <div class="modal-body">
-                    @foreach (var dic in Model.GroupedPermissions)
-                    {
-                        <div class="card mb-g">
-                            <div class="card-body p-3">
-                                <h5 class="frame-heading">@_localizer[dic.Key]</h5>
-                                <div class="frame-wrap">
-                                    <div class="demo">
-                                        @foreach (var permission in dic.Value)
-                                        {
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" value="@permission.ClaimValue" name="AssignedPermissions" id="@permission.ClaimValue.Replace(".","_")">
-                                                <label class="custom-control-label" for="@permission.ClaimValue.Replace(".","_")">@permission.ClaimValue</label>
-                                            </div>
-                                        }
+            <div class="modal-body">
+                <ul class="nav nav-tabs role=" tablist"">
+                    @{
+                        int index = 0;
+
+                        foreach (var dic in Model.GroupedPermissions)
+                        {
+                            @:<li class="nav-item">
+                                @: <a class="nav-link" data-toggle="tab" href="#roleTab@(++index)" role="tab">
+                                    @: <i class="@(Settings.Theme.IconPrefix) fa-users mr-1"></i> @dic.Key
+                                @: </a>
+                            @: </li>
+                        }
+                    }
+                </ul>
+                <div class="tab-content border border-top-0 p-1">
+                    @{
+                        int index1 = 0;
+
+                        foreach (var dic in Model.GroupedPermissions)
+                        {
+                            @:<div class="@string.Format("tab-pane fade show p-2 {0}", index1 == 0 ? "active" : "")" id="roleTab@(++index1)" role="tabpanel">
+                                @:<div class="demo">
+                                    @foreach (var permission in dic.Value)
+                                    {
+                                        @: <div class="custom-control custom-checkbox">
+                                            @:  <input type="checkbox" class="custom-control-input" value="@permission.ClaimValue" name="AssignedPermissions" id="@permission.ClaimValue.Replace(".", "_")">
+                                            @:<label class="custom-control-label" for="@permission.ClaimValue.Replace(".", "_")">@permission.ClaimValue</label>
+                                        @: </div>
+                                    }
+                                @:</div>
+                            @: </div>
+                        }
+                    }
+                </div>
+                        
+                    @*@foreach (var dic in Model.GroupedPermissions)
+            {
+                <div class="card mb-g">
+                    <div class="card-body p-3">
+                        <h5 class="frame-heading">@_localizer[dic.Key]</h5>
+                        <div class="frame-wrap">
+                            <div class="demo">
+                                @foreach (var permission in dic.Value)
+                                {
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" value="@permission.ClaimValue" name="AssignedPermissions" id="@permission.ClaimValue.Replace(".","_")">
+                                        <label class="custom-control-label" for="@permission.ClaimValue.Replace(".","_")">@permission.ClaimValue</label>
                                     </div>
-                                </div>
+                                }
                             </div>
                         </div>
-                    }
+                    </div>
+                </div>
+            }*@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">@_localizer["Close"]</button>
                     <button type="submit" class="btn btn-primary">@_localizer["Update permissions"]</button>
                 </div>
-            </form>
+</form>
         </div>
     </div>
 </div>
