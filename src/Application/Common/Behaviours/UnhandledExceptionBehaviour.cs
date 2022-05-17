@@ -22,7 +22,11 @@ namespace CleanArchitecture.Razor.Application.Common.Behaviours
         {
             try
             {
-                return await next();
+                
+                var nextReq=  await next();
+                //throw new Exception("testexption");
+                return nextReq;
+                
             }
             catch (Exception ex)
             {
